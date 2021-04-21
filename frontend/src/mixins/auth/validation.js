@@ -1,5 +1,8 @@
 import router from '@/router';
 import { validateEmail, validatePwd } from '@/utils/validation';
+import { emailCheck } from '@/api/auth';
+import { debounce } from 'lodash';
+
 export default {
   // 재사용할 컴포넌트 옵션
   data() {
@@ -30,13 +33,19 @@ export default {
     'userData.email': {
       immediate: true,
       handler(email) {
-        // 이메일 검사
         if (email === '') {
           this.validationMsg.email = '※ 비밀번호 찾기를 위해서, 이메일을 신중히 입력해주세요';
           this.validationClass.email = '';
         } else if (validateEmail(email)) {
           this.validationMsg.email = '올바른 이메일 형식입니다';
           this.validationClass.email = 'success-msg';
+          // 이메일 중복 검사
+          debounce(() => {
+            emailCheck(email).catch(error => {
+              this.validationMsg.email = '이미 해당 이메일이 존재합니다';
+              this.validationClass.email = 'alert-msg';
+            });
+          }, 1000)();
         } else {
           this.validationMsg.email = '이메일 형식이 잘못되었습니다';
           this.validationClass.email = 'alert-msg';

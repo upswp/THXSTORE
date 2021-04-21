@@ -4,7 +4,7 @@
       <div class="signup-header">Sign up for Thx!Store</div>
     </header>
     <div class="profile-img">
-      <img :src="userData.profile" alt="profile" />
+      <img :src="userData.profileImage" alt="profile" />
     </div>
     <form @submit.prevent="submitForm">
       <div class="submit-items">

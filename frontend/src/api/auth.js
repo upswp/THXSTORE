@@ -43,9 +43,21 @@ const registerUser = registerData => publicAPI.post('', registerData);
  * @param {LoginData} loginData
  * @returns {Promise<User>} userData
  */
-const loginUser = loginData => instance.post('', loginData);
-const emailCheck = params => instance.get('', params);
-const authWithEmailForPwd = userData => instance.post('', userData);
-const resetPwd = userData => instanceAuth.put('', userData);
+const loginUser = loginData => publicAPI.post('', loginData);
+
+/**
+ * 이메일 중복채크
+ * @typedef {function} emailCheck
+ * @param {string} email
+ * @returns {Promise<Boolean>} 중복 여부
+ */
+const emailCheck = email =>
+  publicAPI.get('user/', {
+    params: {
+      email,
+    },
+  });
+const authWithEmailForPwd = userData => publicAPI.post('', userData);
+const resetPwd = userData => privateAPI.put('', userData);
 
 export { registerUser, loginUser, emailCheck, authWithEmailForPwd, resetPwd };
