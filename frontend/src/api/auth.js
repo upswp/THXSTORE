@@ -45,3 +45,5 @@ const loginUser = loginData => instance.post('', loginData);
 const emailCheck = params => instance.get('', params);
 const authWithEmailForPwd = userData => instance.post('', userData);
 const resetPwd = userData => instanceAuth.put('', userData);
+
+export { registerUser, loginUser, emailCheck, authWithEmailForPwd, resetPwd };
