@@ -8,7 +8,7 @@ export default {
     commit('setUser', data.data);
     return data;
   },
-  async KAKAO_LOGIN({ commit }){
-    const data = await 
-  }
+  // async KAKAO_LOGIN({ commit }){
+  //   const data = await 
+  // }
 };
