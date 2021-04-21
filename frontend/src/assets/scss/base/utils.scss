@@ -1,0 +1,123 @@
+@include spacing();
+
+// 텍스트 정렬
+.text-left {
+  text-align: left;
+}
+.text-center {
+  text-align: center;
+}
+.text-right {
+  text-align: right;
+}
+.text-primary {
+  color: $primary;
+}
+.text-success {
+  color: $success !important;
+}
+
+.highlight {
+  &-text {
+    background-color: #fffcc0;
+  }
+}
+
+.text-truncate {
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+  word-wrap: normal !important;
+}
+
+// position
+.p-absolute {
+  position: absolute !important;
+}
+.p-fixed {
+  position: fixed !important;
+}
+.p-relative {
+  position: relative !important;
+}
+
+.flex {
+  display: flex;
+  &.flex-row {
+    flex-direction: row;
+  }
+  &.flex-column {
+    flex-direction: column;
+  }
+  &.justify-center {
+    justify-content: center;
+  }
+  &.justify-between {
+    justify-content: space-between;
+  }
+  &.justify-start {
+    justify-content: flex-start;
+  }
+  &.justify-end {
+    justify-content: flex-end;
+  }
+  &.align-center {
+    align-items: center;
+  }
+}
+
+// display
+.d-block {
+  display: block;
+}
+.d-inline-block {
+  display: inline-block;
+}
+
+// cursor
+.c-pointer {
+  cursor: pointer !important;
+}
+.c-default {
+  cursor: default !important;
+}
+
+.h-screen {
+  min-height: 100vh;
+}
+
+.f-thin {
+  font-weight: $thin;
+}
+
+.f-light {
+  font-weight: $light;
+}
+
+.f-normal {
+  font-weight: $normal;
+}
+
+.f-medi {
+  font-weight: $medi;
+}
+
+.f-bold {
+  font-weight: $bold;
+}
+
+.not-scroll {
+  overflow: hidden;
+}
+
+// word break
+.break-normal {
+  overflow-wrap: normal;
+  word-break: normal;
+}
+.break-words {
+  overflow-wrap: break-word;
+}
+.break-all {
+  word-break: break-all;
+}
