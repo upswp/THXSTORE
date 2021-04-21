@@ -63,7 +63,7 @@ export default {
 .container {
   z-index: 1;
   padding: 20px;
-  width: clamp(340px, 30%, 430px);
+  width: clamp(360px, 30%, 430px);
   min-height: 500px;
   @include box-shadow;
   // background: #f9fafc;

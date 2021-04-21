@@ -8,6 +8,11 @@ const routes = [
     path: '/',
     redirect: '/auth/login',
   },
+  {
+    path: '/main',
+    name: 'main',
+    component: () => import('@/views/MainPage.vue'),
+  },
   ...routesForAuth,
 ];
 

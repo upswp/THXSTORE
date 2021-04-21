@@ -1,4 +1,24 @@
-import { instance, instanceAuth } from '@/api';
+import { createInstance, createInstanceWithToken } from '@/api';
+
+const publicAPI = createInstance('api/member/');
+const privateAPI = createInstanceWithToken('api/member/');
+
+/**
+ * @typedef {object} RegisterData
+ * @property {string} uid - 회원가입 아이디 (null 허용)
+ * @property {string} email - 회원가입 이메일
+ * @property {string} password - 회원가입 비밀번호
+ * @property {string} nickname - 회원가입 별명
+ * @property {string} social - 소셜 가입 플랫폼 (null 허용)
+ * @property {string} profileImage - 소셜 가입시 프로필 이미지 (null 허용)
+ */
+/**
+ * 회원가입
+ * @typedef {function} registerUser
+ * @param {RegisterData} registerData
+ * @returns {Promise<Boolean>} isRegistered
+ */
+const registerUser = registerData => publicAPI.post('', registerData);
 
 /**
  * @typedef {object} LoginData
@@ -7,16 +27,6 @@ import { instance, instanceAuth } from '@/api';
  * @property {string} id - 로그인 아이디 (소셜 로그인)
  * @property {string} social - 소셜 구분 (소셜 로그인), 아닐 경우 공란
  */
-
-/**
- * @typedef {object} RegisterData
- * @property {string} id - 회원가입 아이디
- * @property {string} password - 회원가입 비밀번호
- * @property {string} email - 회원가입 이메일
- * @property {string} nickname - 회원가입 별명
- * @property {string} social - 회원가입 소셜 가입 플랫폼
- */
-
 /**
  * @typedef {object} User
  * @property {string} email - 이메일
@@ -26,14 +36,6 @@ import { instance, instanceAuth } from '@/api';
  * @property {string} social - 소셜 계정 여부. 소셜 가입이 아닐 때는 null
  * @property {string} token - 로그인 token
  */
-
-/**
- * 회원가입
- * @typedef {function} registerUser
- * @param {RegisterData} registerData
- * @returns {Promise<Boolean>} isRegistered
- */
-const registerUser = registerData => instance.post('', registerData);
 
 /**
  * 로그인

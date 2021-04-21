@@ -12,10 +12,10 @@ export default {
       success: async res => {
         const kakao_account = res.kakao_account;
         const req = {
-          id: res.id,
+          uid: res.id,
           nickname: kakao_account.profile.nickname,
           email: kakao_account.email,
-          profile: kakao_account.profile.profile_image_url,
+          profileImage: kakao_account.profile.profile_image_url,
           social: 'kakao',
         };
         if (division === 'login') {
