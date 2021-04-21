@@ -119,7 +119,6 @@ fabric.properties
 
 
 .gradle/*
-gradle/*
 gradlew
 gradlew.bat
 
