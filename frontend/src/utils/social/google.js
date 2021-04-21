@@ -1,0 +1,67 @@
+import { socialLogin, socialSignup } from '@/utils/social';
+import router from '@/router';
+// import { getUserFromLocalStorage } from '@/utils/webStorage';
+
+const Google = {
+  init() {
+    window.gapi.load('auth2', () => {
+      const auth2 = window.gapi.auth2.init({
+        client_id: process.env.VUE_APP_GOOGLE_CLIENT_ID,
+        cookiepolicy: 'single_host_origin',
+      });
+      this.attachSignin(document.getElementById('loginBtn'), auth2);
+    });
+  },
+
+  attachSignin(element, auth2) {
+    auth2.attachClickHandler(
+      element,
+      {},
+      googleUser => {
+        const profile = googleUser.getBasicProfile();
+        // if (getUserFromLocalStorage()) {
+        //   alert('이미 로그인 되어 있습니다.');
+        //   router.push('/main');
+        //   return;
+        // }
+        const path = router.history.current.path;
+        if (path.includes('login')) {
+          this.login(profile);
+        } else {
+          this.signup(profile);
+        }
+      },
+      error => {
+        alert(JSON.stringify(error, undefined, 2));
+        console.log(JSON.stringify(error, undefined, 2));
+      },
+    );
+  },
+
+  login(profile) {
+    this.makeReq(profile).then(req => {
+      socialLogin(req);
+    });
+  },
+
+  signup(profile) {
+    this.makeReq(profile).then(req => {
+      socialSignup(req);
+    });
+  },
+
+  makeReq(profile) {
+    return new Promise((resolve, reject) => {
+      const req = {
+        id: profile.getId(),
+        nickname: profile.getName(),
+        email: profile.getEmail(),
+        profile: profile.getImageUrl(),
+        social: 'google',
+      };
+      resolve(req);
+    });
+  },
+};
+
+export default Google;
