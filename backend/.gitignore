@@ -1,0 +1,133 @@
+HELP.md
+target/
+!.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+build/
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+### VS Code ###
+.vscode/
+
+/module-api/src/test/resources/
+/module-web/src/main/resources/
+/module-web/src/test/resources/
+/module-api/src/main/resources/
+/.gradle/
+/module-api/build/
+/module-web/build/
+/.gradle/6.7/executionHistory/executionHistory.bin
+/.gradle/6.7/executionHistory/executionHistory.lock
+/.gradle/6.7/fileHashes/fileHashes.bin
+/.gradle/6.7/fileHashes/fileHashes.lock
+/.gradle/6.7/fileHashes/resourceHashesCache.bin
+/.gradle/6.7/javaCompile/classAnalysis.bin
+/.gradle/6.7/javaCompile/jarAnalysis.bin
+/.gradle/6.7/javaCompile/javaCompile.lock
+/.gradle/6.7/javaCompile/taskHistory.bin
+/.gradle/buildOutputCleanup/buildOutputCleanup.lock
+/.gradle/buildOutputCleanup/outputFiles.bin
+/.gradle/checksums/checksums.lock
+/.gradle/checksums/md5-checksums.bin
+/.gradle/checksums/sha1-checksums.bin
+/.idea/modules/thxstore.iml
+/.idea/compiler.xml
+/build.gradle
+
+# Covers JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm, CLion, Android Studio, WebStorm and Rider
+# Reference: https://intellij-support.jetbrains.com/hc/en-us/articles/206544839
+
+# User-specific stuff
+.idea/**/workspace.xml
+.idea/**/tasks.xml
+.idea/**/usage.statistics.xml
+.idea/**/dictionaries
+.idea/**/shelf
+
+# Generated files
+.idea/**/contentModel.xml
+
+# Sensitive or high-churn files
+.idea/**/dataSources/
+.idea/**/dataSources.ids
+.idea/**/dataSources.local.xml
+.idea/**/sqlDataSources.xml
+.idea/**/dynamic.xml
+.idea/**/uiDesigner.xml
+.idea/**/dbnavigator.xml
+
+# Gradle
+.idea/**/gradle.xml
+.idea/**/libraries
+
+# Gradle and Maven with auto-import
+# When using Gradle or Maven with auto-import, you should exclude module files,
+# since they will be recreated, and may cause churn.  Uncomment if using
+# auto-import.
+# .idea/artifacts
+# .idea/compiler.xml
+# .idea/jarRepositories.xml
+# .idea/modules.xml
+# .idea/*.iml
+# .idea/modules
+# *.iml
+# *.ipr
+
+# CMake
+cmake-build-*/
+
+# IntelliJ
+out/
+
+# mpeltonen/sbt-idea plugin
+.idea_modules/
+
+# Cursive Clojure plugin
+.idea/replstate.xml
+
+# Crashlytics plugin (for Android Studio and IntelliJ)
+com_crashlytics_export_strings.xml
+crashlytics.properties
+crashlytics-build.properties
+fabric.properties
+
+# Editor-based Rest Client
+.idea/httpRequests
+
+
+.gradle/*
+gradle/*
+gradlew
+gradlew.bat
+
+.DS_Store
+
+logs/
+logs/**
+
+# Created by .ignore support plugin (hsz.mobi)
+.gradle
+*/build
