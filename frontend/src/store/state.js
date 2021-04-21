@@ -6,7 +6,7 @@ import {
 export default {
   tempUserInfo: {},
   userInfo:Object.assign({
-    id: ,
+    id: '',
     nickname:'',
     email:'',
     profileImg:'',
