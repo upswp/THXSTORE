@@ -33,6 +33,7 @@
 
 <script>
 import ValidationMixin from '@/mixins/auth/validation';
+import { registerUser } from '@/api/auth';
 export default {
   mixins: [ValidationMixin],
   data() {
@@ -46,6 +47,12 @@ export default {
         this.$store.state.tempUserInfo,
       ),
     };
+  },
+  methods: {
+    async submitForm() {
+      await registerUser(this.userData);
+      this.$store.dispatch('LOGIN', this.userData);
+    },
   },
 };
 </script>
