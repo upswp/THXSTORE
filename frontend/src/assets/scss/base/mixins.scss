@@ -1,0 +1,380 @@
+@import "color";
+@import "flexbox";
+@import "functions";
+
+// 이곳에서 미리 설정된 규격을 @include 해서 사용하면 된다.
+@mixin display1 {
+  font-size: 48px;
+  line-height: 120%;
+  font-weight: $bold;
+}
+@mixin headline1 {
+  font-size: 32px;
+  line-height: 130%;
+  font-weight: $bold;
+}
+@mixin headline2 {
+  font-size: 28px;
+  line-height: 130%;
+  font-weight: $bold;
+}
+@mixin headline3 {
+  font-size: 26px;
+  line-height: 130%;
+  font-weight: $bold;
+}
+@mixin headline4 {
+  font-size: 24px;
+  line-height: 125%;
+  font-weight: $bold;
+}
+@mixin headline5 {
+  font-size: 22px;
+  line-height: 135%;
+  font-weight: $normal;
+}
+@mixin headline6 {
+  font-size: 18px;
+  line-height: 135%;
+  font-weight: $bold;
+}
+@mixin body1 {
+  font-size: 16px;
+  line-height: 150%;
+  font-weight: $normal;
+}
+@mixin body2 {
+  font-size: 14px;
+  line-height: 150%;
+  font-weight: $normal;
+}
+@mixin caption1 {
+  font-size: 12px;
+  line-height: 110%;
+  font-weight: $light;
+}
+@mixin caption2 {
+  font-size: 10px;
+  line-height: 100%;
+  font-weight: $light;
+}
+@mixin f-thin {
+  font-weight: $thin;
+}
+
+@mixin f-light {
+  font-weight: $light;
+}
+
+@mixin f-normal {
+  font-weight: $normal !important;
+}
+
+@mixin f-medi {
+  font-weight: $medi;
+}
+
+@mixin f-bold {
+  font-weight: $bold;
+}
+// clearfix는 float으로 인해서 생기는 배치 문제를 해결할 수 있다. 참조) https://takeuu.tistory.com/60
+@mixin clearfix {
+  *zoom: 1;
+  &:before,
+  &:after {
+    content: " "; // 1
+    display: table; // 2
+  }
+  &:after {
+    // 주변의 float이 오른쪽에 걸리든, 왼쪽에 걸리든 양쪽 모두 없애기
+    clear: both;
+  }
+}
+
+// 툴팁 등에 사용
+@mixin shadow1 {
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.1);
+}
+// 모바일 카드를 감싼 box 등에 사용
+@mixin shadow2 {
+  box-shadow: 0 5px 10px 1px rgba(0, 0, 0, 0.03);
+}
+// topbar, header 등에 사용
+@mixin shadow3 {
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+// xlarge 버튼 등에 사용
+@mixin shadow4 {
+  box-shadow: 0 3px 7px rgba(0, 0, 0, 0.06);
+}
+
+@mixin transition($transition) {
+  -webkit-transition: $transition;
+  -moz-transition: $transition;
+  -ms-transition: $transition;
+  -o-transition: $transition;
+  transition: $transition;
+}
+
+@mixin transform($transform) {
+  transform: $transform;
+  -moz-transform: $transform;
+  -ms-transform: $transform;
+  -o-transform: $transform;
+  -webkit-transform: $transform;
+}
+
+//  # cross-browsing
+
+@mixin opacity($opacity) {
+  opacity: $opacity;
+  // IE8 filter
+  $opacity-ie: ($opacity * 100);
+  //filter: ~"alpha(opacity=${opacity-ie})";
+}
+
+//  # box, border, shadow, line
+@mixin border-radius($radius) {
+  -webkit-border-radius: $radius;
+  -moz-border-radius: $radius;
+  border-radius: $radius;
+}
+
+@mixin get-columns-width-pc($cols) {
+  @include pc {
+    -ms-flex: ($container-width-pc - $grid-gutter-width-pc * ($grid-columns-pc - 1) ) / $grid-columns-pc * $cols + $grid-gutter-width-pc * ($cols - 1);
+    flex: ($container-width-pc - $grid-gutter-width-pc * ($grid-columns-pc - 1) ) / $grid-columns-pc * $cols + $grid-gutter-width-pc * ($cols - 1);
+  }
+}
+
+@mixin get-columns-width-mobile($cols) {
+  @include mobile {
+    -ms-flex: ($container-width-mobile - $grid-gutter-width-mobile * ($grid-columns-mobile - 1) ) / $grid-columns-mobile * $cols + $grid-gutter-width-mobile * ($cols - 1);
+    flex: ($container-width-mobile - $grid-gutter-width-mobile * ($grid-columns-mobile - 1) ) / $grid-columns-mobile * $cols + $grid-gutter-width-mobile * ($cols - 1);
+  }
+}
+
+@mixin inline-block() {
+  display: -moz-inline-stack;
+  display: inline-block;
+  zoom: 1;
+  *display: inline;
+}
+
+@mixin pc {
+  @media only screen and (min-width: $screen-sm) { @content }
+}
+
+@mixin mobile {
+  @media only screen and (max-width: $screen-sm) { @content }
+}
+
+
+@mixin placeholder {
+  &::-webkit-input-placeholder { @content }
+  &:-moz-placeholder           { @content }
+  &::-moz-placeholder          { @content }
+  &:-ms-input-placeholder      { @content }
+  &::-ms-input-placeholder     { @content }
+  &::placeholder               {
+    @content;
+    opacity: 1;
+  }
+}
+
+@mixin ellipsis($clamp: 1, $word-break: keep-all) {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: $clamp;
+  -webkit-box-orient: vertical;
+  word-wrap: break-word;
+  word-break: $word-break;
+}
+
+@mixin disabled {
+  cursor: not-allowed !important;
+  pointer-events: none;
+}
+
+@mixin selection($background) {
+  // ::selection은 마우스 드래그 등으로 선택한 텍스트를 선택
+  @if is-number($background) {
+    // 숫자가 들어올 경우, 
+    $color: inherit;
+    $cursor: text;
+    ::selection {
+      color: $color;
+      background-color: darken(#FFF, $background); // scss에서 제공하는 색상 함수, 색, 정도(% 단위로 적용. %를 직접 안적어도 됨)
+      // background-color: fade(#000, $background);
+      cursor: $cursor;
+    }
+    ::-moz-selection {
+      color: $color;
+      background-color: darken(#FFF, $background);
+      // background-color: fade(#000, $background);
+      cursor: $cursor;
+    }
+  } @else {
+    $color:white;
+    $cursor:text;
+    ::selection      { color: $color; background-color: $background; cursor: $cursor; }
+    ::-moz-selection { color: $color; background-color: $background; cursor: $cursor; }
+  }
+}
+
+@mixin user-select($select) {
+  // 텍스트 선택이 가능하게 할지 안되게 할지 설정 => $select는 auto, all ,none, text가 옴. 기본은 text, 선택 안되게 하려면 none으로 할 것
+  -webkit-user-select: $select;
+  -moz-user-select: $select;
+  -ms-user-select: $select; // IE10+
+  user-select: $select;
+}
+
+@mixin remove-active-and-focus() {
+  &:active, &:focus {
+    background: transparent;
+  }
+}
+
+@mixin spacing {
+  // 간격 조절
+  $sides: ("b": "bottom", "t": "top", "l": "left", "r": "right", "": "all",  "x": "x", "y": "y");
+  $size: 2;
+  $units: 50;
+
+  @each $prefix, $value in $sides {
+    .m#{$prefix} {
+      &-auto {
+        @if $prefix == "" {
+          margin: auto !important;
+        } @else if $prefix == "x" {
+          margin-left: auto !important;
+          margin-right: auto !important;
+        } @else if $prefix == "y" {
+          margin-top: auto !important;
+          margin-bottom: auto !important;
+        } @else {
+          margin-#{$value}: auto !important;
+        }
+      }
+    }
+
+    @for $i from 0 through $units {
+      .m#{$prefix} {
+        &-#{($i * $size)} {
+          @if $prefix == "" {
+            margin: #{($i * $size)}px !important;
+          } @else if $prefix == "x" {
+            margin-left: #{($i * $size)}px !important;
+            margin-right: #{($i * $size)}px !important;
+          } @else if $prefix == "y" {
+            margin-top: #{($i * $size)}px !important;
+            margin-bottom: #{($i * $size)}px !important;
+          } @else {
+            margin-#{$value}: #{($i * $size)}px !important;
+          }
+        }
+      }
+      .p#{$prefix} {
+        &-#{($i * $size)} {
+          @if $prefix == "" {
+            padding: #{($i * $size)}px !important;
+          } @else if $prefix == "x" {
+            padding-left: #{($i * $size)}px !important;
+            padding-right: #{($i * $size)}px !important;
+          } @else if $prefix == "y" {
+            padding-top: #{($i * $size)}px !important;
+            padding-bottom: #{($i * $size)}px !important;
+          } @else {
+            padding-#{$value}: #{($i * $size)}px !important;
+          }
+        }
+      }
+    }
+  }
+}
+
+@mixin skeleton {
+  vertical-align: middle;
+  background-color: #fafafa;
+  position: relative;
+  overflow: hidden;
+  &:after{
+  position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    -webkit-transform: translateX(-100%);
+    transform: translateX(-100%);
+    background-image: -webkit-gradient(linear,left top,right top,color-stop(0,rgba(225,228,231,0)),color-stop(20%,rgba(225,228,231,.2)),color-stop(60%,rgba(225,228,231,.5)),to(rgba(225,228,231,0)));
+    background-image: linear-gradient(
+90deg
+,rgba(225,228,231,0),rgba(225,228,231,.2) 20%,rgba(225,228,231,.5) 60%,rgba(225,228,231,0));
+    -webkit-animation: load 1.5s infinite;
+    animation: load 1.5s infinite;
+    content: "";
+  }
+}
+
+@keyframes load {
+  from {
+      left: -150px;
+  }
+  to   {
+      left: 100%;
+  }
+}
+
+@mixin vue-transition($name) {
+  // mask
+.#{$name}-enter-active,
+.#{$name}-leave-active {
+  @include transition( all 0.5s);
+}
+.#{$name}-enter, .#{$name}-leave-to /* .fade-leave-active below version 2.1.8 */ {
+ @content; 
+}
+}
+@mixin box-shadow{
+  box-shadow: rgba(0, 0, 0, 0.1) 0 0 19px;
+}
+// https://markus.oberlehner.net/blog/vue-router-page-transitions/#slide-transition 참조
+@mixin slide-transition{
+  .slide-left-enter-active,
+    .slide-left-leave-active,
+    .slide-right-enter-active,
+    .slide-right-leave-active {
+      transition-duration: 0.5s;
+      transition-property: height, opacity, transform;
+      transition-timing-function: cubic-bezier(0.55, 0, 0.1, 1);
+      overflow: hidden;
+    }
+
+    .slide-left-enter,
+    .slide-right-leave-active {
+      opacity: 0;
+      @include transform(translate(2em, 0));
+    }
+
+    .slide-left-leave-active,
+    .slide-right-enter {
+      opacity: 0;
+      @include transform(translate(-2em, 0));
+    }
+}
+
+@mixin fade-transition($name){
+  .#{$name}-enter-active,
+.#{$name}-leave-active {
+  transition-duration: 0.5s;
+  transition-property: opacity;
+  transition-timing-function: ease;
+}
+
+.#{$name}-enter,
+.#{$name}-leave-active {
+  opacity: 0
+}
+}
