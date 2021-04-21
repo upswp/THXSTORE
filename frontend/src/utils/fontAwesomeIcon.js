@@ -33,6 +33,8 @@ import {
   faCrown,
   faComment,
   faStore,
+  faFrownOpen,
+  faUnlockAlt,
 } from '@fortawesome/free-solid-svg-icons';
 library.add(
   faUser,
@@ -64,6 +66,8 @@ library.add(
   faCrown,
   faComment,
   faStore,
+  faFrownOpen,
+  faUnlockAlt,
 );
 
 import {

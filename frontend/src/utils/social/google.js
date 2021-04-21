@@ -19,7 +19,6 @@ const Google = {
       {},
       googleUser => {
         const profile = googleUser.getBasicProfile();
-
         // if (getUserFromLocalStorage()) {
         //   alert('이미 로그인 되어 있습니다.');
         //   router.push('/main');

@@ -26,6 +26,17 @@ const routesForAuth = [
       //   path: 'findPassword',
       //   component: () => import('@/components/auth/FindPassword.vue'),
       // },
+      {
+        path: 'mailcode',
+        name: 'mailcode',
+        component: () => import('@/components/auth/MailCodeForm.vue'),
+        meta: { transitionName: 'slide' },
+      },
+      {
+        path: 'findpassword',
+        component: () => import('@/components/auth/FindPassword.vue'),
+        meta: { transitionName: 'slide' },
+      },
     ],
   },
   {
