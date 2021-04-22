@@ -367,10 +367,10 @@
     }
 }
 
-@mixin fade-transition($name){
+@mixin fade-transition($name, $time){
   .#{$name}-enter-active,
 .#{$name}-leave-active {
-  transition-duration: 0.5s;
+  transition-duration: $time;
   transition-property: opacity;
   transition-timing-function: ease;
 }
