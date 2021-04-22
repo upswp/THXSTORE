@@ -5,7 +5,7 @@ const privateAPI = createInstanceWithToken('api/member/');
 
 /**
  * @typedef {object} RegisterData
- * @property {string} uid - 회원가입 아이디 (null 허용)
+ * @property {string} userId - 회원가입 아이디 (null 허용)
  * @property {string} email - 회원가입 이메일
  * @property {string} password - 회원가입 비밀번호
  * @property {string} nickname - 회원가입 별명
@@ -14,15 +14,15 @@ const privateAPI = createInstanceWithToken('api/member/');
  */
 /**
  * @typedef {object} LoginData
+ * @property {string} userId - 로그인 아이디 (소셜 로그인)
  * @property {string} email - 로그인 이메일 (일반 유저)
  * @property {string} password - 로그인 비밀번호
- * @property {string} id - 로그인 아이디 (소셜 로그인)
- * @property {string} social - 소셜 구분 (소셜 로그인), 아닐 경우 공란
+ * @property {string} social - 소셜 구분 (소셜 로그인), 아닐 경우 null
  */
 /**
  * @typedef {object} User
  * @property {string} email - 이메일
- * @property {string} id - 아이디
+ * @property {string} userId - 아이디
  * @property {string} nickname - 별명
  * @property {string} profile - 프로필 이미지 경로
  * @property {string} social - 소셜 계정 여부. 소셜 가입이 아닐 때는 null
@@ -43,7 +43,7 @@ const registerUser = registerData => publicAPI.post('', registerData);
  * @param {LoginData} loginData
  * @returns {Promise<User>} userData
  */
-const loginUser = loginData => publicAPI.post('', loginData);
+const loginUser = loginData => publicAPI.post('user/login', loginData);
 
 /**
  * 이메일 중복채크
@@ -60,14 +60,14 @@ const emailCheck = email =>
 /**
  * 아이디, 소셜 중복채크
  * @typedef {function} socialCheck
- * @param {string} uid
+ * @param {string} userId
  * @param {string} social
  * @returns {Promise<Boolean>} 중복 여부
  */
-const socialCheck = (uid, social) =>
+const socialCheck = (userId, social) =>
   publicAPI.get('user/', {
     params: {
-      uid,
+      userId,
       social,
     },
   });

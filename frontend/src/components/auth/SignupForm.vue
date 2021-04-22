@@ -71,7 +71,7 @@ export default {
     async submitForm() {
       try {
         const userData = {
-          uid: null,
+          userId: null,
           email: this.email,
           password: this.password1,
           nickname: this.nickname,
