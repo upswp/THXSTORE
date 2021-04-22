@@ -8,4 +8,7 @@ export default {
   setToken(state, token) {
     state.token = token;
   },
+  toggleMainDrawerOpen(state) {
+    state.mainDrawerOpen = !state.mainDrawerOpen;
+  },
 };

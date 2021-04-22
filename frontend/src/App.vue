@@ -4,20 +4,7 @@
   </div>
 </template>
 <script>
-export default {
-  data() {
-    return {
-      key: 0,
-    };
-  },
-  watch: {
-    key(newValue, oldValue) {
-      return newValue;
-    },
-  },
-
-  created() {},
-};
+export default {};
 </script>
 <style lang="scss">
 #app {

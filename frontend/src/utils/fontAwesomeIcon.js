@@ -4,7 +4,6 @@ import { library } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
 import {
-  faUser,
   faExchangeAlt,
   faTrashAlt,
   faAlignLeft,
@@ -35,9 +34,10 @@ import {
   faStore,
   faFrownOpen,
   faUnlockAlt,
+  faBars,
+  faUserCircle,
 } from '@fortawesome/free-solid-svg-icons';
 library.add(
-  faUser,
   faExchangeAlt,
   faTrashAlt,
   faAlignLeft,
@@ -68,6 +68,8 @@ library.add(
   faStore,
   faFrownOpen,
   faUnlockAlt,
+  faBars,
+  faUserCircle,
 );
 
 import {
