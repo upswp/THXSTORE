@@ -1,12 +1,9 @@
 package com.ssafy.thxstore.controller.member;
 
 import com.ssafy.thxstore.controller.common.ErrorsResource;
-import com.ssafy.thxstore.domain.Member;
-import com.ssafy.thxstore.domain.SignupRequest;
-import com.ssafy.thxstore.member.MemberService;
+import com.ssafy.thxstore.member.dto.MemberDto;
+import com.ssafy.thxstore.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
-import org.modelmapper.ModelMapper;
-import org.springframework.http.RequestEntity;
 import org.springframework.validation.Errors;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,12 +20,12 @@ public class MemberController {
     private final MemberValidator memberValidator;
 
     @PostMapping("/user/")
-    public ResponseEntity signupMember(@RequestBody @Valid SignupRequest signupRequest, Errors errors){
+    public ResponseEntity signupMember(@RequestBody @Valid MemberDto memberDto, Errors errors){
         if(errors.hasErrors()){
             return badRequest(errors);
         }
-        memberService.saveMember(signupRequest);
-        return ResponseEntity.ok(signupRequest);
+        memberService.saveMember(memberDto);
+        return ResponseEntity.ok(memberDto);
     }
 
     private ResponseEntity badRequest(Errors errors) {
