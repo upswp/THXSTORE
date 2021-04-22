@@ -4,10 +4,11 @@ export default {
   tempUserInfo: {},
   userInfo: Object.assign(
     {
-      id: '',
-      nickname: '',
+      uid: '',
       email: '',
-      profileImg: '',
+      nickname: '',
+      social: '',
+      profileImage: '',
     },
     getUserFromLocalStorage(),
   ),

@@ -3,7 +3,7 @@ export default {
     state.tempUserInfo = Object.assign(state.tempUserInfo, tmpUserInfo);
   },
   setUserInfo(state, userInfo) {
-    state.tempUserInfo = Object.assign(state.tempUserInfo, userInfo);
+    state.userInfo = Object.assign(state.userInfo, userInfo);
   },
   setToken(state, token) {
     state.token = token;

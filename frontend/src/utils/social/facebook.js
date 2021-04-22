@@ -47,10 +47,10 @@ const Facebook = {
                   this.LoginFailure();
                 }
                 const req_body = {
-                  id: res.id,
-                  nickname: res.name,
+                  uid: res.id,
                   email: res.email,
-                  profile: res.picture.data.url,
+                  nickname: res.name,
+                  profileImage: res.picture.data.url,
                   social: 'facebook',
                 };
                 resolve(req_body);
