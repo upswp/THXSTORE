@@ -1,4 +1,4 @@
-package com.ssafy.thxstore.config;
+package com.ssafy.thxstore.member.dto;
 
 public enum  MemberRole {
     USER, MANAGER, ADMIN;

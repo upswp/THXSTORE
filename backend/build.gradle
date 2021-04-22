@@ -1,0 +1,62 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '2.3.9.RELEASE'
+    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+}
+
+repositories {
+    mavenCentral()
+}
+
+//새롭게 추가될 모듈들에 공통적으로 적용될 내용 (setting.gradle 에 포함된 프로젝트 전부 관리)
+subprojects {
+
+    group 'com.ssafy'
+    version '1.0'
+
+    repositories {
+        mavenCentral()
+    }
+
+    apply plugin: 'java'
+    apply plugin: 'org.springframework.boot'
+    apply plugin: 'io.spring.dependency-management'
+
+    sourceCompatibility = 11
+
+    dependencies {
+        //TODO project 진행사항 이후 dependencies 설정 진행하기.
+        testImplementation group: 'org.springframework.restdocs', name: 'spring-restdocs-mockmvc', version: '2.0.4.RELEASE'
+        implementation group: 'org.springframework.security.oauth.boot', name: 'spring-security-oauth2-autoconfigure', version: '2.4.4'
+        compile('org.springframework.boot:spring-boot-starter-web')
+        implementation('org.springframework.boot:spring-boot-starter-data-jpa')
+        implementation group: 'org.springframework.boot', name: 'spring-boot-starter-hateoas'
+        implementation group: 'org.springframework.boot', name: 'spring-boot-starter-web'
+        implementation group: 'org.springframework.boot', name: 'spring-boot-starter-validation'
+        implementation group: 'org.modelmapper', name: 'modelmapper', version: '2.3.8'
+        implementation group: 'mysql', name: 'mysql-connector-java', version: '8.0.22'
+        compile('org.springframework.boot:spring-boot-starter-jdbc')
+        implementation 'org.projectlombok:lombok'
+        testImplementation 'org.springframework.boot:spring-boot-starter-test'
+        testCompile group: 'junit', name: 'junit', version: '4.12'
+        annotationProcessor 'org.projectlombok:lombok'
+        implementation 'org.projectlombok:lombok'
+    }
+}
+
+//module-api와 module-web은 모두 module-common에 의존
+project(':module-api') {
+    dependencies {
+        compile project(':module-common')
+    }
+}
+project(':module-web') {
+    dependencies {
+        compile project(':module-common')
+    }
+}
+project(':module-web') {
+    dependencies {
+        compile project(':module-api')
+    }
+}
