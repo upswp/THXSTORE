@@ -13,4 +13,5 @@ export default {
     getUserFromLocalStorage(),
   ),
   token: getTokenFromLocalStorage() || '',
+  mainDrawerOpen: true,
 };

@@ -2,7 +2,7 @@
   <div class="auth-container">
     <header>
       <ul class="header-wrap">
-        <li><awesome icon="store" class="fas fa-store"></awesome></li>
+        <li><awesome icon="store" class="store"></awesome></li>
         <li><span class="title">Thx!Store</span></li>
       </ul>
     </header>
@@ -119,7 +119,7 @@ export default {
         color: white;
         @include auth-transition(color);
       }
-      .fas.fa-store {
+      .store {
         font-size: 2rem;
         padding-right: 0.3rem;
       }
