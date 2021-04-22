@@ -1,8 +1,9 @@
-package com.ssafy.thxstore.member;
+package com.ssafy.thxstore.member.service;
 
-import com.ssafy.thxstore.config.MemberRole;
-import com.ssafy.thxstore.domain.Member;
-import com.ssafy.thxstore.domain.SignupRequest;
+import com.ssafy.thxstore.member.dto.Member;
+import com.ssafy.thxstore.member.dto.MemberDto;
+import com.ssafy.thxstore.member.dto.MemberRole;
+import com.ssafy.thxstore.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.core.GrantedAuthority;
@@ -26,8 +27,8 @@ public class MemberService implements UserDetailsService {
     private final ModelMapper modelMapper;
     private final PasswordEncoder passwordEncoder;
 
-    public Member saveMember(SignupRequest signupRequest) {
-        Member member = modelMapper.map(signupRequest, Member.class);
+    public Member saveMember(MemberDto memberDto) {
+        Member member = modelMapper.map(memberDto, Member.class);
         Member newMember = this.memberRepository.save(member);
         member.setPassword(this.passwordEncoder.encode(member.getPassword()));
         return this.memberRepository.save(member);

@@ -1,7 +1,7 @@
 package com.ssafy.thxstore.controller.member;
 
 
-import com.ssafy.thxstore.domain.Member;
+import com.ssafy.thxstore.member.dto.Member;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.Link;
 

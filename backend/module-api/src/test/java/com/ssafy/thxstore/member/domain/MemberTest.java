@@ -1,6 +1,6 @@
-package com.ssafy.thxstore.domain;
+package com.ssafy.thxstore.member.domain;
 
-import lombok.val;
+import com.ssafy.thxstore.member.dto.Member;
 import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;

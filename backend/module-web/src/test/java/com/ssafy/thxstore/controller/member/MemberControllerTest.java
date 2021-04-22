@@ -1,9 +1,9 @@
 package com.ssafy.thxstore.controller.member;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ssafy.thxstore.config.MemberRole;
-import com.ssafy.thxstore.domain.SignupRequest;
 import com.ssafy.thxstore.controller.common.RestDocsConfiguration;
+import com.ssafy.thxstore.member.dto.MemberDto;
+import com.ssafy.thxstore.member.dto.MemberRole;
 import lombok.RequiredArgsConstructor;
 import org.junit.Test;
 import org.junit.jupiter.api.DisplayName;
@@ -45,7 +45,7 @@ public class MemberControllerTest {
     @Test
     @DisplayName("정상적으로 멤버를 생성하는 테스트")
     public void createMember() throws Exception{
-        SignupRequest member = SignupRequest.builder()
+        MemberDto member = MemberDto.builder()
                 .email("test@gmail.com")
                 .password("TestWord1234")
                 .nickName("HelloTHXStore")
