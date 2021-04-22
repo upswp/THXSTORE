@@ -131,8 +131,8 @@ export default {
       @include slide-transition;
     }
     @include mobile {
-      @include fade-transition(slide-right);
-      @include fade-transition(slide-left);
+      @include fade-transition(slide-right, 0.5s);
+      @include fade-transition(slide-left, 0.5s);
     }
     main {
       @include flexbox();
