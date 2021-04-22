@@ -3,7 +3,7 @@ package com.ssafy.thxstore.store.domain;
 import com.ssafy.thxstore.common.ColumnDescription;
 import com.ssafy.thxstore.member.dto.Favorite;
 import com.ssafy.thxstore.member.dto.Member;
-import com.ssafy.thxstore.order.domain.Order;
+import com.ssafy.thxstore.reservation.domain.Reservation;
 import com.ssafy.thxstore.product.domain.Product;
 import lombok.*;
 
@@ -40,7 +40,7 @@ public class Store {
 
     @ColumnDescription("FK")
     @OneToMany
-    private List<Order> orderList = new ArrayList<>();
+    private List<Reservation> reservationList = new ArrayList<>();
 
     @ColumnDescription("유저가 좋아하는 가게 리스트")
     @OneToMany
