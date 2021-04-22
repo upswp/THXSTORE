@@ -1,4 +1,4 @@
-package com.ssafy.thxstore.order.domain;
+package com.ssafy.thxstore.reservation.domain;
 
 import com.ssafy.thxstore.common.ColumnDescription;
 import com.ssafy.thxstore.member.dto.Member;
@@ -16,12 +16,12 @@ import java.util.Date;
 @Getter
 @Setter
 @EqualsAndHashCode(of = "id")
-public class Order {
+public class Reservation {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "order_sequence_gen")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "reservation_sequence_gen")
     @SequenceGenerator(
-            name = "order_sequence_gen",
-            sequenceName = "order_sequence"
+            name = "reservation_sequence_gen",
+            sequenceName = "reservation_sequence"
     )
     @ColumnDescription("PK")
     private Long id;
@@ -42,8 +42,8 @@ public class Order {
     private Date createOrder;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "order_status")
+    @Column(name = "reservation_status")
     @ColumnDescription("오더 상황")
-    private OrderStatus orderStatus = OrderStatus.DEFAULT;
+    private ReservationStatus reservationStatus = ReservationStatus.DEFAULT;
 
 }

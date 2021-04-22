@@ -1,7 +1,7 @@
 package com.ssafy.thxstore.member.dto;
 
 import com.ssafy.thxstore.common.ColumnDescription;
-import com.ssafy.thxstore.order.domain.Order;
+import com.ssafy.thxstore.reservation.domain.Reservation;
 import lombok.*;
 
 import javax.persistence.*;
@@ -35,7 +35,7 @@ public class Member {
 
     @ColumnDescription("유저가 주문한 리스트[오더리스트]")
     @OneToMany
-    private List<Order> orderList  = new ArrayList<>();
+    private List<Reservation> reservationList = new ArrayList<>();
 
     @ColumnDescription("유저 ID")
     @Column(name = "user_id")
