@@ -2,6 +2,9 @@
   <div class="main-container">
     <main-header></main-header>
     <main-aside></main-aside>
+    <div class="main-contents">
+      <router-view></router-view>
+    </div>
   </div>
 </template>
 
@@ -19,5 +22,8 @@ export default {
 <style lang="scss" scoped>
 .main-container {
   z-index: 0;
+  .main-contents {
+    padding: 60px 20px 30px 20px;
+  }
 }
 </style>
