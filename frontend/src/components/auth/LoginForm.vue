@@ -49,11 +49,32 @@ export default {
   },
 
   methods: {
-    submitForm() {
-      console.log('submit');
-    },
     moveToPage(name) {
       this.$router.push({ name });
+    },
+    kakaoLogin() {
+      this.$_Kakao.login();
+    },
+    facebookLogin() {
+      this.$_Facebook.login();
+    },
+    googleLogin() {
+      this.$_Google.login();
+    },
+    async submitForm() {
+      try {
+        await this.$store.dispatch('LOGIN', {
+          userId: null,
+          email: this.userData.id,
+          password: this.userData.password,
+          social: null,
+        });
+        this.$router.push({ name: 'main' });
+      } catch (error) {
+        if (confirm('아직 가입되지 않은 회원입니다. \n회원가입 화면으로 이동하시겠습니까?')) {
+          this.router.push({ name: 'signup' });
+        }
+      }
     },
   },
 };

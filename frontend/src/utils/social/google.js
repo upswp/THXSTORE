@@ -53,7 +53,7 @@ const Google = {
   makeReq(profile) {
     return new Promise((resolve, reject) => {
       const req = {
-        uid: profile.getId(),
+        userId: profile.getId(),
         nickname: profile.getName(),
         email: profile.getEmail(),
         profileImage: profile.getImageUrl(),

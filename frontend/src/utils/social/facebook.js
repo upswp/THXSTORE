@@ -47,7 +47,7 @@ const Facebook = {
                   this.LoginFailure();
                 }
                 const req_body = {
-                  uid: res.id,
+                  userId: res.id,
                   email: res.email,
                   nickname: res.name,
                   profileImage: res.picture.data.url,

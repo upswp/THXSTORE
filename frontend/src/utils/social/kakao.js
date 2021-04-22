@@ -12,7 +12,7 @@ export default {
       success: async res => {
         const kakao_account = res.kakao_account;
         const req = {
-          uid: res.id,
+          userId: res.id,
           nickname: kakao_account.profile.nickname,
           email: kakao_account.email,
           profileImage: kakao_account.profile.profile_image_url,

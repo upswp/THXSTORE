@@ -4,7 +4,7 @@ export default {
   tempUserInfo: {},
   userInfo: Object.assign(
     {
-      uid: '',
+      userId: '',
       email: '',
       nickname: '',
       social: '',
