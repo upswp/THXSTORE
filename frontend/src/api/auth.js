@@ -13,14 +13,6 @@ const privateAPI = createInstanceWithToken('api/member/');
  * @property {string} profileImage - 소셜 가입시 프로필 이미지 (null 허용)
  */
 /**
- * 회원가입
- * @typedef {function} registerUser
- * @param {RegisterData} registerData
- * @returns {Promise<Boolean>} isRegistered
- */
-const registerUser = registerData => publicAPI.post('', registerData);
-
-/**
  * @typedef {object} LoginData
  * @property {string} email - 로그인 이메일 (일반 유저)
  * @property {string} password - 로그인 비밀번호
@@ -36,6 +28,14 @@ const registerUser = registerData => publicAPI.post('', registerData);
  * @property {string} social - 소셜 계정 여부. 소셜 가입이 아닐 때는 null
  * @property {string} token - 로그인 token
  */
+
+/**
+ * 회원가입
+ * @typedef {function} registerUser
+ * @param {RegisterData} registerData
+ * @returns {Promise<Boolean>} isRegistered
+ */
+const registerUser = registerData => publicAPI.post('', registerData);
 
 /**
  * 로그인
@@ -57,7 +57,22 @@ const emailCheck = email =>
       email,
     },
   });
+/**
+ * 아이디, 소셜 중복채크
+ * @typedef {function} socialCheck
+ * @param {string} uid
+ * @param {string} social
+ * @returns {Promise<Boolean>} 중복 여부
+ */
+const socialCheck = (uid, social) =>
+  publicAPI.get('user/', {
+    params: {
+      uid,
+      social,
+    },
+  });
+
 const authWithEmailForPwd = userData => publicAPI.post('', userData);
 const resetPwd = userData => privateAPI.put('', userData);
 
-export { registerUser, loginUser, emailCheck, authWithEmailForPwd, resetPwd };
+export { registerUser, loginUser, emailCheck, socialCheck, authWithEmailForPwd, resetPwd };
