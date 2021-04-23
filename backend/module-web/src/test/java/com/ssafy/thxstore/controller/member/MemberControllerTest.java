@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ssafy.thxstore.controller.common.RestDocsConfiguration;
 import com.ssafy.thxstore.member.dto.MemberDto;
 import com.ssafy.thxstore.member.dto.MemberRole;
+import com.ssafy.thxstore.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.junit.Test;
 import org.junit.jupiter.api.DisplayName;
@@ -11,6 +12,7 @@ import org.junit.runner.RunWith;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.http.HttpHeaders;
@@ -40,7 +42,8 @@ public class MemberControllerTest {
 
     private final ObjectMapper objectMapper;
 
-//    private final MemberRepository memberRepository;
+    @MockBean
+    private final MemberRepository memberRepository;
 
     @Test
     @DisplayName("정상적으로 멤버를 생성하는 테스트")
@@ -48,7 +51,6 @@ public class MemberControllerTest {
         MemberDto member = MemberDto.builder()
                 .email("test@gmail.com")
                 .password("TestWord1234")
-                .nickName("HelloTHXStore")
                 .build();
         mockMvc.perform(post("/api/member/user/")
                     .contentType(MediaType.APPLICATION_JSON)
@@ -61,7 +63,7 @@ public class MemberControllerTest {
                 .andExpect(header().string(HttpHeaders.CONTENT_TYPE,MediaTypes.HAL_JSON_VALUE))
                 .andExpect(jsonPath("memberType").value(MemberRole.USER))
                 .andExpect(jsonPath("_links.self").exists())
-                .andExpect(jsonPath("_links.create-member").exists())
+                .andExpect(jsonPath("_links.register-member").exists())
                 .andDo(document("create-member",
                         links(
                                 linkWithRel("self").description("link to self"),
@@ -92,7 +94,7 @@ public class MemberControllerTest {
                                 fieldWithPath("memberType").description("memberType of user"),
 
                                 fieldWithPath("_links.self").description("link to self"),
-                                fieldWithPath("_links.create-member").description("link to create-member"),
+                                fieldWithPath("_links.register-member").description("link to create-member"),
                                 fieldWithPath("_links.profile").description("link to profile")
                         )
                 ));
