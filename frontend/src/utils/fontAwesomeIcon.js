@@ -3,8 +3,8 @@ import Vue from 'vue';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
-import { faStore, faBars, faUserCircle, faMeteor } from '@fortawesome/free-solid-svg-icons';
-library.add(faStore, faBars, faUserCircle, faMeteor);
+import { faStore, faBars, faUserCircle, faMeteor, faFrown } from '@fortawesome/free-solid-svg-icons';
+library.add(faStore, faBars, faUserCircle, faMeteor, faFrown);
 
 import {
   faClock as farClock,
@@ -14,7 +14,9 @@ import {
   faCheckCircle as farCheckCircle,
   faMeh as farMeh,
   faHeart as farHeart,
+  faFrown as farFrown,
+  faSmileWink as farSmileWink,
 } from '@fortawesome/free-regular-svg-icons';
-library.add(farClock, farClipboard, farCheckSquare, farUser, farCheckCircle, farMeh, farHeart);
+library.add(farClock, farClipboard, farCheckSquare, farUser, farCheckCircle, farMeh, farHeart, farFrown, farSmileWink);
 
 Vue.component('awesome', FontAwesomeIcon);
