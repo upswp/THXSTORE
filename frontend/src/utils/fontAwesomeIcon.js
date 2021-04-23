@@ -3,6 +3,7 @@ import Vue from 'vue';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
+<<<<<<< HEAD
 import {
   faStore,
   faBars,
@@ -29,6 +30,10 @@ library.add(
   faCloudUploadAlt,
   faTimes,
 );
+=======
+import { faStore, faBars, faUserCircle, faMeteor, faFrown } from '@fortawesome/free-solid-svg-icons';
+library.add(faStore, faBars, faUserCircle, faMeteor, faFrown);
+>>>>>>> a2fc403 ([S04P31B202-111] feat: 메일인증 및 비밀번호 재설정)
 
 import {
   faClock as farClock,
