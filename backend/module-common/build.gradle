@@ -18,16 +18,7 @@
 //    useJUnitPlatform()
 //}
 
-//전체 빌드 시 문제 생기면 common 의 jar 생성 막기
-bootJar { enabled = false}
+
 jar {enabled = true}
-
 dependencies {
-    //spring
-
-
-    //database
-
-
-    //test
 }

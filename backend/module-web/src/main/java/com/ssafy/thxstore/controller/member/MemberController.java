@@ -1,23 +1,25 @@
 package com.ssafy.thxstore.controller.member;
 
+
 import com.ssafy.thxstore.controller.common.ErrorsResource;
-import com.ssafy.thxstore.member.dto.Member;
+import com.ssafy.thxstore.member.domain.Member;
 import com.ssafy.thxstore.member.dto.MemberDto;
 import com.ssafy.thxstore.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.hateoas.Link;
+import org.springframework.hateoas.MediaTypes;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.Errors;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.hateoas.MediaTypes;
 
 import javax.validation.Valid;
 import java.net.URI;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
+@CrossOrigin(origins = "*")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(value = "/api/member", produces = MediaTypes.HAL_JSON_VALUE)
@@ -28,7 +30,7 @@ public class MemberController {
     private final PasswordEncoder passwordEncoder;
 
     @PostMapping("/user/")
-    public ResponseEntity registerMember(@Valid @RequestBody MemberDto memberDto,Errors errors){
+    public ResponseEntity registerMember(@Valid @RequestBody MemberDto memberDto, Errors errors){
         if(errors.hasErrors()){
             return badRequest(errors);
         }

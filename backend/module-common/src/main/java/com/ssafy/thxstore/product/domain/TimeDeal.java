@@ -1,7 +1,6 @@
 package com.ssafy.thxstore.product.domain;
 
 import com.ssafy.thxstore.common.ColumnDescription;
-import com.ssafy.thxstore.product.domain.Product;
 import lombok.*;
 
 import javax.persistence.*;

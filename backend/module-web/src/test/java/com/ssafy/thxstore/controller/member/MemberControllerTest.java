@@ -1,23 +1,17 @@
 package com.ssafy.thxstore.controller.member;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ssafy.thxstore.controller.common.RestDocsConfiguration;
+import com.ssafy.thxstore.controller.common.BaseControllerTest;
 import com.ssafy.thxstore.member.dto.MemberDto;
-import com.ssafy.thxstore.member.dto.MemberRole;
+import com.ssafy.thxstore.member.domain.MemberRole;
 import com.ssafy.thxstore.member.repository.MemberRepository;
-import lombok.RequiredArgsConstructor;
 import org.junit.Test;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.runner.RunWith;
-import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Import;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
 
@@ -30,20 +24,11 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest
-@AutoConfigureMockMvc
-@AutoConfigureRestDocs
-@RequiredArgsConstructor
-@Import(RestDocsConfiguration.class)
-public class MemberControllerTest {
 
-    private final MockMvc mockMvc;
+public class MemberControllerTest extends BaseControllerTest {
 
-    private final ObjectMapper objectMapper;
-
-    @MockBean
-    private final MemberRepository memberRepository;
+    @Autowired
+    MemberRepository memberRepository;
 
     @Test
     @DisplayName("정상적으로 멤버를 생성하는 테스트")

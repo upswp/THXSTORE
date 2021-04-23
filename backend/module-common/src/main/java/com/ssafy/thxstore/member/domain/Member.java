@@ -1,4 +1,4 @@
-package com.ssafy.thxstore.member.dto;
+package com.ssafy.thxstore.member.domain;
 
 import com.ssafy.thxstore.common.ColumnDescription;
 import com.ssafy.thxstore.reservation.domain.Reservation;

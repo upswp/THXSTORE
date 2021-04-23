@@ -17,6 +17,6 @@
 //test {
 //    useJUnitPlatform()
 //}
-
+jar {enabled = true}
 dependencies {
 }
