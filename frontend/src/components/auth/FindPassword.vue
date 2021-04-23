@@ -24,6 +24,10 @@
 
 <script>
 import ValidationMixin from '@/mixins/auth/validation';
+<<<<<<< HEAD
+=======
+
+>>>>>>> 45368fc ([S04P31B202-59] feat: 개인정보처리방침 스켈레톤코드)
 export default {
   mixins: [ValidationMixin],
   data() {

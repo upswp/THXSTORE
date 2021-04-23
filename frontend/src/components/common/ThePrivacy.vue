@@ -10,6 +10,7 @@
           <div class="modal-body">
             <slot name="body">
               <h3>1. 개인정보의 처리 목적</h3>
+<<<<<<< HEAD
               <p>
                 땡스토어(thxstore)는 다음의 목적을 위하여 개인정보를 처리하고 있으며, 다음의 목적 이외의 용도로는
                 이용하지 않습니다.
@@ -94,6 +95,15 @@
           <div class="modal-footer">
             <slot name="footer">
               <button v-click-outside="closeModal" class="modal-default-button" @click="closeModal">닫기</button>
+=======
+            </slot>
+          </div>
+
+          <div class="modal-footer">
+            <slot name="footer">
+              default footer
+              <button class="modal-default-button" @click="$emit('close')">OK</button>
+>>>>>>> 45368fc ([S04P31B202-59] feat: 개인정보처리방침 스켈레톤코드)
             </slot>
           </div>
         </div>
@@ -103,6 +113,7 @@
 </template>
 
 <script>
+<<<<<<< HEAD
 export default {
   methods: {
     closeModal() {
@@ -113,6 +124,12 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+=======
+export default {};
+</script>
+
+<style scoped>
+>>>>>>> 45368fc ([S04P31B202-59] feat: 개인정보처리방침 스켈레톤코드)
 .modal-mask {
   position: fixed;
   z-index: 9998;
@@ -131,7 +148,11 @@ export default {
 }
 
 .modal-container {
+<<<<<<< HEAD
   width: 500px;
+=======
+  width: 300px;
+>>>>>>> 45368fc ([S04P31B202-59] feat: 개인정보처리방침 스켈레톤코드)
   margin: 0px auto;
   padding: 20px 30px;
   background-color: #fff;
@@ -139,6 +160,7 @@ export default {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);
   transition: all 0.3s ease;
   font-family: Helvetica, Arial, sans-serif;
+<<<<<<< HEAD
   /* 내가 추가한 것 */
   max-height: 600px;
   overflow: clip;
@@ -193,6 +215,23 @@ export default {
     margin: 0 auto;
     border: none;
   }
+=======
+}
+
+.modal-header h2 {
+  margin-top: 0;
+  color: #42b983;
+  text-align: center;
+}
+
+.modal-body {
+  margin: 20px 0;
+  text-align: center;
+}
+
+.modal-default-button {
+  float: right;
+>>>>>>> 45368fc ([S04P31B202-59] feat: 개인정보처리방침 스켈레톤코드)
 }
 
 /*
