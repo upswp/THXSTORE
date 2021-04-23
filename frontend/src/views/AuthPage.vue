@@ -9,9 +9,15 @@
     <div class="main-wrap">
       <main>
         <transition :name="transitionName" mode="out-in"><router-view></router-view> </transition>
+        <the-privacy v-if="showModal" @close="showModal = false">
+          <!--
+      you can use custom content here to overwrite
+      default content
+    -->
+        </the-privacy>
       </main>
       <aside>
-        <div class="privacy-policy">Privacy Policy</div>
+        <div class="privacy-policy" @click="showModal = true">Privacy Policy</div>
       </aside>
     </div>
     <Footer />
@@ -19,11 +25,16 @@
 </template>
 
 <script>
+import ThePrivacy from '@/components/common/ThePrivacy';
 const DEFAULT_TRANSITION = 'fade';
 export default {
+  components: {
+    ThePrivacy,
+  },
   data() {
     return {
       transitionName: DEFAULT_TRANSITION,
+      showModal: false,
     };
   },
   created() {
