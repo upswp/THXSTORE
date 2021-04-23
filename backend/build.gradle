@@ -33,6 +33,7 @@ subprojects {
         implementation group: 'org.springframework.boot', name: 'spring-boot-starter-hateoas'
         implementation group: 'org.springframework.boot', name: 'spring-boot-starter-web'
         implementation group: 'org.springframework.boot', name: 'spring-boot-starter-validation'
+        implementation group: 'org.springframework.boot', name: 'spring-boot-starter-security'
         implementation group: 'org.modelmapper', name: 'modelmapper', version: '2.3.8'
         implementation group: 'mysql', name: 'mysql-connector-java', version: '8.0.22'
         compile('org.springframework.boot:spring-boot-starter-jdbc')
