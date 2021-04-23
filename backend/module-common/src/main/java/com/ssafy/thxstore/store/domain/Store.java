@@ -1,10 +1,10 @@
 package com.ssafy.thxstore.store.domain;
 
 import com.ssafy.thxstore.common.ColumnDescription;
-import com.ssafy.thxstore.member.dto.Favorite;
-import com.ssafy.thxstore.member.dto.Member;
-import com.ssafy.thxstore.reservation.domain.Reservation;
+import com.ssafy.thxstore.member.domain.Favorite;
+import com.ssafy.thxstore.member.domain.Member;
 import com.ssafy.thxstore.product.domain.Product;
+import com.ssafy.thxstore.reservation.domain.Reservation;
 import lombok.*;
 
 import javax.persistence.*;

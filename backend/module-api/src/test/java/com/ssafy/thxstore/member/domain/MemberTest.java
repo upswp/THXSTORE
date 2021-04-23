@@ -1,6 +1,5 @@
 package com.ssafy.thxstore.member.domain;
 
-import com.ssafy.thxstore.member.dto.Member;
 import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;

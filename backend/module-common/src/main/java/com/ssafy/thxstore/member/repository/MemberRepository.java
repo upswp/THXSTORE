@@ -1,7 +1,7 @@
 package com.ssafy.thxstore.member.repository;
 
 
-import com.ssafy.thxstore.member.dto.Member;
+import com.ssafy.thxstore.member.domain.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

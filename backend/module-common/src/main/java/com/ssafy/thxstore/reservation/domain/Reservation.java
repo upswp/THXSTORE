@@ -1,7 +1,7 @@
 package com.ssafy.thxstore.reservation.domain;
 
 import com.ssafy.thxstore.common.ColumnDescription;
-import com.ssafy.thxstore.member.dto.Member;
+import com.ssafy.thxstore.member.domain.Member;
 import com.ssafy.thxstore.store.domain.Store;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;

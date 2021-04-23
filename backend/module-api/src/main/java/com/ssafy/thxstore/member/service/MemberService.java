@@ -2,9 +2,9 @@ package com.ssafy.thxstore.member.service;
 
 import com.ssafy.thxstore.common.exceptions.AuthException;
 import com.ssafy.thxstore.common.exceptions.ErrorCode;
-import com.ssafy.thxstore.member.dto.Member;
+import com.ssafy.thxstore.member.domain.Member;
 import com.ssafy.thxstore.member.dto.MemberDto;
-import com.ssafy.thxstore.member.dto.MemberRole;
+import com.ssafy.thxstore.member.domain.MemberRole;
 import com.ssafy.thxstore.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -14,6 +14,7 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
@@ -21,6 +22,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
+@Component
 @RequiredArgsConstructor
 public class MemberService implements UserDetailsService {
 
