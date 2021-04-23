@@ -15,10 +15,14 @@
         <input v-model="userData.password2" type="password" placeholder="새로운 비밀번호를 확인해 주세요" />
         <div ref="password2" class="label" :class="validationClass.password2">{{ validationMsg.password2 }}</div>
 <<<<<<< HEAD
+<<<<<<< HEAD
         <button type="submit" :disabled="btnDisabled" @click="submitForm">
 =======
         <button type="submit" :disabled="btnDisabled">
 >>>>>>> a2fc403 ([S04P31B202-111] feat: 메일인증 및 비밀번호 재설정)
+=======
+        <button type="submit" :disabled="btnDisabled" @click="resetPwd">
+>>>>>>> 778f33d ([S04P31B202-110] feat : resetPWD 함수 연결)
           <b> 비밀번호 재설정 </b>
         </button>
       </div>
@@ -28,6 +32,7 @@
 
 <script>
 import ValidationMixin from '@/mixins/auth/validation';
+import func from 'vue-editor-bridge';
 export default {
   mixins: [ValidationMixin],
   data() {
@@ -44,6 +49,9 @@ export default {
     this.validationClass.email = 'success-msg';
   },
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 778f33d ([S04P31B202-110] feat : resetPWD 함수 연결)
   methods: {
     async submitForm() {
       try {
@@ -54,8 +62,11 @@ export default {
       }
     },
   },
+<<<<<<< HEAD
 =======
 >>>>>>> a2fc403 ([S04P31B202-111] feat: 메일인증 및 비밀번호 재설정)
+=======
+>>>>>>> 778f33d ([S04P31B202-110] feat : resetPWD 함수 연결)
 };
 </script>
 
