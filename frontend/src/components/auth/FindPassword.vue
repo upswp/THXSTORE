@@ -14,7 +14,7 @@
         </div>
         <input v-model="userData.password2" type="password" placeholder="새로운 비밀번호를 확인해 주세요" />
         <div ref="password2" class="label" :class="validationClass.password2">{{ validationMsg.password2 }}</div>
-        <button type="submit" :disabled="btnDisabled">
+        <button type="submit" :disabled="btnDisabled" @click="resetPwd">
           <b> 비밀번호 재설정 </b>
         </button>
       </div>
@@ -24,6 +24,7 @@
 
 <script>
 import ValidationMixin from '@/mixins/auth/validation';
+import func from 'vue-editor-bridge';
 export default {
   mixins: [ValidationMixin],
   data() {
@@ -38,6 +39,16 @@ export default {
   },
   created() {
     this.validationClass.email = 'success-msg';
+  },
+  methods: {
+    async submitForm() {
+      try {
+        const userData = {};
+        await resetPwd(userData);
+      } catch (error) {
+        console.log(error);
+      }
+    },
   },
 };
 </script>
