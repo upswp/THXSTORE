@@ -24,7 +24,6 @@
 
 <script>
 import ValidationMixin from '@/mixins/auth/validation';
-
 export default {
   mixins: [ValidationMixin],
   data() {
