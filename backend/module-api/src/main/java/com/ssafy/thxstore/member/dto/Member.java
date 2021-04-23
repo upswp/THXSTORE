@@ -37,17 +37,17 @@ public class Member {
     @OneToMany
     private List<Reservation> reservationList = new ArrayList<>();
 
-    @ColumnDescription("유저 ID")
-    @Column(name = "user_id")
+    @ColumnDescription("소셜로그인 유저 ID")
+    @Column(name = "user_id", unique = true)
     private String userId;
 
     @Email
     @ColumnDescription("유저 이메일")
-    @Column(name = "email",nullable = false)
+    @Column(name = "email", nullable = false, unique = true)
     private String email;
 
     @ColumnDescription("유저 비밀번호")
-    @Column(name = "password",nullable = false)
+    @Column(name = "password", nullable = false)
     private String password;
 
     @ColumnDescription("유저 위치정보")
@@ -55,7 +55,7 @@ public class Member {
     private String address;
 
     @ColumnDescription("유저 닉네임")
-    @Column(name = "nickname",nullable = false)
+    @Column(name = "nickname", nullable = false, unique = true)
     private String nickName;
 
     @ColumnDescription("유저 프로필 이미지")
