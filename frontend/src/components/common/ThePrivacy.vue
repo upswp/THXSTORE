@@ -91,7 +91,7 @@
           </div>
           <div class="modal-footer">
             <slot name="footer">
-              <button class="modal-default-button" @click="$emit('close')">닫기</button>
+              <button v-click-outside="closeModal" class="modal-default-button" @click="$emit('close')">닫기</button>
             </slot>
           </div>
         </div>
@@ -101,7 +101,13 @@
 </template>
 
 <script>
-export default {};
+export default {
+  methods: {
+    closeModal() {
+      this.$emit('close');
+    },
+  },
+};
 </script>
 
 <style lang="scss" scoped>
