@@ -86,12 +86,14 @@
                 이 개인정보처리방침은 시행일로부터 적용되며, 법령 및 방침에 따른 변경내용의 추가, 삭제 및 정정이 있는
                 경우에는 변경사항의 시행 7일 전부터 공지사항을 통하여 고지할 것입니다.
               </p>
+              <br />
               <p>공고일자 : 2021년 4월 23일</p>
+              <br />
             </slot>
           </div>
           <div class="modal-footer">
             <slot name="footer">
-              <button v-click-outside="closeModal" class="modal-default-button" @click="$emit('close')">닫기</button>
+              <button v-click-outside="closeModal" class="modal-default-button" @click="closeModal">닫기</button>
             </slot>
           </div>
         </div>
@@ -129,7 +131,7 @@ export default {
 }
 
 .modal-container {
-  width: 300px;
+  width: 500px;
   margin: 0px auto;
   padding: 20px 30px;
   background-color: #fff;
@@ -140,6 +142,10 @@ export default {
   /* 내가 추가한 것 */
   max-height: 600px;
   overflow: clip;
+  @include mobile {
+    width: 300px;
+    padding: 20px 0px 20px 30px;
+  }
 }
 
 .modal-header h2 {
@@ -147,12 +153,20 @@ export default {
   margin-top: 0;
   color: $blue600;
   text-align: center;
+  @include mobile {
+    padding-right: 25px;
+  }
 }
 
 .modal-body {
   max-height: 470px;
   overflow-y: scroll !important;
   margin: 10px 0;
+  // 코드리뷰
+  padding-right: 5px;
+  @include mobile {
+    padding-right: 20px;
+  }
   h3 {
     @include headline6;
     margin-top: 5%;
