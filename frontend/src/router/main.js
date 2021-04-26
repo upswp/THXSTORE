@@ -1,18 +1,14 @@
 const routesForMain = [
   {
     path: '/main',
+    redirect: '/main/user',
     name: 'main',
     component: () => import('@/views/MainPage.vue'),
     children: [
       {
-        path: 'profile',
-        name: 'profile',
-        component: () => import('@/views/profile/ProfilePage.vue'),
-      },
-      {
-        path: 'profile-setting',
-        name: 'profileSetting',
-        component: () => import('@/views/profile/ProfileSettingPage.vue'),
+        path: 'user',
+        name: 'user',
+        component: () => import('@/views/UserPage.vue'),
       },
     ],
   },

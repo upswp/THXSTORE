@@ -3,8 +3,8 @@ import Vue from 'vue';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
-import { faStore, faBars, faUserCircle, faMeteor } from '@fortawesome/free-solid-svg-icons';
-library.add(faStore, faBars, faUserCircle, faMeteor);
+import { faStore, faBars, faUserCircle, faMeteor, faClipboardList } from '@fortawesome/free-solid-svg-icons';
+library.add(faStore, faBars, faUserCircle, faMeteor, faClipboardList);
 
 import {
   faClock as farClock,

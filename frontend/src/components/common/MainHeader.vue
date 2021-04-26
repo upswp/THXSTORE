@@ -36,6 +36,7 @@ export default {
   position: fixed;
   top: 0;
   width: 100%;
+  background-color: white;
   @include flexbox;
   @include justify-content(space-between);
   @include align-items(center);
@@ -55,6 +56,7 @@ export default {
   }
   .fixed-header-logo {
     width: 100%;
+    position: fixed;
     @include flexbox;
     @include justify-content(space-between);
     @include align-items(center);
@@ -63,7 +65,7 @@ export default {
       font-family: 'Pacifico', cursive;
       color: $blue800;
       font-size: 2rem;
-      transition: font-size 0.5s;
+      @include transition(font-size 0.5s);
       @include mobile() {
         font-size: 1.4rem;
       }
