@@ -2,18 +2,21 @@
   <div class="user-container">
     <user-navigation @clickButton="clickButton"></user-navigation>
     <div class="user-container-center">
-      <user-info-body :nav="nav"></user-info-body>
+      <keep-alive>
+        <component :is="nav"></component>
+      </keep-alive>
     </div>
   </div>
 </template>
 
 <script>
 import UserNavigation from '@/components/user/UserNavigation';
-import UserInfoBody from '@/components/user/UserInfoBody';
+import UserProfile from '@/components/user/category/UserProfile';
+
 export default {
   components: {
     UserNavigation,
-    UserInfoBody,
+    UserProfile,
   },
   data() {
     return {

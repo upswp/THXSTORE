@@ -1,24 +1,37 @@
 <template>
   <nav class="user-nav-container">
     <div class="nav-buttons">
-      <button v-focus @click="clickButton('currentStore')">예약 목록</button>
+      <button ref="currentStore" class="active" @click="selectComponent('currentStore')">예약 목록</button>
       <span>|</span>
-      <button @click="clickButton('recentReviews')">최근 리뷰</button>
+      <button ref="recentReviews" @click="selectComponent('recentReviews')">최근 리뷰</button>
       <span>|</span>
-      <button @click="clickButton('profile')">프로필</button>
+      <button ref="userProfile" @click="selectComponent('userProfile')">프로필</button>
       <span>|</span>
-      <button @click="clickButton('resetPassword')">비밀번호 변경</button>
+      <button ref="resetPassword" @click="selectComponent('resetPassword')">비밀번호 변경</button>
       <span>|</span>
-      <button @click="clickButton('registerProductor')">판매자 신청</button>
+      <button ref="registerProductor" @click="selectComponent('registerProductor')">판매자 신청</button>
     </div>
   </nav>
 </template>
 
 <script>
 export default {
+  data() {
+    return {
+      active: 'currentStore',
+    };
+  },
   methods: {
-    clickButton(item) {
-      this.$emit('clickButton', item);
+    selectComponent(item) {
+      if (this.active === item) return;
+      this.resetActive();
+      this.active = item;
+      this.$refs[item].classList.add('active');
+      const capitalize = ([firstLetter, ...rest]) => `${firstLetter.toUpperCase()}${rest.join('')}`;
+      this.$emit('clickButton', capitalize(item));
+    },
+    resetActive() {
+      this.$refs[this.active].classList.remove('active');
     },
   },
 };
@@ -48,7 +61,7 @@ export default {
       display: block;
       border: none;
       padding: 5px 0;
-      &:focus {
+      &.active {
         color: black;
         font-weight: 600;
       }
