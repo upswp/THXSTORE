@@ -30,7 +30,7 @@ html {
     overflow-y: $html-overflow-y;
     scrollbar-arrow-color: $gray200; // 스크롤 바 아래위 왼쪽 오른쪽 화살표 색
     scrollbar-base-color: $gray100;  // 스크롤 바 전체 배경 색
-    scrollbar-Face-Color: $gray200;  // 상하좌우로 움직이는 부분(thumb), 화살표가 포함된 상하좌우 끝 사각형 부분(button) 색
+    scrollbar-Face-Color: $blue100;  // 상하좌우로 움직이는 부분(thumb), 화살표가 포함된 상하좌우 끝 사각형 부분(button) 색
     scrollbar-Track-Color: $gray100; //  스크롤 바 thumb를 제외한 나머지 빈 부분 색
     scrollbar-3dLight-Color: $gray100;  // 스크롤 바 thumb, button의 왼쪽. 즉, 밝은 부분 색
     scrollbar-DarkShadow-Color: $gray100; // 스크롤 바 thumb, button의 오른쪽. 즉, 어두운 부분 색
@@ -57,7 +57,7 @@ html {
       // 몸통 부분에서 실제 움직이는 부분
       height: 50px;
       width: 50px;
-      background: $gray200;
+      background: $blue300;
       -webkit-border-radius: 8px;
       border-radius: 8px;
       -webkit-box-shadow: inset 0 0 4px rgba(0, 0, 0, .1);
