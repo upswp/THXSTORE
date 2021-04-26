@@ -72,6 +72,7 @@ export default {
 }
 .drawer-container {
   position: fixed;
+  z-index: 2;
   top: 50px;
   height: 100vh;
   box-shadow: 0 10px 5px rgba(0, 0, 0, 0.2);
@@ -100,7 +101,7 @@ export default {
     height: 100vh;
     padding: 20px 0;
     background-color: white;
-    z-index: 2;
+    border: none;
     .drawer-item {
       height: 50px;
       @include flexbox;
@@ -110,24 +111,29 @@ export default {
       color: black;
       padding: 10px;
       cursor: pointer;
+      border: 1px solid white;
       &.active {
         color: white;
         background-color: $blue600;
+        border: 1px solid $blue600;
       }
     }
   }
   .navigation-drawer {
+    position: relative;
+    left: -1px;
     padding: 20px 0;
     height: 100vh;
     background-color: white;
-    z-index: 1;
+    z-index: 11;
     .detail-guide {
       height: 50px;
       line-height: 50px;
       font-size: 20px;
       cursor: pointer;
-      @include transition(all 0.5s);
       color: $navy800;
+      border: 1px solid white;
+      @include transition(all 0.5s);
       @include flexbox;
       @include justify-content(space-between);
       .detail-guide-text {
@@ -151,6 +157,7 @@ export default {
       &.active {
         color: white;
         background-color: $blue600;
+        border: 1px solid $blue600;
       }
     }
   }

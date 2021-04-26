@@ -21,18 +21,36 @@ export default {
 
 <style lang="scss" scoped>
 .main-container {
-  z-index: 0;
+  z-index: 10;
+  background-color: $gray100;
   .main-contents {
-    padding: 70px 20px 50px 250px;
-    height: 100vh;
-    @include mobile() {
+    background-color: $gray100;
+    position: absolute;
+    padding: 50px 0 50px 225px;
+    min-height: 100vh;
+    width: 100%;
+    @include flexbox;
+  }
+}
+
+@include mobile() {
+  .main-container {
+    .main-contents {
       padding: {
         top: 60px;
         left: 60px;
         right: 10px;
       }
+      .aside-padding {
+        display: none;
+      }
     }
-    @include xs-mobile() {
+  }
+}
+
+@include xs-mobile() {
+  .main-container {
+    .main-contents {
       padding: {
         left: 20px;
         right: 20px;

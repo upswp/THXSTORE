@@ -32,7 +32,7 @@ export default {
 
 <style lang="scss" scoped>
 .fixed-header {
-  z-index: 0;
+  z-index: 10;
   position: fixed;
   top: 0;
   width: 100%;
@@ -50,7 +50,7 @@ export default {
     width: 50px;
     padding: 10px;
     cursor: pointer;
-    z-index: 1;
+    z-index: 11;
     @include flexbox;
     @include justify-content(center);
   }

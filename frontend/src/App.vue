@@ -9,5 +9,6 @@ export default {};
 <style lang="scss">
 #app {
   min-height: 100vh;
+  overflow: scroll;
 }
 </style>
