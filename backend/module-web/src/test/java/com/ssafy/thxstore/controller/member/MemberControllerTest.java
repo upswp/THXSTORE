@@ -1,21 +1,17 @@
 package com.ssafy.thxstore.controller.member;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ssafy.thxstore.controller.common.RestDocsConfiguration;
+import com.ssafy.thxstore.controller.common.BaseControllerTest;
 import com.ssafy.thxstore.member.dto.MemberDto;
-import com.ssafy.thxstore.member.dto.MemberRole;
-import lombok.RequiredArgsConstructor;
+import com.ssafy.thxstore.member.domain.MemberRole;
+import com.ssafy.thxstore.member.repository.MemberRepository;
 import org.junit.Test;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.runner.RunWith;
-import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.Import;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
 
@@ -28,19 +24,11 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest
-@AutoConfigureMockMvc
-@AutoConfigureRestDocs
-@RequiredArgsConstructor
-@Import(RestDocsConfiguration.class)
-public class MemberControllerTest {
 
-    private final MockMvc mockMvc;
+public class MemberControllerTest extends BaseControllerTest {
 
-    private final ObjectMapper objectMapper;
-
-//    private final MemberRepository memberRepository;
+    @Autowired
+    MemberRepository memberRepository;
 
     @Test
     @DisplayName("정상적으로 멤버를 생성하는 테스트")
@@ -48,7 +36,6 @@ public class MemberControllerTest {
         MemberDto member = MemberDto.builder()
                 .email("test@gmail.com")
                 .password("TestWord1234")
-                .nickName("HelloTHXStore")
                 .build();
         mockMvc.perform(post("/api/member/user/")
                     .contentType(MediaType.APPLICATION_JSON)
@@ -61,7 +48,7 @@ public class MemberControllerTest {
                 .andExpect(header().string(HttpHeaders.CONTENT_TYPE,MediaTypes.HAL_JSON_VALUE))
                 .andExpect(jsonPath("memberType").value(MemberRole.USER))
                 .andExpect(jsonPath("_links.self").exists())
-                .andExpect(jsonPath("_links.create-member").exists())
+                .andExpect(jsonPath("_links.register-member").exists())
                 .andDo(document("create-member",
                         links(
                                 linkWithRel("self").description("link to self"),
@@ -92,7 +79,7 @@ public class MemberControllerTest {
                                 fieldWithPath("memberType").description("memberType of user"),
 
                                 fieldWithPath("_links.self").description("link to self"),
-                                fieldWithPath("_links.create-member").description("link to create-member"),
+                                fieldWithPath("_links.register-member").description("link to create-member"),
                                 fieldWithPath("_links.profile").description("link to profile")
                         )
                 ));
