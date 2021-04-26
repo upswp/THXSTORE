@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 import routesForAuth from '@/router/auth';
+import routesForMain from '@/router/main';
 Vue.use(VueRouter);
 
 const routes = [
@@ -8,11 +9,7 @@ const routes = [
     path: '/',
     redirect: '/main',
   },
-  {
-    path: '/main',
-    name: 'main',
-    component: () => import('@/views/MainPage.vue'),
-  },
+  ...routesForMain,
   ...routesForAuth,
 ];
 

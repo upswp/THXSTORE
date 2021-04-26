@@ -29,7 +29,8 @@ const routesForAuth = [
         meta: { transitionName: 'slide' },
       },
       {
-        path: 'findpassword',
+        path: 'find-password',
+        name: 'findPassword',
         component: () => import('@/components/auth/FindPassword.vue'),
         meta: { transitionName: 'slide' },
       },

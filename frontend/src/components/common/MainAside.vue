@@ -11,6 +11,9 @@
         <div ref="store-icon" class="drawer-item" @click="setBtnActive('store')">
           <awesome icon="store"></awesome>
         </div>
+        <div ref="admin-icon" class="drawer-item" @click="setBtnActive('admin')">
+          <awesome icon="clipboard-list"></awesome>
+        </div>
       </nav>
       <aside class="navigation-drawer">
         <div ref="time" class="detail-guide active" @click="setBtnActive('time')">
@@ -21,6 +24,9 @@
         </div>
         <div ref="store" class="detail-guide" @click="setBtnActive('store')">
           <span class="detail-guide-text">내 가게</span>
+        </div>
+        <div ref="admin" class="detail-guide" @click="setBtnActive('admin')">
+          <span class="detail-guide-text">관리자 대시보드</span>
         </div>
       </aside>
     </div>
@@ -36,12 +42,11 @@ export default {
   },
   methods: {
     resetAside() {
-      this.$refs['time-icon'].classList.remove('active');
-      this.$refs['profile-icon'].classList.remove('active');
-      this.$refs['store-icon'].classList.remove('active');
-      this.$refs.time.classList.remove('active');
-      this.$refs.profile.classList.remove('active');
-      this.$refs.store.classList.remove('active');
+      const icons = ['time', 'profile', 'store', 'admin'];
+      for (const icon of icons) {
+        this.$refs[`${icon}-icon`].classList.remove('active');
+        this.$refs[icon].classList.remove('active');
+      }
     },
     setBtnActive(e) {
       this.resetAside();
@@ -88,7 +93,7 @@ export default {
   }
   background: $gray600;
   .navigation-icon-wrapper {
-    transition: all 0.5s;
+    @include transition(all 0.5s);
     // header 크기가 변함에 따라 top 변경해줘야함.
     font-size: 1.8rem;
     width: 50px;
@@ -101,7 +106,7 @@ export default {
       @include flexbox;
       @include justify-content(center);
       @include align-items(center);
-      transition: all 0.3s;
+      @include transition(all 0.5s);
       color: black;
       padding: 10px;
       cursor: pointer;
@@ -121,31 +126,32 @@ export default {
       line-height: 50px;
       font-size: 20px;
       cursor: pointer;
-
+      @include transition(all 0.5s);
       color: $navy800;
       @include flexbox;
       @include justify-content(space-between);
       .detail-guide-text {
         @include user-select(none);
+        font-size: 1rem;
         margin: {
-          right: 100px;
+          right: 50px;
           left: 10px;
         }
       }
       &::after {
         content: '';
         width: 5px;
-        transition: all 0.3s;
+        @include transition(all 0.1s);
       }
       &:hover {
         &::after {
           background-color: $blue800;
         }
       }
-    }
-    .active {
-      color: white;
-      background-color: $blue600;
+      &.active {
+        color: white;
+        background-color: $blue600;
+      }
     }
   }
 }
