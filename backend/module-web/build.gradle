@@ -1,26 +1,3 @@
-<<<<<<< HEAD
-//plugins {
-//    id 'java'
-//}
-//
-//group 'com.ssafy'
-//version '1.0'
-//
-//repositories {
-//    mavenCentral()
-//}
-//
-//dependencies {
-//    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.0'
-//    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
-//}
-//
-//test {
-//    useJUnitPlatform()
-//}
-//bootJar { enabled = false}
-//jar {enabled = true}
-=======
 plugins {
     id 'org.asciidoctor.convert' version '1.5.8'
 }
@@ -52,7 +29,6 @@ bootJar {
         into 'static/docs'
     }
 }
->>>>>>> 98fe716 ([S04P31B202-168] feat : REST Docs configure)
 
 dependencies {
     asciidoctor 'org.springframework.restdocs:spring-restdocs-asciidoctor'

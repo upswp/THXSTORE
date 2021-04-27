@@ -1,0 +1,64 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '2.3.9.RELEASE'
+    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+}
+
+repositories {
+    mavenCentral()
+}
+
+//새롭게 추가될 모듈들에 공통적으로 적용될 내용 (setting.gradle 에 포함된 프로젝트 전부 관리)
+subprojects {
+
+    group 'com.ssafy'
+    version '1.0'
+
+    repositories {
+        mavenCentral()
+    }
+
+    apply plugin: 'java'
+    apply plugin: 'org.springframework.boot'
+    apply plugin: 'io.spring.dependency-management'
+
+
+    sourceCompatibility = 11
+    dependencies {
+        //TODO project 진행사항 이후 dependencies 설정 진행하기.
+        implementation group: 'org.springframework.boot', name: 'spring-boot-starter-web'
+        implementation group: 'org.springframework.boot', name: 'spring-boot-starter-data-jpa'
+        implementation group: 'org.springframework.boot', name: 'spring-boot-starter-hateoas'
+        implementation group: 'org.springframework.boot', name: 'spring-boot-starter-web'
+        implementation group: 'org.springframework.boot', name: 'spring-boot-starter-validation'
+        implementation group: 'org.springframework.boot', name:'spring-boot-starter-jdbc'
+        implementation group: 'org.modelmapper', name: 'modelmapper', version: '2.3.8'
+
+        implementation 'org.projectlombok:lombok'
+        annotationProcessor 'org.projectlombok:lombok'
+
+        // DB
+        implementation group: 'mysql', name: 'mysql-connector-java', version: '8.0.22'
+        testImplementation group: 'com.h2database', name: 'h2', version: '1.4.200'
+
+        testImplementation 'org.springframework.boot:spring-boot-starter-test'
+        testImplementation 'org.springframework.security:spring-security-test'
+        testCompile group: 'junit', name: 'junit', version: '4.12'
+    }
+}
+//module-api와 module-web은 모두 module-common에 의존
+project(':module-api') {
+    dependencies {
+        compile project(':module-common')
+    }
+}
+project(':module-web') {
+    dependencies {
+        compile project(':module-common')
+    }
+}
+project(':module-web') {
+    dependencies {
+        compile project(':module-api')
+    }
+}
