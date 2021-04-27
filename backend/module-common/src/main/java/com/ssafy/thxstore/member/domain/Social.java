@@ -1,5 +1,5 @@
 package com.ssafy.thxstore.member.domain;
 
 public enum Social {
-    EMPTY, FACEBOOK, GOOGLE, KAKAO
+    LOCAL, FACEBOOK, GOOGLE, KAKAO
 }
