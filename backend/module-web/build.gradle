@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 //plugins {
 //    id 'java'
 //}
@@ -19,7 +20,41 @@
 //}
 //bootJar { enabled = false}
 //jar {enabled = true}
+=======
+plugins {
+    id 'org.asciidoctor.convert' version '1.5.8'
+}
+ext {
+    snippetsDir = file('build/generated-snippets')
+}
+
+test {
+    outputs.dir snippetsDir
+    useJUnitPlatform()
+}
+
+asciidoctor {
+    inputs.dir snippetsDir
+    dependsOn test
+}
+asciidoctor.doFirst {
+    println "=====start asciidoctor====="
+    //asciidoctor 실행전 기존에 생성된 API 문서 삭제
+    delete file('src/main/resources/static/docs')
+}
+asciidoctor.doLast {
+    println "=====finish asciidoctor====="
+}
+
+bootJar {
+    dependsOn asciidoctor
+    from ("${asciidoctor.outputDir}/html5") {
+        into 'static/docs'
+    }
+}
+>>>>>>> 98fe716 ([S04P31B202-168] feat : REST Docs configure)
 
 dependencies {
-//spring
+    asciidoctor 'org.springframework.restdocs:spring-restdocs-asciidoctor'
+    testCompile 'org.springframework.restdocs:spring-restdocs-mockmvc'
 }
