@@ -21,4 +21,5 @@
 
 jar {enabled = true}
 dependencies {
+    implementation 'io.jsonwebtoken:jjwt:0.5.1'
 }

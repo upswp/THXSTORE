@@ -13,7 +13,6 @@ import java.util.Set;
 
 
 @Entity
-@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
@@ -75,8 +74,18 @@ public class Member {
     @ColumnDescription("소셜로그인 유저 정보")
     @Enumerated(EnumType.STRING)
     @Column(name = "social")
-    private Social social = Social.EMPTY;
+    private Social social;
 
-//    @Column(name = "check_member_info")
-//    private boolean checkMemberInfo;
+    @Builder
+    public Member(String userId, @Email String email, String password, String address, String nickName, String image, String phoneNumber, Set<MemberRole> roles, Social social) {
+        this.userId = userId;
+        this.email = email;
+        this.password = password;
+        this.address = address;
+        this.nickName = nickName;
+        this.image = image;
+        this.phoneNumber = phoneNumber;
+        this.roles = roles;
+        this.social = social;
+    }
 }
