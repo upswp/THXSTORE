@@ -10,10 +10,6 @@
           <div class="modal-body">
             <slot name="body">
               <h3>1. 개인정보의 처리 목적</h3>
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> ba2d237 ([S04P31B202-130] feat: 개인정보처리방침 모달추가)
               <p>
                 땡스토어(thxstore)는 다음의 목적을 위하여 개인정보를 처리하고 있으며, 다음의 목적 이외의 용도로는
                 이용하지 않습니다.
@@ -90,7 +86,6 @@
                 이 개인정보처리방침은 시행일로부터 적용되며, 법령 및 방침에 따른 변경내용의 추가, 삭제 및 정정이 있는
                 경우에는 변경사항의 시행 7일 전부터 공지사항을 통하여 고지할 것입니다.
               </p>
-<<<<<<< HEAD
               <br />
               <p>공고일자 : 2021년 4월 23일</p>
               <br />
@@ -99,21 +94,6 @@
           <div class="modal-footer">
             <slot name="footer">
               <button v-click-outside="closeModal" class="modal-default-button" @click="closeModal">닫기</button>
-=======
-=======
-              <p>공고일자 : 2021년 4월 23일</p>
->>>>>>> ba2d237 ([S04P31B202-130] feat: 개인정보처리방침 모달추가)
-            </slot>
-          </div>
-          <div class="modal-footer">
-            <slot name="footer">
-<<<<<<< HEAD
-              default footer
-              <button class="modal-default-button" @click="$emit('close')">OK</button>
->>>>>>> 45368fc ([S04P31B202-59] feat: 개인정보처리방침 스켈레톤코드)
-=======
-              <button class="modal-default-button" @click="$emit('close')">닫기</button>
->>>>>>> ba2d237 ([S04P31B202-130] feat: 개인정보처리방침 모달추가)
             </slot>
           </div>
         </div>
@@ -123,7 +103,6 @@
 </template>
 
 <script>
-<<<<<<< HEAD
 export default {
   methods: {
     closeModal() {
@@ -134,16 +113,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-=======
-export default {};
-</script>
-
-<<<<<<< HEAD
-<style scoped>
->>>>>>> 45368fc ([S04P31B202-59] feat: 개인정보처리방침 스켈레톤코드)
-=======
-<style lang="scss" scoped>
->>>>>>> ba2d237 ([S04P31B202-130] feat: 개인정보처리방침 모달추가)
 .modal-mask {
   position: fixed;
   z-index: 9998;
@@ -162,11 +131,7 @@ export default {};
 }
 
 .modal-container {
-<<<<<<< HEAD
   width: 500px;
-=======
-  width: 300px;
->>>>>>> 45368fc ([S04P31B202-59] feat: 개인정보처리방침 스켈레톤코드)
   margin: 0px auto;
   padding: 20px 30px;
   background-color: #fff;
@@ -174,8 +139,6 @@ export default {};
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);
   transition: all 0.3s ease;
   font-family: Helvetica, Arial, sans-serif;
-<<<<<<< HEAD
-<<<<<<< HEAD
   /* 내가 추가한 것 */
   max-height: 600px;
   overflow: clip;
@@ -230,58 +193,6 @@ export default {};
     margin: 0 auto;
     border: none;
   }
-=======
-=======
-  /* 내가 추가한 것 */
-  max-height: 600px;
-  overflow: clip;
->>>>>>> ba2d237 ([S04P31B202-130] feat: 개인정보처리방침 모달추가)
-}
-
-.modal-header h2 {
-  @include headline4;
-  margin-top: 0;
-  color: $blue600;
-  text-align: center;
-}
-
-.modal-body {
-  max-height: 470px;
-  overflow-y: scroll !important;
-  margin: 10px 0;
-  h3 {
-    @include headline6;
-    margin-top: 5%;
-    margin-bottom: 2%;
-    text-align: center;
-    word-break: keep-all;
-  }
-  p {
-    // @include body2;
-    margin-top: 1%;
-    font-size: 0.9em;
-  }
-  .sub-p {
-    font-size: 0.8em;
-    padding-left: 3%;
-    margin-top: 2%;
-  }
-}
-<<<<<<< HEAD
-
-.modal-default-button {
-  float: right;
->>>>>>> 45368fc ([S04P31B202-59] feat: 개인정보처리방침 스켈레톤코드)
-=======
-.modal-footer {
-  .modal-default-button {
-    background-color: $blue600;
-    color: white;
-    display: block;
-    margin: 0 auto;
-    border: none;
-  }
->>>>>>> ba2d237 ([S04P31B202-130] feat: 개인정보처리방침 모달추가)
 }
 
 /*
