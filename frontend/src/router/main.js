@@ -12,6 +12,11 @@ const routesForMain = [
         name: 'user',
         component: () => import('@/views/UserPage.vue'),
       },
+      {
+        path: 'store-enrollment',
+        name: 'storeEnrollment',
+        component: () => import('@/components/store/StoreEnrollmentForm.vue'),
+      },
     ],
     beforeEnter: (to, from, next) => {
       if (screen.width < 480) {

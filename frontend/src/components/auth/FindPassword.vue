@@ -53,10 +53,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-h1 {
-  text-align: center;
-  margin-bottom: 2rem;
-}
 .container {
   z-index: 1;
   padding: 20px;
@@ -64,69 +60,66 @@ h1 {
   min-height: 500px;
   @include box-shadow;
   background: white;
-}
-header {
-  @include flexbox;
-  @include justify-content(center);
-  margin-bottom: 20px;
-  font: {
-    size: 18px;
-    weight: 600;
-  }
-  color: $gray500;
-}
-.container {
-  z-index: 1;
-  padding: 20px;
-  width: clamp(360px, 30%, 430px);
-  min-height: 500px;
-  @include box-shadow;
-  background: white;
-}
-form {
-  font-size: 14px;
-  input {
-    width: 100%;
-    background-color: $gray000;
-    border: 2.5px solid #dfe1e6;
-    padding: 10px 15px;
-    border-radius: 3px;
-    margin-bottom: 20px;
-  }
-  .label {
-    color: $gray600;
-    font-size: 12px;
-    position: relative;
-    top: -15px;
-    padding: 0 0 0 3px;
-  }
-  .submit-items {
-    .label {
-      transition: color 0.3s;
-    }
-    .success-msg {
-      color: $green800;
-    }
-    .alert-msg {
-      color: $red600;
-    }
+  h1 {
+    text-align: center;
+    margin-bottom: 2rem;
   }
 
-  button {
-    color: $white;
-    border: none;
-    background-color: $blue400;
-    width: 100%;
-    padding: 10px 0;
-    font-size: 16px;
-    @include box-shadow;
-    margin-bottom: 30px;
-    transition: background-color 0.3s;
-    &:disabled {
-      background-color: $gray400;
+  header {
+    @include flexbox;
+    @include justify-content(center);
+    margin-bottom: 20px;
+    font: {
+      size: 18px;
+      weight: 600;
     }
-    &:hover:enabled {
-      background-color: $blue600;
+    color: $gray500;
+  }
+  form {
+    font-size: 14px;
+    input {
+      width: 100%;
+      background-color: $gray000;
+      border: 2.5px solid #dfe1e6;
+      padding: 10px 15px;
+      border-radius: 3px;
+      margin-bottom: 20px;
+    }
+    .label {
+      color: $gray600;
+      font-size: 12px;
+      position: relative;
+      top: -15px;
+      padding: 0 0 0 3px;
+    }
+    .submit-items {
+      .label {
+        transition: color 0.3s;
+      }
+      .success-msg {
+        color: $green800;
+      }
+      .alert-msg {
+        color: $red600;
+      }
+    }
+
+    button {
+      color: $white;
+      border: none;
+      background-color: $blue400;
+      width: 100%;
+      padding: 10px 0;
+      font-size: 16px;
+      @include box-shadow;
+      margin-bottom: 30px;
+      transition: background-color 0.3s;
+      &:disabled {
+        background-color: $gray400;
+      }
+      &:hover:enabled {
+        background-color: $blue600;
+      }
     }
   }
 }
