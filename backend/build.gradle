@@ -65,6 +65,9 @@ bootJar {
         into 'static/docs'
     }
 }
+bootJar{
+    enabled = false
+}
 //module-api와 module-web은 모두 module-common에 의존
 project(':module-api') {
     dependencies {
