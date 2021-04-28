@@ -4,22 +4,20 @@ import lombok.*;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.Pattern;
 
 @Data
-@Builder
 @Getter
 @Setter
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@Builder
 @AllArgsConstructor
-public class MemberDto {
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+public class SignUpRequest {
 
     @NotEmpty
     @Email
     private String email;
 
     @NotEmpty
-    @Pattern(regexp = "/^[A-Za-z0-9+]{6,12}$/")
     private String password;
 
     @NotEmpty

@@ -12,11 +12,13 @@
 <script>
 import UserNavigation from '@/components/user/UserNavigation';
 import UserProfile from '@/components/user/category/UserProfile';
+import StoreEnrollmentForm from '@/components/store/StoreEnrollmentForm';
 
 export default {
   components: {
     UserNavigation,
     UserProfile,
+    StoreEnrollmentForm,
   },
   data() {
     return {

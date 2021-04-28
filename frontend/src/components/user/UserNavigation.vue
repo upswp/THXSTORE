@@ -9,7 +9,7 @@
       <span>|</span>
       <button ref="resetPassword" @click="selectComponent('resetPassword')">비밀번호 변경</button>
       <span>|</span>
-      <button ref="registerProductor" @click="selectComponent('registerProductor')">판매자 신청</button>
+      <button ref="storeEnrollmentForm" @click="selectComponent('storeEnrollmentForm')">판매자 신청</button>
     </div>
   </nav>
 </template>
