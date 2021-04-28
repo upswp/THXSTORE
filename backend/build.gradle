@@ -2,7 +2,6 @@ plugins {
     id 'java'
     id 'org.springframework.boot' version '2.3.9.RELEASE'
     id 'io.spring.dependency-management' version '1.0.11.RELEASE'
-    id "org.asciidoctor.convert" version "1.5.3"
 }
 
 repositories {
@@ -40,33 +39,12 @@ subprojects {
 
         // DB
         implementation group: 'mysql', name: 'mysql-connector-java', version: '8.0.22'
+        testImplementation group: 'com.h2database', name: 'h2', version: '1.4.200'
 
-        testImplementation group: 'org.springframework.restdocs', name: 'spring-restdocs-mockmvc', version: '2.0.4.RELEASE'
         testImplementation 'org.springframework.boot:spring-boot-starter-test'
         testImplementation 'org.springframework.security:spring-security-test'
         testCompile group: 'junit', name: 'junit', version: '4.12'
     }
-}
-ext {
-    snippetsDir = file('build/generated-snippets')
-}
-
-test {
-    outputs.dir snippetsDir
-}
-
-asciidoctor {
-    inputs.dir snippetsDir
-    dependsOn test
-}
-bootJar {
-    dependsOn asciidoctor
-    from ("${asciidoctor.outputDir}/html5") {
-        into 'static/docs'
-    }
-}
-bootJar{
-    enabled = false
 }
 //module-api와 module-web은 모두 module-common에 의존
 project(':module-api') {

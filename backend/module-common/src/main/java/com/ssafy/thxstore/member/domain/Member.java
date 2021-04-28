@@ -88,4 +88,12 @@ public class Member {
         this.roles = roles;
         this.social = social;
     }
+
+    public Object getRoles(MemberRole user) {
+        return MemberRole.USER;
+    }
+
+    public Object getSocial(Social local) {
+        return Social.LOCAL;
+    }
 }
