@@ -2,7 +2,7 @@ plugins {
     id 'org.asciidoctor.convert' version '1.5.8'
 }
 ext {
-    snippetsDir = file('build/generated-snippets')
+    snippetsDir = file('generated-snippets')
 }
 
 test {
