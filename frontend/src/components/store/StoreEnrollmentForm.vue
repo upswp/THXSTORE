@@ -1,6 +1,6 @@
 <template>
   <div class="store-enrollment-container">
-    <header><h1>스토어 정보입력</h1></header>
+    <header><h2>스토어 정보입력</h2></header>
     <div>
       <form @submit.prevent>
         <ul>
@@ -95,10 +95,21 @@ export default {
       element_layer.style.height = height + 'px';
       element_layer.style.border = borderWidth + 'px solid';
       // 실행되는 순간의 화면 너비와 높이 값을 가져와서 중앙에 뜰 수 있도록 위치를 계산한다.
-      element_layer.style.left =
-        ((window.innerWidth || document.documentElement.clientWidth) - width) / 2 - borderWidth + 60 + 'px';
-      element_layer.style.top =
-        ((window.innerHeight || document.documentElement.clientHeight) - height) / 2 - borderWidth + 'px';
+
+      if (window.innerWidth > 728) {
+        element_layer.style.left =
+          ((window.innerWidth || document.documentElement.clientWidth) - width) / 2 - borderWidth + 180 + 'px';
+        element_layer.style.top =
+          ((window.innerHeight || document.documentElement.clientHeight) - height) / 2 - borderWidth + 'px';
+      } else {
+        // 모바일의 경우 주소찾기 창 크기를 조절한다.
+        var width = 300;
+        element_layer.style.width = width + 'px';
+        element_layer.style.left =
+          ((window.innerWidth || document.documentElement.clientWidth) - width) / 2 - borderWidth + 'px';
+        element_layer.style.top =
+          ((window.innerHeight || document.documentElement.clientHeight) - height) / 2 - borderWidth + 'px';
+      }
     },
     closeDaumPostcode() {
       // iframe을 넣은 element를 안보이게 한다.
@@ -144,7 +155,7 @@ export default {
 
 <style lang="scss" scoped>
 .store-enrollment-container {
-  padding: 5%;
+  padding: 2%;
   width: 100%;
 
   form {
@@ -163,7 +174,7 @@ export default {
   label {
     @include body1;
     width: 125px;
-    margin-left: 3%;
+    margin-left: 2%;
     padding: 3px 5px 7px;
     float: left;
   }
@@ -215,6 +226,7 @@ export default {
       @include box-shadow;
       background-color: $blue400;
       width: 30%;
+      margin-top: 20px;
       color: $white;
       border: none;
       &:hover:enabled {
@@ -223,16 +235,34 @@ export default {
     }
   }
   @include mobile {
-    .StoreEnrollment-container {
-      padding: 1px;
+    .store-enrollment-container {
+      padding: 0%;
+      width: 20%;
+    }
+    header {
+      font-size: 0.7rem;
     }
     label {
       width: 100%;
       float: left;
+      font-size: 12px;
+      padding-bottom: 0%;
+      margin-left: 0px;
     }
     .input-content {
-      width: 90%;
+      width: 98%;
       padding: 1%;
+    }
+    #nomalAddress {
+      width: 70%;
+    }
+    #addressButton {
+      padding-right: 0%;
+      padding-left: 0%;
+      margin-left: 1%;
+    }
+    button {
+      margin-right: 4%;
     }
   }
 }
