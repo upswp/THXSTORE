@@ -20,7 +20,7 @@ export default {
   },
   data() {
     return {
-      nav: '',
+      nav: 'UserProfile',
     };
   },
   methods: {
@@ -39,6 +39,10 @@ export default {
   .user-container-center {
     @include flexbox;
     @include justify-content(center);
+    padding: 0px 40px;
+    @include xs-mobile {
+      padding: 0;
+    }
   }
 }
 </style>

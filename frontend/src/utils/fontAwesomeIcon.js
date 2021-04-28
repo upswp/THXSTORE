@@ -12,8 +12,23 @@ import {
   faClipboardList,
   faPlus,
   faCamera,
+  faPenSquare,
+  faCloudUploadAlt,
+  faTimes,
 } from '@fortawesome/free-solid-svg-icons';
-library.add(faStore, faBars, faUserCircle, faMeteor, faFrown, faClipboardList, faPlus, faCamera);
+library.add(
+  faStore,
+  faBars,
+  faUserCircle,
+  faMeteor,
+  faFrown,
+  faClipboardList,
+  faPlus,
+  faCamera,
+  faPenSquare,
+  faCloudUploadAlt,
+  faTimes,
+);
 
 import {
   faClock as farClock,
