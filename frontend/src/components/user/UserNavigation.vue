@@ -1,11 +1,11 @@
 <template>
   <nav class="user-nav-container">
     <div class="nav-buttons">
-      <button ref="currentStore" class="active" @click="selectComponent('currentStore')">예약 목록</button>
+      <button ref="currentStore" @click="selectComponent('currentStore')">예약 목록</button>
       <span>|</span>
       <button ref="recentReviews" @click="selectComponent('recentReviews')">최근 리뷰</button>
       <span>|</span>
-      <button ref="userProfile" @click="selectComponent('userProfile')">프로필</button>
+      <button ref="userProfile" class="active" @click="selectComponent('userProfile')">프로필</button>
       <span>|</span>
       <button ref="resetPassword" @click="selectComponent('resetPassword')">비밀번호 변경</button>
       <span>|</span>
@@ -18,7 +18,7 @@
 export default {
   data() {
     return {
-      active: 'currentStore',
+      active: 'userProfile',
     };
   },
   methods: {

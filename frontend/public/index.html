@@ -5,9 +5,9 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <link rel="icon" href="<%= BASE_URL %>favicon.ico">
-    <!-- <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pacifico&display=fallback">    -->
-    <title><%= htmlWebpackPlugin.options.title %></title>
+    <script type="text/javascript" src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.VUE_APP_KAKAO_API_KEY}&libraries=services"></script>
     <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+    <title><%= htmlWebpackPlugin.options.title %></title>
   </head>
   <body>
     <noscript>

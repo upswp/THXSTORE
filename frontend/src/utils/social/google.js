@@ -6,7 +6,7 @@ const Google = {
   init() {
     window.gapi.load('auth2', () => {
       const auth2 = window.gapi.auth2.init({
-        client_id: process.env.VUE_APP_GOOGLE_CLIENT_ID,
+        client_id: process.env.VUE_APP_GOOGLE_API_KEY,
         cookiepolicy: 'single_host_origin',
       });
       this.attachSignin(document.getElementById('loginBtn'), auth2);

@@ -2,7 +2,7 @@ import { socialLogin, socialSignup } from '@/utils/social';
 
 export default {
   init() {
-    window.Kakao.init(process.env.VUE_APP_KAKAO_APP_KEY);
+    window.Kakao.init(process.env.VUE_APP_KAKAO_API_KEY);
     return true;
   },
 

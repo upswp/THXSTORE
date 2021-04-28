@@ -4,7 +4,7 @@ const Facebook = {
   init() {
     window.fbAsyncInit = function () {
       window.FB.init({
-        appId: process.env.VUE_APP_FACEBOOK_APP_KEY,
+        appId: process.env.VUE_APP_FACEBOOK_API_KEY,
         cookie: true,
         xfbml: true,
         version: 'v9.0',
