@@ -26,7 +26,7 @@ public class MemberController {
 
     private final MemberService memberService;
 
-    @PostMapping("/user/")
+    @PostMapping
     public ResponseEntity registerMember(@Valid @RequestBody SignUpRequest signUpRequest, Errors errors){
         if(errors.hasErrors()){
             return badRequest(errors);
@@ -37,7 +37,7 @@ public class MemberController {
         URI createUri = selfLinkBuilder.toUri();
         MemberResource memberResource = new MemberResource(newMember);
         memberResource.add(linkTo(MemberController.class).withRel("signUp-member"));
-//        memberResource.add(Link.of("").withRel("profile"));
+        memberResource.add(Link.of("/api/docs/index.html#resources-signUp-member").withRel("profile"));
         return ResponseEntity.created(createUri).body(memberResource);
     }
 

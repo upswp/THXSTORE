@@ -4,6 +4,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 import org.springframework.restdocs.payload.JsonFieldType;
 
+import static com.ssafy.thxstore.controller.utils.ApiDocumentsUtils.getDocumentRequest;
+import static com.ssafy.thxstore.controller.utils.ApiDocumentsUtils.getDocumentResponse;
 import static org.springframework.restdocs.headers.HeaderDocumentation.*;
 import static org.springframework.restdocs.hypermedia.HypermediaDocumentation.linkWithRel;
 import static org.springframework.restdocs.hypermedia.HypermediaDocumentation.links;
@@ -27,10 +29,12 @@ public class AuthDocumentation {
 
     public static RestDocumentationResultHandler signup() {
         return document("signUp-member",
+                getDocumentRequest(),
+                getDocumentResponse(),
                 links(
                         linkWithRel("self").description("link to self"),
-                        linkWithRel("signUp-member").description("link to query members")
-//                        linkWithRel("profile").description("link to profile")
+                        linkWithRel("signUp-member").description("link to query members"),
+                        linkWithRel("profile").description("link to profile")
                 ),
                 requestHeaders(
                         headerWithName(HttpHeaders.CONTENT_TYPE).description("content type header")

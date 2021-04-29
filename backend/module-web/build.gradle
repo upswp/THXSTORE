@@ -6,8 +6,8 @@ ext {
 }
 
 test {
-    outputs.dir snippetsDir
     useJUnitPlatform()
+    outputs.dir snippetsDir
 }
 
 asciidoctor {
@@ -16,8 +16,6 @@ asciidoctor {
 }
 asciidoctor.doFirst {
     println "=====start asciidoctor====="
-    //asciidoctor 실행전 기존에 생성된 API 문서 삭제
-    delete file('src/main/resources/static/docs')
 }
 asciidoctor.doLast {
     println "=====finish asciidoctor====="
@@ -26,11 +24,19 @@ asciidoctor.doLast {
 bootJar {
     dependsOn asciidoctor
     from ("${asciidoctor.outputDir}/html5") {
-        into 'static/docs'
+        into 'BOOT-INF/classes/static/docs'
     }
 }
-
+task copyDocument(type: Copy) {
+    dependsOn asciidoctor
+    // 소스 코드에 html파일을 복사
+    from file("build/asciidoc/html5")
+    into file("src/main/resources/static/docs")
+}
+build {
+    dependsOn copyDocument
+}
 dependencies {
-    asciidoctor 'org.springframework.restdocs:spring-restdocs-asciidoctor'
-    testCompile 'org.springframework.restdocs:spring-restdocs-mockmvc'
+    asciidoctor 'org.springframework.restdocs:spring-restdocs-asciidoctor:2.0.3.RELEASE'
+    testCompile 'org.springframework.restdocs:spring-restdocs-mockmvc:2.0.3.RELEASE'
 }

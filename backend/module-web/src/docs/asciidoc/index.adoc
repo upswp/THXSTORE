@@ -1,8 +1,6 @@
-= THXSTORE REST Docs
-Park Sangwoo;
-
 ifndef::snippets[]
 :snippets: ../../../build/generated-snippets
+endif::[]
 :doctype: book
 :icons: font
 :source-highlighter: highlightjs
@@ -96,25 +94,28 @@ ifndef::snippets[]
 
 `POST` 요청을 사용해서 새 유저를 만들 수 있다.
 
-operation::signUp-member[snippets='curl-request,http-request,http-response,request-body,request-fields,request-headers,response-body,response-headers,links']
-//=== Request
-//CURL:
-//include::{snippets}/signUp-member/curl-request.adoc[]
-//Http-request:
-//include::{snippets}/signUp-member/http-request.adoc[]
-//Httpie-request:
-//include::{snippets}/signUp-member/httpie-request.adoc[]
-//Request-body:
-//include::{snippets}/signUp-member/request-body.adoc[]
-//Request-fields:
-//include::{snippets}/signUp-member/request-fields.adoc[]
-//Request-header:
-//include::{snippets}/signUp-member/request-headers.adoc[]
-//
-//=== Response
-//Http-response:
-//include::{snippets}/signUp-member/http-response.adoc[]
-//Response-body:
-//include::{snippets}/signUp-member/response-body.adoc[]
-//Response-header
-//include::{snippets}/signUp-member/response-headers.adoc[]
+=== Links
+Links:
+include::{snippets}/signUp-member/links.adoc[]
+
+=== Request
+CURL:
+include::{snippets}/signUp-member/curl-request.adoc[]
+Http-request:
+include::{snippets}/signUp-member/http-request.adoc[]
+Httpie-request:
+include::{snippets}/signUp-member/httpie-request.adoc[]
+Request-body:
+include::{snippets}/signUp-member/request-body.adoc[]
+Request-fields:
+include::{snippets}/signUp-member/request-fields.adoc[]
+Request-header:
+include::{snippets}/signUp-member/request-headers.adoc[]
+
+=== Response
+Http-response:
+include::{snippets}/signUp-member/http-response.adoc[]
+Response-body:
+include::{snippets}/signUp-member/response-body.adoc[]
+Response-header
+include::{snippets}/signUp-member/response-headers.adoc[]
