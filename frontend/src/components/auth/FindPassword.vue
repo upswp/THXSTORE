@@ -118,6 +118,7 @@ h1 {
       padding: 0 0 0 3px;
     }
     .submit-items {
+      margin-top: 40px;
       .label {
         transition: color 0.3s;
       }
@@ -137,7 +138,7 @@ h1 {
       padding: 10px 0;
       font-size: 16px;
       @include box-shadow;
-      margin-bottom: 30px;
+      margin-top: 40px;
       transition: background-color 0.3s;
       &:disabled {
         background-color: $gray400;

@@ -33,7 +33,7 @@
     <footer>
       <span @click="moveToPage('signup')">회원가입하기</span>
       <span>|</span>
-      <span>비밀번호찾기</span>
+      <span @click="moveToPage('mailcode')">비밀번호찾기</span>
     </footer>
   </div>
 </template>
