@@ -196,7 +196,11 @@
   word-wrap: break-word;
   word-break: $word-break;
 }
-
+@mixin ellipsis-one{
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
 @mixin disabled {
   cursor: not-allowed !important;
   pointer-events: none;

@@ -2,62 +2,72 @@
   <div class="user-account-container">
     <div class="page-title">프로필 설정</div>
     <div class="user-account-contents">
-      <div class="user-profile-image">
-        <img
-          src="https://images.unsplash.com/photo-1521572267360-ee0c2909d518?ixid=MnwxMjA3fDB8MHxzZWFyY2h8MjB8fHByb2ZpbGV8ZW58MHx8MHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=400&q=60"
-        />
-      </div>
-      <div class="profile-change-button">
-        <awesome icon="cloud-upload-alt"></awesome>
-      </div>
-      <div class="user-profile-info">
-        <div class="simple-info">
-          <div class="col">
-            <div class="email">
-              <div class="item-header">이메일</div>
-              <div class="item-label">a@a.com</div>
+      <div class="profile-background"></div>
+      <div class="user-contents-wrapper">
+        <div class="user-profile-image">
+          <img
+            src="https://images.unsplash.com/photo-1521572267360-ee0c2909d518?ixid=MnwxMjA3fDB8MHxzZWFyY2h8MjB8fHByb2ZpbGV8ZW58MHx8MHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=400&q=60"
+          />
+        </div>
+        <div class="profile-change-button">
+          <awesome icon="cloud-upload-alt"></awesome>
+        </div>
+        <div class="user-profile-info">
+          <div class="simple-info">
+            <div class="col">
+              <div class="email">
+                <div class="item-header">이메일</div>
+                <div class="item-label">a@a.com</div>
+              </div>
+              <div class="social">
+                <div class="item-header">소셜 가입</div>
+                <div class="item-label">일반 회원</div>
+              </div>
             </div>
-            <div class="social">
-              <div class="item-header">소셜 가입</div>
-              <div class="item-label">일반 회원</div>
-            </div>
-          </div>
-          <div class="col">
-            <div class="nickname">
-              <div class="item-header">닉네임</div>
-              <transition name="fade" mode="out-in">
-                <div v-if="!change.nickname" key="non-editable" class="item-display">
-                  <div class="item-label">{{ nickname }}</div>
+            <div class="col">
+              <div class="nickname">
+                <div class="item-header">
+                  닉네임
                   <awesome icon="pen-square" @click="change.nickname = true"></awesome>
                 </div>
-                <div v-else key="editable" class="item-input">
-                  <input v-model="nickname" type="text" maxlength="10" />
-                  <awesome :icon="['far', 'check-circle']" @click="change.nickname = false"></awesome>
-                </div>
-              </transition>
-            </div>
-            <div class="phone">
-              <div class="item-header">핸드폰 번호</div>
-              <transition name="fade" mode="out-in">
-                <div v-if="!change.phone" key="non-editable" class="item-display">
-                  <div class="item-label">{{ phone }}</div>
+                <transition name="fade" mode="out-in">
+                  <div v-if="!change.nickname" key="non-editable" class="item-display">
+                    <div class="item-label">{{ nickname }}</div>
+                  </div>
+                  <div v-else key="editable" class="item-input">
+                    <input v-model="nickname" type="text" maxlength="10" />
+                    <awesome :icon="['far', 'check-circle']" @click="change.nickname = false"></awesome>
+                  </div>
+                </transition>
+              </div>
+              <div class="phone">
+                <div class="item-header">
+                  핸드폰 번호
                   <awesome icon="pen-square" @click="change.phone = true"></awesome>
                 </div>
-                <div v-else key="editable" class="item-input">
-                  <input v-model="phone" type="tel" />
-                  <awesome :icon="['far', 'check-circle']" @click="change.phone = false"></awesome>
-                </div>
-              </transition>
+                <transition name="fade" mode="out-in">
+                  <div v-if="!change.phone" key="non-editable" class="item-display">
+                    <div class="item-label">{{ phone }}</div>
+                  </div>
+                  <div v-else key="editable" class="item-input">
+                    <input v-model="phone" type="tel" />
+                    <awesome :icon="['far', 'check-circle']" @click="change.phone = false"></awesome>
+                  </div>
+                </transition>
+              </div>
             </div>
           </div>
-        </div>
-        <div class="location">
-          <div class="item-header">위치 설정</div>
-          <div class="item-display">
-            <div class="item-label">{{ location }}</div>
-            <awesome icon="pen-square" @click="loaded = true"></awesome>
+          <hr />
+          <div class="location">
+            <div class="item-header">
+              위치 설정
+              <awesome icon="pen-square" @click="loaded = true"></awesome>
+            </div>
+            <div class="item-display location">
+              <div class="item-label">{{ location }}</div>
+            </div>
+            <kakao-map :location="newLocation"></kakao-map>
           </div>
-          <kakao-map :location="newLocation"></kakao-map>
         </div>
       </div>
     </div>
@@ -77,24 +87,22 @@ export default {
     return {
       nickname: 'daep93',
       phone: '010-8388-7260',
-      location: '대전시 유성구 서울산로 3길',
-      newLocation: '대전시 유성구 서울산로 3길',
+      location: '대전 유성구 동서대로 98-39',
+      newLocation: '대전 유성구 동서대로 98-39',
       change: {
         nickname: false,
         phone: false,
         location: false,
       },
-      loaded: true,
+      loaded: false,
     };
   },
   methods: {
-    setLocation() {
-      this.change.location = false;
-      this.newLocation = this.location;
-    },
-    setLocationByRoadName(data) {
+    setLocationByRoadName(addr) {
       this.loaded = false;
-      console.log(data);
+      if (addr === '') return;
+      this.location = addr;
+      this.newLocation = addr;
     },
   },
 };
@@ -103,6 +111,17 @@ export default {
 <style lang="scss" scoped>
 .user-account-container {
   width: 100%;
+}
+.profile-background {
+  width: 100%;
+  height: 130px;
+  background: black;
+  @include mobile() {
+    height: 110px;
+  }
+  @include xs-mobile() {
+    height: 100px;
+  }
 }
 .page-title {
   font-size: 24px;
@@ -123,6 +142,16 @@ export default {
   @include shadow1;
   padding: 20px;
 }
+.user-contents-wrapper {
+  position: relative;
+  top: -110px;
+  @include mobile() {
+    top: -90px;
+  }
+  @include xs-mobile() {
+    top: -70px;
+  }
+}
 .user-profile-image {
   @include flexbox;
   @include justify-content(center);
@@ -132,6 +161,7 @@ export default {
     border-radius: 50%;
     object-fit: cover;
     padding: 5px;
+    background-color: white;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
     @include mobile {
       width: 140px;
@@ -182,19 +212,9 @@ export default {
 .item-header {
   font-size: 20px;
   font-weight: 600;
+  height: 20px;
   margin-bottom: 20px;
   text-align: center;
-  @include mobile() {
-    font-size: 16px;
-  }
-  @include xs-mobile() {
-    font-size: 14px;
-  }
-}
-.item-display {
-  @include flexbox;
-  @include justify-content(center);
-  @include align-items(center);
   svg {
     width: 20px;
     height: 20px;
@@ -203,6 +223,30 @@ export default {
     &:hover {
       color: $blue600;
     }
+    @include mobile() {
+      width: 16px;
+      height: 16px;
+    }
+    @include xs-mobile() {
+      width: 14px;
+      height: 14px;
+    }
+  }
+  @include mobile() {
+    font-size: 16px;
+    height: 16px;
+  }
+  @include xs-mobile() {
+    font-size: 14px;
+    height: 14px;
+  }
+}
+.item-display {
+  @include flexbox;
+  @include justify-content(center);
+  @include align-items(center);
+  &.location {
+    margin-bottom: 20px;
   }
 }
 
@@ -231,6 +275,10 @@ export default {
   @include pc() {
     @include justify-content(space-around);
   }
+  margin-bottom: 10px;
+}
+hr {
+  width: 80%;
   margin-bottom: 20px;
 }
 .col {
@@ -260,6 +308,9 @@ export default {
 .item-label {
   min-width: 130px;
   line-height: 20px;
+  width: 100%;
+  text-align: center;
+  @include ellipsis-one;
   @include mobile {
     font-size: 14px;
   }
