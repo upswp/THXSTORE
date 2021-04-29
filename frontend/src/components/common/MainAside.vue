@@ -119,7 +119,7 @@ export default {
   }
   .navigation-drawer {
     position: relative;
-    // left: -1px;
+    left: -1px;
     padding: 20px 0;
     background-color: white;
     z-index: 11;

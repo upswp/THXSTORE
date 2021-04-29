@@ -8,10 +8,10 @@ export default {
       email: '',
       nickname: '',
       social: '',
-      profileImage: '',
+      profileImage: require('@/assets/image/basic_profile.jpg'),
     },
     getUserFromLocalStorage(),
   ),
   token: getTokenFromLocalStorage() || '',
-  mainDrawerOpen: true,
+  mainDrawerOpen: false,
 };

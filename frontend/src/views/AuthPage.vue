@@ -1,6 +1,6 @@
 <template>
   <div class="auth-container">
-    <header>
+    <header class="auth-header">
       <ul class="header-wrap">
         <li><awesome icon="store" class="store"></awesome></li>
         <li><span class="title">Thx!Store</span></li>
@@ -9,27 +9,21 @@
     <div class="main-wrap">
       <main>
         <transition :name="transitionName" mode="out-in"><router-view></router-view> </transition>
-        <the-privacy v-if="showModal" @close="showModal = false">
-          <!--
-      you can use custom content here to overwrite
-      default content
-    -->
-        </the-privacy>
       </main>
-      <aside>
-        <div class="privacy-policy" @click="showModal = true">Privacy Policy</div>
+      <aside class="privacy-policy" @click="showModal = true">
+        <span>Privacy Policy</span>
       </aside>
+      <privacy-policy v-if="showModal" @close="showModal = false"></privacy-policy>
     </div>
-    <Footer />
   </div>
 </template>
 
 <script>
-import ThePrivacy from '@/components/common/ThePrivacy';
+import PrivacyPolicy from '@/components/common/PrivacyPolicy';
 const DEFAULT_TRANSITION = 'fade';
 export default {
   components: {
-    ThePrivacy,
+    PrivacyPolicy,
   },
   data() {
     return {
@@ -111,59 +105,72 @@ export default {
         opacity: 1;
       }
     }
+    @include xs-mobile() {
+      & {
+        opacity: 1;
+      }
+    }
   }
-
-  header {
-    font-family: 'Pacifico', cursive;
-    color: $blue800;
-    @include flexbox;
+}
+.auth-header {
+  font-family: 'Pacifico', cursive;
+  color: $blue800;
+  @include flexbox;
+  @include justify-content(center);
+  font-size: 2rem;
+  @include align-items(center);
+}
+.header-wrap {
+  margin: 32px 0;
+  padding: 0.1rem;
+  @include flexbox;
+  position: relative;
+  cursor: pointer;
+  @include mobile() {
+    color: white;
+    @include auth-transition(color);
+  }
+  @include xs-mobile() {
+    color: white;
+    @include auth-transition(color);
+  }
+}
+.store {
+  font-size: 2rem;
+  padding-right: 0.3rem;
+}
+.main-wrap {
+  @include pc() {
+    @include slide-transition;
+  }
+  @include mobile() {
+    @include slide-transition;
+  }
+  @include xs-mobile() {
+    @include fade-transition(slide-right, 0.5s);
+    @include fade-transition(slide-left, 0.5s);
+  }
+  main {
+    @include flexbox();
     @include justify-content(center);
-    font-size: 2rem;
-    @include align-items(center);
-    .header-wrap {
-      margin: 32px 0;
-      padding: 0.1rem;
-      @include flexbox;
-      position: relative;
-      cursor: pointer;
-      @include mobile() {
-        color: white;
-        @include auth-transition(color);
-      }
-      .store {
-        font-size: 2rem;
-        padding-right: 0.3rem;
-      }
-    }
+    margin-bottom: 40px;
   }
-
-  .main-wrap {
-    @include pc {
-      @include slide-transition;
+}
+.privacy-policy {
+  @include flexbox();
+  @include justify-content(center);
+  span {
+    font-weight: 600;
+    z-index: 1;
+    color: $blue600;
+    cursor: pointer;
+    margin-bottom: 20px;
+    @include auth-transition(color);
+    @include mobile() {
+      color: white;
     }
-    @include mobile {
-      @include fade-transition(slide-right, 0.5s);
-      @include fade-transition(slide-left, 0.5s);
-    }
-    main {
-      @include flexbox();
-      @include justify-content(center);
-      margin-bottom: 40px;
-    }
-    aside {
-      @include flexbox();
-      @include justify-content(center);
-      .privacy-policy {
-        font-weight: 600;
-        z-index: 1;
-        color: $blue600;
-        cursor: pointer;
-        margin-bottom: 20px;
-        @include auth-transition(color);
-        @include mobile() {
-          color: white;
-        }
-      }
+    @include xs-mobile() {
+      color: white;
     }
   }
 }

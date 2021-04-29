@@ -1,0 +1,98 @@
+.modal-mask {
+  position: fixed;
+  z-index: 9998;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: table;
+  transition: opacity 0.3s ease;
+  @include flexbox;
+  @include justify-content(center);
+  @include align-items(center);
+}
+
+
+.modal-container {
+  width:clamp(310px, 50%, 500px);
+  padding: 20px 10px;
+  background-color: #fff;
+  border-radius: 2px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);
+  transition: all 0.3s ease;
+  font-family: Helvetica, Arial, sans-serif;
+  /* 내가 추가한 것 */
+  max-height: 600px;
+  overflow: clip;
+}
+
+.modal-header h2 {
+  @include headline4;
+  margin-top: 0;
+  color: $blue600;
+  text-align: center;
+  @include mobile {
+    padding-right: 25px;
+  }
+}
+
+.modal-body {
+  max-height: 470px;
+  overflow-y: scroll !important;
+  margin: 10px 0;
+  padding: 0 10px;
+  // 코드리뷰
+  padding-right: 5px;
+  @include mobile {
+    padding-right: 20px;
+  }
+  h3 {
+    @include headline6;
+    margin-top: 5%;
+    margin-bottom: 2%;
+    word-break: keep-all;
+  }
+  p {
+    // @include body2;
+    margin-top: 1%;
+    font-size: 0.9em;
+  }
+  .sub-p {
+    font-size: 0.8em;
+    padding-left: 3%;
+    margin-top: 2%;
+  }
+}
+.modal-footer {
+  .modal-default-button {
+    background-color: $blue600;
+    color: white;
+    display: block;
+    margin: 0 auto;
+    border: none;
+  }
+}
+
+/*
+ * The following styles are auto-applied to elements with
+ * transition="modal" when their visibility is toggled
+ * by Vue.js.
+ *
+ * You can easily play with the modal transition by editing
+ * these styles.
+ */
+
+.modal-enter {
+  opacity: 0;
+}
+
+.modal-leave-active {
+  opacity: 0;
+}
+
+.modal-enter .modal-container,
+.modal-leave-active .modal-container {
+  -webkit-transform: scale(1.1);
+  transform: scale(1.1);
+}

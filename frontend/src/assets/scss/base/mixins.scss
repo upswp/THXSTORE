@@ -165,11 +165,11 @@
 }
 
 @mixin pc {
-  @media only screen and (max-width: $screen-lg) { @content }
+  @media only screen and (max-width: $screen-lg) and (min-width: $screen-sm) { @content }
 }
 
 @mixin mobile {
-  @media only screen and (max-width: $screen-sm) { @content }
+  @media only screen and (max-width: $screen-sm) and (min-width: $screen-xs) { @content }
 }
 @mixin xs-mobile {
   @media only screen and (max-width: $screen-xs) { @content }
