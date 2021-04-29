@@ -271,6 +271,16 @@ export default {
     }
   }
   @include xs-mobile {
+    header {
+      font-size: 0.7rem;
+    }
+    label {
+      width: 40%;
+      float: left;
+      font-size: 12px;
+      padding-bottom: 0%;
+      margin-left: 0px;
+    }
     .before-upload {
       font-size: 30px;
     }
@@ -280,6 +290,11 @@ export default {
     #addressButton {
       margin: 2%;
       padding: 5px 3px 5px 3px;
+    }
+    .input-content {
+      width: 98%;
+      padding: 1%;
+      display: inline-block;
     }
     #nomalAddress {
       margin: 0px;
