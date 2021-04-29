@@ -2,9 +2,11 @@
   <div class="user-container">
     <user-navigation @clickButton="clickButton"></user-navigation>
     <div class="user-container-center">
-      <keep-alive>
-        <component :is="nav"></component>
-      </keep-alive>
+      <transition name="slide-left">
+        <keep-alive>
+          <component :is="nav"></component>
+        </keep-alive>
+      </transition>
     </div>
   </div>
 </template>
@@ -12,7 +14,7 @@
 <script>
 import UserNavigation from '@/components/user/UserNavigation';
 import UserProfile from '@/components/user/category/UserProfile';
-import StoreEnrollmentForm from '@/components/store/StoreEnrollmentForm';
+import StoreEnrollmentForm from '@/components/user/category/StoreEnrollmentForm';
 
 export default {
   components: {
@@ -34,6 +36,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@include slide-transition;
 .user-container {
   width: 100%;
   min-height: 100vh;

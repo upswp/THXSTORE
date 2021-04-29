@@ -5,12 +5,13 @@
       <div class="profile-background"></div>
       <div class="user-contents-wrapper">
         <div class="user-profile-image">
-          <img
-            src="https://images.unsplash.com/photo-1521572267360-ee0c2909d518?ixid=MnwxMjA3fDB8MHxzZWFyY2h8MjB8fHByb2ZpbGV8ZW58MHx8MHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=400&q=60"
-          />
+          <img :src="profileImage" />
         </div>
         <div class="profile-change-button">
-          <awesome icon="cloud-upload-alt"></awesome>
+          <label for="image-upload-button">
+            <awesome icon="plus"></awesome>
+          </label>
+          <input id="image-upload-button" type="file" style="display: none" @change="changeImage" />
         </div>
         <div class="user-profile-info">
           <div class="simple-info">
@@ -35,8 +36,8 @@
                     <div class="item-label">{{ nickname }}</div>
                   </div>
                   <div v-else key="editable" class="item-input">
-                    <input v-model="nickname" type="text" maxlength="10" />
-                    <awesome :icon="['far', 'check-circle']" @click="change.nickname = false"></awesome>
+                    <input v-model="nickname" type="text" maxlength="10" @keydown.enter="setNickname" />
+                    <awesome :icon="['far', 'check-circle']" @click="setNickname"></awesome>
                   </div>
                 </transition>
               </div>
@@ -50,8 +51,8 @@
                     <div class="item-label">{{ phone }}</div>
                   </div>
                   <div v-else key="editable" class="item-input">
-                    <input v-model="phone" type="tel" />
-                    <awesome :icon="['far', 'check-circle']" @click="change.phone = false"></awesome>
+                    <input v-model="phone" type="tel" @keydown.enter="setPhoneNumber" />
+                    <awesome :icon="['far', 'check-circle']" @click="setPhoneNumber"></awesome>
                   </div>
                 </transition>
               </div>
@@ -78,6 +79,9 @@
 <script>
 import KakaoMap from '@/components/common/KakaoMap';
 import SetRoadName from '@/components/common/SetRoadName';
+import { mapGetters } from 'vuex';
+
+import { updateProfile } from '@/api/profile';
 export default {
   components: {
     KakaoMap,
@@ -89,6 +93,7 @@ export default {
       phone: '010-8388-7260',
       location: '대전 유성구 동서대로 98-39',
       newLocation: '대전 유성구 동서대로 98-39',
+      profileImage: '',
       change: {
         nickname: false,
         phone: false,
@@ -97,12 +102,59 @@ export default {
       loaded: false,
     };
   },
+  computed: {
+    ...mapGetters(['getUserInfo']),
+  },
+  created() {
+    this.profileImage = this.getUserInfo.profileImage;
+  },
   methods: {
+    setNickname() {
+      this.change.nickname = false;
+
+      // try {
+      //   await updateProfile({
+      //     nickname: this.nickname,
+      //   })
+      //   this.change.nickname = false;
+      // } catch (error) {
+      //   alert('닉네임 변경 실패!')
+      // }
+    },
+    setPhoneNumber() {
+      this.change.phone = false;
+      // try {
+      //  await updateProfile({
+      //    phone: this.phone,
+      //  })
+      //  this.change.phone = false;
+      // } catch (error) {
+      //   alert('핸드폰 번호 변경 실패!');
+      // }
+    },
     setLocationByRoadName(addr) {
       this.loaded = false;
       if (addr === '') return;
       this.location = addr;
       this.newLocation = addr;
+      // try {
+      //   await updateProfile({
+      //     location:addr,
+      //   })
+      // } catch (error) {
+      //   alert('위치 변경 실패!')
+      // }
+    },
+    changeImage(e) {
+      const file = e.target.files[0];
+      this.profileImage = URL.createObjectURL(file);
+      // try {
+      //   const frm = new FormData();
+      //   frm.append('profileImage', file);
+      //   await updateProfile(frm);
+      // } catch (error) {
+      //   alert('프로필 이미지 변경 실패!');
+      // }
     },
   },
 };
@@ -110,7 +162,13 @@ export default {
 
 <style lang="scss" scoped>
 .user-account-container {
-  width: 100%;
+  width: 80%;
+  @include mobile() {
+    width: 100%;
+  }
+  @include xs-mobile() {
+    width: 100%;
+  }
 }
 .profile-background {
   width: 100%;
@@ -177,7 +235,7 @@ export default {
 .profile-change-button {
   @include flexbox;
   @include justify-content(center);
-  & > svg {
+  & > label > svg {
     position: relative;
     top: -50px;
     right: -70px;
@@ -287,9 +345,7 @@ hr {
     @include flexbox;
     @include justify-content(space-around);
   }
-  @include pc() {
-    text-align: center;
-  }
+  text-align: center;
 }
 .item-input {
   @include flexbox;

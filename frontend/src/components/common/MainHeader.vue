@@ -46,6 +46,9 @@ export default {
   @include mobile() {
     font-size: 1.4rem;
   }
+  @include xs-mobile() {
+    font-size: 1.4rem;
+  }
   .navigation-drawer-button {
     width: 50px;
     padding: 10px;
@@ -67,6 +70,9 @@ export default {
       font-size: 2rem;
       @include transition(font-size 0.5s);
       @include mobile() {
+        font-size: 1.4rem;
+      }
+      @include xs-mobile() {
         font-size: 1.4rem;
       }
       @include flexbox;
