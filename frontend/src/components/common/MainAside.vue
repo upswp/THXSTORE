@@ -1,5 +1,5 @@
 <template>
-  <transition name="slide-horizon">
+  <transition name="slide-vertical">
     <div v-show="isMainDrawerOpend" class="drawer-container">
       <nav class="navigation-icon-wrapper">
         <div ref="time-icon" class="drawer-item active" @click="setBtnActive('time')">
@@ -58,23 +58,23 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.slide-horizon-enter-active,
-.slide-horizon-leave-active {
+.slide-vertical-enter-active,
+.slide-vertical-leave-active {
   transition-duration: 0.5s;
   transition-property: height, opacity, transform;
   transition-timing-function: cubic-bezier(0.55, 0, 0.1, 1);
   overflow: hidden;
 }
-.slide-horizon-leave-active,
-.slide-horizon-enter {
+.slide-vertical-leave-active,
+.slide-vertical-enter {
   opacity: 0;
-  @include transform(translate(-10em, 0));
+  @include transform(translate(0, -10em));
 }
 .drawer-container {
   position: fixed;
   z-index: 2;
   top: 50px;
-  height: 100vh;
+  right: 10px;
   box-shadow: 0 10px 5px rgba(0, 0, 0, 0.2);
   @include flexbox;
   @include mobile() {
@@ -92,13 +92,11 @@ export default {
       }
     }
   }
-  background: $gray600;
   .navigation-icon-wrapper {
     @include transition(all 0.5s);
     // header 크기가 변함에 따라 top 변경해줘야함.
     font-size: 1.8rem;
     width: 50px;
-    height: 100vh;
     padding: 20px 0;
     background-color: white;
     border: none;
@@ -121,9 +119,8 @@ export default {
   }
   .navigation-drawer {
     position: relative;
-    left: -1px;
+    // left: -1px;
     padding: 20px 0;
-    height: 100vh;
     background-color: white;
     z-index: 11;
     .detail-guide {

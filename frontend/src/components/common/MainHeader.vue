@@ -1,8 +1,5 @@
 <template>
   <header class="fixed-header">
-    <div class="navigation-drawer-button" @click="toggleDrawer">
-      <awesome icon="bars"></awesome>
-    </div>
     <div class="fixed-header-logo">
       <div></div>
       <div class="logo-title" @click="moveToPage('main')">
@@ -12,6 +9,9 @@
         </ul>
       </div>
       <div></div>
+    </div>
+    <div class="navigation-drawer-button" @click="toggleDrawer">
+      <awesome icon="bars"></awesome>
     </div>
   </header>
 </template>
@@ -38,7 +38,7 @@ export default {
   width: 100%;
   background-color: white;
   @include flexbox;
-  @include justify-content(space-between);
+  @include justify-content(flex-end);
   @include align-items(center);
   box-shadow: 0 0 3px rgba(0, 0, 0, 0.2);
   @include transition(font-size 0.5s);

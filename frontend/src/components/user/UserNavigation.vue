@@ -40,52 +40,48 @@ export default {
 <style lang="scss" scoped>
 .user-nav-container {
   // margin-bottom: 20px;
-  max-width: 800px;
   padding: 20px 40px;
+  margin-bottom: 40px;
   @include flexbox;
-
-  .nav-buttons {
-    width: 100%;
-    @include flexbox;
-    @include justify-content(space-between);
-    font-size: 18px;
-    & > span {
-      color: $gray600;
-      padding: 5px 0;
-    }
-    & > button {
-      @include ellipsis;
-      @include user-select(none);
-      color: $gray600;
-      background: $gray100;
-      display: block;
-      border: none;
-      padding: 5px 0;
-      &.active {
-        color: black;
-        font-weight: 600;
-      }
-      &:hover {
-        color: black;
-      }
-    }
+  @include justify-content(center);
+  @include mobile() {
+    padding: 10px 30px;
+  }
+  @include xs-mobile() {
+    padding: 10px 20px;
   }
 }
-@include mobile() {
-  .user-nav-container {
-    padding: 0;
-    margin-bottom: 20px;
-    .nav-buttons {
-      font-size: 14px;
-      // display: none;
+.nav-buttons {
+  max-width: 800px;
+  width: 100%;
+  @include flexbox;
+  @include justify-content(space-between);
+  font-size: 18px;
+  & > span {
+    color: $gray600;
+    padding: 5px 0;
+  }
+  & > button {
+    @include ellipsis;
+    @include user-select(none);
+    color: $gray600;
+    background: $gray100;
+    display: block;
+    border: none;
+    padding: 5px 0;
+    &.active {
+      color: black;
+      font-weight: 600;
+    }
+    &:hover {
+      color: black;
     }
   }
-}
-@include xs-mobile() {
-  .user-nav-container {
-    .nav-buttons {
-      font-size: 11px;
-    }
+  @include mobile() {
+    font-size: 14px;
+  }
+  @include xs-mobile() {
+    font-size: 11px;
   }
 }
 </style>

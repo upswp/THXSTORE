@@ -23,39 +23,21 @@ export default {
 .main-container {
   z-index: 10;
   background-color: $gray100;
-  .main-contents {
-    background-color: $gray100;
-    position: absolute;
-    padding: 50px 0 50px 225px;
-    min-height: 100vh;
-    width: 100%;
-    @include flexbox;
+}
+.main-contents {
+  background-color: $gray100;
+  position: absolute;
+  padding: 50px 10px;
+  min-height: 100vh;
+  width: 100%;
+  @include flexbox;
+  @include mobile() {
+    padding-top: 40px;
   }
 }
-
-@include mobile() {
-  .main-container {
-    .main-contents {
-      padding: {
-        top: 60px;
-        left: 60px;
-        right: 10px;
-      }
-      .aside-padding {
-        display: none;
-      }
-    }
-  }
-}
-
-@include xs-mobile() {
-  .main-container {
-    .main-contents {
-      padding: {
-        left: 20px;
-        right: 20px;
-      }
-    }
+.aside-padding {
+  @include mobile() {
+    display: none;
   }
 }
 </style>
