@@ -2,29 +2,27 @@ package com.ssafy.thxstore.member.domain;
 
 import com.ssafy.thxstore.common.ColumnDescription;
 import com.ssafy.thxstore.reservation.domain.Reservation;
+import jdk.jfr.Description;
 import lombok.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 
 @Entity
 @AllArgsConstructor
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Setter
 @EqualsAndHashCode(of = "id")
-public class Member {
+public class Member implements UserDetails {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_sequence_gen")
-    @SequenceGenerator(
-            name = "user_sequence_gen",
-            sequenceName = "user_sequence"
-    )
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @ColumnDescription("PK")
     private Long id;
 
@@ -66,10 +64,9 @@ public class Member {
     private String phoneNumber;
 
     @ColumnDescription("유저 Role")
-    @ElementCollection(fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
     @Column(name = "member_type")
-    private Set<MemberRole> roles;
+    private MemberRole roles;
 
     @ColumnDescription("소셜로그인 유저 정보")
     @Enumerated(EnumType.STRING)
@@ -77,7 +74,7 @@ public class Member {
     private Social social;
 
     @Builder
-    public Member(String userId, @Email String email, String password, String address, String nickName, String image, String phoneNumber, Set<MemberRole> roles, Social social) {
+    public Member(String userId, @Email String email, String password, String address, String nickName, String image, String phoneNumber, MemberRole roles, Social social) {
         this.userId = userId;
         this.email = email;
         this.password = password;
@@ -89,11 +86,52 @@ public class Member {
         this.social = social;
     }
 
-    public Object getRoles(MemberRole user) {
-        return MemberRole.USER;
+    @Override
+    @Description("사용자의 id를 반환(unique 값)")
+    public String getUsername() {
+        return email;
     }
 
-    public Object getSocial(Social local) {
-        return Social.LOCAL;
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        Set<GrantedAuthority> role = new HashSet<>();
+        return role
+                .stream()
+                .map(r -> new SimpleGrantedAuthority("ROLE_" + roles))
+                .collect(Collectors.toSet());
+    }
+
+    @Override
+    @Description("사용자의 password 반환")
+    public String getPassword() {
+        return password;
+    }
+
+    @Override
+    @Description("사용자의 계정 만료 여부 확인")
+    public boolean isAccountNonExpired() {
+        // 만료되었는지 확인하는 로직
+        return true; // true -> 만료되지 않았음
+    }
+
+    @Override
+    @Description("사용자의 계정이 잠금 여부 확인")
+    public boolean isAccountNonLocked() {
+        // 계정 잠금되었는지 확인하는 로직
+        return true; // true -> 잠금되지 않았음
+    }
+
+    @Override
+    @Description("패스워드 만료여부 확인")
+    public boolean isCredentialsNonExpired() {
+        // 패스워드가 만료되었는지 확인하는 로직
+        return true; // true -> 만료되지 않았음
+    }
+
+    @Override
+    @Description("계정 사용 가능 여부 확인")
+    public boolean isEnabled() {
+        // 계정이 사용 가능한지 확인하는 로직
+        return true; // true -> 사용 가능
     }
 }
