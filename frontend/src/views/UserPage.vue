@@ -42,8 +42,11 @@ export default {
     @include flexbox;
     @include justify-content(center);
     padding: 0px 40px;
+    @include mobile {
+      padding: 0 20px;
+    }
     @include xs-mobile {
-      padding: 0;
+      padding: 0 10px;
     }
   }
 }
