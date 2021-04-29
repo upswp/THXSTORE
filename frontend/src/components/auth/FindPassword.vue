@@ -32,7 +32,6 @@
 
 <script>
 import ValidationMixin from '@/mixins/auth/validation';
-import func from 'vue-editor-bridge';
 export default {
   mixins: [ValidationMixin],
   data() {

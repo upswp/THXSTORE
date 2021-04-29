@@ -38,7 +38,7 @@
     <footer>
       <span @click="moveToPage('login')">로그인하기</span>
       <span>|</span>
-      <span>비밀번호찾기</span>
+      <span @click="moveToPage('mailcode')">비밀번호찾기</span>
     </footer>
   </div>
 </template>
