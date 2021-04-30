@@ -70,6 +70,7 @@
 
 <script>
 import SetRoadName from '@/components/common/SetRoadName.vue';
+import { registerStore } from '@/api/seller';
 export default {
   components: {
     SetRoadName,
@@ -83,10 +84,23 @@ export default {
       phoneNum: '',
       comResNum: '',
       loaded: false,
-      file: '',
     };
   },
   methods: {
+    async submitForm() {
+      try {
+        const storeData = {
+          storeName: this.storeName,
+          nomalAddress: this.nomalAddress,
+          detailAddress: this.detailAddress,
+          phoneNum: this.phoneNum,
+          comResNum: this.comResNum,
+        };
+        await registerStore(storeData);
+      } catch (error) {
+        alert('스토어 등록에 문제가 생겼습니다. 다시 시도해주세요.');
+      }
+    },
     insertedFile(event) {
       const file = event.target.files[0];
       const fileValue = event.target.value;
@@ -233,7 +247,7 @@ export default {
       font-size: 0.7rem;
     }
     label {
-      width: 100%;
+      width: 40%;
       float: left;
       font-size: 12px;
       padding-bottom: 0%;
@@ -242,6 +256,7 @@ export default {
     .input-content {
       width: 98%;
       padding: 1%;
+      display: inline-block;
     }
     #nomalAddress {
       width: 70%;
@@ -253,6 +268,36 @@ export default {
     }
     button {
       margin-right: 4%;
+    }
+  }
+  @include xs-mobile {
+    header {
+      font-size: 0.7rem;
+    }
+    label {
+      width: 40%;
+      float: left;
+      font-size: 12px;
+      padding-bottom: 0%;
+      margin-left: 0px;
+    }
+    .before-upload {
+      font-size: 30px;
+    }
+    input {
+      padding: 5px 8px;
+    }
+    #addressButton {
+      margin: 2%;
+      padding: 5px 3px 5px 3px;
+    }
+    .input-content {
+      width: 98%;
+      padding: 1%;
+      display: inline-block;
+    }
+    #nomalAddress {
+      margin: 0px;
     }
   }
 }
