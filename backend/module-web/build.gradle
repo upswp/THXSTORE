@@ -39,4 +39,6 @@ build {
 dependencies {
     asciidoctor 'org.springframework.restdocs:spring-restdocs-asciidoctor:2.0.3.RELEASE'
     testCompile 'org.springframework.restdocs:spring-restdocs-mockmvc:2.0.3.RELEASE'
+    implementation 'io.rest-assured:rest-assured-common:3.3.0'
+    testImplementation 'io.rest-assured:spring-mock-mvc:3.3.0'
 }

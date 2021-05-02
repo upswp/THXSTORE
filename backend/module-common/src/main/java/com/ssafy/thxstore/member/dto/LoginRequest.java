@@ -1,14 +1,13 @@
 package com.ssafy.thxstore.member.dto;
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 
 @Getter
+@Builder
+@Data
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor
 public class LoginRequest {

@@ -1,14 +1,15 @@
 package com.ssafy.thxstore.controller.member;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ssafy.thxstore.controller.common.BaseControllerTest;
+import com.ssafy.thxstore.controller.common.BaseControllerTestWithSecurity;
 import com.ssafy.thxstore.controller.member.docs.AuthDocumentation;
 import com.ssafy.thxstore.member.dto.SignUpRequest;
 import com.ssafy.thxstore.member.service.MemberService;
 import org.junit.Test;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.RestDocumentationContextProvider;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -19,13 +20,15 @@ import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuild
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class MemberControllerTest extends BaseControllerTest {
+@WebMvcTest(controllers = MemberController.class)
+public class MemberAcceptanceTest extends BaseControllerTestWithSecurity {
 
-    @Autowired
+    @MockBean
     MemberService memberService;
+
     @BeforeEach
-    void setUp(final WebApplicationContext webApplicationContext,
-               final RestDocumentationContextProvider restDocumentationContextProvider) {
+    public void setUp(final WebApplicationContext webApplicationContext,
+                      final RestDocumentationContextProvider restDocumentationContextProvider) {
 
         this.mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
                 .apply(documentationConfiguration(restDocumentationContextProvider))

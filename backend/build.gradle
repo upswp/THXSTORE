@@ -29,6 +29,9 @@ subprojects {
 
     sourceCompatibility = 11
     dependencies {
+
+        implementation 'com.google.guava:guava:29.0-jre'
+
         compile('org.springframework.boot:spring-boot-starter')
         //TODO project 진행사항 이후 dependencies 설정 진행하기.
         implementation group: 'org.springframework.boot', name: 'spring-boot-starter-web'

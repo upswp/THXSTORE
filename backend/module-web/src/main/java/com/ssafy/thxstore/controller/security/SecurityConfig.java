@@ -1,4 +1,4 @@
-package com.ssafy.thxstore.controller.config.security;
+package com.ssafy.thxstore.controller.security;
 
 import com.ssafy.thxstore.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
