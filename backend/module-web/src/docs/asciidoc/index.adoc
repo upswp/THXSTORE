@@ -84,39 +84,43 @@ endif::[]
 
 인덱스는 서비스 진입점을 제공한다.
 
+
+//?????? store
+
 [[resources-events]]
-== 유저
+== 스토어
+//==store, store
 
-유저 리소스는 유저를 만들거나 조회할 때 사용한다.
+스토어 리소스는 유저를 만들거나 조회할 때 사용한다.
 
-[[resources-signUp-member]]
-=== 유저 생성
+[[resources-create-store]]
+=== 스토어 생성
 
-`POST` 요청을 사용해서 새 유저를 만들 수 있다.
+`POST` 요청을 사용해서 스토어를 만든다.
 
 === Links
 Links:
-include::{snippets}/signUp-member/links.adoc[]
+include::{snippets}/create-store/links.adoc[]
 
 //operation::signUp-member[snippets='curl-request,http-request,http-response,request-body,request-fields,request-headers,response-body,response-headers,links']
 === Request
 CURL:
-include::{snippets}/signUp-member/curl-request.adoc[]
+include::{snippets}/create-store/curl-request.adoc[]
 Http-request:
-include::{snippets}/signUp-member/http-request.adoc[]
+include::{snippets}/create-store/http-request.adoc[]
 Httpie-request:
-include::{snippets}/signUp-member/httpie-request.adoc[]
+include::{snippets}/create-store/httpie-request.adoc[]
 Request-body:
-include::{snippets}/signUp-member/request-body.adoc[]
+include::{snippets}/create-store/request-body.adoc[]
 Request-fields:
-include::{snippets}/signUp-member/request-fields.adoc[]
+include::{snippets}/create-store/request-fields.adoc[]
 Request-header:
-include::{snippets}/signUp-member/request-headers.adoc[]
+include::{snippets}/create-store/request-headers.adoc[]
 
 === Response
 Http-response:
-include::{snippets}/signUp-member/http-response.adoc[]
+include::{snippets}/create-store/http-response.adoc[]
 Response-body:
-include::{snippets}/signUp-member/response-body.adoc[]
+include::{snippets}/create-store/response-body.adoc[]
 Response-header
-include::{snippets}/signUp-member/response-headers.adoc[]
+include::{snippets}/create-store/response-headers.adoc[]
