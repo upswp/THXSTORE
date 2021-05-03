@@ -73,6 +73,13 @@ const socialCheck = (userId, social) =>
   });
 
 const authWithEmailForPwd = userData => publicAPI.post('', userData);
-const resetPwd = userData => privateAPI.put('', userData);
+
+/**
+ * 비밀번호 변경
+ * @typedef {function} resetPwd
+ * @param {string} password
+ * @returns {Promise<Boolean>} 변경 성공 여부
+ */
+const resetPwd = password => privateAPI.put('', { password });
 
 export { registerUser, loginUser, emailCheck, socialCheck, authWithEmailForPwd, resetPwd };

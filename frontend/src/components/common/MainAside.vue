@@ -74,10 +74,25 @@ export default {
   position: fixed;
   z-index: 2;
   top: 50px;
-  right: 10px;
+  right: 0px;
   box-shadow: 0 10px 5px rgba(0, 0, 0, 0.2);
   @include flexbox;
   @include mobile() {
+    top: 44px;
+    .navigation-drawer {
+      display: none;
+    }
+    .navigation-icon-wrapper {
+      .drawer-item {
+        font-size: 1.4rem;
+        &:hover {
+          color: white;
+          background-color: $blue600;
+        }
+      }
+    }
+  }
+  @include xs-mobile() {
     top: 44px;
     .navigation-drawer {
       display: none;

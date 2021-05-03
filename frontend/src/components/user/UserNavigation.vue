@@ -5,9 +5,9 @@
       <span>|</span>
       <button ref="recentReviews" @click="selectComponent('recentReviews')">최근 리뷰</button>
       <span>|</span>
-      <button ref="userProfile" class="active" @click="selectComponent('userProfile')">프로필</button>
+      <button ref="userProfile" @click="selectComponent('userProfile')">프로필</button>
       <span>|</span>
-      <button ref="resetPassword" @click="selectComponent('resetPassword')">비밀번호 변경</button>
+      <button ref="passwordReset" class="active" @click="selectComponent('passwordReset')">비밀번호 변경</button>
       <span>|</span>
       <button ref="storeEnrollmentForm" @click="selectComponent('storeEnrollmentForm')">판매자 신청</button>
     </div>
@@ -18,7 +18,7 @@
 export default {
   data() {
     return {
-      active: 'userProfile',
+      active: 'passwordReset',
     };
   },
   methods: {

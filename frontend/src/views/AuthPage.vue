@@ -81,11 +81,10 @@ export default {
 
 <style lang="scss" scoped>
 @mixin auth-transition($target) {
-  @include transition($target 1s linear);
+  @include transition($target 1s);
 }
 .auth-container {
   background: linear-gradient(0.25turn, $blue400, $gray200, $gray200, $blue400);
-  // background-color: $green400;
   z-index: -1;
   min-height: 100vh;
 
@@ -140,6 +139,9 @@ export default {
   padding-right: 0.3rem;
 }
 .main-wrap {
+  @include lg-pc() {
+    @include slide-transition;
+  }
   @include pc() {
     @include slide-transition;
   }
