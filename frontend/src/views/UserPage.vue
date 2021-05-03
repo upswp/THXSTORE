@@ -2,7 +2,7 @@
   <div class="user-container">
     <user-navigation @clickButton="clickButton"></user-navigation>
     <div class="user-container-center">
-      <transition name="slide-left">
+      <transition name="slide-right" mode="out-in">
         <keep-alive>
           <component :is="nav"></component>
         </keep-alive>
@@ -15,16 +15,17 @@
 import UserNavigation from '@/components/user/UserNavigation';
 import UserProfile from '@/components/user/category/UserProfile';
 import StoreEnrollmentForm from '@/components/user/category/StoreEnrollmentForm';
-
+import PasswordReset from '@/components/user/category/PasswordReset';
 export default {
   components: {
     UserNavigation,
     UserProfile,
     StoreEnrollmentForm,
+    PasswordReset,
   },
   data() {
     return {
-      nav: 'UserProfile',
+      nav: 'PasswordReset',
     };
   },
   methods: {
