@@ -26,7 +26,7 @@
           <span class="detail-guide-text">내 가게</span>
         </div>
         <div ref="admin" class="detail-guide" @click="setBtnActive('admin')">
-          <span class="detail-guide-text">관리자 대시보드</span>
+          <span class="detail-guide-text" @click="moveToPage('admin')">관리자 대시보드</span>
         </div>
       </aside>
     </div>
@@ -52,6 +52,10 @@ export default {
       this.resetAside();
       this.$refs[e].classList.add('active');
       this.$refs[`${e}-icon`].classList.add('active');
+    },
+    moveToPage(name) {
+      console.log('이동가능함');
+      this.$router.push({ name });
     },
   },
 };
