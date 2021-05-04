@@ -1,26 +1,24 @@
 package com.ssafy.thxstore.member.domain;
 
+import com.ssafy.thxstore.common.BaseTimeEntity;
 import com.ssafy.thxstore.common.ColumnDescription;
 import com.ssafy.thxstore.reservation.domain.Reservation;
-import jdk.jfr.Description;
 import lombok.*;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 
 
 @Entity
 @AllArgsConstructor
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 @Getter
 @Setter
-@EqualsAndHashCode(of = "id")
-public class Member implements UserDetails {
+@EqualsAndHashCode(of = "id", callSuper = false)
+public class Member extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @ColumnDescription("PK")
@@ -64,9 +62,7 @@ public class Member implements UserDetails {
     private String phoneNumber;
 
     @ColumnDescription("유저 Role")
-    @Enumerated(EnumType.STRING)
-    @Column(name = "member_type")
-    private MemberRole roles;
+    private MemberRole role;
 
     @ColumnDescription("소셜로그인 유저 정보")
     @Enumerated(EnumType.STRING)
@@ -74,7 +70,7 @@ public class Member implements UserDetails {
     private Social social;
 
     @Builder
-    public Member(String userId, @Email String email, String password, String address, String nickName, String image, String phoneNumber, MemberRole roles, Social social) {
+    public Member(String userId, @Email String email, String password, String address, String nickName, String image, String phoneNumber, MemberRole role, Social social) {
         this.userId = userId;
         this.email = email;
         this.password = password;
@@ -82,56 +78,11 @@ public class Member implements UserDetails {
         this.nickName = nickName;
         this.image = image;
         this.phoneNumber = phoneNumber;
-        this.roles = roles;
+        this.role = role;
         this.social = social;
     }
 
-    @Override
-    @Description("사용자의 id를 반환(unique 값)")
-    public String getUsername() {
-        return email;
-    }
-
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        Set<GrantedAuthority> role = new HashSet<>();
-        return role
-                .stream()
-                .map(r -> new SimpleGrantedAuthority("ROLE_" + roles))
-                .collect(Collectors.toSet());
-    }
-
-    @Override
-    @Description("사용자의 password 반환")
-    public String getPassword() {
-        return password;
-    }
-
-    @Override
-    @Description("사용자의 계정 만료 여부 확인")
-    public boolean isAccountNonExpired() {
-        // 만료되었는지 확인하는 로직
-        return true; // true -> 만료되지 않았음
-    }
-
-    @Override
-    @Description("사용자의 계정이 잠금 여부 확인")
-    public boolean isAccountNonLocked() {
-        // 계정 잠금되었는지 확인하는 로직
-        return true; // true -> 잠금되지 않았음
-    }
-
-    @Override
-    @Description("패스워드 만료여부 확인")
-    public boolean isCredentialsNonExpired() {
-        // 패스워드가 만료되었는지 확인하는 로직
-        return true; // true -> 만료되지 않았음
-    }
-
-    @Override
-    @Description("계정 사용 가능 여부 확인")
-    public boolean isEnabled() {
-        // 계정이 사용 가능한지 확인하는 로직
-        return true; // true -> 사용 가능
+    public String roleName(){
+        return role.name();
     }
 }

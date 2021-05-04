@@ -1,5 +1,6 @@
 package com.ssafy.thxstore.member.dto;
 
+import com.ssafy.thxstore.member.domain.Social;
 import lombok.*;
 
 import javax.validation.constraints.Email;
@@ -22,5 +23,11 @@ public class SignUpRequest {
 
     @NotEmpty
     private String nickName;
+
+    private String image;
+
+    private Social social;
+
+    private String userId;
 
 }
