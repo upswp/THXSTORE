@@ -40,10 +40,17 @@ export default {
     width: 100%;
     text-align: center;
     margin-top: 30px;
+    @include xs-mobile {
+      font-size: 1.2rem;
+    }
   }
   select {
     text-align: left;
     margin-right: 5%;
+    @include shadow4;
+    @include xs-mobile {
+      font-size: 0.7rem;
+    }
   }
 }
 </style>

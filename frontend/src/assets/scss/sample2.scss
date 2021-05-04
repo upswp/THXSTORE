@@ -1,0 +1,79 @@
+.manager-list-container {
+  width: 100%;
+  max-width: 1280px;
+  padding: 5% 4%;
+  margin: auto;
+  @include flexbox;
+  @include justify-content(center);
+  flex-wrap: wrap;
+  align-items: stretch;
+  .side-bar {
+    width: 20%;
+    border: hotpink 2px solid;
+    min-height: 50%;
+    .name-list {
+      margin: 10px 5px;
+    }
+    .name-item {
+      @include flexbox;
+      border: 1px black solid;
+      margin-bottom: 5px;
+      flex-wrap: wrap;
+      align-items: center;
+      @include justify-content(center);
+    }
+  }
+  .manager-info-container {
+    @include flexbox;
+    border: black 2px solid;
+    width: 40%;
+    align-items: center;
+    flex-grow: 1;
+    flex-wrap: wrap;
+    .info-column {
+      flex-basis: 40%;
+      text-align: left;
+      padding-left: 2%;
+    }
+    .info-data {
+      flex-basis: 60%;
+      text-align: left;
+    }
+  }
+  .manager-copy-container {
+    border: indigo 2px solid;
+    width: 30%;
+    background-size: contain;
+    background-image: url('/');
+  }
+  .button-group {
+    @include flexbox;
+    justify-content: space-around;
+    text-align: center;
+    width: 90%;
+    padding-top: 20px;
+    .pass-button {
+      display: inline-block;
+      width: 30%;
+      color: $white;
+      border: none;
+      background-color: $red400;
+      padding: 10px 0;
+      font-size: 16px;
+      @include box-shadow;
+      margin-bottom: 30px;
+    }
+    .fail-button {
+      display: inline-block;
+      display: inline-block;
+      width: 30%;
+      color: $white;
+      border: none;
+      background-color: $green400;
+      padding: 10px 0;
+      font-size: 16px;
+      @include box-shadow;
+      margin-bottom: 30px;
+    }
+  }
+}
