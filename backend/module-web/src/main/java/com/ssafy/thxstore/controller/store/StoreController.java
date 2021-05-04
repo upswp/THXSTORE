@@ -3,9 +3,8 @@ package com.ssafy.thxstore.controller.store;
 import com.ssafy.thxstore.image.service.ImageService;
 import com.ssafy.thxstore.store.domain.Store;
 import com.ssafy.thxstore.store.dto.CreateStoreDto;
-import com.ssafy.thxstore.store.dto.CreateStoreDtoTest;
+import com.ssafy.thxstore.store.dto.CreateStoreFileDto;
 import com.ssafy.thxstore.store.service.StoreService;
-import com.sun.jersey.multipart.FormDataParam;
 import lombok.RequiredArgsConstructor;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.MediaTypes;
@@ -13,11 +12,7 @@ import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
-import javax.validation.Valid;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.core.MediaType;
 
 import java.io.IOException;
 import java.net.URI;
@@ -32,31 +27,31 @@ public class StoreController {
     private final StoreService storeService;
     private final ImageService imageService;
 
-    //@Consumes({MediaType.MULTIPART_FORM_DATA})
-    // root
     @PostMapping
-    public ResponseEntity createStore(@ModelAttribute CreateStoreDtoTest createStoreDtoTest){
-        //@RequestHeader String authorization,@Valid @RequestBody CreateStoreDto createStoreDto
-        //@RequestPart(value = "file") MultipartFile licenseImage, @RequestPart("request") CreateStoreDto createStoreDto){
-        // 인증 검사
-        //MultipartFile test;
-        System.out.println("test");
+    public ResponseEntity createStore(@ModelAttribute CreateStoreFileDto createStoreFileDto){
         String imgProfile = null;
         try {
-            imgProfile = imageService.createImage(createStoreDtoTest.getLicenseImg());
+            imgProfile = imageService.createImage(createStoreFileDto.getLicenseImg());
         }catch (IOException e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        CreateStoreDto createStoreDto = CreateStoreDto.builder()
-                .name(createStoreDtoTest.getName())
-                .mainAddress(createStoreDtoTest.getMainAddress())
-                .subAddress(createStoreDtoTest.getSubAddress())
-                .phoneNum(createStoreDtoTest.getPhoneNum())
-                .license(createStoreDtoTest.getLicense())
-                .licenseImg(imgProfile)
-                .build();
-        //createStoreDto.setLicenseImg(imgProfile);
-        Store store = storeService.createStore(createStoreDto);
+
+        Store store = storeService.createStore(imgProfile, createStoreFileDto);
+
+        WebMvcLinkBuilder selfLinkBuilder = linkTo(StoreController.class).slash(store.getId());
+        URI createUri = selfLinkBuilder.toUri();
+        StoreResource storeResource = new StoreResource(store);
+        storeResource.add(linkTo(StoreController.class).withRel("create-store"));
+        storeResource.add(Link.of("/api/docs/index.html#resources-create-store").withRel("profile"));
+
+        return ResponseEntity.created(createUri).body(storeResource);
+    }
+
+    @PostMapping("/test/")
+    public ResponseEntity createStoreTest(@RequestBody CreateStoreDto createStoreDto){
+
+
+        Store store = storeService.createStoreTest(createStoreDto);
 
         WebMvcLinkBuilder selfLinkBuilder = linkTo(StoreController.class).slash(store.getId());
         URI createUri = selfLinkBuilder.toUri();

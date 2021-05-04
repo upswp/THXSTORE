@@ -34,7 +34,7 @@ public class AuthDocumentation {
                         fieldWithPath("subAddress").type(JsonFieldType.STRING).description("서브 주소(사용자 입력)"),
                         fieldWithPath("phoneNum").type(JsonFieldType.STRING).description("가게 전화번호"),
                         fieldWithPath("license").type(JsonFieldType.STRING).description("사업자 등록번호"),
-                        fieldWithPath("licenseImg").type(JsonFieldType.OBJECT).description("사업자 등록번호증")
+                        fieldWithPath("licenseImg").type(JsonFieldType.STRING).description("사업자 등록번호증")
                 ),
                 responseHeaders(
                         headerWithName(HttpHeaders.LOCATION).description("Location header"),

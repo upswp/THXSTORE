@@ -57,5 +57,4 @@ public class AwsS3Service {
     private void removeNewFile(File targetFile) {
         targetFile.delete();
     }
-
 }

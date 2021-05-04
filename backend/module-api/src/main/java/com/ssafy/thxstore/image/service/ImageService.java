@@ -11,16 +11,13 @@ import java.io.IOException;
 @Transactional
 @RequiredArgsConstructor
 public class ImageService {
-
     private final AwsS3Service awsS3Service;
     public static final String DOMAIN_NAME = "thxstore.s3.ap-northeast-2.amazonaws.com";
 
     public String createImage(MultipartFile image) throws IOException {
-
         String imgName = awsS3Service.uploadImage(image);
         String imgPath = "https://" + DOMAIN_NAME + "/" + imgName;
 
         return imgPath;
     }
 }
-//https://thxstore.s3.ap-northeast-2.amazonaws.com/KakaoTalk_20210415_204238744.jpg

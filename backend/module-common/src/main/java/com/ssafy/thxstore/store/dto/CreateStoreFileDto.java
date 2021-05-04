@@ -9,7 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class CreateStoreDtoTest {
+public class CreateStoreFileDto {
     private String name;
 
     private String mainAddress;

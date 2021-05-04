@@ -2,6 +2,7 @@ package com.ssafy.thxstore.store.service;
 
 import com.ssafy.thxstore.store.domain.Store;
 import com.ssafy.thxstore.store.dto.CreateStoreDto;
+import com.ssafy.thxstore.store.dto.CreateStoreFileDto;
 import com.ssafy.thxstore.store.repository.StoreRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -19,19 +20,27 @@ public class StoreService {
 
     private final StoreRepository storeRepository;
 
-    public Store createStore(CreateStoreDto createStoreDto) {
-
-        // 파일 저장장
+    public Store createStore(String imgProfile, CreateStoreFileDto createStoreFileDto) {
+        // 파일 저장
+        CreateStoreDto createStoreDto = CreateStoreDto.builder()
+                .name(createStoreFileDto.getName())
+                .mainAddress(createStoreFileDto.getMainAddress())
+                .subAddress(createStoreFileDto.getSubAddress())
+                .phoneNum(createStoreFileDto.getPhoneNum())
+                .license(createStoreFileDto.getLicense())
+                .licenseImg(imgProfile)
+                .build();
 
        Store store = modelMapper.map(createStoreDto, Store.class);
 
-        System.out.println(store.getName());
-        System.out.println(store.getSubAddress());
-        System.out.println(store.getMainAddress());
-        System.out.println(store.getLicenseImg());
-        System.out.println(store.getLicense());
-        System.out.println(store.getPhoneNum());
-        System.out.println(store.getId());
+        storeRepository.save(store);
+
+        return store;
+    }
+
+
+    public Store createStoreTest(CreateStoreDto createStoreDto) {
+        Store store = modelMapper.map(createStoreDto, Store.class);
 
         storeRepository.save(store);
 

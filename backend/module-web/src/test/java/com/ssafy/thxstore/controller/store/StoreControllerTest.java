@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ssafy.thxstore.controller.common.BaseControllerTest;
 import com.ssafy.thxstore.controller.store.docs.AuthDocumentation;
 import com.ssafy.thxstore.store.dto.CreateStoreDto;
-import com.ssafy.thxstore.store.dto.CreateStoreDtoTest;
+import com.ssafy.thxstore.store.dto.CreateStoreFileDto;
 import com.ssafy.thxstore.store.service.StoreService;
 import org.junit.Test;
 import org.junit.jupiter.api.BeforeEach;
@@ -40,29 +40,29 @@ public class StoreControllerTest extends BaseControllerTest {
     public void createStore() throws Exception{
 //        MockMultipartFile file = new MockMultipartFile("content", fileName.toString(), "multipart/mixed", content);
        // MultipartFile file = new MultipartFile();
-        MultipartFile uploadFile = new MockMultipartFile("ssafy.jpg", "content".getBytes());
-//        CreateStoreDto createStoreDto = CreateStoreDto.builder()
-//                .name("SSAFY china food")
-//                .mainAddress("Yuseong-gu 98-39")
-//                .subAddress("Three castles 203-Ho")
-//                .phoneNum("042-820-7400")
-//                .license("111-11-11111")
-//                .licenseImg("asdkj12dj33fmds_ssafy_license_img.jpg")
-//                .build();
-
-        CreateStoreDtoTest createStoreDtoTest = CreateStoreDtoTest.builder()
+      //  MultipartFile uploadFile = new MockMultipartFile("ssafy.jpg", "content".getBytes());
+        CreateStoreDto createStoreDto = CreateStoreDto.builder()
                 .name("SSAFY china food")
                 .mainAddress("Yuseong-gu 98-39")
                 .subAddress("Three castles 203-Ho")
                 .phoneNum("042-820-7400")
                 .license("111-11-11111")
-                .licenseImg(uploadFile)
+                .licenseImg("asdkj12dj33fmds_ssafy_license_img.jpg")
                 .build();
 
+//        CreateStoreFileDto createStoreFileDto = CreateStoreFileDto.builder()
+//                .name("SSAFY china food")
+//                .mainAddress("Yuseong-gu 98-39")
+//                .subAddress("Three castles 203-Ho")
+//                .phoneNum("042-820-7400")
+//                .license("111-11-11111")
+//                .licenseImg(uploadFile)
+//                .build();
+
         //MULTIPART_FORM_DATA 이지만, 테스트는?APPLICATION_JSON
-        mockMvc.perform(post("/store/")
-                .content(new ObjectMapper().writeValueAsString(createStoreDtoTest))
-                .contentType(MediaType.MULTIPART_FORM_DATA))
+        mockMvc.perform(post("/store/test/")
+                .content(new ObjectMapper().writeValueAsString(createStoreDto))
+                .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated())
                 .andDo(print())
                 .andDo(AuthDocumentation.createStore());
