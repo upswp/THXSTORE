@@ -98,6 +98,7 @@ endif::[]
 Links:
 include::{snippets}/signUp-member/links.adoc[]
 
+//operation::signUp-member[snippets='curl-request,http-request,http-response,request-body,request-fields,request-headers,response-body,response-headers,links']
 === Request
 CURL:
 include::{snippets}/signUp-member/curl-request.adoc[]
