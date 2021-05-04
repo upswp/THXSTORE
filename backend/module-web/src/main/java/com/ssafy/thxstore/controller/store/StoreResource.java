@@ -12,4 +12,3 @@ public class StoreResource extends EntityModel<Store> {
         add(linkTo(StoreController.class).slash(store.getId()).withSelfRel());
     }
 }
-//add(linkTo(MemberController.class).slash(member.getId()).withSelfRel());

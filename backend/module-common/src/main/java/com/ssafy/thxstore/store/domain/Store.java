@@ -22,12 +22,8 @@ public class Store {
 
     @Id
     @ColumnDescription("PK")
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "store_sequence_get")
-    @SequenceGenerator(
-            name = "store_sequence_get",
-            sequenceName = "store_sequence"
-    )
-    @Column(name = "store_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
 
 //    @OneToOne // 멤버와 연결

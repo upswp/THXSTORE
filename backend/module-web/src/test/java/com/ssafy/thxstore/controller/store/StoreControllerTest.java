@@ -4,15 +4,18 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ssafy.thxstore.controller.common.BaseControllerTest;
 import com.ssafy.thxstore.controller.store.docs.AuthDocumentation;
 import com.ssafy.thxstore.store.dto.CreateStoreDto;
+import com.ssafy.thxstore.store.dto.CreateStoreDtoTest;
 import com.ssafy.thxstore.store.service.StoreService;
 import org.junit.Test;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.restdocs.RestDocumentationContextProvider;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.multipart.MultipartFile;
 
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
@@ -35,30 +38,34 @@ public class StoreControllerTest extends BaseControllerTest {
     @Test
     @DisplayName("스토어 생성()")
     public void createStore() throws Exception{
-        CreateStoreDto createStoreDto = CreateStoreDto.builder()
-                .name("SSAFY tset test222")
-                .mainAddress("tes22t 98-39")
-                .subAddress("tttt 203tt")
-                .phoneNum("042-820-7400")
-                .license("111-11-11111")
-                .licenseImg("licenseasdc123sdfa23f_ssafylicense.jpg")
-                .build();
-//        SignUpRequest signUpRequest = SignUpRequest.builder()
-//                .email("test123@gmail.com")
-//                .password("Pasword123!")
-//                .nickName("helloTest123")
+//        MockMultipartFile file = new MockMultipartFile("content", fileName.toString(), "multipart/mixed", content);
+       // MultipartFile file = new MultipartFile();
+        MultipartFile uploadFile = new MockMultipartFile("ssafy.jpg", "content".getBytes());
+//        CreateStoreDto createStoreDto = CreateStoreDto.builder()
+//                .name("SSAFY china food")
+//                .mainAddress("Yuseong-gu 98-39")
+//                .subAddress("Three castles 203-Ho")
+//                .phoneNum("042-820-7400")
+//                .license("111-11-11111")
+//                .licenseImg("asdkj12dj33fmds_ssafy_license_img.jpg")
 //                .build();
 
+        CreateStoreDtoTest createStoreDtoTest = CreateStoreDtoTest.builder()
+                .name("SSAFY china food")
+                .mainAddress("Yuseong-gu 98-39")
+                .subAddress("Three castles 203-Ho")
+                .phoneNum("042-820-7400")
+                .license("111-11-11111")
+                .licenseImg(uploadFile)
+                .build();
 
-        //MULTIPART_FORM_DATA 이지만, 테스트는?
-        System.out.println(0);
+        //MULTIPART_FORM_DATA 이지만, 테스트는?APPLICATION_JSON
         mockMvc.perform(post("/store/")
-                .content(new ObjectMapper().writeValueAsString(createStoreDto))
-                .contentType(MediaType.APPLICATION_JSON))
+                .content(new ObjectMapper().writeValueAsString(createStoreDtoTest))
+                .contentType(MediaType.MULTIPART_FORM_DATA))
                 .andExpect(status().isCreated())
                 .andDo(print())
                 .andDo(AuthDocumentation.createStore());
-        System.out.println("2");
     }
 }
 

@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @Component
@@ -19,7 +20,18 @@ public class StoreService {
     private final StoreRepository storeRepository;
 
     public Store createStore(CreateStoreDto createStoreDto) {
-        Store store = modelMapper.map(createStoreDto, Store.class);
+
+        // 파일 저장장
+
+       Store store = modelMapper.map(createStoreDto, Store.class);
+
+        System.out.println(store.getName());
+        System.out.println(store.getSubAddress());
+        System.out.println(store.getMainAddress());
+        System.out.println(store.getLicenseImg());
+        System.out.println(store.getLicense());
+        System.out.println(store.getPhoneNum());
+        System.out.println(store.getId());
 
         storeRepository.save(store);
 
