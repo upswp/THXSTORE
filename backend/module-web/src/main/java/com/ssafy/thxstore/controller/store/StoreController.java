@@ -21,6 +21,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
 @RestController
 @RequiredArgsConstructor
+@CrossOrigin(origins = { "*" }, maxAge = 6000)
 @RequestMapping(value = "/store", produces = MediaTypes.HAL_JSON_VALUE)
 public class StoreController {
 
