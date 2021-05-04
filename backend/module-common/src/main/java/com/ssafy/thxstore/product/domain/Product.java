@@ -15,11 +15,7 @@ import javax.persistence.*;
 public class Product {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "product_sequence_gen")
-    @SequenceGenerator(
-            name = "product_sequence_gen",
-            sequenceName = "product_sequence"
-    )
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @ColumnDescription("PK")
     private Long id;
 
