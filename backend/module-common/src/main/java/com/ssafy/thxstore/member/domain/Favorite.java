@@ -15,11 +15,7 @@ import javax.persistence.*;
 public class Favorite {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "favorite_sequence_gen")
-    @SequenceGenerator(
-            name = "favorite_sequence_gen",
-            sequenceName = "favorite_sequence"
-    )
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @ColumnDescription("PK")
     private Long id;
 

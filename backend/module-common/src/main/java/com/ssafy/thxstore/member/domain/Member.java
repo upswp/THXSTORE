@@ -51,11 +51,11 @@ public class Member extends BaseTimeEntity {
 
     @ColumnDescription("유저 닉네임")
     @Column(name = "nickname", nullable = false, unique = true)
-    private String nickName;
+    private String nickname;
 
     @ColumnDescription("유저 프로필 이미지")
-    @Column(name = "image")
-    private String image;
+    @Column(name = "profile_image")
+    private String profileImage;
 
     @ColumnDescription("유저 휴대폰 번호")
     @Column(name = "phone_number")
@@ -70,13 +70,13 @@ public class Member extends BaseTimeEntity {
     private Social social;
 
     @Builder
-    public Member(String userId, @Email String email, String password, String address, String nickName, String image, String phoneNumber, MemberRole role, Social social) {
+    public Member(String userId, @Email String email, String password, String address, String nickname, String profileImage, String phoneNumber, MemberRole role, Social social) {
         this.userId = userId;
         this.email = email;
         this.password = password;
         this.address = address;
-        this.nickName = nickName;
-        this.image = image;
+        this.nickname = nickname;
+        this.profileImage = profileImage;
         this.phoneNumber = phoneNumber;
         this.role = role;
         this.social = social;
