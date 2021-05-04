@@ -31,6 +31,7 @@ subprojects {
     dependencies {
         compile('org.springframework.boot:spring-boot-starter')
         //TODO project 진행사항 이후 dependencies 설정 진행하기.
+        implementation group: 'org.springframework', name: 'spring-aop'
         implementation group: 'org.springframework.boot', name: 'spring-boot-starter-web'
         implementation group: 'org.springframework.boot', name: 'spring-boot-starter-data-jpa'
         implementation group: 'org.springframework.boot', name: 'spring-boot-starter-hateoas'
