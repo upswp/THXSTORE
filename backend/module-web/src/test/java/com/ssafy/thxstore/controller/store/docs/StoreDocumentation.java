@@ -13,7 +13,7 @@ import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.docu
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 
-public class AuthDocumentation {
+public class StoreDocumentation {
 
 
     public static RestDocumentationResultHandler createStore() {

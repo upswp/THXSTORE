@@ -10,8 +10,12 @@ import org.springframework.hateoas.Link;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.Errors;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 import java.net.URI;
@@ -21,12 +25,13 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(value = "/member", produces = MediaTypes.HAL_JSON_VALUE)
+@RequestMapping(value = "/auth", produces = MediaTypes.HAL_JSON_VALUE)
 public class MemberController {
 
     private final MemberService memberService;
 
     @PostMapping
+    @PreAuthorize("isAnonymous()")
     public ResponseEntity registerMember(@Valid @RequestBody SignUpRequest signUpRequest, Errors errors){
         if(errors.hasErrors()){
             return badRequest(errors);
@@ -36,8 +41,13 @@ public class MemberController {
         WebMvcLinkBuilder selfLinkBuilder = linkTo(MemberController.class).slash(newMember.getId());
         URI createUri = selfLinkBuilder.toUri();
         MemberResource memberResource = new MemberResource(newMember);
-        memberResource.add(linkTo(MemberController.class).withRel("signUp-member"));
-        memberResource.add(Link.of("/api/docs/index.html#resources-signUp-member").withRel("profile"));
+        if(signUpRequest.getSocial() == null){
+            memberResource.add(linkTo(MemberController.class).withRel("signUp-LOCAL"));
+            memberResource.add(Link.of("/api/docs/index.html#resources-signUp-LOCAL").withRel("profile"));
+        }else{
+            memberResource.add(linkTo(MemberController.class).withRel("signUp-SOCIAL"));
+            memberResource.add(Link.of("/api/docs/index.html#resources-signUp-SOCIAL").withRel("profile"));
+        }
         return ResponseEntity.created(createUri).body(memberResource);
     }
 

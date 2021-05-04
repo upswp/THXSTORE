@@ -2,20 +2,17 @@ package com.ssafy.thxstore.controller.store;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ssafy.thxstore.controller.common.BaseControllerTest;
-import com.ssafy.thxstore.controller.store.docs.AuthDocumentation;
+import com.ssafy.thxstore.controller.store.docs.StoreDocumentation;
 import com.ssafy.thxstore.store.dto.CreateStoreDto;
-import com.ssafy.thxstore.store.dto.CreateStoreFileDto;
 import com.ssafy.thxstore.store.service.StoreService;
 import org.junit.Test;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.restdocs.RestDocumentationContextProvider;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
-import org.springframework.web.multipart.MultipartFile;
 
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
@@ -65,7 +62,7 @@ public class StoreControllerTest extends BaseControllerTest {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated())
                 .andDo(print())
-                .andDo(AuthDocumentation.createStore());
+                .andDo(StoreDocumentation.createStore());
     }
 }
 
