@@ -1,17 +1,34 @@
 <template>
   <div style="max-width: 900px; margin: auto">
     <div class="manager-list-container">
-      <div id="nameColumn">가게명</div>
+      <!-- <div id="nameColumn">가게명</div>
       <div id="infoColumn">정보</div>
-      <div id="infoColumn">사업자등록증</div>
-      <div class="side-bar">
+      <div id="infoColumn">사업자등록증</div> -->
+      <!-- <div class="side-bar">
         <ul class="name-list">
           <li class="name-item" @click="clickNameList">🏬 {{ storeName }}</li>
           <li class="name-item">🏬 {{ storeName }}</li>
           <li class="name-item">🏬 {{ storeName }}</li>
         </ul>
-      </div>
+      </div> -->
       <div class="manager-info-container">
+        <div class="side-bar">
+          <ul class="name-list">
+            <li class="name-item" @click="clickNameList">🏬 {{ storeName }}</li>
+            <li class="name-item">🏬 {{ storeName }}</li>
+            <li class="name-item">🏬 {{ storeName }}</li>
+            <li class="name-item">🏬 {{ storeName }}</li>
+            <li class="name-item">🏬 {{ storeName }}</li>
+            <li class="name-item">🏬 {{ storeName }}</li>
+            <li class="name-item">🏬 {{ storeName }}</li>
+            <li class="name-item">🏬 {{ storeName }}</li>
+            <li class="name-item">🏬 {{ storeName }}</li>
+            <li class="name-item">🏬 {{ storeName }}</li>
+            <li class="name-item">🏬 {{ storeName }}</li>
+            <li class="name-item">🏬 {{ storeName }}</li>
+            <li class="name-item">🏬 {{ storeName }}</li>
+          </ul>
+        </div>
         <div class="info-column">스토어 명:</div>
         <div class="info-data">{{ storeName }}</div>
         <div class="info-column">전화번호:</div>
@@ -80,14 +97,14 @@ export default {
   .side-bar {
     overflow-y: auto;
     overflow-x: hidden;
-    width: 18%;
+    width: 100%;
     background: $gray700;
     color: white;
     margin-right: 1%;
-    min-height: 50%;
+    height: 40%;
     @include xs-mobile {
-      width: 50%;
-      order: 1;
+      width: 100%;
+      order: 3;
     }
     .name-list {
       margin: 10px 5px;
@@ -114,7 +131,7 @@ export default {
     flex-grow: 1;
     flex-wrap: wrap;
     @include xs-mobile {
-      font-size: 0.7em;
+      font-size: 0.6em;
       order: 3;
     }
     .info-column {
@@ -123,6 +140,7 @@ export default {
       padding-left: 2%;
       @include xs-mobile {
         text-align: center;
+        padding-left: 0%;
       }
     }
     .info-data {
@@ -136,17 +154,20 @@ export default {
   }
   .manager-copy-container {
     border: indigo 2px solid;
-    width: 40%;
-    // background: url('../../assets/image/사업자 등록증.jpg') no-repeat;
-    // object-fit: cover; // 이미지 태그에 넣는 것 width 100% height 100%
-    background-size: contain;
-    .img {
-      object-fit: cover; // 이미지 태그에 넣는 것 width 100% height 100%
-      height: 400px;
-    }
+    width: 50%;
+    // height: 500px;
+    overflow: hidden;
     @include xs-mobile {
       order: 2;
-      width: 49%;
+      width: 50%;
+    }
+    // background: url('../../assets/image/사업자 등록증.jpg') no-repeat;
+    // object-fit: cover; // 이미지 태그에 넣는 것 width 100% height 100%
+    img {
+      width: 100%;
+      // height: 500px;
+      margin: 0 auto;
+      object-fit: cover; // 이미지 태그에 넣는 것 width 100% height 100%
     }
   }
   .button-group {
