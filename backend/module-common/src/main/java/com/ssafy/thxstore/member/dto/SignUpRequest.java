@@ -22,9 +22,9 @@ public class SignUpRequest {
     private String password;
 
     @NotEmpty
-    private String nickName;
+    private String nickname;
 
-    private String image;
+    private String profileImage;
 
     private Social social;
 

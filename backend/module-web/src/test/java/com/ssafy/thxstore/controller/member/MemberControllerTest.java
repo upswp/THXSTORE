@@ -39,7 +39,7 @@ public class MemberControllerTest extends BaseControllerTest {
         SignUpRequest signUpRequest = SignUpRequest.builder()
                 .email("test456@gmail.com")
                 .password("Pasword123!")
-                .nickName("helloTest456")
+                .nickname("helloTest456")
                 .build();
 
         mockMvc.perform(post("/auth/")
@@ -56,10 +56,10 @@ public class MemberControllerTest extends BaseControllerTest {
         SignUpRequest signUpRequest = SignUpRequest.builder()
                 .email("test123@gmail.com")
                 .password("Pasword123!")
-                .nickName("helloTest123")
+                .nickname("helloTest123")
                 .social(Social.KAKAO)
                 .userId("hello")
-                .image("Default Profile link")
+                .profileImage("Default Profile link")
                 .build();
 
         mockMvc.perform(post("/auth/")

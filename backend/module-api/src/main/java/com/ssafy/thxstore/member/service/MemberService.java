@@ -26,38 +26,30 @@ public class MemberService {
         if(memberRepository.existsByEmail(signUpRequest.getEmail())){
             throw new AuthException(ErrorCode.DUPLICATED_EMAIL);
         }
-        if(memberRepository.existsByNickName(signUpRequest.getNickName())){
-            throw new AuthException(ErrorCode.DUPLICATED_NICKNAME);
-        }
-//        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-//        signUpRequest.setPassword(encoder.encode(signUpRequest.getPassword()));
-
         Member member ;
-        if(signUpRequest.getSocial() == null && signUpRequest.getUserId() == null&& signUpRequest.getImage() == null){
+        if(signUpRequest.getSocial() == null && signUpRequest.getUserId() == null&& signUpRequest.getProfileImage() == null){
             member = Member.builder()
                     .email(signUpRequest.getEmail())
                     .password(signUpRequest.getPassword())
-                    .nickName(signUpRequest.getNickName())
+                    .nickname(signUpRequest.getNickname())
                     .role(MemberRole.USER)
                     .social(Social.LOCAL)
                     .userId(null)
-                    .image(null)
+                    .profileImage(null)
                     .build();
-            member.setPassword(passwordEncoder.encode(member.getPassword()));
-            memberRepository.save(member);
         }else {
             member = Member.builder()
                     .email(signUpRequest.getEmail())
                     .password(signUpRequest.getPassword())
-                    .nickName(signUpRequest.getNickName())
+                    .nickname(signUpRequest.getNickname())
                     .role(MemberRole.USER)
                     .social(signUpRequest.getSocial())
-                    .image(signUpRequest.getImage())
+                    .profileImage(signUpRequest.getProfileImage())
                     .userId(signUpRequest.getUserId())
                     .build();
-            member.setPassword(passwordEncoder.encode(member.getPassword()));
-            memberRepository.save(member);
         }
+        member.setPassword(passwordEncoder.encode(member.getPassword()));
+        memberRepository.save(member);
         return member;
     }
 }
