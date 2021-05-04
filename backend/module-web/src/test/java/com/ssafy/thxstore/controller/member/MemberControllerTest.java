@@ -1,15 +1,14 @@
 package com.ssafy.thxstore.controller.member;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ssafy.thxstore.controller.common.BaseControllerTestWithSecurity;
+import com.ssafy.thxstore.controller.common.BaseControllerTest;
 import com.ssafy.thxstore.controller.member.docs.AuthDocumentation;
+import com.ssafy.thxstore.member.domain.Social;
 import com.ssafy.thxstore.member.dto.SignUpRequest;
-import com.ssafy.thxstore.member.service.MemberService;
 import org.junit.Test;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.RestDocumentationContextProvider;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -20,15 +19,14 @@ import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuild
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(controllers = MemberController.class)
-public class MemberAcceptanceTest extends BaseControllerTestWithSecurity {
+public class MemberControllerTest extends BaseControllerTest {
 
-    @MockBean
-    MemberService memberService;
+    @Autowired
+    CustomMemberDetailsService memberService;
 
     @BeforeEach
-    public void setUp(final WebApplicationContext webApplicationContext,
-                      final RestDocumentationContextProvider restDocumentationContextProvider) {
+    void setUp(final WebApplicationContext webApplicationContext,
+               final RestDocumentationContextProvider restDocumentationContextProvider) {
 
         this.mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
                 .apply(documentationConfiguration(restDocumentationContextProvider))
@@ -36,22 +34,41 @@ public class MemberAcceptanceTest extends BaseControllerTestWithSecurity {
     }
 
     @Test
-    @DisplayName("SignUpRequest를 이용한 회원가입 진행")
-    public void registerMember() throws Exception{
+    @DisplayName("일반회원 회원가입 진행")
+    public void registerLocalMember() throws Exception {
         SignUpRequest signUpRequest = SignUpRequest.builder()
-                .email("test123@gmail.com")
+                .email("test456@gmail.com")
                 .password("Pasword123!")
-                .nickName("helloTest123")
+                .nickName("helloTest456")
                 .build();
 
-        mockMvc.perform(post("/member/")
+        mockMvc.perform(post("/auth/")
                 .content(new ObjectMapper().writeValueAsString(signUpRequest))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated())
                 .andDo(print())
-                .andDo(AuthDocumentation.signup());
+                .andDo(AuthDocumentation.signUpLOCAL());
     }
 
+    @Test
+    @DisplayName("소셜 회원가입 진행")
+    public void registerSocialMember() throws Exception {
+        SignUpRequest signUpRequest = SignUpRequest.builder()
+                .email("test123@gmail.com")
+                .password("Pasword123!")
+                .nickName("helloTest123")
+                .social(Social.KAKAO)
+                .userId("hello")
+                .image("Default Profile link")
+                .build();
+
+        mockMvc.perform(post("/auth/")
+                .content(new ObjectMapper().writeValueAsString(signUpRequest))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isCreated())
+                .andDo(print())
+                .andDo(AuthDocumentation.signUpSOCIAL());
+    }
 }
 
 
