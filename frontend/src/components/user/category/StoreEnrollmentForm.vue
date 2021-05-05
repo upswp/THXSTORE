@@ -5,7 +5,7 @@
 
     <header><h2>스토어 정보입력</h2></header>
     <div>
-      <form @submit.prevent>
+      <form @submit.prevent="submitForm">
         <ul>
           <li>
             <label for="">스토어 이름</label>
@@ -76,6 +76,8 @@ import SetRoadName from '@/components/common/SetRoadName.vue';
 import WaitingModal from '@/components/common/WaitingModal.vue';
 import ReturnModal from '@/components/common/ReturnModal.vue';
 import { registerStore } from '@/api/seller';
+import { handleException } from '@/utils/handler.js';
+
 export default {
   components: {
     SetRoadName,
@@ -94,7 +96,7 @@ export default {
       comResNum: '',
       fileValue: '',
       loaded: false,
-      isEnrollmentDone: 0,
+      isEnrollmentDone: 1,
     };
   },
   created() {
@@ -117,21 +119,32 @@ export default {
     },
     async submitForm() {
       try {
-        const formdata = new FormData();
-        formdata.append('storeName', this.storeName);
-        formdata.append('nomalAddress', this.nomalAddress);
-        formdata.append('detailAddress', this.detailAddress);
-        formdata.append('phoneNum', this.phoneNum);
-        formdata.append('comResNum', this.comResNum);
-        formdata.append('comResNum', this.profileImage);
-        // const storeData = {
-        //   storeName: this.storeName,
-        //   nomalAddress: this.nomalAddress,
-        //   detailAddress: this.detailAddress,
-        //   phoneNum: this.phoneNum,
-        //   comResNum: this.comResNum,
-        // };
-        await registerStore(storeData);
+        if (
+          this.storeName == '' ||
+          this.nomalAddress == '' ||
+          this.phoneNum == '' ||
+          this.comResNum == '' ||
+          this.profileImage == ''
+        ) {
+          alert('항목을 모두 채워주세요');
+        } else {
+          const formdata = new FormData();
+          formdata.append('storeName', this.storeName);
+          formdata.append('nomalAddress', this.nomalAddress);
+          formdata.append('detailAddress', this.detailAddress);
+          formdata.append('phoneNum', this.phoneNum);
+          formdata.append('comResNum', this.comResNum);
+          formdata.append('comResNum', this.profileImage);
+          // const storeData = {
+          //   storeName: this.storeName,
+          //   nomalAddress: this.nomalAddress,
+          //   detailAddress: this.detailAddress,
+          //   phoneNum: this.phoneNum,
+          //   comResNum: this.comResNum,
+          // };
+          await registerStore(formdata);
+          this.$emit('changeTab', 'UserProfile');
+        }
       } catch (error) {
         alert('스토어 등록에 문제가 생겼습니다. 다시 시도해주세요.');
       }

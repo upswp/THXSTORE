@@ -30,7 +30,6 @@ export default {
   },
   methods: {
     clickButton(e) {
-      console.log('클릭버튼작동하나');
       this.nav = e;
     },
   },
