@@ -13,11 +13,7 @@ import javax.persistence.*;
 @EqualsAndHashCode(of = "id")
 public class TimeDeal {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "timedeal_sequence_gen")
-    @SequenceGenerator(
-            name = "timedeal_sequence_gen",
-            sequenceName = "timedeal_sequence"
-    )
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @ColumnDescription("PK")
     private Long id;
 
