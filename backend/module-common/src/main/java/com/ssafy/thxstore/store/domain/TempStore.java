@@ -1,6 +1,7 @@
 package com.ssafy.thxstore.store.domain;
 
 import com.ssafy.thxstore.common.ColumnDescription;
+import com.ssafy.thxstore.member.domain.Member;
 import lombok.*;
 
 import javax.persistence.*;
@@ -16,10 +17,14 @@ public class TempStore {
     @Id
     @ColumnDescription("PK")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+    @Column(name = "temp_store_id")
     private Long id;
 
     // store id
+    @OneToOne // 멤버와 연결
+    @ColumnDescription("FK member의 id 참조(필드_컬럼명)")
+    @JoinColumn(name = "store_id")
+    private Store store;
 
     @ColumnDescription("스토어 상호명")
     @Column(name = "name")
@@ -47,7 +52,8 @@ public class TempStore {
     private String licenseImg;
 
     @Builder
-    public TempStore(String name, String phoneNum, String mainAddress, String subAddress, String license, String licenseImg){
+    public TempStore(Store store, String name, String phoneNum, String mainAddress, String subAddress, String license, String licenseImg){
+        this.store = store;
         this.name = name;
         this.mainAddress = mainAddress;
         this.subAddress = subAddress;

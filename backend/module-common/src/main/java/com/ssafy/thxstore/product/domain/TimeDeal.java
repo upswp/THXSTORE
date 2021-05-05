@@ -1,6 +1,7 @@
 package com.ssafy.thxstore.product.domain;
 
 import com.ssafy.thxstore.common.ColumnDescription;
+import com.ssafy.thxstore.store.domain.Store;
 import lombok.*;
 
 import javax.persistence.*;
@@ -25,6 +26,11 @@ public class TimeDeal {
     @ColumnDescription("FK")
     private Product product;
 
+    @ManyToOne
+    @JoinColumn(name = "store_id")
+    @ColumnDescription("FK")
+    private Store store;
+
     @Column(name = "start_time")
     @ColumnDescription("타임딜 시작시간")
     private String startTime;
@@ -38,7 +44,9 @@ public class TimeDeal {
 //    private Integer dcRate;
 
     @Builder
-    public TimeDeal(String startTime){
+    public TimeDeal(Product product, Store store, String startTime){
+        this.product = product;
+        this.store = store;
         this.startTime = startTime;
     }
 }

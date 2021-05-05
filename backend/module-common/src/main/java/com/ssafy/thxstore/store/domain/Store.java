@@ -25,12 +25,12 @@ public class Store {
     @Id
     @ColumnDescription("PK")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+    @Column(name = "store_id")
     private Long id;
 
     @OneToOne // 멤버와 연결
     @ColumnDescription("FK member의 id 참조(필드_컬럼명)")
-    @JoinColumn(name = "id")
+    @JoinColumn(name = "id") // id 맞낭
     private Member member;
 
     @ColumnDescription("스토어 상호명")

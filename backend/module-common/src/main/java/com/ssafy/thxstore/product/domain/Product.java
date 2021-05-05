@@ -17,16 +17,16 @@ public class Product {
     @Id
     @ColumnDescription("PK")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+    @Column(name = "product_id")
     private Long id;
 
     @ManyToOne(fetch = FetchType.EAGER) // 즉시 로딩
-    @JoinColumn(name = "store_id")
+    @JoinColumn(name = "group_id")
     @ColumnDescription("FK")
-    private Store store;
+    private ProductGroup productGroup;
 
-    @OneToOne
-    private TimeDeal timeDealList;
+//    @OneToOne
+//    private TimeDeal timeDealList;
 
     @Column(name = "name")
     @ColumnDescription("상품명")
@@ -58,7 +58,8 @@ public class Product {
 
 
     @Builder
-    public Product(String name, Integer price, String productImg, String amount, Integer rate, Integer stock){
+    public Product(ProductGroup productGroup, String name, Integer price, String productImg, String amount, Integer rate, Integer stock){
+        this.productGroup = productGroup;
         this.name = name;
         this.price = price;
         this.productImg = productImg;
