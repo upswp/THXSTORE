@@ -32,6 +32,7 @@ public class StoreControllerTest extends BaseControllerTest {
                 .build();
     }
 
+
     @Test
     @DisplayName("스토어 생성()")
     public void createStore() throws Exception{
@@ -57,13 +58,14 @@ public class StoreControllerTest extends BaseControllerTest {
 //                .build();
 
         //MULTIPART_FORM_DATA 이지만, 테스트는?APPLICATION_JSON
-        mockMvc.perform(post("/store/test/")
-                .content(new ObjectMapper().writeValueAsString(createStoreDto))
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isCreated())
-                .andDo(print())
-                .andDo(StoreDocumentation.createStore());
+//        mockMvc.perform(post("/store/test/")
+//                .content(new ObjectMapper().writeValueAsString(createStoreDto))
+//                .contentType(MediaType.APPLICATION_JSON))
+//                .andExpect(status().isCreated())
+//                .andDo(print())
+//                .andDo(StoreDocumentation.createStore());
     }
+
 }
 
 //MediaType.APPLICATION_JSON
