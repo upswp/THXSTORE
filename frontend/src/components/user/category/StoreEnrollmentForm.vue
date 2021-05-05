@@ -1,5 +1,8 @@
 <template>
   <div class="store-enrollment-container">
+    <waiting-modal v-if="showWaitingModal" @close="backToMain"> </waiting-modal>
+    <return-Modal v-if="showReturnModal" @close="showReturnModal = false"></return-Modal>
+
     <header><h2>스토어 정보입력</h2></header>
     <div>
       <form @submit.prevent>
@@ -47,7 +50,7 @@
             <label for="">사업자등록사본</label>
             <div class="input-content">
               <div class="file-flex">
-                <input id="fileName" type="text" class="file_input_textbox" readonly />
+                <input id="fileName" v-model="fileValue" type="text" class="file_input_textbox" readonly />
                 <div class="file_input_div">
                   <label for="file_1">
                     <awesome id="faCloud" ref="cloud" icon="cloud-upload-alt" class="before-upload"></awesome>
@@ -70,32 +73,64 @@
 
 <script>
 import SetRoadName from '@/components/common/SetRoadName.vue';
+import WaitingModal from '@/components/common/WaitingModal.vue';
+import ReturnModal from '@/components/common/ReturnModal.vue';
 import { registerStore } from '@/api/seller';
 export default {
   components: {
     SetRoadName,
+    WaitingModal,
+    ReturnModal,
   },
   data() {
     return {
+      showWaitingModal: false,
+      showReturnModal: false,
       storeName: '',
       zip: '',
       nomalAddress: '',
       detailAddress: '',
       phoneNum: '',
       comResNum: '',
+      fileValue: '',
       loaded: false,
+      isEnrollmentDone: 0,
     };
   },
+  created() {
+    // if (this.isEnrollmentDone !== 0 || this.isEnrollmentDone !== 1) {
+    //   return;
+    // }
+    // axios통신으로 등록상태를 받아온다. (등록중 = 0, 등록반려 = 1)
+    if (!this.isEnrollmentDone) {
+      this.showWaitingModal = true;
+    } else {
+      this.showReturnModal = true;
+    }
+  },
   methods: {
+    backToMain() {
+      console.log('백투');
+      this.showWaitingModal = false;
+      // this.$router.push({ path: 'user' });
+      this.$emit('changeTab', 'UserProfile');
+    },
     async submitForm() {
       try {
-        const storeData = {
-          storeName: this.storeName,
-          nomalAddress: this.nomalAddress,
-          detailAddress: this.detailAddress,
-          phoneNum: this.phoneNum,
-          comResNum: this.comResNum,
-        };
+        const formdata = new FormData();
+        formdata.append('storeName', this.storeName);
+        formdata.append('nomalAddress', this.nomalAddress);
+        formdata.append('detailAddress', this.detailAddress);
+        formdata.append('phoneNum', this.phoneNum);
+        formdata.append('comResNum', this.comResNum);
+        formdata.append('comResNum', this.profileImage);
+        // const storeData = {
+        //   storeName: this.storeName,
+        //   nomalAddress: this.nomalAddress,
+        //   detailAddress: this.detailAddress,
+        //   phoneNum: this.phoneNum,
+        //   comResNum: this.comResNum,
+        // };
         await registerStore(storeData);
       } catch (error) {
         alert('스토어 등록에 문제가 생겼습니다. 다시 시도해주세요.');
@@ -103,8 +138,9 @@ export default {
     },
     insertedFile(event) {
       const file = event.target.files[0];
+      this.profileImage = URL.createObjectURL(file);
       const fileValue = event.target.value;
-      document.getElementById('fileName').value = fileValue;
+      this.fileValue = fileValue;
       if (file) {
         this.$refs.cloud.classList.add('after-upload');
       }
