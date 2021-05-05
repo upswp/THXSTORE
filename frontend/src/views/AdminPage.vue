@@ -10,6 +10,8 @@
       </select>
     </div>
     <manager-list></manager-list>
+    <br />
+    <br />
   </div>
 </template>
 
@@ -34,16 +36,25 @@ export default {
   .admin-header {
     width: 100%;
     padding-top: 50px;
+    margin-bottom: 10px;
     text-align: end;
   }
   h1 {
     width: 100%;
     text-align: center;
     margin-top: 30px;
+    @include xs-mobile {
+      font-size: 1.2rem;
+      margin-top: 10px;
+    }
   }
   select {
     text-align: left;
     margin-right: 5%;
+    @include shadow4;
+    @include xs-mobile {
+      font-size: 0.7rem;
+    }
   }
 }
 </style>
