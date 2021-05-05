@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.net.URI;
+import java.util.List;
 import java.util.Optional;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
@@ -65,9 +66,7 @@ public class StoreController {
     //스토어 정보 수정(개인)
     @PatchMapping
     public ResponseEntity patchStore(@RequestBody StoreChangedDto storeChangedDto){ // store_category, open_time, close_time, close_day, introduce, thumbnail_img, profile_img,
-
         Store store = storeService.patchStore(storeChangedDto);
-
         return ResponseEntity.created(null).body(store);
     }
 
@@ -112,10 +111,11 @@ public class StoreController {
 
 
 /* 스토어  관리(신청 목록)*/
-    // 관리자 스토어 관리. 신청리스트 반환
+    // 관리자 스토어 관리. 신청리스트 반환---------------------------------------------------
     @GetMapping("/application/")
     public ResponseEntity storeApplicationList(){
-        return ResponseEntity.created(null).body(null);
+        List<Store> storeApplicationList = storeService.storeApplicationList();
+        return ResponseEntity.created(null).body(storeApplicationList);
     }
 
     //스토어 신청 허가(관리자)
@@ -136,10 +136,11 @@ public class StoreController {
         return ResponseEntity.created(null).body(null);
     }
 
-    //스토어 수정 리스트
+    //스토어 수정 리스트--------------------------------------------------------
     @GetMapping("/modify/")
     public ResponseEntity storeModifyList(){
-        return ResponseEntity.created(null).body(null);
+        List<Store> storeModifyList = storeService.storeModifyList();
+        return ResponseEntity.created(null).body(storeModifyList);
     }
 
     // 스토어 수정 허가(관리자)

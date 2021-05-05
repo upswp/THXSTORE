@@ -1,5 +1,6 @@
 package com.ssafy.thxstore.store.service;
 
+import com.ssafy.thxstore.image.service.ImageService;
 import com.ssafy.thxstore.store.domain.Store;
 import com.ssafy.thxstore.store.domain.StoreCategory;
 import com.ssafy.thxstore.store.dto.CreateStoreDto;
@@ -9,10 +10,14 @@ import com.ssafy.thxstore.store.repository.StoreRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -23,6 +28,8 @@ public class StoreService {
     private final ModelMapper modelMapper;
 
     private final StoreRepository storeRepository;
+
+    private final ImageService imageService;
 
     // 스토어 생성
     public Store createStore(String imgProfile, CreateStoreFileDto createStoreFileDto) {
@@ -52,34 +59,23 @@ public class StoreService {
 
     // 스토어 개인정보 변경 개인
     public Store patchStore(StoreChangedDto storeChangedDto){
-        Store store = storeRepository.findById(storeChangedDto.getStoreId()).get();
-         // 정보 꺼내고
-        // 가공
-        // 하나씩 비교
-        if(storeChangedDto.getStoreCategory() != null){
-            if(storeChangedDto.getStoreCategory() == "CAFE")
-                store.setStoreCategory(StoreCategory.CAFE);
-
-        }else if(storeChangedDto.getOpenTime() != null){
-
-        }else if(storeChangedDto.getCloseTime() != null){
-
-        }else if(storeChangedDto.getCloseDay() != null){
-
-        }else if(storeChangedDto.getIntroduce() != null){
-
-        }else if(storeChangedDto.getThumbnailImg() != null){
-
-        }else if(storeChangedDto.getProfileImg() != null){
-
-        }
-
-
-        return store;
+       return null;
     }
 
     // 스토어 정보 변경 불변
+    public Store putStore(StoreChangedDto storeChangedDto) {
+        return null;
+    }
 
+
+    /* 스토어  관리(신청 목록)*/
+    // 스토어 신청 리스트
+    public List<Store> storeApplicationList() {
+        List<Store> store = storeRepository.findByStoreCategory("APPLICATION_WAITING");
+        return store;
+    }
+
+    // 스토어 수정 리스트
 
 
     // etc. 기타 시간간 문여는 시간 체크
@@ -94,6 +90,12 @@ public class StoreService {
 
         storeRepository.save(store);
 
+        return store;
+    }
+
+
+    public List<Store> storeModifyList() {
+        List<Store> store = storeRepository.findByStoreCategory("EDIT_WAITING");
         return store;
     }
 }
