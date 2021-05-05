@@ -10,6 +10,8 @@
       </select>
     </div>
     <manager-list></manager-list>
+    <br />
+    <br />
   </div>
 </template>
 
@@ -34,6 +36,7 @@ export default {
   .admin-header {
     width: 100%;
     padding-top: 50px;
+    margin-bottom: 10px;
     text-align: end;
   }
   h1 {
@@ -42,6 +45,7 @@ export default {
     margin-top: 30px;
     @include xs-mobile {
       font-size: 1.2rem;
+      margin-top: 10px;
     }
   }
   select {
