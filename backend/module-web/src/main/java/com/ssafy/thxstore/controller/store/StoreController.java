@@ -100,17 +100,12 @@ public class StoreController {
 
         return ResponseEntity.created(null).body(null);
     }
-
-
-
+    
     //스토어 상태 반환 신청 정보도?
 //    @GetMapping("/status/")
 //    public ResponseEntity statusStore(){
 //        return ResponseEntity.created(null).body(null);
 //    }
-
-
-
 
 /* 스토어  관리(신청 목록)*/
     // 관리자 스토어 관리. 스토어 신청 리스트 반환---------------------------------------------------
@@ -123,23 +118,25 @@ public class StoreController {
 
     //스토어 신청 허가(관리자)
     @PostMapping("/application/success/")
-    public ResponseEntity storeApplicationSuccess(Long storeId){
-
-
-        return ResponseEntity.created(null).body(null);
+    public ResponseEntity storeApplicationSuccess(@RequestParam(value="store_id") Long storeId){
+        System.out.println(storeId);
+        //status 변경
+        Store store= storeService.storeApplicationSuccess(storeId);
+        return ResponseEntity.created(null).body(store);
     }
 
-    // 스토어 신청 실패(관리자)
+    // 스토어 신청 실패(관리자) 매니저 -> 유저
     @PostMapping("/application/fail/")
-    public ResponseEntity storeApplicationFail(Long storeId){
+    public ResponseEntity storeApplicationFail(@RequestParam(value="store_id") Long storeId){
         // 스토어 삭제
-
+        storeService.storeApplicationFail(storeId);
         return ResponseEntity.created(null).body(null);
     }
 
     // 스토어 신청 실패 확인(판패자가 클릭)
     @PostMapping("/application/confirm")
-    public ResponseEntity storeApplicationConfirm(){
+    public ResponseEntity storeApplicationConfirm(@RequestParam(value="store_id") Long storeId){
+        storeService.storeApplicationConfirm(storeId);
         return ResponseEntity.created(null).body(null);
     }
 

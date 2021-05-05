@@ -19,6 +19,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -131,6 +132,33 @@ public class StoreService {
         return store;
     }
 
+    // 스토어 신청 허가. 영속성 ㄲ
+    @Transactional
+    public Store storeApplicationSuccess(Long storeId){
+        Store store = storeRepository.findById(storeId).get();
+        //store = Store.builder()
+       //         .checkStore(CheckStore.EDIT_WAITING)
+       //         .build();
+        store.setCheckStore(CheckStore.NORMAL);
+        System.out.println(store.getCheckStore());
+        return store;
+    }
+    // 스토어 신청 불가 여기서는 store status만 변경
+    @Transactional
+    public void storeApplicationFail(Long storeId){
+        Store store = storeRepository.findById(storeId).get();
+        store.setCheckStore(CheckStore.APPLICATION_FAILED);
+    }
+    // 스토어 신청 불가 확인 -> 매니저 -> 유저,  스토어 삭제
+    @Transactional
+    public void storeApplicationConfirm(Long storeId){
+        Store store = storeRepository.findById(storeId).get();
+        Long memberId = store.getMember().getId();
+
+        Member member = memberRepository.findById(memberId).get();
+        member.setRole(MemberRole.USER);
+        storeRepository.deleteById(storeId);
+    }
     // 스토어 수정 리스트
 
 

@@ -94,7 +94,7 @@ public class Store {
     //  @Enumerated(EnumType.STRING)
     @ColumnDescription("스토어 관리자 승인 여부 및 스토어 상태") // enum 수정
     @Column(name = "check_store")
-    private CheckStore checkStore = CheckStore.APPLICATION_WAITING;
+    private CheckStore checkStore;
 
     @Builder
     public Store(Member member, String name, StoreCategory storeCategory, String phoneNum, String mainAddress, String subAddress,String openTime,String closeTime,String closedDay,String introduce, String thumbImg, String profileImg, String license, String licenseImg, CheckStore checkStore){
