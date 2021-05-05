@@ -59,7 +59,49 @@ public class StoreService {
 
     // 스토어 개인정보 변경 개인
     public Store patchStore(StoreChangedDto storeChangedDto){
-       return null;
+        Store store = storeRepository.findById(storeChangedDto.getStoreId()).get();
+        // 정보 꺼내고
+        // 가공
+        // 하나씩 비교
+        if(storeChangedDto.getStoreCategory() != null){
+            // 1. switch(): 2. if
+            //store.setStoreCategory();
+            //빌더로 수정?
+            store.setStoreCategory(StoreCategory.valueOf(storeChangedDto.getStoreCategory()));
+        }else if(storeChangedDto.getOpenTime() != null){
+            store.setOpenTime(storeChangedDto.getOpenTime());
+
+        }else if(storeChangedDto.getCloseTime() != null){
+            store.setCloseTime(storeChangedDto.getCloseTime());
+
+        }else if(storeChangedDto.getCloseDay() != null){
+            store.setClosedDay(storeChangedDto.getCloseDay());
+
+        }else if(storeChangedDto.getIntroduce() != null){
+            store.setIntroduce(storeChangedDto.getIntroduce());
+
+        }else if(storeChangedDto.getThumbnailImg() != null){
+            // 파일
+            String imgProfile = null;
+            try {
+                imgProfile = imageService.createImage(storeChangedDto.getThumbnailImg());
+            }catch (IOException e) {
+                return null;
+            }
+            store.setThumbImg(imgProfile);
+
+        }else if(storeChangedDto.getProfileImg() != null){
+            // 파일
+            String imgProfile = null;
+            try {
+                imgProfile = imageService.createImage(storeChangedDto.getProfileImg());
+            }catch (IOException e) {
+                return null;
+            }
+            store.setThumbImg(imgProfile);
+        }
+
+        return store;
     }
 
     // 스토어 정보 변경 불변

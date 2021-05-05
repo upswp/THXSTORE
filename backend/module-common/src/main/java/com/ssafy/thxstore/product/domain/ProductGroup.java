@@ -18,7 +18,7 @@ public class ProductGroup {
     @Id
     @ColumnDescription("PK")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "group_id") //
+    @Column(name = "id") //
     private Long id;
     
     //store_id

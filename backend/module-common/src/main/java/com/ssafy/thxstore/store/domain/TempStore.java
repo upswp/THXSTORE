@@ -17,7 +17,7 @@ public class TempStore {
     @Id
     @ColumnDescription("PK")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "temp_store_id")
+    @Column(name = "id")
     private Long id;
 
     // store id

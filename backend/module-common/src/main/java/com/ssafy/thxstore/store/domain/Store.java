@@ -25,7 +25,7 @@ public class Store {
     @Id
     @ColumnDescription("PK")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "store_id")
+    @Column(name = "id")
     private Long id;
 
     @OneToOne // 멤버와 연결

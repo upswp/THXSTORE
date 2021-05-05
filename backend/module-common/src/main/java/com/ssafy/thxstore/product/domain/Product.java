@@ -17,11 +17,11 @@ public class Product {
     @Id
     @ColumnDescription("PK")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "product_id")
+    @Column(name = "id")
     private Long id;
 
     @ManyToOne(fetch = FetchType.EAGER) // 즉시 로딩
-    @JoinColumn(name = "group_id")
+    @JoinColumn(name = "product_group_id")
     @ColumnDescription("FK")
     private ProductGroup productGroup;
 
