@@ -100,4 +100,34 @@ public class AuthDocumentation {
                 )
         );
     }
+
+    public static ResultHandler getSocialMember() {
+        return document("find-social-member",
+                getDocumentRequest(),
+                getDocumentResponse(),
+                links(
+                        linkWithRel("self").description("link to self"),
+                        linkWithRel("find-social-member").description("link to query members"),
+                        linkWithRel("profile").description("link to profile")
+                ),
+                requestHeaders(
+                        headerWithName(HttpHeaders.CONTENT_TYPE).description("content type header")
+                ),
+                requestFields(
+                        fieldWithPath("social").type(JsonFieldType.STRING).description("회원 소셜 종류 판단"),
+                        fieldWithPath("userId").type(JsonFieldType.STRING).description("소셜 유저 아이디")
+                ),
+                responseHeaders(
+                        headerWithName(HttpHeaders.CONTENT_TYPE).description("hal+json type")
+                ),
+                responseFields(
+                        fieldWithPath("id").type(JsonFieldType.NUMBER).description("PK"),
+                        fieldWithPath("email").type(JsonFieldType.STRING).description("유저 이메일"),
+                        fieldWithPath("profileImage").type(JsonFieldType.STRING).description("회원 프로필 이미지"),
+                        fieldWithPath("_links.self.href").description("link to self"),
+                        fieldWithPath("_links.find-social-member.href").description("link to query event list"),
+                        fieldWithPath("_links.profile.href").description("link to profile")
+                )
+        );
+    }
 }
