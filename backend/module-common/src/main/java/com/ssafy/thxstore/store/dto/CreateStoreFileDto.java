@@ -10,6 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class CreateStoreFileDto {
+    private Long memberId;
     private String name;
 
     private String mainAddress;

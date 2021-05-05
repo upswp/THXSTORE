@@ -1,6 +1,10 @@
 package com.ssafy.thxstore.store.service;
 
 import com.ssafy.thxstore.image.service.ImageService;
+import com.ssafy.thxstore.member.domain.Member;
+import com.ssafy.thxstore.member.domain.MemberRole;
+import com.ssafy.thxstore.member.repository.MemberRepository;
+import com.ssafy.thxstore.store.domain.CheckStore;
 import com.ssafy.thxstore.store.domain.Store;
 import com.ssafy.thxstore.store.domain.StoreCategory;
 import com.ssafy.thxstore.store.dto.CreateStoreDto;
@@ -9,6 +13,7 @@ import com.ssafy.thxstore.store.dto.StoreChangedDto;
 import com.ssafy.thxstore.store.repository.StoreRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.annotations.Check;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,22 +33,30 @@ public class StoreService {
     private final ModelMapper modelMapper;
 
     private final StoreRepository storeRepository;
+    private final MemberRepository memberRepository;
 
     private final ImageService imageService;
 
     // 스토어 생성
     public Store createStore(String imgProfile, CreateStoreFileDto createStoreFileDto) {
+        Member member = memberRepository.findById(createStoreFileDto.getMemberId()).get();
+        member.setRole(MemberRole.MANAGER);
+
         // 파일 저장
         CreateStoreDto createStoreDto = CreateStoreDto.builder()
+                .member(member)
+                .memberId(createStoreFileDto.getMemberId())
                 .name(createStoreFileDto.getName())
                 .mainAddress(createStoreFileDto.getMainAddress())
                 .subAddress(createStoreFileDto.getSubAddress())
                 .phoneNum(createStoreFileDto.getPhoneNum())
                 .license(createStoreFileDto.getLicense())
                 .licenseImg(imgProfile)
+                .checkStore(CheckStore.APPLICATION_WAITING)
                 .build();
 
        Store store = modelMapper.map(createStoreDto, Store.class);
+       // member 상태도 변환
 
         storeRepository.save(store);
 
@@ -113,7 +126,8 @@ public class StoreService {
     /* 스토어  관리(신청 목록)*/
     // 스토어 신청 리스트
     public List<Store> storeApplicationList() {
-        List<Store> store = storeRepository.findByStoreCategory("APPLICATION_WAITING");
+        //System.out.println(CheckStore.APPLICATION_WAITING.ordinal());
+        List<Store> store = storeRepository.findByCheckStore(CheckStore.APPLICATION_WAITING.ordinal());
         return store;
     }
 
@@ -137,7 +151,7 @@ public class StoreService {
 
 
     public List<Store> storeModifyList() {
-        List<Store> store = storeRepository.findByStoreCategory("EDIT_WAITING");
+        List<Store> store = null;//storeRepository.findByStoreCategory("EDIT_WAITING");
         return store;
     }
 }

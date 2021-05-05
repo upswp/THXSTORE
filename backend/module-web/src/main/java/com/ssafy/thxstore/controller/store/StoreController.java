@@ -44,13 +44,13 @@ public class StoreController {
         }
 
         Store store = storeService.createStore(imgProfile, createStoreFileDto);
+        //member 상태 변환
 
         WebMvcLinkBuilder selfLinkBuilder = linkTo(StoreController.class).slash(store.getId());
         URI createUri = selfLinkBuilder.toUri();
 //        StoreResource storeResource = new StoreResource(store);
 //        storeResource.add(linkTo(StoreController.class).withRel("create-store"));
 //        storeResource.add(Link.of("/api/docs/index.html#resources-create-store").withRel("profile"));
-//
 //        return ResponseEntity.created(createUri).body(storeResource);
         return ResponseEntity.created(createUri).body(store);
     }
@@ -101,6 +101,8 @@ public class StoreController {
         return ResponseEntity.created(null).body(null);
     }
 
+
+
     //스토어 상태 반환 신청 정보도?
 //    @GetMapping("/status/")
 //    public ResponseEntity statusStore(){
@@ -111,22 +113,27 @@ public class StoreController {
 
 
 /* 스토어  관리(신청 목록)*/
-    // 관리자 스토어 관리. 신청리스트 반환---------------------------------------------------
+    // 관리자 스토어 관리. 스토어 신청 리스트 반환---------------------------------------------------
     @GetMapping("/application/")
     public ResponseEntity storeApplicationList(){
+        //System.out.println("1");
         List<Store> storeApplicationList = storeService.storeApplicationList();
         return ResponseEntity.created(null).body(storeApplicationList);
     }
 
     //스토어 신청 허가(관리자)
-    @PostMapping("/application/success")
-    public ResponseEntity storeApplicationSuccess(){
+    @PostMapping("/application/success/")
+    public ResponseEntity storeApplicationSuccess(Long storeId){
+
+
         return ResponseEntity.created(null).body(null);
     }
 
     // 스토어 신청 실패(관리자)
-    @PostMapping("/application/fail")
-    public ResponseEntity storeApplicationFail(){
+    @PostMapping("/application/fail/")
+    public ResponseEntity storeApplicationFail(Long storeId){
+        // 스토어 삭제
+
         return ResponseEntity.created(null).body(null);
     }
 

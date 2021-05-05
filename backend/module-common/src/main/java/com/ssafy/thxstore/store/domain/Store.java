@@ -30,7 +30,7 @@ public class Store {
 
     @OneToOne // 멤버와 연결
     @ColumnDescription("FK member의 id 참조(필드_컬럼명)")
-    @JoinColumn(name = "id") // id 맞낭
+    @JoinColumn(name = "member_id") // id 맞낭
     private Member member;
 
     @ColumnDescription("스토어 상호명")
@@ -43,7 +43,7 @@ public class Store {
     private StoreCategory storeCategory = StoreCategory.DEFAULT;
 
     @ColumnDescription("스토어 전화번호")
-    @Column(name = "phone_num",nullable = false)
+    @Column(name = "phone_num")
     private String phoneNum;
 
     @ColumnDescription("스토어 메인 주소")
@@ -83,7 +83,7 @@ public class Store {
     private String profileImg;
 
     @ColumnDescription("사업자등록번호")
-    @Column(name = "license",nullable = false)
+    @Column(name = "license")
     private String license;
 
     @ColumnDescription("사업자등록 이미지")
@@ -91,8 +91,8 @@ public class Store {
     @Lob
     private String licenseImg;
 
+    //  @Enumerated(EnumType.STRING)
     @ColumnDescription("스토어 관리자 승인 여부 및 스토어 상태") // enum 수정
-    @Enumerated(EnumType.STRING)
     @Column(name = "check_store")
     private CheckStore checkStore = CheckStore.APPLICATION_WAITING;
 

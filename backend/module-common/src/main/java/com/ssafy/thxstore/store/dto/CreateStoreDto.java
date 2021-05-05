@@ -1,5 +1,7 @@
 package com.ssafy.thxstore.store.dto;
 
+import com.ssafy.thxstore.member.domain.Member;
+import com.ssafy.thxstore.store.domain.CheckStore;
 import lombok.*;
 
 import javax.validation.constraints.NotEmpty;
@@ -11,6 +13,9 @@ import javax.validation.constraints.NotEmpty;
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class CreateStoreDto {
+    private Member member;
+
+    private Long memberId;
 
     private String name;
 
@@ -23,4 +28,6 @@ public class CreateStoreDto {
     private String license;
 
     private String licenseImg;
+
+    private CheckStore checkStore;
 }
