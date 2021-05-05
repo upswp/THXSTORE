@@ -23,11 +23,7 @@ public class CustomMemberDetailsService implements UserDetailsService {
     @Override
     @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(String email) {
-        Member member = memberRepository.findByEmail(email)
-                .orElseThrow(() ->
-                        new UsernameNotFoundException("유저를 찾을 수 없습니다. email: " + email)
-                );
-
+        Member member = memberRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("유저를 찾을 수 없습니다. email: " + email));
         return UserPrincipal.create(member);
     }
 }
