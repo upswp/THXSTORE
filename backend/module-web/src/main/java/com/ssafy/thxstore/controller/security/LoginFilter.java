@@ -15,40 +15,48 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 public class LoginFilter extends UsernamePasswordAuthenticationFilter {
-	@Override
-	public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws
+
+    @Override
+    public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws
             AuthenticationException {
-		if (!request.getMethod().equals("POST")) {
-			throw new AuthenticationServiceException(
-				"Authentication method not supported: " + request.getMethod());
-		}
 
-		LoginRequest loginRequest;
-		try {
-			loginRequest = new ObjectMapper().readValue(request.getInputStream(), LoginRequest.class);
-		} catch (IOException e) {
-			throw new AuthException(ErrorCode.BAD_LOGIN);
-		}
+        LoginRequest loginRequest;
 
-		String username = loginRequest.getEmail();
-		String password = loginRequest.getPassword();
+        if (!request.getMethod().equals("POST")) {
+            throw new AuthenticationServiceException(
+                    "Authentication method not supported: " + request.getMethod());
+        }
+        try {
+            loginRequest = new ObjectMapper().readValue(request.getInputStream(), LoginRequest.class);
+        } catch (IOException e) {
+            throw new AuthException(ErrorCode.BAD_LOGIN);
+        }
 
-		if (username == null) {
-			username = "";
-		}
+        String username;
+        String password;
 
-		if (password == null) {
-			password = "";
-		}
+        username = loginRequest.getEmail();
+        password = loginRequest.getPassword();
 
-		username = username.trim();
+        System.out.println(password);
 
-		UsernamePasswordAuthenticationToken authRequest = new UsernamePasswordAuthenticationToken(
-			username, password);
 
-		// Allow subclasses to set the "details" property
-		setDetails(request, authRequest);
+        //TODO: 익명유저일 경우 사용
+        if (username == null) {
+            username = "";
+        }
 
-		return this.getAuthenticationManager().authenticate(authRequest);
-	}
+        if (password == null) {
+            password = "";
+        }
+
+        username = username.trim();
+
+        UsernamePasswordAuthenticationToken authRequest = new UsernamePasswordAuthenticationToken(username, password);
+
+
+        setDetails(request, authRequest);
+
+        return this.getAuthenticationManager().authenticate(authRequest);
+    }
 }
