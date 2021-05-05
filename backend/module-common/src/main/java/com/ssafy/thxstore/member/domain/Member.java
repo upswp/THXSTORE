@@ -50,7 +50,7 @@ public class Member extends BaseTimeEntity {
     private String address;
 
     @ColumnDescription("유저 닉네임")
-    @Column(name = "nickname", nullable = false, unique = true)
+    @Column(name = "nickname", nullable = false)
     private String nickname;
 
     @ColumnDescription("유저 프로필 이미지")

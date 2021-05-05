@@ -19,43 +19,41 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 public class TokenAuthenticationFilter extends OncePerRequestFilter {
-	private static final Logger logger = LoggerFactory.getLogger(TokenAuthenticationFilter.class);
+    private static final Logger logger = LoggerFactory.getLogger(TokenAuthenticationFilter.class);
 
-	@Autowired
-	private JwtTokenProvider jwtTokenProvider;
-	@Autowired
-	private CustomMemberDetailsService customMemberDetailsService;
+    @Autowired
+    private JwtTokenProvider jwtTokenProvider;
+    @Autowired
+    private CustomMemberDetailsService customMemberDetailsService;
 
-	@Override
-	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
-                                    FilterChain filterChain) throws
-            ServletException,
-		IOException {
-		try {
-			String jwt = getJwtFromRequest(request);
+    @Override
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+        try {
+            String jwt = getJwtFromRequest(request);
 
-			if (StringUtils.hasText(jwt) && jwtTokenProvider.validateToken(jwt)) {
-				String userEmail = jwtTokenProvider.getUserEmailFromToken(jwt);
+            if (StringUtils.hasText(jwt) && jwtTokenProvider.validateToken(jwt)) {
 
-				UserDetails userDetails = customMemberDetailsService.loadUserByUsername(userEmail);
-				UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-					userDetails, null, userDetails.getAuthorities());
-				authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                String userEmail = jwtTokenProvider.getUserEmailFromToken(jwt);
 
-				SecurityContextHolder.getContext().setAuthentication(authentication);
-			}
-		} catch (Exception ex) {
-			logger.error("Could not set user authentication in security context", ex);
-		}
+                UserDetails userDetails = customMemberDetailsService.loadUserByUsername(userEmail);
+                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
+                        userDetails, null, userDetails.getAuthorities());
+                authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
-		filterChain.doFilter(request, response);
-	}
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+            }
+        } catch (Exception ex) {
+            logger.error("Could not set user authentication in security context", ex);
+        }
 
-	private String getJwtFromRequest(HttpServletRequest request) {
-		String bearerToken = request.getHeader("Authorization");
-		if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
-			return bearerToken.substring(7);
-		}
-		return null;
-	}
+        filterChain.doFilter(request, response);
+    }
+
+    private String getJwtFromRequest(HttpServletRequest request) {
+        String bearerToken = request.getHeader("Authorization");
+        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
+            return bearerToken.substring(7);
+        }
+        return null;
+    }
 }

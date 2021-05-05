@@ -105,18 +105,21 @@ CURL:
 include::{snippets}/signUp-LOCAL/curl-request.adoc[]
 Http-request:
 include::{snippets}/signUp-LOCAL/http-request.adoc[]
-Httpie-request:
-include::{snippets}/signUp-LOCAL/httpie-request.adoc[]
 Request-body:
 include::{snippets}/signUp-LOCAL/request-body.adoc[]
+Request-field:
+include::{snippets}/signUp-LOCAL/request-fields.adoc[]
 
 === Response
 Http-response:
 include::{snippets}/signUp-LOCAL/http-response.adoc[]
-Response-body:
-include::{snippets}/signUp-LOCAL/response-body.adoc[]
 Response-header
 include::{snippets}/signUp-LOCAL/response-headers.adoc[]
+Response-body:
+include::{snippets}/signUp-LOCAL/response-body.adoc[]
+Response-field
+include::{snippets}/signUp-LOCAL/response-fields.adoc[]
+
 
 [[resources-signUp-SOCIAL]]
 === 소셜 유저 생성
@@ -132,16 +135,56 @@ CURL:
 include::{snippets}/signUp-SOCIAL/curl-request.adoc[]
 Http-request:
 include::{snippets}/signUp-SOCIAL/http-request.adoc[]
-Httpie-request:
-include::{snippets}/signUp-SOCIAL/httpie-request.adoc[]
+Request-headers:
+include::{snippets}/signUp-SOCIAL/request-headers.adoc[]
 Request-body:
 include::{snippets}/signUp-SOCIAL/request-body.adoc[]
+Request-field:
+include::{snippets}/signUp-SOCIAL/request-fields.adoc[]
 
 === Response
 Http-response:
 include::{snippets}/signUp-SOCIAL/http-response.adoc[]
+Response-headers:
+include::{snippets}/signUp-SOCIAL/response-headers.adoc[]
 Response-body:
 include::{snippets}/signUp-SOCIAL/response-body.adoc[]
+Response-field
+include::{snippets}/signUp-SOCIAL/response-fields.adoc[]
+
+[[resources-find-social-member]]
+=== 소셜 유저 정보 반환
+
+`POST` 요청을 사용해서 request로 요청받은 social, userId 정보로 id, email, profileImage를 반환한다.
+
+=== Curl
+include::{snippets}/find-social-member/curl-request.adoc[]
+
+=== Links
+Links:
+include::{snippets}/find-social-member/links.adoc[]
+
+=== Request
+CURL:
+include::{snippets}/find-social-member/curl-request.adoc[]
+Http-request:
+include::{snippets}/find-social-member/http-request.adoc[]
+Request-header:
+include::{snippets}/find-social-member/request-headers.adoc[]
+Request-body:
+include::{snippets}/find-social-member/request-body.adoc[]
+Request-filed:
+include::{snippets}/find-social-member/request-fields.adoc[]
+
+=== Response
+Http-response:
+include::{snippets}/find-social-member/http-response.adoc[]
+Response-header:
+include::{snippets}/find-social-member/response-headers.adoc[]
+Response-body:
+include::{snippets}/find-social-member/response-body.adoc[]
+Response-filed:
+include::{snippets}/find-social-member/response-fields.adoc[]
 
 
 //?????? store

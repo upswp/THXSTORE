@@ -19,12 +19,10 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
 	private final JwtTokenProvider jwtTokenProvider;
 
 	@Override
-	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
-                                        Authentication authentication) throws IOException, ServletException {
+	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
 		response.setStatus(HttpStatus.OK.value());
 		response.setContentType("application/json");
 		response.setCharacterEncoding("UTF-8");
-		new ObjectMapper().writeValue(response.getWriter(),
-			new AuthResponse(jwtTokenProvider.createToken(authentication)));
+		new ObjectMapper().writeValue(response.getWriter(), new AuthResponse(jwtTokenProvider.createToken(authentication)));
 	}
 }
