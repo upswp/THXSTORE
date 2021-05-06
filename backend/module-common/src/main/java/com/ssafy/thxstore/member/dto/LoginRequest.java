@@ -12,8 +12,8 @@ import javax.validation.constraints.NotBlank;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor
 public class LoginRequest {
-    @NotBlank
     @Email
+    @NotBlank
     private String email;
 
     @NotBlank

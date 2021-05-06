@@ -17,11 +17,7 @@ import java.util.Date;
 @EqualsAndHashCode(of = "id")
 public class Reservation {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "reservation_sequence_gen")
-    @SequenceGenerator(
-            name = "reservation_sequence_gen",
-            sequenceName = "reservation_sequence"
-    )
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @ColumnDescription("PK")
     private Long id;
 

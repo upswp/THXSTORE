@@ -1,5 +1,6 @@
 package com.ssafy.thxstore.member.domain;
 
+import com.ssafy.thxstore.common.BaseTimeEntity;
 import com.ssafy.thxstore.common.ColumnDescription;
 import com.ssafy.thxstore.reservation.domain.Reservation;
 import lombok.*;
@@ -9,7 +10,6 @@ import javax.validation.constraints.Email;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
 
 
 @Entity
@@ -17,14 +17,10 @@ import java.util.Set;
 @NoArgsConstructor
 @Getter
 @Setter
-@EqualsAndHashCode(of = "id")
-public class Member {
+@EqualsAndHashCode(of = "id", callSuper = false)
+public class Member extends BaseTimeEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_sequence_gen")
-    @SequenceGenerator(
-            name = "user_sequence_gen",
-            sequenceName = "user_sequence"
-    )
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @ColumnDescription("PK")
     private Long id;
 
@@ -54,22 +50,19 @@ public class Member {
     private String address;
 
     @ColumnDescription("유저 닉네임")
-    @Column(name = "nickname", nullable = false, unique = true)
-    private String nickName;
+    @Column(name = "nickname", nullable = false)
+    private String nickname;
 
     @ColumnDescription("유저 프로필 이미지")
-    @Column(name = "image")
-    private String image;
+    @Column(name = "profile_image")
+    private String profileImage;
 
     @ColumnDescription("유저 휴대폰 번호")
     @Column(name = "phone_number")
     private String phoneNumber;
 
     @ColumnDescription("유저 Role")
-    @ElementCollection(fetch = FetchType.EAGER)
-    @Enumerated(EnumType.STRING)
-    @Column(name = "member_type")
-    private Set<MemberRole> roles;
+    private MemberRole role;
 
     @ColumnDescription("소셜로그인 유저 정보")
     @Enumerated(EnumType.STRING)
@@ -77,23 +70,19 @@ public class Member {
     private Social social;
 
     @Builder
-    public Member(String userId, @Email String email, String password, String address, String nickName, String image, String phoneNumber, Set<MemberRole> roles, Social social) {
+    public Member(String userId, @Email String email, String password, String address, String nickname, String profileImage, String phoneNumber, MemberRole role, Social social) {
         this.userId = userId;
         this.email = email;
         this.password = password;
         this.address = address;
-        this.nickName = nickName;
-        this.image = image;
+        this.nickname = nickname;
+        this.profileImage = profileImage;
         this.phoneNumber = phoneNumber;
-        this.roles = roles;
+        this.role = role;
         this.social = social;
     }
 
-    public Object getRoles(MemberRole user) {
-        return MemberRole.USER;
-    }
-
-    public Object getSocial(Social local) {
-        return Social.LOCAL;
+    public String roleName(){
+        return role.name();
     }
 }

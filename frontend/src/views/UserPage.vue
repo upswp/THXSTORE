@@ -4,7 +4,7 @@
     <div class="user-container-center">
       <transition name="slide-right" mode="out-in">
         <keep-alive>
-          <component :is="nav"></component>
+          <component :is="nav" @changeTab="clickButton"></component>
         </keep-alive>
       </transition>
     </div>

@@ -31,6 +31,7 @@ subprojects {
     dependencies {
         compile('org.springframework.boot:spring-boot-starter')
         //TODO project 진행사항 이후 dependencies 설정 진행하기.
+        implementation group: 'org.springframework', name: 'spring-aop'
         implementation group: 'org.springframework.boot', name: 'spring-boot-starter-web'
         implementation group: 'org.springframework.boot', name: 'spring-boot-starter-data-jpa'
         implementation group: 'org.springframework.boot', name: 'spring-boot-starter-hateoas'
@@ -38,6 +39,11 @@ subprojects {
         implementation group: 'org.springframework.boot', name: 'spring-boot-starter-validation'
         implementation group: 'org.springframework.boot', name:'spring-boot-starter-jdbc'
         implementation group: 'org.modelmapper', name: 'modelmapper', version: '2.3.8'
+
+        // Security
+        implementation group: 'org.springframework.boot', name: 'spring-boot-starter-security', version: '2.3.9.RELEASE'
+        implementation group: 'org.springframework.security', name: 'spring-security-oauth2-client', version: '5.4.5'
+        implementation group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.1'
 
         implementation 'org.projectlombok:lombok'
         annotationProcessor 'org.projectlombok:lombok'
@@ -51,6 +57,13 @@ subprojects {
         testImplementation 'org.springframework.boot:spring-boot-starter-test'
         testImplementation 'org.springframework.security:spring-security-test'
         testCompile group: 'junit', name: 'junit', version: '4.12'
+
+        implementation platform('com.amazonaws:aws-java-sdk-bom:1.11.934')
+        implementation 'com.amazonaws:aws-java-sdk-s3'
+        annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
+        //compile group: 'org.springframework.cloud', name: 'spring-cloud-aws', version: '2.2.1.RELEASE', ext: 'pom'
+
+        implementation group: 'com.sun.jersey.contribs', name: 'jersey-multipart', version: '1.19.4'
     }
 }
 

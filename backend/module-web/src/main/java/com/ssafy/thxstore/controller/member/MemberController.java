@@ -4,12 +4,15 @@ package com.ssafy.thxstore.controller.member;
 import com.ssafy.thxstore.controller.common.ErrorsResource;
 import com.ssafy.thxstore.member.domain.Member;
 import com.ssafy.thxstore.member.dto.SignUpRequest;
+import com.ssafy.thxstore.member.dto.SocialMemberRequest;
+import com.ssafy.thxstore.member.dto.SocialMemberResponse;
 import com.ssafy.thxstore.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,25 +24,40 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(value = "/member", produces = MediaTypes.HAL_JSON_VALUE)
+@CrossOrigin(origins = {"*"}, maxAge = 6000)
+@RequestMapping(value = "/auth", produces = MediaTypes.HAL_JSON_VALUE)
 public class MemberController {
 
     private final MemberService memberService;
 
     @PostMapping
-    public ResponseEntity registerMember(@Valid @RequestBody SignUpRequest signUpRequest, Errors errors){
-        if(errors.hasErrors()){
-            return badRequest(errors);
-        }
+    @PreAuthorize("isAnonymous()")
+    public ResponseEntity registerMember(@Valid @RequestBody SignUpRequest signUpRequest) {
         Member newMember = memberService.registerMember(signUpRequest);
 
         WebMvcLinkBuilder selfLinkBuilder = linkTo(MemberController.class).slash(newMember.getId());
         URI createUri = selfLinkBuilder.toUri();
         MemberResource memberResource = new MemberResource(newMember);
-        memberResource.add(linkTo(MemberController.class).withRel("signUp-member"));
-        memberResource.add(Link.of("/api/docs/index.html#resources-signUp-member").withRel("profile"));
+        if (signUpRequest.getSocial() == null) {
+            memberResource.add(linkTo(MemberController.class).withRel("signUp-LOCAL"));
+            memberResource.add(Link.of("/api/docs/index.html#resources-signUp-LOCAL").withRel("profile"));
+        } else {
+            memberResource.add(linkTo(MemberController.class).withRel("signUp-SOCIAL"));
+            memberResource.add(Link.of("/api/docs/index.html#resources-signUp-SOCIAL").withRel("profile"));
+        }
         return ResponseEntity.created(createUri).body(memberResource);
     }
+
+
+    @PostMapping("/social/")
+    public ResponseEntity getSocialMember(@RequestBody @Valid SocialMemberRequest socialMemberRequest) {
+        SocialMemberResponse socialMemberResponse = memberService.findSocialMember(socialMemberRequest);
+        SocialMemberResource socialMemberResource = new SocialMemberResource(socialMemberResponse);
+        socialMemberResource.add(linkTo(MemberController.class).withRel("find-social-member"));
+        socialMemberResource.add(Link.of("/api/docs/index.html#resources-find-social-member").withRel("profile"));
+        return ResponseEntity.ok(socialMemberResource);
+    }
+
 
     private ResponseEntity badRequest(Errors errors) {
         return ResponseEntity.badRequest().body(ErrorsResource.modelOf(errors));

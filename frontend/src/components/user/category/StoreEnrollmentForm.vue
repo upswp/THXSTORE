@@ -1,8 +1,11 @@
 <template>
   <div class="store-enrollment-container">
+    <waiting-modal v-if="showWaitingModal" @close="backToMain"> </waiting-modal>
+    <return-Modal v-if="showReturnModal" @close="showReturnModal = false"></return-Modal>
+
     <header><h2>스토어 정보입력</h2></header>
     <div>
-      <form @submit.prevent>
+      <form @submit.prevent="submitForm">
         <ul>
           <li>
             <label for="">스토어 이름</label>
@@ -24,22 +27,22 @@
             <div class="input-content">
               <input
                 v-model="phoneNum"
-                type="tel"
-                name="phone"
-                pattern="[0,1]{3}-[0-9]{4}-[0-9]{4}"
-                placeholder="010-○○○○-○○○○"
+                type="text"
+                placeholder="하이픈기호(-) 없이 입력해주세요."
+                @keyup="getPhoneNumber(phoneNum)"
               />
             </div>
           </li>
           <li>
-            <label for="">사업자등록 번호</label>
+            <label for="">사업자등록번호</label>
             <div class="input-content">
               <input
                 v-model="comResNum"
                 type="tel"
                 name="phone"
                 pattern="[0-9]{3}-[0-9]{2}-[0-9]{5}"
-                placeholder="○○○-○○-○○○○○"
+                placeholder="사업자등록번호를 입력해주세요"
+                @keyup="getComResNum(comResNum)"
               />
             </div>
           </li>
@@ -47,7 +50,7 @@
             <label for="">사업자등록사본</label>
             <div class="input-content">
               <div class="file-flex">
-                <input id="fileName" type="text" class="file_input_textbox" readonly />
+                <input id="fileName" v-model="fileValue" type="text" class="file_input_textbox" readonly />
                 <div class="file_input_div">
                   <label for="file_1">
                     <awesome id="faCloud" ref="cloud" icon="cloud-upload-alt" class="before-upload"></awesome>
@@ -70,41 +73,157 @@
 
 <script>
 import SetRoadName from '@/components/common/SetRoadName.vue';
+import WaitingModal from '@/components/common/WaitingModal.vue';
+import ReturnModal from '@/components/common/ReturnModal.vue';
 import { registerStore } from '@/api/seller';
+import { handleException } from '@/utils/handler.js';
+
 export default {
   components: {
     SetRoadName,
+    WaitingModal,
+    ReturnModal,
   },
   data() {
     return {
+      showWaitingModal: false,
+      showReturnModal: false,
       storeName: '',
       zip: '',
       nomalAddress: '',
       detailAddress: '',
       phoneNum: '',
       comResNum: '',
+      fileValue: '',
       loaded: false,
+      isEnrollmentDone: 1,
     };
   },
+  created() {
+    // if (this.isEnrollmentDone !== 0 || this.isEnrollmentDone !== 1) {
+    //   return;
+    // }
+    // axios통신으로 등록상태를 받아온다. (등록중 = 0, 등록반려 = 1)
+    if (!this.isEnrollmentDone) {
+      this.showWaitingModal = true;
+    } else {
+      this.showReturnModal = true;
+    }
+  },
   methods: {
+    getComResNum(val) {
+      let res = this.validationComResNum(val);
+      console.log('서버넘어가는값', res);
+      this.comResNum = res;
+    },
+
+    getPhoneNumber(val) {
+      let res = this.validationPhoneNumber(val);
+      console.log('서버넘어가는값', res);
+      this.phoneNum = res;
+    },
+    validationComResNum(comResNum) {
+      if (!comResNum) return comResNum;
+      comResNum = comResNum.replace(/[^0-9]/g, '');
+      console.log(comResNum);
+      let res = '';
+      if (comResNum.length < 4) {
+        res = comResNum;
+        console.log('res:', res);
+      } else {
+        if (comResNum.length == 4) {
+          res = comResNum.substr(0, 3) + '-' + comResNum.substr(3, 4);
+        } else if (comResNum.length == 5) {
+          res = comResNum.substr(0, 3) + '-' + comResNum.substr(3);
+        } else if (comResNum.length == 6) {
+          res = comResNum.substr(0, 3) + '-' + comResNum.substr(3, 2) + '-' + comResNum.substr(5);
+        } else if (comResNum.length >= 7) {
+          res = comResNum.substr(0, 3) + '-' + comResNum.substr(3, 2) + '-' + comResNum.substr(5, 5);
+        }
+      }
+
+      return res;
+    },
+
+    validationPhoneNumber(phoneNumber) {
+      if (!phoneNumber) return phoneNumber;
+      phoneNumber = phoneNumber.replace(/[^0-9]/g, '');
+
+      let res = '';
+      if (phoneNumber.length < 3) {
+        res = phoneNumber;
+      } else {
+        if (phoneNumber.substr(0, 2) == '02') {
+          if (phoneNumber.length <= 5) {
+            //02-123-5678
+            res = phoneNumber.substr(0, 2) + '-' + phoneNumber.substr(2, 3);
+          } else if (phoneNumber.length > 5 && phoneNumber.length <= 9) {
+            //02-123-5678
+            res = phoneNumber.substr(0, 2) + '-' + phoneNumber.substr(2, 3) + '-' + phoneNumber.substr(5);
+          } else if (phoneNumber.length > 9) {
+            //02-1234-5678
+            res = phoneNumber.substr(0, 2) + '-' + phoneNumber.substr(2, 4) + '-' + phoneNumber.substr(6);
+          }
+        } else {
+          if (phoneNumber.length < 8) {
+            res = phoneNumber;
+          } else if (phoneNumber.length == 8) {
+            res = phoneNumber.substr(0, 4) + '-' + phoneNumber.substr(4);
+          } else if (phoneNumber.length == 9) {
+            res = phoneNumber.substr(0, 3) + '-' + phoneNumber.substr(3, 3) + '-' + phoneNumber.substr(6);
+          } else if (phoneNumber.length == 10) {
+            res = phoneNumber.substr(0, 3) + '-' + phoneNumber.substr(3, 3) + '-' + phoneNumber.substr(6);
+          } else if (phoneNumber.length > 10) {
+            //010-1234-5678
+            res = phoneNumber.substr(0, 3) + '-' + phoneNumber.substr(3, 4) + '-' + phoneNumber.substr(7, 4);
+          }
+        }
+      }
+
+      return res;
+    },
+    backToMain() {
+      this.showWaitingModal = false;
+      // this.$router.push({ path: 'user' });
+      this.$emit('changeTab', 'UserProfile');
+    },
     async submitForm() {
       try {
-        const storeData = {
-          storeName: this.storeName,
-          nomalAddress: this.nomalAddress,
-          detailAddress: this.detailAddress,
-          phoneNum: this.phoneNum,
-          comResNum: this.comResNum,
-        };
-        await registerStore(storeData);
+        if (
+          this.storeName == '' ||
+          this.nomalAddress == '' ||
+          this.phoneNum == '' ||
+          this.comResNum == '' ||
+          this.profileImage == ''
+        ) {
+          alert('항목을 모두 채워주세요');
+        } else {
+          const formdata = new FormData();
+          formdata.append('storeName', this.storeName);
+          formdata.append('nomalAddress', this.nomalAddress);
+          formdata.append('detailAddress', this.detailAddress);
+          formdata.append('phoneNum', this.phoneNum);
+          formdata.append('comResNum', this.comResNum);
+          formdata.append('comResNum', this.profileImage);
+          // const storeData = {
+          //   storeName: this.storeName,
+          //   nomalAddress: this.nomalAddress,
+          //   detailAddress: this.detailAddress,
+          //   phoneNum: this.phoneNum,
+          //   comResNum: this.comResNum,
+          // };
+          await registerStore(formdata);
+          this.$emit('changeTab', 'UserProfile');
+        }
       } catch (error) {
         alert('스토어 등록에 문제가 생겼습니다. 다시 시도해주세요.');
       }
     },
     insertedFile(event) {
       const file = event.target.files[0];
+      this.profileImage = URL.createObjectURL(file);
       const fileValue = event.target.value;
-      document.getElementById('fileName').value = fileValue;
+      this.fileValue = fileValue;
       if (file) {
         this.$refs.cloud.classList.add('after-upload');
       }

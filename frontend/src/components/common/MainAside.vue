@@ -52,6 +52,11 @@ export default {
       this.resetAside();
       this.$refs[e].classList.add('active');
       this.$refs[`${e}-icon`].classList.add('active');
+      // 함수명과 연관이 없는, 라우터링크입니다.
+      this.moveToPage(e);
+    },
+    moveToPage(name) {
+      this.$router.push({ name });
     },
   },
 };
