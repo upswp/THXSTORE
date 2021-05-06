@@ -3,7 +3,7 @@ package com.ssafy.thxstore.controller.security;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ssafy.thxstore.common.exceptions.AuthException;
 import com.ssafy.thxstore.common.exceptions.ErrorCode;
-import com.ssafy.thxstore.member.dto.LoginRequest;
+import com.ssafy.thxstore.member.dto.request.LoginRequest;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;

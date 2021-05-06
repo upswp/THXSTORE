@@ -2,7 +2,7 @@ package com.ssafy.thxstore.controller.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ssafy.thxstore.controller.config.JwtTokenProvider;
-import com.ssafy.thxstore.member.dto.AuthResponse;
+import com.ssafy.thxstore.member.dto.response.AuthResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
