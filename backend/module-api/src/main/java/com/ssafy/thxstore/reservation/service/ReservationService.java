@@ -8,4 +8,5 @@ import java.util.List;
 
 public interface ReservationService {
     void addCart(List<CartDto> cartList);
+    List<CartDto> getCart(Long memberId);
 }
