@@ -1,4 +1,4 @@
-package com.ssafy.thxstore.member.dto;
+package com.ssafy.thxstore.member.dto.response;
 
 import com.ssafy.thxstore.member.domain.Member;
 import lombok.*;

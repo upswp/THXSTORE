@@ -186,6 +186,40 @@ include::{snippets}/find-social-member/response-body.adoc[]
 Response-filed:
 include::{snippets}/find-social-member/response-fields.adoc[]
 
+[[resources-check-member-email]]
+=== 이메일 중복여부 확인
+
+`GET` 요청을 사용해서 request로 요청받은 email 정보로 Boolean 형태로 반환한다.
+
+=== Curl
+include::{snippets}/check-member-email/curl-request.adoc[]
+
+=== Links
+Links:
+include::{snippets}/check-member-email/links.adoc[]
+
+=== Request
+CURL:
+include::{snippets}/check-member-email/curl-request.adoc[]
+Http-request:
+include::{snippets}/check-member-email/http-request.adoc[]
+Request-header:
+include::{snippets}/check-member-email/request-headers.adoc[]
+Request-body:
+include::{snippets}/check-member-email/request-body.adoc[]
+Request-filed:
+include::{snippets}/check-member-email/request-fields.adoc[]
+
+=== Response
+Http-response:
+include::{snippets}/check-member-email/http-response.adoc[]
+Response-header:
+include::{snippets}/check-member-email/response-headers.adoc[]
+Response-body:
+include::{snippets}/check-member-email/response-body.adoc[]
+Response-filed:
+include::{snippets}/check-member-email/response-fields.adoc[]
+
 
 //?????? store
 
