@@ -4,10 +4,12 @@
       <div class="manager-info-container">
         <div class="side-bar">
           <ul class="name-list">
-            <li class="name-item" @click="clickNameList">🏬 {{ storeName }}</li>
-            <li class="name-item">🏬 {{ storeName }}</li>
-            <li class="name-item">🏬 GS25편의점 원내점</li>
-            <li class="name-item">🏬 {{ storeName }}</li>
+            <li class="name-item" @click="clickNameList">
+              <awesome icon="store" class="store"></awesome> {{ storeName }}
+            </li>
+            <li class="name-item"><awesome icon="store" class="store"></awesome>{{ storeName }}</li>
+            <li class="name-item">GS25편의점 원내점</li>
+            <li class="name-item">{{ storeName }}</li>
           </ul>
         </div>
         <div class="manager-info-bottom">
@@ -61,8 +63,8 @@ export default {
 <style lang="scss" scoped>
 @import '@/assets/scss/sample2';
 .manager-list-container {
-  width: 100%;
-  padding: 5% 5% 4% 5%;
+  width: 95%;
+  padding: 3% 3% 2% 3%;
   margin: auto;
   background-color: white;
   @include flexbox;
@@ -70,6 +72,10 @@ export default {
   flex-wrap: wrap;
   // align-items: stretch;
   @include box-shadow;
+  @include mobile {
+    width: 95%;
+    padding: 2% 2% 2% 2%;
+  }
   @include xs-mobile {
     width: 95%;
     padding: 2% 2% 2% 2%;
@@ -86,13 +92,20 @@ export default {
   .side-bar {
     overflow-y: auto;
     overflow-x: hidden;
-    min-height: 500px;
+    min-height: 70%;
     width: 100%;
     margin: 2%;
-    background: $gray700;
-    color: white;
+    background: black;
+    border: 2px black solid;
+    color: $blue600;
     font-size: 2em;
     // height: 300px;
+    @include mobile {
+      width: 100%;
+      order: 1;
+      min-height: 100px;
+      margin: 7px;
+    }
     @include xs-mobile {
       width: 100%;
       order: 1;
@@ -124,6 +137,11 @@ export default {
     // align-items: center;
     flex-grow: 1;
     flex-wrap: wrap;
+    @include mobile {
+      font-size: 0.6em;
+      width: 100%;
+      align-items: stretch;
+    }
     @include xs-mobile {
       font-size: 0.6em;
       width: 100%;
@@ -133,6 +151,10 @@ export default {
       @include flexbox;
       flex-wrap: wrap;
       width: 100%;
+      @include mobile {
+        order: 2;
+        margin: 7px;
+      }
       @include xs-mobile {
         order: 2;
         margin: 7px;
@@ -141,14 +163,22 @@ export default {
         flex-basis: 30%;
         text-align: left;
         padding-left: 2%;
-        font-size: 1.5em;
+        font-size: 1.2em;
+        @include mobile {
+          padding-left: 2%;
+          font-size: 1.9em;
+        }
         @include xs-mobile {
           padding-left: 2%;
         }
       }
       .info-data {
         flex-basis: 70%;
-        font-size: 1.5em;
+        font-size: 1.3em;
+        @include mobile {
+          margin-bottom: 0.2rem;
+          font-size: 1.9em;
+        }
         @include xs-mobile {
           margin-bottom: 0.2rem;
         }
@@ -161,6 +191,11 @@ export default {
     // height: 500px;
     padding: 5px;
     overflow: hidden;
+    @include mobile {
+      order: 2;
+      width: 100%;
+      border-top: none;
+    }
     @include xs-mobile {
       order: 2;
       width: 100%;
@@ -182,6 +217,9 @@ export default {
     width: 90%;
     padding-top: 50px;
     order: 4;
+    @include mobile {
+      padding-top: 15px;
+    }
     @include xs-mobile {
       padding-top: 15px;
     }

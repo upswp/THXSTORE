@@ -4,10 +4,12 @@
     <main-aside></main-aside>
     <div class="admin-header">
       <h1>관리자 페이지</h1>
-      <select id="" name="manager-status">
-        <option value="신청목록">신청 목록</option>
-        <option value="수정목록">수정 목록</option>
-      </select>
+      <div class="select-container">
+        <select id="" name="manager-status">
+          <option value="신청목록">신청 목록</option>
+          <option value="수정목록">수정 목록</option>
+        </select>
+      </div>
     </div>
     <manager-list></manager-list>
     <br />
@@ -37,7 +39,6 @@ export default {
     width: 100%;
     padding-top: 50px;
     margin-bottom: 10px;
-    text-align: end;
   }
   h1 {
     width: 100%;
@@ -48,12 +49,30 @@ export default {
       margin-top: 10px;
     }
   }
-  select {
-    text-align: left;
-    margin-right: 5%;
-    @include shadow4;
-    @include xs-mobile {
-      font-size: 0.7rem;
+  .select-container {
+    width: 95%;
+    max-width: 1080px;
+    margin: 1px auto;
+    padding: 1% 2%;
+    @include flexbox;
+    justify-content: flex-end;
+    select {
+      width: 15%;
+      height: 30px;
+      padding: 2 4px;
+      border: 0.5px solid grey;
+      @include shadow4;
+      @include xs-mobile {
+        width: 25%;
+        font-size: 0.7rem;
+        height: 20px;
+        padding: 1 4px;
+      }
+      @include mobile {
+        width: 20%;
+        height: 25px;
+        padding: 1 4px;
+      }
     }
   }
 }

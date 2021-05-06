@@ -27,22 +27,22 @@
             <div class="input-content">
               <input
                 v-model="phoneNum"
-                type="tel"
-                name="phone"
-                pattern="[0,1]{3}-[0-9]{4}-[0-9]{4}"
-                placeholder="010-○○○○-○○○○"
+                type="text"
+                placeholder="하이픈기호(-) 없이 입력해주세요."
+                @keyup="getPhoneNumber(phoneNum)"
               />
             </div>
           </li>
           <li>
-            <label for="">사업자등록 번호</label>
+            <label for="">사업자등록번호</label>
             <div class="input-content">
               <input
                 v-model="comResNum"
                 type="tel"
                 name="phone"
                 pattern="[0-9]{3}-[0-9]{2}-[0-9]{5}"
-                placeholder="○○○-○○-○○○○○"
+                placeholder="사업자등록번호를 입력해주세요"
+                @keyup="getComResNum(comResNum)"
               />
             </div>
           </li>
@@ -111,8 +111,78 @@ export default {
     }
   },
   methods: {
+    getComResNum(val) {
+      let res = this.validationComResNum(val);
+      console.log('서버넘어가는값', res);
+      this.comResNum = res;
+    },
+
+    getPhoneNumber(val) {
+      let res = this.validationPhoneNumber(val);
+      console.log('서버넘어가는값', res);
+      this.phoneNum = res;
+    },
+    validationComResNum(comResNum) {
+      if (!comResNum) return comResNum;
+      comResNum = comResNum.replace(/[^0-9]/g, '');
+      console.log(comResNum);
+      let res = '';
+      if (comResNum.length < 4) {
+        res = comResNum;
+        console.log('res:', res);
+      } else {
+        if (comResNum.length == 4) {
+          res = comResNum.substr(0, 3) + '-' + comResNum.substr(3, 4);
+        } else if (comResNum.length == 5) {
+          res = comResNum.substr(0, 3) + '-' + comResNum.substr(3);
+        } else if (comResNum.length == 6) {
+          res = comResNum.substr(0, 3) + '-' + comResNum.substr(3, 2) + '-' + comResNum.substr(5);
+        } else if (comResNum.length >= 7) {
+          res = comResNum.substr(0, 3) + '-' + comResNum.substr(3, 2) + '-' + comResNum.substr(5, 5);
+        }
+      }
+
+      return res;
+    },
+
+    validationPhoneNumber(phoneNumber) {
+      if (!phoneNumber) return phoneNumber;
+      phoneNumber = phoneNumber.replace(/[^0-9]/g, '');
+
+      let res = '';
+      if (phoneNumber.length < 3) {
+        res = phoneNumber;
+      } else {
+        if (phoneNumber.substr(0, 2) == '02') {
+          if (phoneNumber.length <= 5) {
+            //02-123-5678
+            res = phoneNumber.substr(0, 2) + '-' + phoneNumber.substr(2, 3);
+          } else if (phoneNumber.length > 5 && phoneNumber.length <= 9) {
+            //02-123-5678
+            res = phoneNumber.substr(0, 2) + '-' + phoneNumber.substr(2, 3) + '-' + phoneNumber.substr(5);
+          } else if (phoneNumber.length > 9) {
+            //02-1234-5678
+            res = phoneNumber.substr(0, 2) + '-' + phoneNumber.substr(2, 4) + '-' + phoneNumber.substr(6);
+          }
+        } else {
+          if (phoneNumber.length < 8) {
+            res = phoneNumber;
+          } else if (phoneNumber.length == 8) {
+            res = phoneNumber.substr(0, 4) + '-' + phoneNumber.substr(4);
+          } else if (phoneNumber.length == 9) {
+            res = phoneNumber.substr(0, 3) + '-' + phoneNumber.substr(3, 3) + '-' + phoneNumber.substr(6);
+          } else if (phoneNumber.length == 10) {
+            res = phoneNumber.substr(0, 3) + '-' + phoneNumber.substr(3, 3) + '-' + phoneNumber.substr(6);
+          } else if (phoneNumber.length > 10) {
+            //010-1234-5678
+            res = phoneNumber.substr(0, 3) + '-' + phoneNumber.substr(3, 4) + '-' + phoneNumber.substr(7, 4);
+          }
+        }
+      }
+
+      return res;
+    },
     backToMain() {
-      console.log('백투');
       this.showWaitingModal = false;
       // this.$router.push({ path: 'user' });
       this.$emit('changeTab', 'UserProfile');
