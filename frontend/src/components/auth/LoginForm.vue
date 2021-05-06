@@ -71,7 +71,7 @@ export default {
       } catch (error) {
         console.log(error);
         if (confirm('아직 가입되지 않은 회원입니다. \n회원가입 화면으로 이동하시겠습니까?')) {
-          this.router.push({ name: 'signup' });
+          this.$router.push({ name: 'signup' });
         }
       }
     },
