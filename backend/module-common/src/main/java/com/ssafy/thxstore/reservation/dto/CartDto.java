@@ -1,6 +1,7 @@
 package com.ssafy.thxstore.reservation.dto;
 
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -23,4 +24,13 @@ public class CartDto {
 
     @NotBlank
     private int count;
+
+    @Builder
+    public CartDto(Long userId, Long productId,String productname, int price, int count) {
+        this.userId = userId;
+        this.productId = productId;
+        this.productname =productname;
+        this.price = price;
+        this.count = count;
+    }
 }

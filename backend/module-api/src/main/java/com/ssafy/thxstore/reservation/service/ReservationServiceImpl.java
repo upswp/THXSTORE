@@ -28,7 +28,6 @@ public class ReservationServiceImpl implements ReservationService{
 
 
     @Override
-    @Transactional
     public void addCart(List<CartDto> cartlist){
         List<Cart> cartAntityList = new ArrayList<>();
 
@@ -37,11 +36,23 @@ public class ReservationServiceImpl implements ReservationService{
             Optional<Member> member = memberRepository.findById(cartlist.get(i).getUserId());
 
             Cart cart = Cart.builder().
-                    count(cartlist.get(i).getCount()).member(member.get()).
-                    product(product.get()).price(product.get().getPrice()).productName(product.get().getName()).
+                    count(cartlist.get(i).getCount()).
+                    member(member.get()).
+                    product(product.get()).
+                    price(product.get().getPrice()).
+                    productName(product.get().getName()).
                     build();
             cartAntityList.add(cart);
         }
         cartRepository.saveAll(cartAntityList);
+    }
+
+    @Override
+    @Transactional
+    public List<CartDto> getCart(Long memberId){
+
+        List<CartDto> list = cartRepository.findCartlist(memberId);
+
+        return list;
     }
 }
