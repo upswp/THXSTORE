@@ -40,12 +40,12 @@ export default {
           this.validationMsg.email = '올바른 이메일 형식입니다';
           this.validationClass.email = 'success-msg';
           // 이메일 중복 검사
-          debounce(() => {
-            emailCheck(email).catch(error => {
-              this.validationMsg.email = '이미 해당 이메일이 존재합니다';
-              this.validationClass.email = 'alert-msg';
-            });
-          }, 1000)();
+          // debounce(() => {
+          //   emailCheck(email).catch(error => {
+          //     this.validationMsg.email = '이미 해당 이메일이 존재합니다';
+          //     this.validationClass.email = 'alert-msg';
+          //   });
+          // }, 1000)();
         } else {
           this.validationMsg.email = '이메일 형식이 잘못되었습니다';
           this.validationClass.email = 'alert-msg';

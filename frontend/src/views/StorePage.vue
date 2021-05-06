@@ -1,7 +1,9 @@
 <template>
   <div class="store-container">
     <store-navigation class="store-aside" @changeTap="changeTap"></store-navigation>
-    <router-view class="store-main"></router-view>
+    <div class="store-main">
+      <router-view></router-view>
+    </div>
   </div>
 </template>
 
@@ -63,6 +65,10 @@ export default {
 }
 .store-main {
   width: 100%;
+
+  min-height: calc(100vh - 50px);
+  @include flexbox;
+  @include justify-content(center);
   @include lg-pc {
     width: calc(100% - 250px);
   }

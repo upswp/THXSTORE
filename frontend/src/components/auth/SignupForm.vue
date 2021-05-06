@@ -72,14 +72,17 @@ export default {
       try {
         const userData = {
           userId: null,
-          email: this.email,
-          password: this.password1,
-          nickname: this.nickname,
+          email: this.userData.email,
+          password: this.userData.password1,
+          nickname: this.userData.nickname,
           social: null,
           profileImage: null,
         };
         await registerUser(userData);
-        await this.$store.dispatch('LOGIN', userData);
+        await this.$store.dispatch('LOGIN', {
+          email: this.userData.email,
+          password: this.userData.password1,
+        });
         this.$router.push({ name: 'main' });
       } catch (error) {
         alert('회원가입에 문제가 생겼습니다. 다시 시도해주세요.');

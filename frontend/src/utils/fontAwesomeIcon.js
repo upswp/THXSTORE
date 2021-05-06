@@ -15,6 +15,9 @@ import {
   faPenSquare,
   faCloudUploadAlt,
   faTimes,
+  faIdCard,
+  faMapMarkerAlt,
+  faPhoneAlt,
 } from '@fortawesome/free-solid-svg-icons';
 library.add(
   faStore,
@@ -28,6 +31,9 @@ library.add(
   faPenSquare,
   faCloudUploadAlt,
   faTimes,
+  faIdCard,
+  faMapMarkerAlt,
+  faPhoneAlt,
 );
 
 import {

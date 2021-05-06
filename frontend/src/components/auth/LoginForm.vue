@@ -64,13 +64,12 @@ export default {
     async submitForm() {
       try {
         await this.$store.dispatch('LOGIN', {
-          userId: null,
           email: this.userData.id,
           password: this.userData.password,
-          social: null,
         });
         this.$router.push({ name: 'main' });
       } catch (error) {
+        console.log(error);
         if (confirm('아직 가입되지 않은 회원입니다. \n회원가입 화면으로 이동하시겠습니까?')) {
           this.router.push({ name: 'signup' });
         }

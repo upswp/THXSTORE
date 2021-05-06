@@ -67,7 +67,9 @@
             <div class="item-display location">
               <div class="item-label">{{ location }}</div>
             </div>
-            <kakao-map :location="newLocation"></kakao-map>
+            <div class="kakao-map">
+              <kakao-map :location="newLocation"></kakao-map>
+            </div>
           </div>
         </div>
       </div>
@@ -374,6 +376,12 @@ hr {
     font-size: 12px;
   }
 }
-
+.kakao-map {
+  @include flexbox;
+  @include justify-content(center);
+}
+.map-container {
+  width: 80%;
+}
 @include fade-transition(fade, 0.5s);
 </style>
