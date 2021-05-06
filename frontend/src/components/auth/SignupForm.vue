@@ -85,6 +85,7 @@ export default {
         });
         this.$router.push({ name: 'main' });
       } catch (error) {
+        console.log(error);
         alert('회원가입에 문제가 생겼습니다. 다시 시도해주세요.');
       }
     },
