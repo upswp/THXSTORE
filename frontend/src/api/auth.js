@@ -1,6 +1,6 @@
 import { createInstance, createInstanceWithToken } from '@/api';
 
-const publicAPI = createInstance('api/member/');
+const publicAPI = createInstance('api/auth/');
 const privateAPI = createInstanceWithToken('api/member/');
 
 /**
@@ -43,7 +43,7 @@ const registerUser = registerData => publicAPI.post('', registerData);
  * @param {LoginData} loginData
  * @returns {Promise<User>} userData
  */
-const loginUser = loginData => publicAPI.post('user/login', loginData);
+const loginUser = loginData => publicAPI.post('login', loginData);
 
 /**
  * 이메일 중복채크

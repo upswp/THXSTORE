@@ -83,7 +83,7 @@ export default {
   width: 100%;
 }
 #map {
-  width: 80%;
+  width: 100%;
   height: 500px;
   @include mobile() {
     width: 90%;
