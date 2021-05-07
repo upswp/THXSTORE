@@ -4,31 +4,28 @@
       <div class="manager-info-container">
         <div class="side-bar">
           <ul class="name-list">
-            <li class="name-item" @click="clickNameList">
+            <li v-for="(storeName, index) in storeNameArr" :key="index" class="name-item" @click="clickNameList(index)">
               <awesome icon="store" class="store"></awesome> {{ storeName }}
             </li>
-            <li class="name-item"><awesome icon="store" class="store"></awesome>{{ storeName }}</li>
-            <li class="name-item">GS25편의점 원내점</li>
-            <li class="name-item">{{ storeName }}</li>
           </ul>
         </div>
         <div class="manager-info-bottom">
           <div class="info-column">스토어 명:</div>
-          <div class="info-data">{{ storeName }}</div>
+          <div class="info-data">{{ storeNameArr[order] }}</div>
           <div class="info-column">전화번호:</div>
-          <div class="info-data">{{ phoneNum }}</div>
+          <div class="info-data">{{ phoneNumArr[order] }}</div>
           <div class="info-column">스토어 주소:</div>
           <div class="info-data">
-            {{ nomalAddress }} <br />
-            {{ detailAddress }}
+            {{ nomalAddressArr[order] }} <br />
+            {{ detailAddressArr[order] }}
           </div>
           <div class="info-column">사업자 번호:</div>
-          <div class="info-data">{{ comResNum }}</div>
+          <div class="info-data">{{ comResNumArr[order] }}</div>
         </div>
       </div>
       <!-- <div class="manager-copy-container" :style="{ 'background-image': require(copy.thumbnail) }"></div> -->
       <div class="manager-copy-container">
-        <img src="@/assets/image/사업자 등록증 포부인터.jpg" alt="" />
+        <img :src="thumbnailArr[order]" alt="" />
         <!-- src v-bind쓸 때  -->
         <!-- {{ thumbnail }} -->
       </div>
@@ -41,20 +38,40 @@
 </template>
 
 <script>
+import { getStoreEnrollmentList } from '@/api/seller';
 export default {
   data() {
     return {
-      storeName: '든든한끼',
-      nomalAddress: '대전 유성구 원내동79-15',
-      detailAddress: '1층',
-      phoneNum: '010-9265-5275',
-      comResNum: '045-24-45678',
-      thumbnail: `@/assets/image/basic_profile.jpg`,
+      storeNameArr: [],
+      nomalAddressArr: [],
+      detailAddressArr: [],
+      phoneNumArr: [],
+      comResNumArr: [],
+      thumbnailArr: [],
+      order: 1,
     };
   },
+  created() {
+    this.getstoreList();
+  },
   methods: {
-    clickNameList() {
-      console.log('된다.');
+    async getstoreList() {
+      const res = await getStoreEnrollmentList();
+      const data = res.data;
+      console.log(data);
+
+      for (let i = 0; i < res.data.length; i++) {
+        this.storeNameArr.push(data[i].name);
+        this.nomalAddressArr.push(data[i].mainAddress);
+        this.detailAddressArr.push(data[i].subAddress);
+        this.phoneNumArr.push(data[i].phoneNum);
+        this.comResNumArr.push(data[i].license);
+        this.thumbnailArr.push(data[i].licenseImg);
+      }
+      console.log(this.storeNameArr);
+    },
+    async clickNameList(index) {
+      this.order = index;
     },
   },
 };
@@ -98,7 +115,7 @@ export default {
     background: black;
     border: 2px black solid;
     color: $blue600;
-    font-size: 2em;
+    font-size: 1.5em;
     // height: 300px;
     @include mobile {
       width: 100%;
@@ -132,7 +149,7 @@ export default {
   .manager-info-container {
     @include flexbox;
     align-items: flex-start;
-    border: black 2px solid;
+    border: grey 2px solid;
     width: 40%;
     // align-items: center;
     flex-grow: 1;
@@ -186,7 +203,8 @@ export default {
     }
   }
   .manager-copy-container {
-    border: black 2px solid;
+    border: grey 2px solid;
+    border-left: none;
     width: 50%;
     // height: 500px;
     padding: 5px;
@@ -195,11 +213,13 @@ export default {
       order: 2;
       width: 100%;
       border-top: none;
+      border-left: grey 2px solid;
     }
     @include xs-mobile {
       order: 2;
       width: 100%;
       border-top: none;
+      border-left: grey 2px solid;
     }
     // background: url('../../assets/image/사업자 등록증.jpg') no-repeat;
     // object-fit: cover; // 이미지 태그에 넣는 것 width 100% height 100%

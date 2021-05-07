@@ -86,14 +86,17 @@ export default {
   },
   data() {
     return {
+      // 모달
       showWaitingModal: false,
       showReturnModal: false,
+      // 신청 정보
       storeName: '',
-      zip: '',
       nomalAddress: '',
       detailAddress: '',
       phoneNum: '',
       comResNum: '',
+      licenseImg: '',
+      // 그 외
       fileValue: '',
       loaded: false,
       isEnrollmentDone: 1,
@@ -194,17 +197,17 @@ export default {
           this.nomalAddress == '' ||
           this.phoneNum == '' ||
           this.comResNum == '' ||
-          this.profileImage == ''
+          this.licenseImg == ''
         ) {
           alert('항목을 모두 채워주세요');
         } else {
           const formdata = new FormData();
-          formdata.append('storeName', this.storeName);
-          formdata.append('nomalAddress', this.nomalAddress);
-          formdata.append('detailAddress', this.detailAddress);
+          formdata.append('name', this.storeName);
+          formdata.append('mainAddress', this.nomalAddress);
+          formdata.append('subAddress', this.detailAddress);
           formdata.append('phoneNum', this.phoneNum);
-          formdata.append('comResNum', this.comResNum);
-          formdata.append('comResNum', this.profileImage);
+          formdata.append('license', this.comResNum);
+          formdata.append('licenseImg', this.licenseImg);
           // const storeData = {
           //   storeName: this.storeName,
           //   nomalAddress: this.nomalAddress,
@@ -212,18 +215,25 @@ export default {
           //   phoneNum: this.phoneNum,
           //   comResNum: this.comResNum,
           // };
-          await registerStore(formdata);
+          const res = await registerStore(formdata);
+          console.log(res);
+
           this.$emit('changeTab', 'UserProfile');
         }
       } catch (error) {
+        console.log('에러표시', error);
+
         alert('스토어 등록에 문제가 생겼습니다. 다시 시도해주세요.');
       }
     },
     insertedFile(event) {
       const file = event.target.files[0];
-      this.profileImage = URL.createObjectURL(file);
-      const fileValue = event.target.value;
+      // this.licenseImg = URL.createObjectURL(file);
+      this.licenseImg = file;
+      console.log('라이센스이미지', this.licenseImg);
+      const fileValue = file.name;
       this.fileValue = fileValue;
+
       if (file) {
         this.$refs.cloud.classList.add('after-upload');
       }

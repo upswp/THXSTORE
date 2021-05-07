@@ -43,7 +43,7 @@ const registerUser = registerData => publicAPI.post('', registerData);
  * @param {LoginData} loginData
  * @returns {Promise<User>} userData
  */
-const loginUser = loginData => publicAPI.post('login', loginData);
+const loginUser = loginData => publicAPI.post('login/', loginData);
 
 /**
  * 이메일 중복채크
