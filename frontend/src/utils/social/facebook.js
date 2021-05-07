@@ -4,7 +4,7 @@ const Facebook = {
   init() {
     window.fbAsyncInit = function () {
       window.FB.init({
-        appId: process.env.VUE_APP_FACEBOOK_APP_KEY,
+        appId: process.env.VUE_APP_FACEBOOK_API_KEY,
         cookie: true,
         xfbml: true,
         version: 'v9.0',
@@ -47,10 +47,10 @@ const Facebook = {
                   this.LoginFailure();
                 }
                 const req_body = {
-                  id: res.id,
-                  nickname: res.name,
+                  userId: res.id,
                   email: res.email,
-                  profile: res.picture.data.url,
+                  nickname: res.name,
+                  profileImage: res.picture.data.url,
                   social: 'facebook',
                 };
                 resolve(req_body);

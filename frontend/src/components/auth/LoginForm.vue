@@ -33,7 +33,7 @@
     <footer>
       <span @click="moveToPage('signup')">회원가입하기</span>
       <span>|</span>
-      <span>비밀번호찾기</span>
+      <span @click="moveToPage('mailcode')">비밀번호찾기</span>
     </footer>
   </div>
 </template>
@@ -49,11 +49,31 @@ export default {
   },
 
   methods: {
-    submitForm() {
-      console.log('submit');
-    },
     moveToPage(name) {
       this.$router.push({ name });
+    },
+    kakaoLogin() {
+      this.$_Kakao.login();
+    },
+    facebookLogin() {
+      this.$_Facebook.login();
+    },
+    googleLogin() {
+      this.$_Google.login();
+    },
+    async submitForm() {
+      try {
+        await this.$store.dispatch('LOGIN', {
+          email: this.userData.id,
+          password: this.userData.password,
+        });
+        this.$router.push({ name: 'main' });
+      } catch (error) {
+        console.log(error);
+        if (confirm('아직 가입되지 않은 회원입니다. \n회원가입 화면으로 이동하시겠습니까?')) {
+          this.$router.push({ name: 'signup' });
+        }
+      }
     },
   },
 };
@@ -63,7 +83,7 @@ export default {
 .container {
   z-index: 1;
   padding: 20px;
-  width: clamp(340px, 30%, 430px);
+  width: clamp(360px, 30%, 430px);
   min-height: 500px;
   @include box-shadow;
   // background: #f9fafc;

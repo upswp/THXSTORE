@@ -8,4 +8,7 @@ export default {
   getToken(state) {
     return state.token;
   },
+  isMainDrawerOpend(state) {
+    return state.mainDrawerOpen;
+  },
 };

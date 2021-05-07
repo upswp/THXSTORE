@@ -4,12 +4,14 @@ export default {
   tempUserInfo: {},
   userInfo: Object.assign(
     {
-      id: '',
-      nickname: '',
+      userId: '',
       email: '',
-      profileImg: '',
+      nickname: '',
+      social: '',
+      profileImage: require('@/assets/image/basic_profile.jpg'),
     },
     getUserFromLocalStorage(),
   ),
   token: getTokenFromLocalStorage() || '',
+  mainDrawerOpen: false,
 };

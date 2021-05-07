@@ -93,7 +93,7 @@
 
 // 툴팁 등에 사용
 @mixin shadow1 {
-  box-shadow: 0 0 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
 }
 // 모바일 카드를 감싼 box 등에 사용
 @mixin shadow2 {
@@ -160,15 +160,20 @@
   zoom: 1;
   *display: inline;
 }
+@mixin lg-pc{
+  @media only screen and (min-width: $screen-lg) { @content }
+}
 
 @mixin pc {
-  @media only screen and (min-width: $screen-sm) { @content }
+  @media only screen and (max-width: $screen-lg) and (min-width: $screen-sm) { @content }
 }
 
 @mixin mobile {
-  @media only screen and (max-width: $screen-sm) { @content }
+  @media only screen and (max-width: $screen-sm) and (min-width: $screen-xs) { @content }
 }
-
+@mixin xs-mobile {
+  @media only screen and (max-width: $screen-xs) { @content }
+}
 
 @mixin placeholder {
   &::-webkit-input-placeholder { @content }
@@ -191,7 +196,11 @@
   word-wrap: break-word;
   word-break: $word-break;
 }
-
+@mixin ellipsis-one{
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
 @mixin disabled {
   cursor: not-allowed !important;
   pointer-events: none;
@@ -346,7 +355,7 @@
     .slide-left-leave-active,
     .slide-right-enter-active,
     .slide-right-leave-active {
-      transition-duration: 0.5s;
+      transition-duration: 0.4s;
       transition-property: height, opacity, transform;
       transition-timing-function: cubic-bezier(0.55, 0, 0.1, 1);
       overflow: hidden;
@@ -365,10 +374,10 @@
     }
 }
 
-@mixin fade-transition($name){
+@mixin fade-transition($name, $time){
   .#{$name}-enter-active,
 .#{$name}-leave-active {
-  transition-duration: 0.5s;
+  transition-duration: $time;
   transition-property: opacity;
   transition-timing-function: ease;
 }

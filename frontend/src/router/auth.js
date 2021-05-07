@@ -22,10 +22,6 @@ const routesForAuth = [
         component: () => import('@/components/auth/ExtraInfoForm.vue'),
         meta: { transitionName: 'slide' },
       },
-      // {
-      //   path: 'findPassword',
-      //   component: () => import('@/components/auth/FindPassword.vue'),
-      // },
       {
         path: 'mailcode',
         name: 'mailcode',
@@ -33,15 +29,12 @@ const routesForAuth = [
         meta: { transitionName: 'slide' },
       },
       {
-        path: 'findpassword',
+        path: 'find-password',
+        name: 'findPassword',
         component: () => import('@/components/auth/FindPassword.vue'),
         meta: { transitionName: 'slide' },
       },
     ],
-  },
-  {
-    path: '/social-login-test',
-    component: () => import('@/views/LoginPage.vue'),
   },
 ];
 export default routesForAuth;

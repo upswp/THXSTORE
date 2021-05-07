@@ -38,14 +38,14 @@
     <footer>
       <span @click="moveToPage('login')">로그인하기</span>
       <span>|</span>
-      <span>비밀번호찾기</span>
+      <span @click="moveToPage('mailcode')">비밀번호찾기</span>
     </footer>
   </div>
 </template>
 
 <script>
 import ValidationMixin from '@/mixins/auth/validation';
-// import { registerUser } from '@/api/auth';
+import { registerUser } from '@/api/auth';
 export default {
   mixins: [ValidationMixin],
   data() {
@@ -70,14 +70,23 @@ export default {
     },
     async submitForm() {
       try {
-        const { data } = await registerUser({
-          email: this.email,
-          password: this.password1,
-          nickname: this.nickname,
+        const userData = {
+          userId: null,
+          email: this.userData.email,
+          password: this.userData.password1,
+          nickname: this.userData.nickname,
           social: null,
+          profileImage: null,
+        };
+        await registerUser(userData);
+        await this.$store.dispatch('LOGIN', {
+          email: this.userData.email,
+          password: this.userData.password1,
         });
+        this.$router.push({ name: 'main' });
       } catch (error) {
-        alert(error);
+        console.log(error);
+        alert('회원가입에 문제가 생겼습니다. 다시 시도해주세요.');
       }
     },
   },
@@ -88,7 +97,7 @@ export default {
 .container {
   z-index: 1;
   padding: 20px;
-  width: clamp(340px, 30%, 430px);
+  width: clamp(360px, 30%, 430px);
   @include box-shadow;
   // background: #f9fafc;
   background: white;

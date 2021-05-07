@@ -2,7 +2,7 @@ import { socialLogin, socialSignup } from '@/utils/social';
 
 export default {
   init() {
-    window.Kakao.init(process.env.VUE_APP_KAKAO_APP_KEY);
+    window.Kakao.init(process.env.VUE_APP_KAKAO_API_KEY);
     return true;
   },
 
@@ -12,10 +12,10 @@ export default {
       success: async res => {
         const kakao_account = res.kakao_account;
         const req = {
-          id: res.id,
+          userId: res.id,
           nickname: kakao_account.profile.nickname,
           email: kakao_account.email,
-          profile: kakao_account.profile.profile_image_url,
+          profileImage: kakao_account.profile.profile_image_url,
           social: 'kakao',
         };
         if (division === 'login') {

@@ -2,16 +2,21 @@ $web-font-family:
   'S-CoreDream-4Regular',
   // 'Noto Sans KR',
   'Apple SD Gothic Neo',
+  'Pacifico',
   'Helvetica Neue', Helvetica, Arial,
   'Trebuchet MS',
   sans-serif;
 
   @font-face {
     font-family: 'S-CoreDream-4Regular';
-    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_six@1.2/S-CoreDream-4Regular.woff') format('woff');
-    font-display: swap;
+    src: url('../../font/SCDream/SCDream4.otf');
+    font-display: fallback ;
 }
-
+@font-face{
+  font-family: 'Pacifico';
+  src: url('../../font/Pacifico/Pacifico-Regular.ttf');
+  font-display: fallback ;
+}
 // @font-face {
 //   font-family: 'Noto Sans KR';
 //   font-weight: 100;
