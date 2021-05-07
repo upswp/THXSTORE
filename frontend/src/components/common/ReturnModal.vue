@@ -31,10 +31,13 @@
 </template>
 
 <script>
+import { deletePreStoreEnrollment } from '@/api/seller.js';
 export default {
   methods: {
-    closeModal() {
+    async closeModal() {
       this.$emit('close');
+      // await deletePreStoreEnrollment();
+      // console.log('삭제요청했어요.');
     },
   },
 };
@@ -43,7 +46,7 @@ export default {
 <style lang="scss" scoped>
 @import '@/assets/scss/modal/modal.scss';
 .modal-container {
-  border: 3px $red600 solid;
+  border: 3px $gray400 solid;
   padding: 10px 15px;
   width: 500px;
   border-radius: 20px;

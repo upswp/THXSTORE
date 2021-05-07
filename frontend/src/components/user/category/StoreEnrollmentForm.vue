@@ -1,7 +1,7 @@
 <template>
   <div class="store-enrollment-container">
     <waiting-modal v-if="showWaitingModal" @close="backToMain"> </waiting-modal>
-    <return-Modal v-if="showReturnModal" @close="showReturnModal = false"></return-Modal>
+    <return-Modal v-if="showReturnModal" @close="rewriteStoreEnrollment"></return-Modal>
 
     <header><h2>스토어 정보입력</h2></header>
     <div>
@@ -75,7 +75,7 @@
 import SetRoadName from '@/components/common/SetRoadName.vue';
 import WaitingModal from '@/components/common/WaitingModal.vue';
 import ReturnModal from '@/components/common/ReturnModal.vue';
-import { registerStore } from '@/api/seller';
+import { registerStore, getCheckOfStore, deletePreStoreEnrollment } from '@/api/seller';
 import { handleException } from '@/utils/handler.js';
 
 export default {
@@ -99,21 +99,35 @@ export default {
       // 그 외
       fileValue: '',
       loaded: false,
-      isEnrollmentDone: 1,
+      checkStore: '',
     };
   },
   created() {
-    // if (this.isEnrollmentDone !== 0 || this.isEnrollmentDone !== 1) {
-    //   return;
-    // }
-    // axios통신으로 등록상태를 받아온다. (등록중 = 0, 등록반려 = 1)
-    if (!this.isEnrollmentDone) {
-      this.showWaitingModal = true;
-    } else {
-      this.showReturnModal = true;
-    }
+    this.decideModal();
+    console.log('created 실행되고있는가?');
   },
   methods: {
+    async decideModal() {
+      try {
+        console.log('dicideModal 함수 시작됨');
+        const storeInfoArr = await getCheckOfStore('');
+        console.log('storeInfoArr', storeInfoArr);
+        // let checkStore = this.checkStore;
+        // 왜 위에처럼 코드를 못쓰나?
+        this.checkStore = storeInfoArr.data.checkStore;
+        console.log('checkStore의 값은?', checkStore);
+        console.log('this.checkStore의 값은?', this.checkStore);
+        if (this.checkStore == 'APPLICATION_WAITING') {
+          console.log('참이라고');
+          this.showWaitingModal = true;
+        } else if (this.checkStore === 'APPLICATION_FAILED') {
+          this.showReturnModal = true;
+        }
+      } catch (error) {
+        var checkStore = this.checkStore;
+        this.checkStore = '일반고객';
+      }
+    },
     getComResNum(val) {
       let res = this.validationComResNum(val);
       console.log('서버넘어가는값', res);
@@ -189,6 +203,12 @@ export default {
       this.showWaitingModal = false;
       // this.$router.push({ path: 'user' });
       this.$emit('changeTab', 'UserProfile');
+    },
+    rewriteStoreEnrollment() {
+      this.showReturnModal = false;
+      this.checkStore = '';
+      deletePreStoreEnrollment();
+      console.log('삭제요청했어요.');
     },
     async submitForm() {
       try {
@@ -311,7 +331,7 @@ export default {
     overflow: hidden;
   }
   .file_input_img_btn {
-    padding: 0 0 0 5px;
+    padding-left: 5px;
   }
   .file_input_hidden {
     font-size: 20px;

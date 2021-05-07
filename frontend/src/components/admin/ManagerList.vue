@@ -1,6 +1,6 @@
 <template>
   <div style="max-width: 1080px; margin: 1px auto">
-    <div class="manager-list-container">
+    <div v-if="isListBe" class="manager-list-container">
       <div class="manager-info-container">
         <div class="side-bar">
           <ul class="name-list">
@@ -23,22 +23,21 @@
           <div class="info-data">{{ comResNumArr[order] }}</div>
         </div>
       </div>
-      <!-- <div class="manager-copy-container" :style="{ 'background-image': require(copy.thumbnail) }"></div> -->
       <div class="manager-copy-container">
         <img :src="thumbnailArr[order]" alt="" />
-        <!-- src v-bind쓸 때  -->
-        <!-- {{ thumbnail }} -->
       </div>
       <div class="button-group">
-        <div class="pass-button">반려</div>
-        <div class="fail-button">승인</div>
+        <div class="fail-button" @click="retireEnrollment">반려</div>
+        <div class="pass-button" @click="approveEnrollment">승인</div>
       </div>
     </div>
+    <div v-else class="list-none">판매자 등록 신청이 없습니다.</div>
   </div>
 </template>
 
 <script>
-import { getStoreEnrollmentList } from '@/api/seller';
+import 'url-search-params-polyfill';
+import { getStoreEnrollmentList, approveStoreEnrollment, retireStoreEnrollment } from '@/api/seller';
 export default {
   data() {
     return {
@@ -48,7 +47,10 @@ export default {
       phoneNumArr: [],
       comResNumArr: [],
       thumbnailArr: [],
-      order: 1,
+
+      isListBe: false,
+      storeId: [],
+      order: 0,
     };
   },
   created() {
@@ -67,11 +69,46 @@ export default {
         this.phoneNumArr.push(data[i].phoneNum);
         this.comResNumArr.push(data[i].license);
         this.thumbnailArr.push(data[i].licenseImg);
+        this.storeId.push(data[i].id);
+      }
+      if (this.storeNameArr.length != 0) {
+        this.isListBe = true;
       }
       console.log(this.storeNameArr);
     },
-    async clickNameList(index) {
+    clickNameList(index) {
       this.order = index;
+    },
+    async approveEnrollment() {
+      const order = this.order;
+      const storeId = this.storeId;
+      var params = new URLSearchParams();
+      params.append('storeId', storeId[order]);
+      await approveStoreEnrollment({ storeId: storeId[order] });
+      // await approveStoreEnrollment(params);
+      this.resetData();
+      this.getstoreList();
+    },
+    async retireEnrollment() {
+      const order = this.order;
+      const storeId = this.storeId;
+      var params = new URLSearchParams();
+      params.append('storeId', storeId[order]);
+      // await retireStoreEnrollment({ storeId: storeId[order] });
+      await retireStoreEnrollment(params);
+      this.resetData();
+      this.getstoreList();
+    },
+    resetData() {
+      this.storeNameArr = [];
+      this.nomalAddressArr = [];
+      this.detailAddressArr = [];
+      this.phoneNumArr = [];
+      this.comResNumArr = [];
+      this.thumbnailArr = [];
+      this.storeId = [];
+      this.order = 0;
+      this.isListBe = false;
     },
   },
 };
@@ -109,7 +146,7 @@ export default {
   .side-bar {
     overflow-y: auto;
     overflow-x: hidden;
-    min-height: 70%;
+    min-height: 60%;
     width: 100%;
     margin: 2%;
     background: black;
@@ -151,9 +188,10 @@ export default {
     align-items: flex-start;
     border: grey 2px solid;
     width: 40%;
-    // align-items: center;
+    align-items: center;
     flex-grow: 1;
     flex-wrap: wrap;
+    overflow: auto;
     @include mobile {
       font-size: 0.6em;
       width: 100%;
@@ -206,7 +244,6 @@ export default {
     border: grey 2px solid;
     border-left: none;
     width: 50%;
-    // height: 500px;
     padding: 5px;
     overflow: hidden;
     @include mobile {
@@ -243,7 +280,7 @@ export default {
     @include xs-mobile {
       padding-top: 15px;
     }
-    .pass-button {
+    .fail-button {
       display: inline-block;
       width: 30%;
       color: $white;
@@ -257,7 +294,7 @@ export default {
         transition: 0.4s;
       }
     }
-    .fail-button {
+    .pass-button {
       display: inline-block;
       width: 30%;
       color: $white;
@@ -272,6 +309,14 @@ export default {
         transition: 0.4s;
       }
     }
+  }
+}
+.list-none {
+  min-height: 200px;
+  padding: 3%;
+  text-align: center;
+  @include mobile {
+    font-size: 1em;
   }
 }
 </style>
