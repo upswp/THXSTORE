@@ -1,6 +1,7 @@
 package com.ssafy.thxstore.controller.order;
 
 import com.ssafy.thxstore.reservation.dto.CartDto;
+import com.ssafy.thxstore.reservation.dto.OrderRequest;
 import com.ssafy.thxstore.reservation.service.ReservationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.hateoas.MediaTypes;
@@ -45,4 +46,18 @@ public ResponseEntity<String> addCart(@Valid @RequestBody List<CartDto> cartList
 //        return ResponseEntity.created(li.getUri()).body(li.getOrderResource());
     }
 
+    /**
+     * 주문 생성
+     * 1. 장바구니에서 주문(예약) 버튼 눌렀을 경우
+     * 2. OrderRequest -> 주문접수
+     */
+
+    @PostMapping("/cart/order")
+    public ResponseEntity<String> addOrder(@RequestBody OrderRequest orderRequest){
+
+        reservationService.addOrder(orderRequest);
+
+        return new ResponseEntity<>("생성완료", HttpStatus.OK);
+//        return ResponseEntity.created(li.getUri()).body(li.getOrderResource());
+    }
 }
