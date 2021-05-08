@@ -1,17 +1,16 @@
 package com.ssafy.thxstore.member.dto.response;
 
-import com.ssafy.thxstore.member.domain.Member;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
 public class SocialMemberResponse {
-    private Long id;
-    private String email;
-    private String profileImage;
+    private Boolean check;
 
-    public static SocialMemberResponse of(Member socialMember){
-        return new SocialMemberResponse(socialMember.getId(),socialMember.getEmail(),socialMember.getProfileImage());
+    public static SocialMemberResponse of(Boolean check){
+        return new SocialMemberResponse(check);
     }
 }

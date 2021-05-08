@@ -25,15 +25,16 @@ public class AuthService {
 
     /**
      * 회원 가입진행
+     *
      * @param signUpRequest 회원가입 RequestDto
      * @return Member
      */
-    public Member registerMember(SignUpRequest signUpRequest){
-        if(memberRepository.existsByEmail(signUpRequest.getEmail())){
+    public Member registerMember(SignUpRequest signUpRequest) {
+        if (memberRepository.existsByEmail(signUpRequest.getEmail())) {
             throw new AuthException(ErrorCode.DUPLICATED_EMAIL);
         }
-        Member member ;
-        if(signUpRequest.getSocial() == null && signUpRequest.getUserId() == null&& signUpRequest.getProfileImage() == null){
+        Member member;
+        if (signUpRequest.getSocial() == null && signUpRequest.getUserId() == null && signUpRequest.getProfileImage() == null) {
             member = Member.builder()
                     .email(signUpRequest.getEmail())
                     .password(signUpRequest.getPassword())
@@ -43,7 +44,7 @@ public class AuthService {
                     .userId(null)
                     .profileImage(null)
                     .build();
-        }else {
+        } else {
             member = Member.builder()
                     .email(signUpRequest.getEmail())
                     .password(signUpRequest.getPassword())
@@ -60,18 +61,23 @@ public class AuthService {
     }
 
     /**
-     * 소셜 로그인시 socialMemberRequest 들어온 UserId와 Social값으로 Member 찾기.
+     * social,userId 값이 들어오면 유저 정보와 boolean 타입으로 확인을 한다.
+     *
      * @param socialMemberRequest UserId & Social use
      * @return Member
      */
-    public SocialMemberResponse findSocialMember(SocialMemberRequest socialMemberRequest){
-        Member socialMember = memberRepository
-                .findByUserIdAndSocial(socialMemberRequest.getUserId(), socialMemberRequest.getSocial().toString())
-                .orElseThrow(() -> new AuthException(ErrorCode.UNAUTHORIZED_MEMBER));
-        return SocialMemberResponse.of(socialMember);
+    public SocialMemberResponse findSocialMember(SocialMemberRequest socialMemberRequest) {
+        Boolean check = memberRepository
+                .existsByUserIdAndSocial(socialMemberRequest.getUserId(), socialMemberRequest.getSocial());
+        return SocialMemberResponse.of(check);
     }
 
-    public CheckEmailResponse existsByEmail(CheckEmailRequest checkEmailRequest){
+    /**
+     * 이메일 중복여부 확인
+     * @param checkEmailRequest
+     * @return Boolean check
+     */
+    public CheckEmailResponse existsByEmail(CheckEmailRequest checkEmailRequest) {
         Boolean check = memberRepository.existsByEmail(checkEmailRequest.getEmail());
         return CheckEmailResponse.of(check);
     }
