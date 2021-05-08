@@ -5,9 +5,11 @@ import com.ssafy.thxstore.common.exceptions.ErrorCode;
 import com.ssafy.thxstore.member.domain.Member;
 import com.ssafy.thxstore.member.domain.MemberRole;
 import com.ssafy.thxstore.member.domain.Social;
-import com.ssafy.thxstore.member.dto.SignUpRequest;
-import com.ssafy.thxstore.member.dto.SocialMemberRequest;
-import com.ssafy.thxstore.member.dto.SocialMemberResponse;
+import com.ssafy.thxstore.member.dto.request.CheckEmailRequest;
+import com.ssafy.thxstore.member.dto.request.SignUpRequest;
+import com.ssafy.thxstore.member.dto.request.SocialMemberRequest;
+import com.ssafy.thxstore.member.dto.response.CheckEmailResponse;
+import com.ssafy.thxstore.member.dto.response.SocialMemberResponse;
 import com.ssafy.thxstore.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -67,5 +69,10 @@ public class MemberService {
                 .findByUserIdAndSocial(socialMemberRequest.getUserId(), socialMemberRequest.getSocial().toString())
                 .orElseThrow(() -> new AuthException(ErrorCode.UNAUTHORIZED_MEMBER));
         return SocialMemberResponse.of(socialMember);
+    }
+
+    public CheckEmailResponse existsByEmail(CheckEmailRequest checkEmailRequest){
+        Boolean check = memberRepository.existsByEmail(checkEmailRequest.getEmail());
+        return CheckEmailResponse.of(check);
     }
 }

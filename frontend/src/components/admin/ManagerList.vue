@@ -1,60 +1,114 @@
 <template>
   <div style="max-width: 1080px; margin: 1px auto">
-    <div class="manager-list-container">
+    <div v-if="isListBe" class="manager-list-container">
       <div class="manager-info-container">
         <div class="side-bar">
           <ul class="name-list">
-            <li class="name-item" @click="clickNameList">
+            <li v-for="(storeName, index) in storeNameArr" :key="index" class="name-item" @click="clickNameList(index)">
               <awesome icon="store" class="store"></awesome> {{ storeName }}
             </li>
-            <li class="name-item"><awesome icon="store" class="store"></awesome>{{ storeName }}</li>
-            <li class="name-item">GS25편의점 원내점</li>
-            <li class="name-item">{{ storeName }}</li>
           </ul>
         </div>
         <div class="manager-info-bottom">
           <div class="info-column">스토어 명:</div>
-          <div class="info-data">{{ storeName }}</div>
+          <div class="info-data">{{ storeNameArr[order] }}</div>
           <div class="info-column">전화번호:</div>
-          <div class="info-data">{{ phoneNum }}</div>
+          <div class="info-data">{{ phoneNumArr[order] }}</div>
           <div class="info-column">스토어 주소:</div>
           <div class="info-data">
-            {{ nomalAddress }} <br />
-            {{ detailAddress }}
+            {{ nomalAddressArr[order] }} <br />
+            {{ detailAddressArr[order] }}
           </div>
           <div class="info-column">사업자 번호:</div>
-          <div class="info-data">{{ comResNum }}</div>
+          <div class="info-data">{{ comResNumArr[order] }}</div>
         </div>
       </div>
-      <!-- <div class="manager-copy-container" :style="{ 'background-image': require(copy.thumbnail) }"></div> -->
       <div class="manager-copy-container">
-        <img src="@/assets/image/사업자 등록증 포부인터.jpg" alt="" />
-        <!-- src v-bind쓸 때  -->
-        <!-- {{ thumbnail }} -->
+        <img :src="thumbnailArr[order]" alt="" />
       </div>
       <div class="button-group">
-        <div class="pass-button">반려</div>
-        <div class="fail-button">승인</div>
+        <div class="fail-button" @click="retireEnrollment">반려</div>
+        <div class="pass-button" @click="approveEnrollment">승인</div>
       </div>
     </div>
+    <div v-else class="list-none">판매자 등록 신청이 없습니다.</div>
   </div>
 </template>
 
 <script>
+import 'url-search-params-polyfill';
+import { getStoreEnrollmentList, approveStoreEnrollment, retireStoreEnrollment } from '@/api/seller';
 export default {
   data() {
     return {
-      storeName: '든든한끼',
-      nomalAddress: '대전 유성구 원내동79-15',
-      detailAddress: '1층',
-      phoneNum: '010-9265-5275',
-      comResNum: '045-24-45678',
-      thumbnail: `@/assets/image/basic_profile.jpg`,
+      storeNameArr: [],
+      nomalAddressArr: [],
+      detailAddressArr: [],
+      phoneNumArr: [],
+      comResNumArr: [],
+      thumbnailArr: [],
+
+      isListBe: false,
+      storeId: [],
+      order: 0,
     };
   },
+  created() {
+    this.getstoreList();
+  },
   methods: {
-    clickNameList() {
-      console.log('된다.');
+    async getstoreList() {
+      const res = await getStoreEnrollmentList();
+      const data = res.data;
+      console.log(data);
+
+      for (let i = 0; i < res.data.length; i++) {
+        this.storeNameArr.push(data[i].name);
+        this.nomalAddressArr.push(data[i].mainAddress);
+        this.detailAddressArr.push(data[i].subAddress);
+        this.phoneNumArr.push(data[i].phoneNum);
+        this.comResNumArr.push(data[i].license);
+        this.thumbnailArr.push(data[i].licenseImg);
+        this.storeId.push(data[i].id);
+      }
+      if (this.storeNameArr.length != 0) {
+        this.isListBe = true;
+      }
+      console.log(this.storeNameArr);
+    },
+    clickNameList(index) {
+      this.order = index;
+    },
+    async approveEnrollment() {
+      const order = this.order;
+      const storeId = this.storeId;
+      var params = new URLSearchParams();
+      params.append('storeId', storeId[order]);
+      await approveStoreEnrollment({ storeId: storeId[order] });
+      // await approveStoreEnrollment(params);
+      this.resetData();
+      this.getstoreList();
+    },
+    async retireEnrollment() {
+      const order = this.order;
+      const storeId = this.storeId;
+      var params = new URLSearchParams();
+      params.append('storeId', storeId[order]);
+      // await retireStoreEnrollment({ storeId: storeId[order] });
+      await retireStoreEnrollment(params);
+      this.resetData();
+      this.getstoreList();
+    },
+    resetData() {
+      this.storeNameArr = [];
+      this.nomalAddressArr = [];
+      this.detailAddressArr = [];
+      this.phoneNumArr = [];
+      this.comResNumArr = [];
+      this.thumbnailArr = [];
+      this.storeId = [];
+      this.order = 0;
+      this.isListBe = false;
     },
   },
 };
@@ -92,13 +146,13 @@ export default {
   .side-bar {
     overflow-y: auto;
     overflow-x: hidden;
-    min-height: 70%;
+    min-height: 60%;
     width: 100%;
     margin: 2%;
     background: black;
     border: 2px black solid;
     color: $blue600;
-    font-size: 2em;
+    font-size: 1.5em;
     // height: 300px;
     @include mobile {
       width: 100%;
@@ -132,11 +186,12 @@ export default {
   .manager-info-container {
     @include flexbox;
     align-items: flex-start;
-    border: black 2px solid;
+    border: grey 2px solid;
     width: 40%;
-    // align-items: center;
+    align-items: center;
     flex-grow: 1;
     flex-wrap: wrap;
+    overflow: auto;
     @include mobile {
       font-size: 0.6em;
       width: 100%;
@@ -186,20 +241,22 @@ export default {
     }
   }
   .manager-copy-container {
-    border: black 2px solid;
+    border: grey 2px solid;
+    border-left: none;
     width: 50%;
-    // height: 500px;
     padding: 5px;
     overflow: hidden;
     @include mobile {
       order: 2;
       width: 100%;
       border-top: none;
+      border-left: grey 2px solid;
     }
     @include xs-mobile {
       order: 2;
       width: 100%;
       border-top: none;
+      border-left: grey 2px solid;
     }
     // background: url('../../assets/image/사업자 등록증.jpg') no-repeat;
     // object-fit: cover; // 이미지 태그에 넣는 것 width 100% height 100%
@@ -223,7 +280,7 @@ export default {
     @include xs-mobile {
       padding-top: 15px;
     }
-    .pass-button {
+    .fail-button {
       display: inline-block;
       width: 30%;
       color: $white;
@@ -237,7 +294,7 @@ export default {
         transition: 0.4s;
       }
     }
-    .fail-button {
+    .pass-button {
       display: inline-block;
       width: 30%;
       color: $white;
@@ -252,6 +309,14 @@ export default {
         transition: 0.4s;
       }
     }
+  }
+}
+.list-none {
+  min-height: 200px;
+  padding: 3%;
+  text-align: center;
+  @include mobile {
+    font-size: 1em;
   }
 }
 </style>

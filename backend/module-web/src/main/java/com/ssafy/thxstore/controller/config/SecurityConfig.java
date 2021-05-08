@@ -101,7 +101,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private LoginFilter loginFilter() throws Exception {
         LoginFilter loginFilter = new LoginFilter();
-        loginFilter.setFilterProcessesUrl("/auth/login");
+        loginFilter.setFilterProcessesUrl("/auth/login/");
         loginFilter.setAuthenticationManager(authenticationManagerBean());
         loginFilter.setAuthenticationSuccessHandler(new LoginSuccessHandler(jwtTokenProvider));
         return loginFilter;

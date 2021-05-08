@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+// todo setter -> build로 변경 필요 (다른 dto, domain 포함)
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
@@ -80,7 +81,7 @@ public class Store {
     @ColumnDescription("스토어 프로필 이미지")
     @Column(name = "profile_img")
     @Lob
-    private String profileImg;
+    private String logo;
 
     @ColumnDescription("사업자등록번호")
     @Column(name = "license")
@@ -91,13 +92,12 @@ public class Store {
     @Lob
     private String licenseImg;
 
-    //  @Enumerated(EnumType.STRING)
     @ColumnDescription("스토어 관리자 승인 여부 및 스토어 상태") // enum 수정
     @Column(name = "check_store")
     private CheckStore checkStore;
 
     @Builder
-    public Store(Member member, String name, StoreCategory storeCategory, String phoneNum, String mainAddress, String subAddress,String openTime,String closeTime,String closedDay,String introduce, String thumbImg, String profileImg, String license, String licenseImg, CheckStore checkStore){
+    public Store(Member member, String name, StoreCategory storeCategory, String phoneNum, String mainAddress, String subAddress,String openTime,String closeTime,String closedDay,String introduce, String thumbImg, String logo, String license, String licenseImg, CheckStore checkStore){
         this.member = member;
         this.name = name;
         this.storeCategory = storeCategory;
@@ -109,12 +109,13 @@ public class Store {
         this.closedDay = closedDay;
         this.introduce = introduce;
         this.thumbImg = thumbImg;
-        this.profileImg = profileImg;
+        this.logo = logo;
         this.license = license;
         this.licenseImg = licenseImg;
         this.checkStore = checkStore;
     }
 
+    // todo 정리 필요
     public Object getCheckStore(CheckStore checkStore){
         return CheckStore.APPLICATION_WAITING;
     }

@@ -73,11 +73,9 @@ export default {
 
       border-radius: 4px;
       border: 1px solid #fff;
-
-      border-style: inset; /*select 내부 그림자*/
-      -moz-box-shadow: inset 1px 1px 3px rgba(0, 38, 95, 1);
-      -webkit-box-shadow: inset 1px 1px 3px rgba(0, 38, 95, 1);
-      box-shadow: inset 1px 1px 3px rgba(0, 38, 95, 1);
+      -moz-box-shadow: outset 1px 1px 3px rgba(0, 38, 95, 1);
+      -webkit-box-shadow: outset 1px 1px 3px rgba(0, 38, 95, 1);
+      box-shadow: outset 1px 1px 3px rgba(0, 38, 95, 1);
 
       @include xs-mobile {
         width: 20%;
