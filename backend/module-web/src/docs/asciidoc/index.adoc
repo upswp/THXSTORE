@@ -153,9 +153,9 @@ Response-field
 include::{snippets}/signUp-SOCIAL/response-fields.adoc[]
 
 [[resources-find-social-member]]
-=== 소셜 유저 정보 반환
+=== 소셜 유저 회원존재 여부 확인
 
-`POST` 요청을 사용해서 request로 요청받은 social, userId 정보로 id, email, profileImage를 반환한다.
+`POST` 요청을 사용해서 request로 요청받은 social, userId 정보로 boolean type을 반환한다.
 
 === Curl
 include::{snippets}/find-social-member/curl-request.adoc[]
