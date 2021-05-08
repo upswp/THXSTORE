@@ -144,7 +144,7 @@ public class AuthDocumentation {
                         headerWithName(HttpHeaders.CONTENT_TYPE).description("content type header")
                 ),
                 requestFields(
-                        fieldWithPath("email").type(JsonFieldType.STRING).description("체크하고자 하는 유저 email")
+                        fieldWithPath("email").type(JsonFieldType.ARRAY).description("체크하고자 하는 유저 email")
                 ),
                 responseHeaders(
                         headerWithName(HttpHeaders.CONTENT_TYPE).description("hal+json type")
