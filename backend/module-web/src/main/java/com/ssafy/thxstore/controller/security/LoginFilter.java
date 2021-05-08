@@ -38,9 +38,6 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         username = loginRequest.getEmail();
         password = loginRequest.getPassword();
 
-        System.out.println(password);
-
-
         //TODO: 익명유저일 경우 사용
         if (username == null) {
             username = "";
