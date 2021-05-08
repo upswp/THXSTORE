@@ -90,7 +90,7 @@ public class AuthControllerTest extends BaseControllerTest {
     @DisplayName("소셜회원에 대한 정보값을 가져온다.")
     public void getSocialMember() throws Exception{
         //Given
-        this.generateMember("socialMemberEmail",100,1);
+        this.generateMember("socialMemberEmail",200,1);
         SocialMemberRequest socialMemberRequest = SocialMemberRequest.builder()
                 .social(Social.KAKAO)
                 .userId("kakao userId"+1)
@@ -99,7 +99,24 @@ public class AuthControllerTest extends BaseControllerTest {
         mockMvc.perform(post("/auth/social/")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(new ObjectMapper().writeValueAsString(socialMemberRequest)))
-                .andExpect(status().isOk())
+                .andExpect(result -> CheckEmailResponse.of(true))
+                .andDo(print())
+                .andDo(AuthDocumentation.getSocialMember());
+    }
+    @Test
+    @DisplayName("존재하지 않는 소셜회원에 대한 정보값을 가져온다.")
+    public void getNotExistSocialMember() throws Exception{
+        //Given
+        this.generateMember("notExistSocialMemberMemberEmail",400,4);
+        SocialMemberRequest socialMemberRequest = SocialMemberRequest.builder()
+                .social(Social.KAKAO)
+                .userId("not exist userId"+1)
+                .build();
+        //When & Then
+        mockMvc.perform(post("/auth/social/")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(new ObjectMapper().writeValueAsString(socialMemberRequest)))
+                .andExpect(result -> CheckEmailResponse.of(false))
                 .andDo(print())
                 .andDo(AuthDocumentation.getSocialMember());
     }
@@ -126,7 +143,7 @@ public class AuthControllerTest extends BaseControllerTest {
     public void failCheckSignUpMemberEmail() throws Exception{
         //Given
         String email = "testCheckEmail@gmail.com";
-        this.generateMember("testCheckEmail",200,2);
+        this.generateMember("testCheckEmail",400,2);
         MultiValueMap<String, String> requestParam = new LinkedMultiValueMap<>();
         requestParam.set("email",email);
         //When & Then

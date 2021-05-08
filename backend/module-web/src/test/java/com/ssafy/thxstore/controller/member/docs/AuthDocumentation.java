@@ -121,9 +121,7 @@ public class AuthDocumentation {
                         headerWithName(HttpHeaders.CONTENT_TYPE).description("hal+json type")
                 ),
                 responseFields(
-                        fieldWithPath("id").type(JsonFieldType.NUMBER).description("PK"),
-                        fieldWithPath("email").type(JsonFieldType.STRING).description("유저 이메일"),
-                        fieldWithPath("profileImage").type(JsonFieldType.STRING).description("회원 프로필 이미지"),
+                        fieldWithPath("check").type(JsonFieldType.BOOLEAN).description("유저 존재 여부"),
                         fieldWithPath("_links.self.href").description("link to self"),
                         fieldWithPath("_links.find-social-member.href").description("link to query event list"),
                         fieldWithPath("_links.profile.href").description("link to profile")
