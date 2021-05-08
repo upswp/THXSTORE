@@ -3,6 +3,9 @@
     <header>
       <div class="signup-header">Sign up for Thx!Store</div>
     </header>
+    <div class="profile-img">
+      <img :src="userData.profileImage" alt="profile" />
+    </div>
     <form @submit.prevent="submitForm">
       <div class="submit-items">
         <input v-model="userData.email" v-focus class="submit-item email" type="text" placeholder="이메일" />
@@ -19,21 +22,6 @@
         </button>
       </div>
     </form>
-    <div class="line-division">OR</div>
-    <div class="external-items">
-      <button class="external-item" type="button" @click="kakaoSignup">
-        <img src="@/assets/logo/kakao.svg" />
-        <b> 카카오톡으로 회원가입하기</b>
-      </button>
-      <button id="loginBtn" class="external-item" type="button">
-        <img src="@/assets/logo/google.svg" />
-        <b style="margin-right: 32px"> 구글로 회원가입하기</b>
-      </button>
-      <button class="external-item" type="button" @click="facebookSignup">
-        <img src="@/assets/logo/facebook.svg" />
-        <b> 페이스북으로 회원가입하기</b>
-      </button>
-    </div>
     <hr />
     <footer>
       <span @click="moveToPage('login')">로그인하기</span>
@@ -46,46 +34,37 @@
 <script>
 import ValidationMixin from '@/mixins/auth/validation';
 import { registerUser } from '@/api/auth';
+import { mapGetters } from 'vuex';
 export default {
   mixins: [ValidationMixin],
   data() {
     return {
-      userData: {
+      userData: {},
+    };
+  },
+  computed: {
+    ...mapGetters(['getTempUserInfo']),
+  },
+  created() {
+    this.userData = Object.assign(
+      {
         email: '',
         password1: '',
         password2: '',
-        nickname: '',
       },
-    };
-  },
-  mounted() {
-    this.googleLoad();
+      this.getTempUserInfo,
+    );
   },
   methods: {
-    async googleLoad() {
-      try {
-        await this.$loadScript(`https://apis.google.com/js/api:client.js`);
-        this.$_Google.init();
-      } catch (error) {
-        console.log(error);
-        alert('구글 클라이언트 API 키를 다시 한번 확인해주세요');
-      }
-    },
-    kakaoSignup() {
-      this.$_Kakao.signup();
-    },
-    facebookSignup() {
-      this.$_Facebook.signup();
-    },
     async submitForm() {
       try {
         const userData = {
-          userId: null,
+          userId: this.userData.userId,
           email: this.userData.email,
           password: this.userData.password1,
           nickname: this.userData.nickname,
-          social: 'LOCAL',
-          profileImage: null,
+          social: this.userData.social,
+          profileImage: this.userData.profileImage,
         };
         await registerUser(userData);
         await this.$store.dispatch('LOGIN', {
@@ -94,7 +73,6 @@ export default {
         });
         this.$router.push({ name: 'main' });
       } catch (error) {
-        console.log(error);
         alert('회원가입에 문제가 생겼습니다. 다시 시도해주세요.');
       }
     },
@@ -121,7 +99,18 @@ export default {
     }
     color: $gray500;
   }
-
+  .profile-img {
+    @include flexbox;
+    @include justify-content(center);
+    img {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      border: 5px solid $red100;
+      object-fit: cover;
+    }
+    margin-bottom: 10px;
+  }
   form {
     font-size: 14px;
     input {
@@ -170,50 +159,6 @@ export default {
     }
   }
 
-  .line-division {
-    @include flexbox;
-    @include align-items(center);
-    @include flex-basis(100%);
-    color: $blue300;
-    &::before,
-    &::after {
-      content: '';
-      @include flex-grow(1);
-      background: $blue300;
-      height: 1px;
-      font-size: 0px;
-      line-height: 0px;
-      margin: 0px 16px;
-    }
-    margin-bottom: 30px;
-  }
-  .external-items {
-    button.external-item {
-      width: 100%;
-      @include flexbox;
-      @include align-items(center);
-      @include justify-content(center);
-      @include box-shadow;
-      margin-bottom: 20px;
-      background-color: white;
-      border: 1px solid $gray100;
-      color: $gray600;
-      font-size: 13px;
-      &:hover {
-        background-color: rgba(0, 0, 0, 0.1);
-        color: $gray800;
-      }
-      &:active {
-        border: 1px solid $blue600;
-        color: $blue600;
-      }
-      img {
-        width: 2rem;
-        height: 2rem;
-        margin-right: 5px;
-      }
-    }
-  }
   hr {
     border: none;
     @include flexbox;

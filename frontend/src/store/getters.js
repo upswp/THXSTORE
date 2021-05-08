@@ -3,7 +3,7 @@ export default {
     return state.userInfo;
   },
   getTempUserInfo(state) {
-    return state.tmpUserInfo;
+    return state.tempUserInfo;
   },
   getToken(state) {
     return state.token;

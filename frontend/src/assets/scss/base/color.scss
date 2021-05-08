@@ -18,8 +18,15 @@ $white: #FFFFFF;
 $green800: #00B334;
 $green600: #00C854;
 $green400: #5CE596;
+$green200: #A7CFAA;
 $green100: #DEFAEB;
 $green000: #F7FCF9;
+
+//dark-green
+$dark-green800: #2ca581;
+$dark-green600: #55b598;
+$dark-green400: #78bfaa;
+$dark-green200: #9fc9bc;
 
 //Red
 $red800: #CC2727;
@@ -35,15 +42,28 @@ $blue600: #1E90FF;
 $blue500: #4c8fe6;
 $blue400: #7EC1FF;
 $blue300: #a8c9e7;
+$blue200: #abc4f3;
 $blue100: #c4e6fd;
 $blue000: #F2FAFF;
 
+
+
+//purple
+$purple800:#a82afc;
+$purple600: #b868ff;
+$purple400: #cda8ed;
+$purple200: #efd1ff;
 //navy
-$navy800: #315375;
+$navy800: #1f578e;
+$navy800: #37699b;
+$navy400: #5989ba;
+$navy200: #79a0c6;
+
 //Yellow
-$yellow700: #FFD500;
-$yellow400: #FFEE7A;
-$yellow100: #FFFACC;
+$yellow800: #fcdd11;
+$yellow600: #f9e24d;
+$yellow400: #ffed77;
+$yellow200: #f9f2c0;
 
 $primary: $green600;
 $success: $blue600;

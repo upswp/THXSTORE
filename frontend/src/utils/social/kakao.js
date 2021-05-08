@@ -16,7 +16,7 @@ export default {
           nickname: kakao_account.profile.nickname,
           email: kakao_account.email,
           profileImage: kakao_account.profile.profile_image_url,
-          social: 'kakao',
+          social: 'KAKAO',
         };
         if (division === 'login') {
           socialLogin(req);

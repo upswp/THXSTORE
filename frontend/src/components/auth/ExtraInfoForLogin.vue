@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <header>
-      <div class="signup-header">Sign up for Thx!Store</div>
+      <div class="login-header">Login for Thx!Store</div>
     </header>
     <div class="profile-img">
       <img :src="userData.profileImage" alt="profile" />
@@ -9,22 +9,15 @@
     <form @submit.prevent="submitForm">
       <div class="submit-items">
         <input v-model="userData.email" v-focus class="submit-item email" type="text" placeholder="이메일" />
-        <div ref="email" class="label" :class="validationClass.email">{{ validationMsg.email }}</div>
         <input v-model="userData.password1" class="submit-item" type="password" placeholder="비밀번호" />
-        <div ref="password1" class="label" :class="validationClass.password1">
-          {{ validationMsg.password1 }}
-        </div>
-        <input v-model="userData.password2" class="submit-item" type="password" placeholder="비밀번호 재입력" />
-        <div ref="password2" class="label" :class="validationClass.password2">{{ validationMsg.password2 }}</div>
-        <input v-model="userData.nickname" class="submit-item" type="text" placeholder="닉네임" />
         <button class="submit-item btn" type="submit" :disabled="btnDisabled">
-          <b>회원가입</b>
+          <b>로그인</b>
         </button>
       </div>
     </form>
     <hr />
     <footer>
-      <span @click="moveToPage('login')">로그인하기</span>
+      <span @click="moveToPage('signup')">회원가입하기</span>
       <span>|</span>
       <span @click="moveToPage('mailcode')">비밀번호찾기</span>
     </footer>
@@ -32,38 +25,39 @@
 </template>
 
 <script>
-import ValidationMixin from '@/mixins/auth/validation';
-import { registerUser } from '@/api/auth';
+import { mapGetters } from 'vuex';
 export default {
-  mixins: [ValidationMixin],
   data() {
     return {
-      userData: Object.assign(
-        {
-          email: '',
-          password1: '',
-          password2: '',
-        },
-        this.$store.state.tempUserInfo,
-      ),
+      userData: '',
     };
+  },
+  computed: {
+    ...mapGetters(['getTempUserInfo']),
+    btnDisabled() {
+      return this.userData.email !== '' && this.userData.password1 !== '' ? false : true;
+    },
+  },
+  created() {
+    this.userData = Object.assign(
+      {
+        email: '',
+        password1: '',
+      },
+      this.getTempUserInfo,
+    );
   },
   methods: {
     async submitForm() {
       try {
         const userData = {
-          userId: this.userData.userId,
-          email: this.email,
-          password: this.password1,
-          nickname: this.nickname,
-          social: this.userData.social,
-          profileImage: this.userData.profileImage,
+          email: this.userData.email,
+          password: this.userData.password1,
         };
-        await registerUser(userData);
         await this.$store.dispatch('LOGIN', userData);
         this.$router.push({ name: 'main' });
       } catch (error) {
-        alert('회원가입에 문제가 생겼습니다. 다시 시도해주세요.');
+        alert('로그인에 문제가 생겼습니다. 다시 시도해주세요.');
       }
     },
   },
