@@ -37,10 +37,6 @@ export default {
 
 <style lang="scss" scoped>
 // @import '@/assets/scss/sample';
-.store-nav-container {
-  border-bottom: 1px solid $gray300;
-  margin-bottom: 10px;
-}
 .store-nav-items {
   @include lg-pc() {
   }

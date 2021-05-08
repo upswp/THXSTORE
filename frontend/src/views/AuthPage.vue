@@ -48,21 +48,10 @@ export default {
     this.kakaoLoad();
     this.facebookLoad();
   },
-  mounted() {
-    this.googleLoad();
-  },
+
   methods: {
     facebookLoad() {
       this.$_Facebook.init();
-    },
-    async googleLoad() {
-      try {
-        await this.$loadScript(`https://apis.google.com/js/api:client.js`);
-        this.$_Google.init();
-      } catch (error) {
-        console.log(error);
-        alert('구글 클라이언트 API 키를 다시 한번 확인해주세요');
-      }
     },
     async kakaoLoad() {
       try {

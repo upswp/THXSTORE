@@ -4,8 +4,8 @@ import router from '@/router';
 
 const Google = {
   init() {
-    window.gapi.load('auth2', () => {
-      const auth2 = window.gapi.auth2.init({
+    window.gapi.load('auth2', async () => {
+      const auth2 = await window.gapi.auth2.init({
         client_id: process.env.VUE_APP_GOOGLE_API_KEY,
         cookiepolicy: 'single_host_origin',
       });
@@ -17,18 +17,26 @@ const Google = {
     auth2.attachClickHandler(
       element,
       {},
-      googleUser => {
-        const profile = googleUser.getBasicProfile();
+      async googleUser => {
+        const profile = await googleUser.getBasicProfile();
         // if (getUserFromLocalStorage()) {
         //   alert('이미 로그인 되어 있습니다.');
         //   router.push('/main');
         //   return;
         // }
         const path = router.history.current.path;
+        const req = {
+          userId: profile.getId(),
+          nickname: profile.getName(),
+          email: profile.getEmail(),
+          profileImage: profile.getImageUrl(),
+          social: 'GOOGLE',
+        };
+
         if (path.includes('login')) {
-          this.login(profile);
+          socialLogin(req);
         } else {
-          this.signup(profile);
+          socialSignup(req);
         }
       },
       error => {
@@ -36,31 +44,6 @@ const Google = {
         console.log(JSON.stringify(error, undefined, 2));
       },
     );
-  },
-
-  login(profile) {
-    this.makeReq(profile).then(req => {
-      socialLogin(req);
-    });
-  },
-
-  signup(profile) {
-    this.makeReq(profile).then(req => {
-      socialSignup(req);
-    });
-  },
-
-  makeReq(profile) {
-    return new Promise((resolve, reject) => {
-      const req = {
-        userId: profile.getId(),
-        nickname: profile.getName(),
-        email: profile.getEmail(),
-        profileImage: profile.getImageUrl(),
-        social: 'google',
-      };
-      resolve(req);
-    });
   },
 };
 

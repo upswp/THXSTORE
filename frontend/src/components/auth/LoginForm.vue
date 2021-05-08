@@ -19,7 +19,7 @@
           <img src="@/assets/logo/kakao.svg" />
           <b> 카카오톡으로 로그인하기</b>
         </button>
-        <button id="loginBtn" class="external-item" type="button" @click="googleLogin">
+        <button id="loginBtn" class="external-item" type="button">
           <img src="@/assets/logo/google.svg" />
           <b style="margin-right: 32px"> 구글로 로그인하기</b>
         </button>
@@ -47,8 +47,19 @@ export default {
       isSocialForm: true,
     };
   },
-
+  mounted() {
+    this.googleLoad();
+  },
   methods: {
+    async googleLoad() {
+      try {
+        await this.$loadScript(`https://apis.google.com/js/api:client.js`);
+        this.$_Google.init();
+      } catch (error) {
+        console.log(error);
+        alert('구글 클라이언트 API 키를 다시 한번 확인해주세요');
+      }
+    },
     moveToPage(name) {
       this.$router.push({ name });
     },
@@ -57,9 +68,6 @@ export default {
     },
     facebookLogin() {
       this.$_Facebook.login();
-    },
-    googleLogin() {
-      this.$_Google.login();
     },
     async submitForm() {
       try {

@@ -41,6 +41,7 @@ export default {
 <style lang="scss" scoped>
 .store-container {
   min-height: 100vh;
+
   @include lg-pc {
     @include flexbox;
   }
@@ -50,12 +51,15 @@ export default {
 }
 .store-aside {
   @include lg-pc {
+    position: fixed;
     padding: 10px 0;
     margin: 0;
     width: 250px;
+    min-height: 100vh;
     box-shadow: 2px 0 5px rgba(0, 0, 0, 0.3);
   }
   @include pc {
+    position: fixed;
     padding: 10px 0;
     width: 250px;
     margin: 0;
@@ -71,9 +75,11 @@ export default {
   @include justify-content(center);
   @include lg-pc {
     width: calc(100% - 250px);
+    margin-left: 250px;
   }
   @include pc {
     width: calc(100% - 250px);
+    margin-left: 250px;
   }
 
   padding: 10px;
