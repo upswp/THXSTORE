@@ -48,6 +48,7 @@ public class ProductController {
     @DeleteMapping // 그룹 삭제(매뉴 전체)
     public ResponseEntity deleteGroup(@RequestHeader String authorization, @RequestBody DeleteGroupDto deleteGroupDto) {
         String email = jwtToEmail(authorization);
+        productService.deleteGroup(deleteGroupDto);
 
        return ResponseEntity.created(null).body(HttpStatus.OK);
     }
@@ -62,6 +63,8 @@ public class ProductController {
 
 
     /* 판매자 스토어 페이지(매뉴관리(2, 그룹 메뉴 리스트)) */
+
+
 
 
     /* 판매자 스토어 페이지(메뉴 관리(3, 메뉴 자세히)) */

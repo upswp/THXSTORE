@@ -2,6 +2,7 @@ package com.ssafy.thxstore.product.service;
 
 import com.ssafy.thxstore.product.domain.ProductGroup;
 import com.ssafy.thxstore.product.dto.CreateGroupDto;
+import com.ssafy.thxstore.product.dto.DeleteGroupDto;
 import com.ssafy.thxstore.product.dto.EditGroupDto;
 import com.ssafy.thxstore.product.dto.FindAllGroupDto;
 import com.ssafy.thxstore.product.repository.ProductGroupRepository;
@@ -45,5 +46,10 @@ public class ProductService {
     public List<ProductGroup> findAllGroup(FindAllGroupDto findAllGroupDto) {
         List<ProductGroup> productGroups = productGroupRepository.findAllByStoreId(findAllGroupDto.getStoreId());
         return productGroups;
+    }
+
+    public void deleteGroup(DeleteGroupDto deleteGroupDto) {
+        // 그룹 아이디 관련 매뉴 전체 삭제. 그룹 삭제 -> 연관매핑 확인
+        productGroupRepository.deleteById(deleteGroupDto.getGroupId());
     }
 }
