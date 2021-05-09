@@ -65,11 +65,9 @@ const emailCheck = email =>
  * @returns {Promise<Boolean>} 중복 여부
  */
 const socialCheck = (userId, social) =>
-  publicAPI.get('user/', {
-    params: {
-      userId,
-      social,
-    },
+  publicAPI.post('social/', {
+    userId,
+    social,
   });
 
 const authWithEmailForPwd = userData => publicAPI.post('', userData);
