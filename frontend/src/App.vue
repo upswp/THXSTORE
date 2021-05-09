@@ -1,10 +1,16 @@
 <template>
   <div id="app">
+    <loading-spinner></loading-spinner>
     <router-view />
   </div>
 </template>
 <script>
-export default {};
+import LoadingSpinner from '@/components/common/LoadingSpinner';
+export default {
+  components: {
+    LoadingSpinner,
+  },
+};
 </script>
 <style lang="scss">
 #app {

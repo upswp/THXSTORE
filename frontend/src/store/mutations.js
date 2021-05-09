@@ -11,4 +11,7 @@ export default {
   toggleMainDrawerOpen(state) {
     state.mainDrawerOpen = !state.mainDrawerOpen;
   },
+  setSpinnerState(state, status) {
+    state.spinnerOn = status;
+  },
 };

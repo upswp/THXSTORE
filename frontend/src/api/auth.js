@@ -52,7 +52,7 @@ const loginUser = loginData => publicAPI.post('login/', loginData);
  * @returns {Promise<Boolean>} 중복 여부
  */
 const emailCheck = email =>
-  publicAPI.get('user/', {
+  publicAPI.get('checkEmail/', {
     params: {
       email,
     },

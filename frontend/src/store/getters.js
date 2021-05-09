@@ -11,4 +11,7 @@ export default {
   isMainDrawerOpend(state) {
     return state.mainDrawerOpen;
   },
+  getSpinnerState(state) {
+    return state.spinnerOn;
+  },
 };

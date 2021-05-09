@@ -46,6 +46,7 @@
 <script>
 import ValidationMixin from '@/mixins/auth/validation';
 import { registerUser } from '@/api/auth';
+import { mapMutations } from 'vuex';
 export default {
   mixins: [ValidationMixin],
   data() {
@@ -62,6 +63,7 @@ export default {
     this.googleLoad();
   },
   methods: {
+    ...mapMutations(['setSpinnerState']),
     async googleLoad() {
       try {
         await this.$loadScript(`https://apis.google.com/js/api:client.js`);
@@ -87,14 +89,17 @@ export default {
           social: 'LOCAL',
           profileImage: null,
         };
+        this.setSpinnerState(true);
         await registerUser(userData);
         await this.$store.dispatch('LOGIN', {
           email: this.userData.email,
           password: this.userData.password1,
         });
+        this.setSpinnerState(false);
         this.$router.push({ name: 'main' });
       } catch (error) {
         console.log(error);
+        this.setSpinnerState(false);
         alert('회원가입에 문제가 생겼습니다. 다시 시도해주세요.');
       }
     },
