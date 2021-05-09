@@ -1,6 +1,7 @@
 package com.ssafy.thxstore.controller.product;
 
 import com.ssafy.thxstore.controller.config.AppProperties;
+import com.ssafy.thxstore.product.dto.CreateGroupDto;
 import com.ssafy.thxstore.product.dto.DeleteGroupDto;
 import com.ssafy.thxstore.product.dto.EditGroupDto;
 import com.ssafy.thxstore.product.service.ProductService;
@@ -30,14 +31,13 @@ public class ProductController {
     @PatchMapping // 그룹 수정
     public ResponseEntity editGroup(@RequestHeader String authorization, @RequestBody EditGroupDto editGroupDto) {
         String email = jwtToEmail(authorization);
-
         return ResponseEntity.created(null).body(null);
     }
 
     @PostMapping // 그룹 등록
-    public ResponseEntity createGroup(@RequestHeader String authorization, @RequestBody CreateStoreFileDto createStoreFileDto) {
+    public ResponseEntity createGroup(@RequestHeader String authorization, @RequestBody CreateGroupDto createGroupDto) {
         String email = jwtToEmail(authorization);
-
+        productService.createGroup(createGroupDto);
         return ResponseEntity.created(null).body(null);
     }
 
