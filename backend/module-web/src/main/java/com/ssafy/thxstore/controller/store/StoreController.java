@@ -4,14 +4,10 @@ import com.ssafy.thxstore.image.service.ImageService;
 import com.ssafy.thxstore.store.domain.CheckStore;
 import com.ssafy.thxstore.store.domain.Store;
 import com.ssafy.thxstore.store.domain.TempStore;
-import com.ssafy.thxstore.store.dto.CreateStoreDto;
-import com.ssafy.thxstore.store.dto.CreateStoreFileDto;
-import com.ssafy.thxstore.store.dto.StoreChangedDto;
-import com.ssafy.thxstore.store.dto.StoreUnchangedDto;
+import com.ssafy.thxstore.store.dto.*;
 import com.ssafy.thxstore.store.service.StoreService;
 import io.jsonwebtoken.Jwts;
 import lombok.RequiredArgsConstructor;
-import org.apache.http.protocol.HTTP;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
@@ -28,7 +24,6 @@ import java.util.Optional;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
-// todo 주석처리, 예외처리 필요
 @RestController
 @RequiredArgsConstructor
 @CrossOrigin(origins = { "*" }, maxAge = 6000)
@@ -38,8 +33,7 @@ public class StoreController {
     private final StoreService storeService;
     private final ImageService imageService;
 
-    // 스토어 생성
-    @PostMapping
+    @PostMapping // 스토어 생성
     public ResponseEntity createStore(@RequestHeader String authorization, @ModelAttribute CreateStoreFileDto createStoreFileDto){
         String email = jwtToEmail(authorization);
         String imgProfile = null;
@@ -48,41 +42,25 @@ public class StoreController {
         }catch (IOException e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-
         Store store = storeService.createStore(imgProfile, createStoreFileDto, email);
-        //member 상태 변환
-
-        WebMvcLinkBuilder selfLinkBuilder = linkTo(StoreController.class).slash(store.getId());
-        URI createUri = selfLinkBuilder.toUri();
-//        StoreResource storeResource = new StoreResource(store);
-//        storeResource.add(linkTo(StoreController.class).withRel("create-store"));
-//        storeResource.add(Link.of("/api/docs/index.html#resources-create-store").withRel("profile"));
-//        return ResponseEntity.created(createUri).body(storeResource);
-        return ResponseEntity.created(createUri).body(HttpStatus.CREATED);
+        return ResponseEntity.created(null).body(HttpStatus.CREATED);
     }
 
-    /*판매자 스토어 페이지(스토어 정보 입력)*/
-    // 스토어 상세 조회
-    @GetMapping
+    @GetMapping // 스토어 상세 조회
     public ResponseEntity detailStore(@RequestHeader String authorization){
-        System.out.println("zzzz");
         String email = jwtToEmail(authorization);
-        System.out.println(email);
         Optional<Store> store = storeService.getStore(email);
         return ResponseEntity.created(null).body(store.get());
     }
 
-    //스토어 정보 수정(개인)
-    @PatchMapping
-    public ResponseEntity patchStore(@RequestHeader String authorization, @ModelAttribute StoreChangedDto storeChangedDto){ // store_category, open_time, close_time, close_day, introduce, thumbnail_img, profile_img,
+    @PatchMapping//스토어 정보 수정(개인)
+    public ResponseEntity patchStore(@RequestHeader String authorization, @ModelAttribute StoreChangedDto storeChangedDto){
         String email = jwtToEmail(authorization);
         Store store = storeService.patchStore(email, storeChangedDto);
         return ResponseEntity.created(null).body(store);
     }
 
-    // todo 에러로 주석 처리. -> 다음 주나 금요일에 수정 부분 시작
-    // 스토어 정보 수정(불변) 불변 자료만 받아오자
-    @PutMapping
+    @PutMapping// 스토어 정보 수정(불변) 불변 자료만 받아오자
     public ResponseEntity putStore(@RequestHeader String authorization, @ModelAttribute StoreUnchangedDto storeUnchangedDto){
         // todo : 가게가 존재하는지 확인하는 로직이 필요합니다.
         String email = jwtToEmail(authorization);
@@ -93,98 +71,76 @@ public class StoreController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
-        Store store = storeService.getStore(email).get();
-        store.setCheckStore(CheckStore.EDIT_WAITING);
+        storeService.putStore(email, storeUnchangedDto, imgProfile);
 
-        TempStore tempStore = TempStore.builder()
-                .store(store)
-                .name(storeUnchangedDto.getName())
-                .mainAddress(storeUnchangedDto.getMainAddress())
-                .subAddress(storeUnchangedDto.getSubAddress())
-                .phoneNum(storeUnchangedDto.getPhoneNum())
-                .license(storeUnchangedDto.getLicense())
-                .licenseImg(imgProfile)
-                .build();
+//        Store store = storeService.getStore(email).get();
+//        store.setCheckStore(CheckStore.EDIT_WAITING);
+//
+//        TempStore tempStore = TempStore.builder()
+//                .store(store)
+//                .name(storeUnchangedDto.getName())
+//                .mainAddress(storeUnchangedDto.getMainAddress())
+//                .subAddress(storeUnchangedDto.getSubAddress())
+//                .phoneNum(storeUnchangedDto.getPhoneNum())
+//                .license(storeUnchangedDto.getLicense())
+//                .licenseImg(imgProfile)
+//                .build();
+//
+//        TempStore saveTempStore = storeService.tempStoreSave(tempStore);
 
-        // 저장
-        TempStore saveTempStore = storeService.tempStoreSave(tempStore);
-
-        // TODO :
         return ResponseEntity.created(null).body(HttpStatus.OK);
     }
-    
-    //스토어 상태 반환 신청 정보도?
-//    @GetMapping("/status/")
-//    public ResponseEntity statusStore(){
-//        return ResponseEntity.created(null).body(null);
-//    }
 
-/* 스토어  관리(신청 목록)*/
-    // 관리자 스토어 관리. 스토어 신청 리스트 반환---------------------------------------------------
-    @GetMapping("/application/")
+    @GetMapping("/application/") // 관리자 스토어 관리. 스토어 신청 리스트 반환
     public ResponseEntity storeApplicationList(@RequestHeader String authorization){
         List<Store> storeApplicationList = storeService.storeApplicationList();
         return ResponseEntity.created(null).body(storeApplicationList);
     }
 
-    //스토어 신청 허가(관리자)
-    @PostMapping("/application/success/")
-    public ResponseEntity storeApplicationSuccess(@RequestHeader String authorization, @RequestParam(value="storeId") Long storeId){
+    @PostMapping("/application/success/")//스토어 신청 허가(관리자)
+    public ResponseEntity storeApplicationSuccess(@RequestHeader String authorization, @RequestBody StoreIdDto storeIdDto){
         String email = jwtToEmail(authorization);
-        // 스토어 변경
-        Store store= storeService.storeApplicationSuccess(storeId, email);
+        Store store= storeService.storeApplicationSuccess(storeIdDto.getStoreId(), email);
         return ResponseEntity.created(null).body(HttpStatus.OK);
     }
 
-    // 스토어 신청 실패(관리자) 매니저 -> 유저
-    @PostMapping("/application/fail/")
-    public ResponseEntity storeApplicationFail(@RequestHeader String authorization,  @RequestParam(value="storeId") Long storeId){
-        // 스토어 삭제
-        storeService.storeApplicationFail(storeId);
+    @PostMapping("/application/fail/") // 스토어 신청 실패(관리자) 매니저 -> 유저
+    public ResponseEntity storeApplicationFail(@RequestHeader String authorization,  @RequestBody StoreIdDto storeIdDto){
+        storeService.storeApplicationFail(storeIdDto.getStoreId());   // 스토어 삭제
         return ResponseEntity.created(null).body(HttpStatus.OK);
     }
 
-    // 스토어 신청 실패 확인(판패자가 클릭)
-    @PostMapping("/application/confirm/")
+    @PostMapping("/application/confirm/") // 스토어 신청 실패 확인(판패자가 클릭)
     public ResponseEntity storeApplicationConfirm(@RequestHeader String authorization){
         String email = jwtToEmail(authorization);
         storeService.storeApplicationConfirm(email);
         return ResponseEntity.created(null).body(HttpStatus.OK);
     }
 
-    //스토어 수정 리스트--------------------------------------------------------
-    @GetMapping("/modify/")
+    @GetMapping("/modify/")//스토어 수정 리스트
     public ResponseEntity storeModifyList(@RequestHeader String authorization){
         List<TempStore> storeModifyList = storeService.storeModifyList();
         return ResponseEntity.created(null).body(storeModifyList);
     }
 
-    // 스토어 수정 허가(관리자)
-    @PostMapping("/modify/success") // 수정이 필요
-    public ResponseEntity storeModifySuccess(@RequestHeader String authorization, @RequestParam(value="tempStoreId") Long tempStoreId){
-
-        storeService.tempStoreSucess(tempStoreId);
-
-
+    @PostMapping("/modify/success") // 스토어 수정 허가(관리자)
+    public ResponseEntity storeModifySuccess(@RequestHeader String authorization, @RequestBody TempStoreIdDto tempStoreId){
+        storeService.tempStoreSucess(tempStoreId.getTempStoreId());
         return ResponseEntity.created(null).body(HttpStatus.OK);
     }
 
-    // 스토어 수정 실패(관리자)
-    @PostMapping("/modify/fail") // 삭제가 필요
-    public ResponseEntity storeModifyFail(@RequestHeader String authorization, @RequestParam(value="tempStoreId") Long tempStoreId){
-
-        storeService.tempStoreFail(tempStoreId);
+    @PostMapping("/modify/fail") // 스토어 수정 실패(관리자)
+    public ResponseEntity storeModifyFail(@RequestHeader String authorization, @RequestBody TempStoreIdDto tempStoreId){
+        storeService.tempStoreFail(tempStoreId.getTempStoreId());
         return ResponseEntity.created(null).body(HttpStatus.OK);
     }
 
-    // 스토어 수정 실패 확인(판매자가 클릭)
-    @PostMapping("/modify/confirm")
+    @PostMapping("/modify/confirm") // 스토어 수정 실패 확인(판매자가 클릭)
     public ResponseEntity storeModifyConfirm(@RequestHeader String authorization){
         String email = jwtToEmail(authorization);
         storeService.editConfirm(email);
         return ResponseEntity.created(null).body(HttpStatus.OK);
     }
-
 
     @PostMapping("/test/")
     public ResponseEntity createStoreTest(@RequestBody CreateStoreDto createStoreDto){
