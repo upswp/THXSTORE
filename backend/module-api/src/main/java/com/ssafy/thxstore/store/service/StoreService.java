@@ -7,10 +7,12 @@ import com.ssafy.thxstore.member.repository.MemberRepository;
 import com.ssafy.thxstore.store.domain.CheckStore;
 import com.ssafy.thxstore.store.domain.Store;
 import com.ssafy.thxstore.store.domain.StoreCategory;
+import com.ssafy.thxstore.store.domain.TempStore;
 import com.ssafy.thxstore.store.dto.CreateStoreDto;
 import com.ssafy.thxstore.store.dto.CreateStoreFileDto;
 import com.ssafy.thxstore.store.dto.StoreChangedDto;
 import com.ssafy.thxstore.store.repository.StoreRepository;
+import com.ssafy.thxstore.store.repository.TempStoreRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.annotations.Check;
@@ -29,12 +31,14 @@ import java.util.Optional;
 // todo 필요없는 주석 처리.
 @Service
 @Component
+@Transactional
 @RequiredArgsConstructor(access = AccessLevel.PUBLIC)
 public class StoreService {
 
     private final ModelMapper modelMapper;
 
     private final StoreRepository storeRepository;
+    private final TempStoreRepository tempStoreRepository;
     private final MemberRepository memberRepository;
 
     private final ImageService imageService;
@@ -80,7 +84,8 @@ public class StoreService {
 
     // todo 수정 부분 -> 금요일이나 다음 주 작업
     // 스토어 개인정보 변경 개인
-    public Store patchStore(StoreChangedDto storeChangedDto){
+
+    public Store patchStore(String email, StoreChangedDto storeChangedDto){
         Store store = storeRepository.findById(storeChangedDto.getStoreId()).get();
         // 정보 꺼내고
         // 가공
@@ -112,17 +117,16 @@ public class StoreService {
             }
             store.setThumbImg(imgProfile);
 
-        }else if(storeChangedDto.getProfileImg() != null){
+        }else if(storeChangedDto.getLogo() != null){
             // 파일
             String imgProfile = null;
             try {
-                imgProfile = imageService.createImage(storeChangedDto.getProfileImg());
+                imgProfile = imageService.createImage(storeChangedDto.getLogo());
             }catch (IOException e) {
                 return null;
             }
-            store.setThumbImg(imgProfile);
+            store.setLogo(imgProfile);
         }
-
         return store;
     }
 
@@ -191,8 +195,56 @@ public class StoreService {
         return store;
     }
 
-    public List<Store> storeModifyList() {
-        List<Store> store = null;//storeRepository.findByStoreCategory("EDIT_WAITING");
+    public List<TempStore> storeModifyList() {
+        List<TempStore> store = tempStoreRepository.findAll();
         return store;
+    }
+
+    public TempStore tempStoreSave(TempStore tempStore) {
+        return tempStoreRepository.save(tempStore);
+    }
+
+    // store에 반영하고, tempStore 제거, 그리고 normal 상태로 반환
+    public void tempStoreSucess(Long tempStoreId) {
+        TempStore tempStore = tempStoreRepository.findById(tempStoreId).get();
+        Long storeId = tempStore.getStore().getId();
+        Store store = storeRepository.findById(storeId).get();
+
+        store.setName(tempStore.getName());
+        store.setMainAddress(tempStore.getMainAddress());
+        store.setSubAddress(tempStore.getSubAddress());
+        store.setPhoneNum(tempStore.getPhoneNum());
+        store.setLicense(tempStore.getLicense());
+        store.setLicenseImg(tempStore.getLicenseImg());
+//        store = Store.builder()
+//                .name(tempStore.getName())
+//                .mainAddress(tempStore.getMainAddress())
+//                .subAddress(tempStore.getSubAddress())
+//                .phoneNum(tempStore.getPhoneNum())
+//                .license(tempStore.getLicense())
+//                .licenseImg(tempStore.getLicenseImg())
+//                .build();
+
+       // storeRepository.save(store);
+
+        tempStoreRepository.deleteById(tempStore.getId());
+
+        // 다시 normal 상태로 전환환
+        store.setCheckStore(CheckStore.NORMAL);
+    }
+
+    public void tempStoreFail(Long tempStoreId) { // 스토어 수정 실패
+        TempStore tempStore = tempStoreRepository.findById(tempStoreId).get();
+        Long storeId = tempStore.getStore().getId();
+        Store store = storeRepository.findById(storeId).get();
+        store.setCheckStore(CheckStore.APPLICATION_FAILED);
+        tempStoreRepository.deleteById(tempStoreId);
+    }
+
+    public void editConfirm(String email) {
+        Member member = memberRepository.findByEmail(email).get();
+        Long memberId = member.getId();
+        Store store = storeRepository.findByMemberId(memberId).get();
+        store.setCheckStore(CheckStore.NORMAL);
     }
 }
