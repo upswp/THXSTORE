@@ -56,6 +56,7 @@ export default {
       this.moveToPage(e);
     },
     moveToPage(name) {
+      if (this.$router.history.current.fullPath.includes(name)) return;
       this.$router.push({ name });
     },
   },
@@ -84,9 +85,6 @@ export default {
   @include flexbox;
   @include mobile() {
     top: 44px;
-    .navigation-drawer {
-      display: none;
-    }
     .navigation-icon-wrapper {
       .drawer-item {
         font-size: 1.4rem;
