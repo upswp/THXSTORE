@@ -39,6 +39,7 @@
 </template>
 
 <script>
+import { mapMutations } from 'vuex';
 export default {
   data() {
     return {
@@ -51,6 +52,7 @@ export default {
     this.googleLoad();
   },
   methods: {
+    ...mapMutations(['setSpinnerState']),
     async googleLoad() {
       try {
         await this.$loadScript(`https://apis.google.com/js/api:client.js`);
@@ -71,13 +73,16 @@ export default {
     },
     async submitForm() {
       try {
+        this.setSpinnerState(true);
         await this.$store.dispatch('LOGIN', {
           email: this.userData.id,
           password: this.userData.password,
         });
+        this.setSpinnerState(false);
         this.$router.push({ name: 'main' });
       } catch (error) {
         console.log(error);
+        this.setSpinnerState(false);
         if (confirm('아직 가입되지 않은 회원입니다. \n회원가입 화면으로 이동하시겠습니까?')) {
           this.$router.push({ name: 'signup' });
         }

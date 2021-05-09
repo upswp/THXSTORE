@@ -25,7 +25,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapGetters, mapMutations } from 'vuex';
 export default {
   data() {
     return {
@@ -48,15 +48,19 @@ export default {
     );
   },
   methods: {
+    ...mapMutations(['setSpinnerState']),
     async submitForm() {
       try {
         const userData = {
           email: this.userData.email,
           password: this.userData.password1,
         };
+        this.setSpinnerState(true);
         await this.$store.dispatch('LOGIN', userData);
+        this.setSpinnerState(false);
         this.$router.push({ name: 'main' });
       } catch (error) {
+        this.setSpinnerState(false);
         alert('로그인에 문제가 생겼습니다. 다시 시도해주세요.');
       }
     },
