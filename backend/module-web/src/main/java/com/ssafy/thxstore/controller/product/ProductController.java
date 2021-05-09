@@ -1,5 +1,6 @@
 package com.ssafy.thxstore.controller.product;
 
+import com.ssafy.thxstore.controller.config.AppProperties;
 import com.ssafy.thxstore.product.dto.DeleteGroupDto;
 import com.ssafy.thxstore.product.dto.EditGroupDto;
 import com.ssafy.thxstore.product.service.ProductService;
@@ -22,6 +23,7 @@ import java.io.IOException;
 public class ProductController {
 
     private final ProductService productService;
+    private final AppProperties appProperties;
 
 /* 판매자 스토어 페이지(메뉴 관리(1, 그룹)) */
 
@@ -66,7 +68,7 @@ public class ProductController {
 
     /* etc */
     public String jwtToEmail(String authorization){
-        return Jwts.parser().setSigningKey(DatatypeConverter.parseBase64Binary("aGVsbG90aHhzdG9yZWJhY2tlbmQK"))
+        return Jwts.parser().setSigningKey(DatatypeConverter.parseBase64Binary(appProperties.getAuth().getTokenSecret()))
                 .parseClaimsJws(authorization).getBody().getSubject();
     }
 }
