@@ -73,21 +73,6 @@ public class StoreController {
 
         storeService.putStore(email, storeUnchangedDto, imgProfile);
 
-//        Store store = storeService.getStore(email).get();
-//        store.setCheckStore(CheckStore.EDIT_WAITING);
-//
-//        TempStore tempStore = TempStore.builder()
-//                .store(store)
-//                .name(storeUnchangedDto.getName())
-//                .mainAddress(storeUnchangedDto.getMainAddress())
-//                .subAddress(storeUnchangedDto.getSubAddress())
-//                .phoneNum(storeUnchangedDto.getPhoneNum())
-//                .license(storeUnchangedDto.getLicense())
-//                .licenseImg(imgProfile)
-//                .build();
-//
-//        TempStore saveTempStore = storeService.tempStoreSave(tempStore);
-
         return ResponseEntity.created(null).body(HttpStatus.OK);
     }
 
