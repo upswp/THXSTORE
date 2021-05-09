@@ -7,20 +7,19 @@ import com.ssafy.thxstore.member.repository.MemberRepository;
 import com.ssafy.thxstore.store.domain.CheckStore;
 import com.ssafy.thxstore.store.domain.Store;
 import com.ssafy.thxstore.store.domain.StoreCategory;
+import com.ssafy.thxstore.store.domain.TempStore;
 import com.ssafy.thxstore.store.dto.CreateStoreDto;
 import com.ssafy.thxstore.store.dto.CreateStoreFileDto;
 import com.ssafy.thxstore.store.dto.StoreChangedDto;
+import com.ssafy.thxstore.store.dto.StoreUnchangedDto;
 import com.ssafy.thxstore.store.repository.StoreRepository;
+import com.ssafy.thxstore.store.repository.TempStoreRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.annotations.Check;
 import org.modelmapper.ModelMapper;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
@@ -29,25 +28,22 @@ import java.util.Optional;
 // todo 필요없는 주석 처리.
 @Service
 @Component
+@Transactional
 @RequiredArgsConstructor(access = AccessLevel.PUBLIC)
 public class StoreService {
 
     private final ModelMapper modelMapper;
 
     private final StoreRepository storeRepository;
+    private final TempStoreRepository tempStoreRepository;
     private final MemberRepository memberRepository;
 
     private final ImageService imageService;
 
-    // 스토어 생성
     // todo error 예외 처리 필요
-    @Transactional
-    public Store createStore(String imgProfile, CreateStoreFileDto createStoreFileDto, String email) {
-//        Member member = memberRepository.findById(createStoreFileDto.getMemberId()).get();
+    public Store createStore(String imgProfile, CreateStoreFileDto createStoreFileDto, String email) { //스토어 생성
         Member member = memberRepository.findByEmail(email).get();
-//        member.setRole(MemberRole.MANAGER);
 
-        // 파일 저장
         CreateStoreDto createStoreDto = CreateStoreDto.builder()
                 .member(member)
                 .memberId(member.getId())
@@ -61,49 +57,30 @@ public class StoreService {
                 .build();
 
        Store store = modelMapper.map(createStoreDto, Store.class);
-       // member 상태도 변환
-
-        storeRepository.save(store);
-
-        return store;
+       storeRepository.save(store);
+       return store;
     }
 
-    /*판매자 스토어 페이지(스토어 정보 입력)*/
-    // 스토어 정보 가져오기
-    public Optional<Store> getStore(String email) {
+    public Optional<Store> getStore(String email) { // 스토어 정보 가져오기
         Member member = memberRepository.findByEmail(email).get();
-
         Optional<Store> store = storeRepository.findByMemberId(member.getId());
-       // Optional<Store> store =  storeRepository.findById(storeId);
         return store;
     }
 
-    // todo 수정 부분 -> 금요일이나 다음 주 작업
-    // 스토어 개인정보 변경 개인
-    public Store patchStore(StoreChangedDto storeChangedDto){
+    public Store patchStore(String email, StoreChangedDto storeChangedDto){ // 스토어 개인정보 변경 개인
         Store store = storeRepository.findById(storeChangedDto.getStoreId()).get();
-        // 정보 꺼내고
-        // 가공
-        // 하나씩 비교
+
         if(storeChangedDto.getStoreCategory() != null){
-            // 1. switch(): 2. if
-            //store.setStoreCategory();
-            //빌더로 수정?
             store.setStoreCategory(StoreCategory.valueOf(storeChangedDto.getStoreCategory()));
         }else if(storeChangedDto.getOpenTime() != null){
             store.setOpenTime(storeChangedDto.getOpenTime());
-
         }else if(storeChangedDto.getCloseTime() != null){
             store.setCloseTime(storeChangedDto.getCloseTime());
-
         }else if(storeChangedDto.getCloseDay() != null){
             store.setClosedDay(storeChangedDto.getCloseDay());
-
         }else if(storeChangedDto.getIntroduce() != null){
             store.setIntroduce(storeChangedDto.getIntroduce());
-
         }else if(storeChangedDto.getThumbnailImg() != null){
-            // 파일
             String imgProfile = null;
             try {
                 imgProfile = imageService.createImage(storeChangedDto.getThumbnailImg());
@@ -111,88 +88,103 @@ public class StoreService {
                 return null;
             }
             store.setThumbImg(imgProfile);
-
-        }else if(storeChangedDto.getProfileImg() != null){
-            // 파일
+        }else if(storeChangedDto.getLogo() != null){
             String imgProfile = null;
             try {
-                imgProfile = imageService.createImage(storeChangedDto.getProfileImg());
+                imgProfile = imageService.createImage(storeChangedDto.getLogo());
             }catch (IOException e) {
                 return null;
             }
-            store.setThumbImg(imgProfile);
+            store.setLogo(imgProfile);
         }
-
         return store;
     }
 
     // 스토어 정보 변경 불변
-    public Store putStore(StoreChangedDto storeChangedDto) {
-        return null;
+    public void putStore(String email, StoreUnchangedDto storeUnchangedDto, String imgProfile) {
+        Member member = memberRepository.findByEmail(email).get();
+        Store store = storeRepository.findByMemberId(member.getId()).get();
+
+        store.setCheckStore(CheckStore.EDIT_WAITING);
+
+        TempStore tempStore = TempStore.builder()
+                .store(store)
+                .name(storeUnchangedDto.getName())
+                .mainAddress(storeUnchangedDto.getMainAddress())
+                .subAddress(storeUnchangedDto.getSubAddress())
+                .phoneNum(storeUnchangedDto.getPhoneNum())
+                .license(storeUnchangedDto.getLicense())
+                .licenseImg(imgProfile)
+                .build();
+        TempStore saveTempStore = tempStoreSave(tempStore);
     }
 
-
-    /* 스토어  관리(신청 목록)*/
-    // 스토어 신청 리스트
-    public List<Store> storeApplicationList() {
-        //System.out.println(CheckStore.APPLICATION_WAITING.ordinal());
+    public List<Store> storeApplicationList() {// 스토어 신청 리스트
         List<Store> store = storeRepository.findByCheckStore(CheckStore.APPLICATION_WAITING.ordinal());
         return store;
     }
 
-    // 스토어 신청 허가.
-    @Transactional
-    public Store storeApplicationSuccess(Long storeId,String email){
+    public Store storeApplicationSuccess(Long storeId,String email){    // 스토어 신청 허가.
         Store store = storeRepository.findById(storeId).get();
         Member member = memberRepository.findByEmail(email).get();
         member.setRole(MemberRole.MANAGER);
-        //store = Store.builder()
-       //         .checkStore(CheckStore.EDIT_WAITING)
-       //         .build();
         store.setCheckStore(CheckStore.NORMAL);
-        //System.out.println(store.getCheckStore());
         return store;
     }
-    // 스토어 신청 불가 여기서는 store status만 변경
-    @Transactional
-    public void storeApplicationFail(Long storeId){
+
+    public void storeApplicationFail(Long storeId){ // 스토어 신청 불가 여기서는 store status만 변경
         Store store = storeRepository.findById(storeId).get();
         store.setCheckStore(CheckStore.APPLICATION_FAILED);
     }
-    // 스토어 신청 불가 확인 -> 매니저 -> 유저,  스토어 삭제
-    @Transactional
-    public void storeApplicationConfirm(String email){
 
+    public void storeApplicationConfirm(String email){// 스토어 신청 불가 확인 -> 스토어 삭제
         Member member = memberRepository.findByEmail(email).get();
         Store store = storeRepository.findByMemberId(member.getId()).get();
         storeRepository.deleteById(store.getId());
-
-//        Store store = storeRepository.findById(storeId).get();
-//        Long memberId = store.getMember().getId();
-//
-//        Member member = memberRepository.findById(memberId).get();
-//        member.setRole(MemberRole.USER);
-//        storeRepository.deleteById(storeId);
     }
-    // 스토어 수정 리스트
 
-
-    // etc. 기타 시간간 문여는 시간 체크
-    public boolean storeOpen(String times, int checkTime){
-
+    public boolean storeOpen(String times, int checkTime){ // etc. 기타 시간간 문여는 시간 체크
         return false;
     }
 
     public Store createStoreTest(CreateStoreDto createStoreDto) {
         Store store = modelMapper.map(createStoreDto, Store.class);
-
         storeRepository.save(store);
-
         return store;
     }
 
-    public List<Store> storeModifyList() {
-        List<Store> store = null;//storeRepository.findByStoreCategory("EDIT_WAITING");
-        return store;
+    public List<TempStore> storeModifyList() { return tempStoreRepository.findAll(); }
+
+    public TempStore tempStoreSave(TempStore tempStore) { return tempStoreRepository.save(tempStore); }
+
+    public void tempStoreSucess(Long tempStoreId) {   // store에 반영하고, tempStore 제거, 그리고 normal 상태로 반환
+        TempStore tempStore = tempStoreRepository.findById(tempStoreId).get();
+        Long storeId = tempStore.getStore().getId();
+        Store store = storeRepository.findById(storeId).get();
+        store.setName(tempStore.getName());
+        store.setMainAddress(tempStore.getMainAddress());
+        store.setSubAddress(tempStore.getSubAddress());
+        store.setPhoneNum(tempStore.getPhoneNum());
+        store.setLicense(tempStore.getLicense());
+        store.setLicenseImg(tempStore.getLicenseImg());
+
+        tempStoreRepository.deleteById(tempStore.getId()); // 임시 저장소 삭제
+
+        store.setCheckStore(CheckStore.NORMAL); // normal 변환
+    }
+
+    public void tempStoreFail(Long tempStoreId) { // 스토어 수정 실패
+        TempStore tempStore = tempStoreRepository.findById(tempStoreId).get();
+        Long storeId = tempStore.getStore().getId();
+        Store store = storeRepository.findById(storeId).get();
+        store.setCheckStore(CheckStore.APPLICATION_FAILED);
+        tempStoreRepository.deleteById(tempStoreId);
+    }
+
+    public void editConfirm(String email) { // 스토어 수정 확인
+        Member member = memberRepository.findByEmail(email).get();
+        Long memberId = member.getId();
+        Store store = storeRepository.findByMemberId(memberId).get();
+        store.setCheckStore(CheckStore.NORMAL);
     }
 }

@@ -96,8 +96,12 @@ public class Store {
     @Column(name = "check_store")
     private CheckStore checkStore;
 
+    @ColumnDescription("스토어 휴무 상태 closestore == 1 닫혀있다.") // enum 수정
+    @Column(name = "close_store")
+    private Boolean closeStore;
+
     @Builder
-    public Store(Member member, String name, StoreCategory storeCategory, String phoneNum, String mainAddress, String subAddress,String openTime,String closeTime,String closedDay,String introduce, String thumbImg, String logo, String license, String licenseImg, CheckStore checkStore){
+    public Store(Member member, String name, StoreCategory storeCategory, String phoneNum, String mainAddress, String subAddress,String openTime,String closeTime,String closedDay,String introduce, String thumbImg, String logo, String license, String licenseImg, CheckStore checkStore, Boolean closeStore){
         this.member = member;
         this.name = name;
         this.storeCategory = storeCategory;
@@ -113,6 +117,7 @@ public class Store {
         this.license = license;
         this.licenseImg = licenseImg;
         this.checkStore = checkStore;
+        this.closeStore = closeStore;
     }
 
     // todo 정리 필요
@@ -135,20 +140,4 @@ public class Store {
     @ColumnDescription("temp_store")
     @OneToOne
     private TempStore tempStore;
-
-//    @ColumnDescription("member")
-//    @OneToOne
-//    private Member member;
-
-//    @ColumnDescription("product_group")
-//    @OneToMany
-//    private List<Product> productList = new ArrayList<>();
-//
-//    @ColumnDescription("time_deal")
-//    @OneToMany
-//    private List<Reservation> reservationList = new ArrayList<>();
-//
-//    @ColumnDescription("temp_store")
-//    @OneToOne
-//    private List<Favorite> storeList = new LinkedList<>();
 }
