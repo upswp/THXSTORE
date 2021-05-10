@@ -8,49 +8,53 @@
       <form @submit.prevent="submitForm">
         <ul>
           <li>
-            <label for="">스토어 이름</label>
+            <label for="storeName">스토어 이름</label>
             <div class="input-content">
-              <input v-model="storeName" type="text" />
+              <input id="storeName" v-model="storeInfo.name" type="text" />
             </div>
           </li>
           <li>
             <set-road-name v-if="loaded" @newAddress="setLocationByRoadName">스토어 주소 등록</set-road-name>
-            <label for="">스토어 주소</label>
+            <label for="nomalAddress">스토어 주소</label>
             <div class="input-content">
-              <input id="nomalAddress" v-model="nomalAddress" type="text" placeholder="주소" />
-              <button id="addressButton" @click="loaded = true">주소 찾기</button>
-              <input id="detailAddress" v-model="detailAddress" type="text" placeholder="상세주소" />
+              <input id="nomalAddress" v-model="storeInfo.mainAddress" type="text" placeholder="주소" />
+              <button id="addressButton" type="reset" @click="loaded = true">주소 찾기</button>
+              <input id="detailAddress" v-model="storeInfo.subAddress" type="text" placeholder="상세주소" />
             </div>
           </li>
           <li>
-            <label for="">전화번호</label>
+            <label for="phoneNum">전화번호</label>
             <div class="input-content">
               <input
-                v-model="phoneNum"
-                type="text"
+                id="phoneNum"
+                v-model="storeInfo.phoneNum"
+                type="tel"
                 placeholder="하이픈기호(-) 없이 입력해주세요."
-                @keyup="getPhoneNumber(phoneNum)"
+                @keyup="getPhoneNumber(storeInfo.phoneNum)"
               />
             </div>
           </li>
           <li>
-            <label for="">사업자등록번호</label>
+            <label for="comResNum">사업자등록번호</label>
             <div class="input-content">
               <input
-                v-model="comResNum"
+                id="comResNum"
+                v-model="storeInfo.license"
                 type="tel"
-                name="phone"
                 pattern="[0-9]{3}-[0-9]{2}-[0-9]{5}"
                 placeholder="사업자등록번호를 입력해주세요"
-                @keyup="getComResNum(comResNum)"
+                @keyup="getComResNum(storeInfo.license)"
               />
             </div>
           </li>
           <li>
-            <label for="">사업자등록사본</label>
+            <label>사업자등록사본</label>
             <div class="input-content">
               <div class="file-flex">
-                <input id="fileName" v-model="fileValue" type="text" class="file_input_textbox" readonly />
+                <label for="file_1" class="file_input_label">
+                  {{ fileValue }}
+                  <!-- <input id="fileName" v-model="fileValue" type="text" class="file_input_textbox" readonly /> -->
+                </label>
                 <div class="file_input_div">
                   <label for="file_1">
                     <awesome id="faCloud" ref="cloud" icon="cloud-upload-alt" class="before-upload"></awesome>
@@ -76,6 +80,7 @@ import SetRoadName from '@/components/common/SetRoadName.vue';
 import WaitingModal from '@/components/common/WaitingModal.vue';
 import ReturnModal from '@/components/common/ReturnModal.vue';
 import { registerStore, getCheckOfStore, deletePreStoreEnrollment } from '@/api/seller';
+import { validationPhoneNumber, validationComResNum } from '@/utils/validation';
 import { handleException } from '@/utils/handler.js';
 
 export default {
@@ -90,17 +95,30 @@ export default {
       showWaitingModal: false,
       showReturnModal: false,
       // 신청 정보
-      storeName: '',
-      nomalAddress: '',
-      detailAddress: '',
-      phoneNum: '',
-      comResNum: '',
-      licenseImg: '',
+      storeInfo: {
+        name: '',
+        mainAddress: '',
+        subAddress: '',
+        phoneNum: '',
+        license: '',
+        licenseImg: '',
+      },
       // 그 외
       fileValue: '',
       loaded: false,
       checkStore: '',
     };
+  },
+  computed: {
+    validForm() {
+      return (
+        this.storeInfo.name !== '' &&
+        this.storeInfo.nomalAddress !== '' &&
+        this.storeInfo.phoneNum !== '' &&
+        this.storeInfo.license !== '' &&
+        this.storeInfo.licenseImg !== ''
+      );
+    },
   },
   created() {
     this.decideModal();
@@ -110,12 +128,12 @@ export default {
     async decideModal() {
       try {
         console.log('dicideModal 함수 시작됨');
-        const storeInfoArr = await getCheckOfStore('');
-        console.log('storeInfoArr', storeInfoArr);
-        // let checkStore = this.checkStore;
-        // 왜 위에처럼 코드를 못쓰나?
-        this.checkStore = storeInfoArr.data.checkStore;
-        console.log('checkStore의 값은?', checkStore);
+        const { data } = await getCheckOfStore('');
+        console.log(data);
+
+        console.log('data.checkStore:', data.checkStore);
+        this.checkStore = data.checkStore;
+        console.log('checkStore의 값은?', this.checkStore);
         console.log('this.checkStore의 값은?', this.checkStore);
         if (this.checkStore == 'APPLICATION_WAITING') {
           console.log('참이라고');
@@ -124,81 +142,22 @@ export default {
           this.showReturnModal = true;
         }
       } catch (error) {
-        var checkStore = this.checkStore;
         this.checkStore = '일반고객';
       }
     },
-    getComResNum(val) {
-      let res = this.validationComResNum(val);
-      console.log('서버넘어가는값', res);
-      this.comResNum = res;
-    },
-
-    getPhoneNumber(val) {
-      let res = this.validationPhoneNumber(val);
-      console.log('서버넘어가는값', res);
-      this.phoneNum = res;
-    },
-    validationComResNum(comResNum) {
+    getComResNum(comResNum) {
       if (!comResNum) return comResNum;
-      comResNum = comResNum.replace(/[^0-9]/g, '');
-      console.log(comResNum);
-      let res = '';
-      if (comResNum.length < 4) {
-        res = comResNum;
-        console.log('res:', res);
-      } else {
-        if (comResNum.length == 4) {
-          res = comResNum.substr(0, 3) + '-' + comResNum.substr(3, 4);
-        } else if (comResNum.length == 5) {
-          res = comResNum.substr(0, 3) + '-' + comResNum.substr(3);
-        } else if (comResNum.length == 6) {
-          res = comResNum.substr(0, 3) + '-' + comResNum.substr(3, 2) + '-' + comResNum.substr(5);
-        } else if (comResNum.length >= 7) {
-          res = comResNum.substr(0, 3) + '-' + comResNum.substr(3, 2) + '-' + comResNum.substr(5, 5);
-        }
-      }
-
-      return res;
+      let res = validationComResNum(comResNum);
+      console.log('서버넘어가는값', res);
+      this.storeInfo.license = res;
     },
-
-    validationPhoneNumber(phoneNumber) {
+    getPhoneNumber(phoneNumber) {
       if (!phoneNumber) return phoneNumber;
-      phoneNumber = phoneNumber.replace(/[^0-9]/g, '');
-
-      let res = '';
-      if (phoneNumber.length < 3) {
-        res = phoneNumber;
-      } else {
-        if (phoneNumber.substr(0, 2) == '02') {
-          if (phoneNumber.length <= 5) {
-            //02-123-5678
-            res = phoneNumber.substr(0, 2) + '-' + phoneNumber.substr(2, 3);
-          } else if (phoneNumber.length > 5 && phoneNumber.length <= 9) {
-            //02-123-5678
-            res = phoneNumber.substr(0, 2) + '-' + phoneNumber.substr(2, 3) + '-' + phoneNumber.substr(5);
-          } else if (phoneNumber.length > 9) {
-            //02-1234-5678
-            res = phoneNumber.substr(0, 2) + '-' + phoneNumber.substr(2, 4) + '-' + phoneNumber.substr(6);
-          }
-        } else {
-          if (phoneNumber.length < 8) {
-            res = phoneNumber;
-          } else if (phoneNumber.length == 8) {
-            res = phoneNumber.substr(0, 4) + '-' + phoneNumber.substr(4);
-          } else if (phoneNumber.length == 9) {
-            res = phoneNumber.substr(0, 3) + '-' + phoneNumber.substr(3, 3) + '-' + phoneNumber.substr(6);
-          } else if (phoneNumber.length == 10) {
-            res = phoneNumber.substr(0, 3) + '-' + phoneNumber.substr(3, 3) + '-' + phoneNumber.substr(6);
-          } else if (phoneNumber.length > 10) {
-            //010-1234-5678
-            res = phoneNumber.substr(0, 3) + '-' + phoneNumber.substr(3, 4) + '-' + phoneNumber.substr(7, 4);
-          }
-        }
-      }
-
-      return res;
+      let res = validationPhoneNumber(phoneNumber);
+      console.log('서버넘어가는값', res);
+      this.storeInfo.phoneNum = res;
     },
+
     backToMain() {
       this.showWaitingModal = false;
       // this.$router.push({ path: 'user' });
@@ -212,44 +171,26 @@ export default {
     },
     async submitForm() {
       try {
-        if (
-          this.storeName == '' ||
-          this.nomalAddress == '' ||
-          this.phoneNum == '' ||
-          this.comResNum == '' ||
-          this.licenseImg == ''
-        ) {
+        if (!this.validForm) {
           alert('항목을 모두 채워주세요');
         } else {
-          const formdata = new FormData();
-          formdata.append('name', this.storeName);
-          formdata.append('mainAddress', this.nomalAddress);
-          formdata.append('subAddress', this.detailAddress);
-          formdata.append('phoneNum', this.phoneNum);
-          formdata.append('license', this.comResNum);
-          formdata.append('licenseImg', this.licenseImg);
-          // const storeData = {
-          //   storeName: this.storeName,
-          //   nomalAddress: this.nomalAddress,
-          //   detailAddress: this.detailAddress,
-          //   phoneNum: this.phoneNum,
-          //   comResNum: this.comResNum,
-          // };
-          const res = await registerStore(formdata);
+          const formData = new FormData();
+          for (const key in this.storeInfo) {
+            formData.append(key, this.storeInfo[key]);
+          }
+          const res = await registerStore(formData);
           console.log(res);
 
           this.$emit('changeTab', 'UserProfile');
         }
       } catch (error) {
-        console.log('에러표시', error);
-
         alert('스토어 등록에 문제가 생겼습니다. 다시 시도해주세요.');
       }
     },
     insertedFile(event) {
       const file = event.target.files[0];
       // this.licenseImg = URL.createObjectURL(file);
-      this.licenseImg = file;
+      this.storeInfo.licenseImg = file;
       console.log('라이센스이미지', this.licenseImg);
       const fileValue = file.name;
       this.fileValue = fileValue;
@@ -260,7 +201,7 @@ export default {
     },
     setLocationByRoadName(data) {
       this.loaded = false;
-      this.nomalAddress = data;
+      this.storeInfo.mainAddress = data;
     },
   },
 };
@@ -300,7 +241,6 @@ export default {
     border: 2.5px solid #dfe1e6;
     padding: 10px 15px;
     border-radius: 3px;
-    z-index: 0;
   }
   #nomalAddress {
     width: 60%;
@@ -314,15 +254,27 @@ export default {
     background-color: none;
     // border: 2.5px solid #dfe1e6;
   }
-
-  .file_input_textbox {
+  .file_input_label {
     display: inline-block;
     width: 90%;
+    margin-bottom: 0px;
+    margin-left: 0%;
+    padding: 5px 15px;
+    border: 2.5px solid #dfe1e6;
+    &:hover {
+      cursor: pointer;
+    }
+  }
+
+  .file_input_textbox {
+    position: inherit;
+    display: inline-block;
+    width: 100%;
     margin-bottom: 0px;
     margin-right: 1%;
     padding: 1px 1px;
     background-color: none;
-    border: 2.5px solid #dfe1e6;
+    border: 2.5px solid white;
   }
   .file_input_div {
     position: relative;
@@ -392,28 +344,41 @@ export default {
       padding: 0%;
       width: 20%;
     }
+    #storeName {
+      margin: 0px 0px 5px 0px;
+    }
     header {
-      font-size: 0.7rem;
+      font-size: 0.8rem;
+    }
+    input {
+      font-size: 13px;
+      padding: 5px 8px;
     }
     label {
       width: 40%;
       float: left;
-      font-size: 12px;
+      font-size: 15px;
       padding-bottom: 0%;
+      margin-bottom: 0.5%;
       margin-left: 0px;
     }
     .input-content {
       width: 98%;
-      padding: 1%;
+      padding: 0px 1% 1% 1%;
+
       display: inline-block;
     }
     #nomalAddress {
       width: 70%;
+      margin-bottom: 2px;
     }
     #addressButton {
       padding-right: 0%;
       padding-left: 0%;
+      padding-bottom: 1.5%;
       margin-left: 1%;
+      margin-bottom: 5px;
+      font-size: 13px;
     }
     button {
       margin-right: 4%;
@@ -435,16 +400,19 @@ export default {
     }
     input {
       padding: 5px 8px;
+      font-size: 11px;
     }
     #addressButton {
-      margin: 2%;
+      margin: 1%;
       padding: 5px 3px 5px 3px;
+      font-size: 12px;
     }
     .input-content {
       width: 98%;
       padding: 1%;
       display: inline-block;
     }
+    // .file_input_label {}
     #nomalAddress {
       margin: 0px;
     }
