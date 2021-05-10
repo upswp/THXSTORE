@@ -1,17 +1,13 @@
 package com.ssafy.thxstore.store.domain;
 
 import com.ssafy.thxstore.common.ColumnDescription;
-import com.ssafy.thxstore.member.domain.Favorite;
 import com.ssafy.thxstore.member.domain.Member;
-import com.ssafy.thxstore.product.domain.Product;
 import com.ssafy.thxstore.product.domain.ProductGroup;
 import com.ssafy.thxstore.product.domain.TimeDeal;
-import com.ssafy.thxstore.reservation.domain.Reservation;
 import lombok.*;
 
 import javax.persistence.*;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 // todo setter -> build로 변경 필요 (다른 dto, domain 포함)

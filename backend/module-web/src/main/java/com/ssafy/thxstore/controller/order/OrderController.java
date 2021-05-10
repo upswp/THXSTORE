@@ -1,7 +1,6 @@
 package com.ssafy.thxstore.controller.order;
 
-import com.ssafy.thxstore.reservation.dto.CartDto;
-import com.ssafy.thxstore.reservation.dto.OrderRequest;
+import com.ssafy.thxstore.reservation.dto.ReservationDto;
 import com.ssafy.thxstore.reservation.service.ReservationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.hateoas.MediaTypes;
@@ -19,63 +18,33 @@ import java.util.List;
 @RequestMapping(value = "/order", produces = MediaTypes.HAL_JSON_VALUE)
 public class OrderController {
 private final ReservationService reservationService;
-/**
- * 장바구니 생성
- * 장바구니는 하나의 스토어 상품만 담을 수 있음
- * product -productgroup- store- id 매핑
- */
-// TODO: 2021-05-10 storeId를 통해 각각의 장바구니를 구분한다, + 다른 store의 장바구니 추가 시 return "같은 스토어의 물품만 담을 수 있습니다" 
-@PostMapping("/cart")
-public ResponseEntity<String> addCart(@Valid @RequestBody List<CartDto> cartList){
 
-    reservationService.addCart(cartList);
+/**
+ * 주문 생성
+ * 스토어의 매뉴 창에서 메뉴 선택 후 바로 주문 한다.  STAND_BY
+ * 주문 테이블에 넣어줌
+ * reservationStatus   --- >   STAND_BY   -> 사장님 승인 후 ->  ACCEPT   -> 사장님 수령 확인 완료 후  --> FINISH
+ */
+@PostMapping("/reservation")
+public ResponseEntity<String> addReservation(@Valid @RequestBody List<ReservationDto> reservationList){
+
+    reservationService.addReservation(reservationList);
 
     return new ResponseEntity<>("생성완료", HttpStatus.OK);
 }
 
     /**
-     * 장바구니 조회
+     * 주문 조회
      * 1. 사용자의 id 전달 받음 -> cart 테이블에서 user_id로 검색 후 상품 dto +수량 전달
      */
 
-    @GetMapping("/cart/{memberId}")
-    public ResponseEntity getCart(@PathVariable Long memberId){
-
-        List<CartDto> li = reservationService.getCart(memberId);
-
-        return new ResponseEntity<>(li, HttpStatus.OK);
-//        return ResponseEntity.created(li.getUri()).body(li.getOrderResource());
-    }
-
-    /**
-     * 주문 생성
-     * 1. 장바구니에서 주문(예약) 버튼 눌렀을 경우
-     * 2. OrderRequest -> 주문접수
-     */
-    // TODO: 2021-05-10 같은 cartId memberId 로 요청 예외처리
-    @PostMapping("/{memberId}")
-    public ResponseEntity<String> addOrder(@PathVariable Long memberId){
-
-        reservationService.addOrder(memberId);
-
-        return new ResponseEntity<>("생성완료", HttpStatus.OK);
-//        return ResponseEntity.created(li.getUri()).body(li.getOrderResource());
-    }
-
-    /**
-     * 주문 조회 , 현제 주문내역이 전부 보임
-     * memberId를 받고 주문 테이블에서 해당 아이디의 주문 정보 가져온다  cart 매핑으로 장바구니, 맴버 정보 가져올 수 있다
-     * 리턴 값 -> 주문자 아이디 , 스토어 아이디 , 장바구니 내역(리스트)
-     * 1. memId 로 cart table에서 store id 조회  -> 1,2 스토어 갯수만큼 for 돌면서 쿼리 조회 -> 효율성 떨어짐
-     * 2. storeId로 구분
-     */
-//    @GetMapping("/{memberId}")
-//    public ResponseEntity getOrder(@PathVariable Long memberId){
+//    @GetMapping("/reservation/{memberId}")
+//    public ResponseEntity getReservation(@PathVariable Long memberId){
 //
-//        List<ReservationDto> li = reservationService.getOrder(memberId);
+//        List<ReservationDto> li = reservationService.getCart(memberId);
 //
 //        return new ResponseEntity<>(li, HttpStatus.OK);
-
+////        return ResponseEntity.created(li.getUri()).body(li.getOrderResource());
 //    }
 
 

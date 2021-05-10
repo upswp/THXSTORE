@@ -2,7 +2,6 @@ package com.ssafy.thxstore.member.domain;
 
 import com.ssafy.thxstore.common.BaseTimeEntity;
 import com.ssafy.thxstore.common.ColumnDescription;
-import com.ssafy.thxstore.reservation.domain.Cart;
 import com.ssafy.thxstore.reservation.domain.Reservation;
 import lombok.*;
 
@@ -71,9 +70,6 @@ public class Member extends BaseTimeEntity {
     private Social social;
 
     @OneToMany(mappedBy = "member", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<Cart> cart = new ArrayList<>();
-
-    @OneToMany(mappedBy = "reservMember", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Reservation> reservations = new ArrayList<>();
 
     @Builder

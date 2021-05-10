@@ -1,10 +1,13 @@
 package com.ssafy.thxstore.product.domain;
 
 import com.ssafy.thxstore.common.ColumnDescription;
+import com.ssafy.thxstore.reservation.domain.Reservation;
 import com.ssafy.thxstore.store.domain.Store;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @AllArgsConstructor
@@ -24,9 +27,6 @@ public class Product {
     @JoinColumn(name = "product_group_id")
     @ColumnDescription("FK")
     private ProductGroup productGroup;
-
-//    @OneToOne
-//    private TimeDeal timeDealList;
 
     @Column(name = "name")
     @ColumnDescription("상품명")
