@@ -1,31 +1,30 @@
 <template>
   <div class="admin-container">
-    <main-header></main-header>
-    <main-aside></main-aside>
     <div class="admin-header">
       <h1>관리자 페이지</h1>
       <div class="select-container">
-        <select id="" name="manager-status">
-          <option value="신청목록">신청 목록</option>
-          <option value="수정목록">수정 목록</option>
+        <select id="" v-model="showStoreEnrollmentList">
+          <option value="applyStoreEnrollment">신청 목록</option>
+          <option value="modifyStoreEnrollment">수정 목록</option>
         </select>
       </div>
     </div>
-    <manager-list></manager-list>
+    <manager-list :show-store-enrollment-list="showStoreEnrollmentList"></manager-list>
     <br />
     <br />
   </div>
 </template>
 
 <script>
-import MainHeader from '@/components/common/MainHeader';
-import MainAside from '@/components/common/MainAside';
 import ManagerList from '@/components/admin/ManagerList.vue';
 export default {
   components: {
-    MainHeader,
-    MainAside,
     ManagerList,
+  },
+  data() {
+    return {
+      showStoreEnrollmentList: '신청 목록',
+    };
   },
 };
 </script>
@@ -35,6 +34,7 @@ export default {
 .admin-container {
   min-height: 100vh;
   background-color: $gray100;
+  width: 100%;
   .admin-header {
     width: 100%;
     padding-top: 50px;
