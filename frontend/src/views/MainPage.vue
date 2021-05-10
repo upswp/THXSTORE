@@ -31,6 +31,7 @@ export default {
   min-height: 100vh;
   width: 100%;
   @include flexbox;
+  @include justify-content(center);
   @include mobile() {
     padding-top: 40px;
   }

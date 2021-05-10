@@ -1,6 +1,6 @@
 <template>
   <div class="user-container">
-    <user-navigation @clickButton="clickButton"></user-navigation>
+    <user-navigation :to="to" @clickButton="clickButton"></user-navigation>
     <div class="user-container-center">
       <transition name="slide-right" mode="out-in">
         <keep-alive>
@@ -25,12 +25,14 @@ export default {
   },
   data() {
     return {
-      nav: 'PasswordReset',
+      nav: 'UserProfile',
+      to: 'UserProfile',
     };
   },
   methods: {
     clickButton(e) {
       this.nav = e;
+      this.to = e;
     },
   },
 };

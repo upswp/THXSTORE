@@ -1,3 +1,6 @@
+import routesForStore from '@/router/store';
+import routesForAdmin from '@/router/admin';
+
 const routesForMain = [
   {
     path: '/main',
@@ -10,6 +13,8 @@ const routesForMain = [
         name: 'user',
         component: () => import('@/views/UserPage.vue'),
       },
+      ...routesForStore,
+      ...routesForAdmin,
     ],
   },
 ];
