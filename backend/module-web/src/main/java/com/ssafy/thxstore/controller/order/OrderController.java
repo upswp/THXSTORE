@@ -2,6 +2,7 @@ package com.ssafy.thxstore.controller.order;
 
 import com.ssafy.thxstore.reservation.dto.CartDto;
 import com.ssafy.thxstore.reservation.dto.OrderRequest;
+import com.ssafy.thxstore.reservation.dto.ReservationDto;
 import com.ssafy.thxstore.reservation.service.ReservationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.hateoas.MediaTypes;
@@ -61,7 +62,18 @@ public ResponseEntity<String> addCart(@Valid @RequestBody List<CartDto> cartList
 
     /**
      * 주문 조회 , 현제 주문내역이 전부 보임
+     * memberId를 받고 주문 테이블에서 해당 아이디의 주문 정보 가져온다  cart 매핑으로 장바구니, 맴버 정보 가져올 수 있다
+     * 리턴 값 -> 주문자 아이디 , 장바구니 내역(리스트)
+     * 1. memId 로 조회
      */
+    @GetMapping("/{memberId}")
+    public ResponseEntity getOrder(@PathVariable Long memberId){
+
+        List<ReservationDto> li = reservationService.getOrder(memberId);
+
+        return new ResponseEntity<>(li, HttpStatus.OK);
+//        return ResponseEntity.created(li.getUri()).body(li.getOrderResource());
+    }
 
 
     /**

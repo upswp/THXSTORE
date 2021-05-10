@@ -5,18 +5,19 @@ import com.ssafy.thxstore.member.repository.MemberRepository;
 import com.ssafy.thxstore.product.domain.Product;
 import com.ssafy.thxstore.product.repository.ProductRepository;
 import com.ssafy.thxstore.reservation.domain.Cart;
-import com.ssafy.thxstore.reservation.domain.Order;
+import com.ssafy.thxstore.reservation.domain.Reservation;
 import com.ssafy.thxstore.reservation.dto.CartDto;
 import com.ssafy.thxstore.reservation.dto.OrderRequest;
+import com.ssafy.thxstore.reservation.dto.ReservationDto;
 import com.ssafy.thxstore.reservation.repository.CartRepository;
 import com.ssafy.thxstore.reservation.repository.OrderRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
-import org.joda.time.DateTime;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -67,13 +68,19 @@ public class ReservationServiceImpl implements ReservationService{
         Optional<Cart> cart = cartRepository.findById(orderRequest.getCartId());
         Optional<Member> member = memberRepository.findById(orderRequest.getUserId());
 
-        Order order = Order.builder().
+        Reservation reservation = Reservation.builder().
                 member(member.get()).
                 cartId(cart.get()).
-                time(DateTime.now()).
-                orderStatus(orderRequest.getOrderStatus()).
+                time(LocalDateTime.now()).
+                reservationStatus(orderRequest.getReservationStatus()).
                 build();
 
-        orderRepository.save(order);
+        orderRepository.save(reservation);
+    }
+
+    @Override
+    public List<ReservationDto> getOrder(Long memberId){
+        List<ReservationDto> list = cartRepository.findOrderById(memberId);
+        return list;
     }
 }

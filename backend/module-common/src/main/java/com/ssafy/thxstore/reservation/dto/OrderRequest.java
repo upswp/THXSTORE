@@ -1,6 +1,6 @@
 package com.ssafy.thxstore.reservation.dto;
 
-import com.ssafy.thxstore.reservation.domain.OrderStatus;
+import com.ssafy.thxstore.reservation.domain.ReservationStatus;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,8 +17,6 @@ public class OrderRequest {
     @NotBlank
     private Long cartId;
 
-    private DateTime orderTime;
-
-    private OrderStatus orderStatus;
+    private ReservationStatus reservationStatus;
 
 }
