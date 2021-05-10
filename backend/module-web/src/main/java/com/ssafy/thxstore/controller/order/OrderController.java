@@ -60,4 +60,19 @@ public ResponseEntity<String> addCart(@Valid @RequestBody List<CartDto> cartList
         return new ResponseEntity<>("생성완료", HttpStatus.OK);
 //        return ResponseEntity.created(li.getUri()).body(li.getOrderResource());
     }
+
+    /**
+     * 주문 조회
+     */
+
+    /**
+     * 결제 정보 조회
+     */
+
+    /**
+     * 주문 상태 조회
+     */
+
+
+
 }
