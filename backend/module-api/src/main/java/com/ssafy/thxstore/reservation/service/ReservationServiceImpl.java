@@ -49,41 +49,20 @@ public class ReservationServiceImpl implements ReservationService{
         reservationRepository.saveAll(reservationAntityList);
     }
 
-//    @Override
-//    @Transactional
-//    public List<ReservationDto> getCart(Long memberId){
-//
-//        List<ReservationDto> list = reservationRepository.findCartlist(memberId);
-//
-//        return list;
-//    }
+    @Override
+    @Transactional
+    public List<ReservationDto> getReservation(Long memberId){
 
-//    /**
-//     * cart에서 memberId를 통해 한번에 조회
-//     * 그 후 order 테이블에 넣고 cart 테이블에서 삭제
-//     */
-//    @Override
-//    public void addOrder(Long memberId){
-//
-//        LocalDateTime time = LocalDateTime.now();
-//        ReservationStatus status = ReservationStatus.DEFAULT;
-//        List<Reservation> reservationList = reservationRepository.findReservationlist(memberId);
-//
-//        reservationRepository.deleteCart(memberId);
-//        System.out.println("size: "+reservationList.size());
-//        reservationRepository.saveAll(reservationList);
-//    }
+        List<ReservationDto> list = reservationRepository.findgetReservationlist(memberId);
+
+        return list;
+    }
 
 
-    /**
-     *
-     */
-//    @Override
-//    public List<ReservationDto> getOrder(Long memberId){
-//        List<ReservationDto> list = cartRepository.findOrderById(memberId);
-//
-//
-//        return list;
-//    }
+    @Override
+    public void deleteReservation(Long memberId,Long storeId){
+//        Optional<Member> member = memberRepository.findById(memberId);
+        reservationRepository.deleteReservation(memberId,storeId);
+    }
 
 }
