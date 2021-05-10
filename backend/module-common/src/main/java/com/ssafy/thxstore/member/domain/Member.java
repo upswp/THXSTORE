@@ -69,6 +69,9 @@ public class Member extends BaseTimeEntity {
     @Column(name = "social")
     private Social social;
 
+    @OneToMany(mappedBy = "member", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Reservation> reservations = new ArrayList<>();
+
     @Builder
     public Member(String userId, @Email String email, String password, String address, String nickname, String profileImage, String phoneNumber, MemberRole role, Social social) {
         this.userId = userId;

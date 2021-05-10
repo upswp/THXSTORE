@@ -1,6 +1,7 @@
 package com.ssafy.thxstore.product.dto;
 
 import lombok.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @Data
 @Getter
@@ -8,7 +9,10 @@ import lombok.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class CreateGroupDto {
-    Long storeId;
+public class EditMenuDto {
+    Long productId;
     String name;
+    Integer price;
+    MultipartFile productImg;
+    String amount;
 }

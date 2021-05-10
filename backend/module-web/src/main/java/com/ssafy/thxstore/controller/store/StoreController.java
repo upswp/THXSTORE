@@ -1,5 +1,6 @@
 package com.ssafy.thxstore.controller.store;
 
+import com.ssafy.thxstore.controller.config.AppProperties;
 import com.ssafy.thxstore.image.service.ImageService;
 import com.ssafy.thxstore.store.domain.CheckStore;
 import com.ssafy.thxstore.store.domain.Store;
@@ -32,6 +33,7 @@ public class StoreController {
 
     private final StoreService storeService;
     private final ImageService imageService;
+    private final AppProperties appProperties;
 
     @PostMapping // 스토어 생성
     public ResponseEntity createStore(@RequestHeader String authorization, @ModelAttribute CreateStoreFileDto createStoreFileDto){
@@ -141,7 +143,7 @@ public class StoreController {
     }
 
     public String jwtToEmail(String authorization){
-        return Jwts.parser().setSigningKey(DatatypeConverter.parseBase64Binary("aGVsbG90aHhzdG9yZWJhY2tlbmQK"))
+        return Jwts.parser().setSigningKey(DatatypeConverter.parseBase64Binary(appProperties.getAuth().getTokenSecret()))
                 .parseClaimsJws(authorization).getBody().getSubject();
     }
 }

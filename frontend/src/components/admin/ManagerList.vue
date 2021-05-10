@@ -4,27 +4,34 @@
       <div class="manager-info-container">
         <div class="side-bar">
           <ul class="name-list">
-            <li v-for="(storeName, index) in storeNameArr" :key="index" class="name-item" @click="clickNameList(index)">
-              <awesome icon="store" class="store"></awesome> {{ storeName }}
+            <li
+              v-for="(storeName, index) in storeNormalInfo"
+              :key="index"
+              class="name-item"
+              @click="clickNameList(index)"
+            >
+              <awesome icon="store" class="store"></awesome> {{ storeName.name }}
             </li>
           </ul>
         </div>
         <div class="manager-info-bottom">
-          <div class="info-column">스토어 명:</div>
-          <div class="info-data">{{ storeNameArr[order] }}</div>
-          <div class="info-column">전화번호:</div>
-          <div class="info-data">{{ phoneNumArr[order] }}</div>
-          <div class="info-column">스토어 주소:</div>
+          <div class="info-label">스토어 명:</div>
+          <!-- <div class="info-data">{{ storeNameArr[order] }}</div> -->
+          <div class="info-data">{{ storeNormalInfo[order].name }}</div>
+          <div class="info-label">전화번호:</div>
+          <div class="info-data">{{ storeNormalInfo[order].phoneNum }}</div>
+          <!-- <div class="info-data">{{ phoneNumArr[order] }}</div> -->
+          <div class="info-label">스토어 주소:</div>
           <div class="info-data">
-            {{ nomalAddressArr[order] }} <br />
-            {{ detailAddressArr[order] }}
+            {{ storeNormalInfo[order].mainAddress }} <br />
+            {{ storeNormalInfo[order].subAddress }}
           </div>
-          <div class="info-column">사업자 번호:</div>
-          <div class="info-data">{{ comResNumArr[order] }}</div>
+          <div class="info-label">사업자 번호:</div>
+          <div class="info-data">{{ storeNormalInfo[order].license }}</div>
         </div>
       </div>
       <div class="manager-copy-container">
-        <img :src="thumbnailArr[order]" alt="" />
+        <img :src="storeNormalInfo[order].licenseImg" alt="이미지 누락" />
       </div>
       <div class="button-group">
         <div class="fail-button" @click="retireEnrollment">반려</div>
@@ -38,15 +45,17 @@
 <script>
 import 'url-search-params-polyfill';
 import { getStoreEnrollmentList, approveStoreEnrollment, retireStoreEnrollment } from '@/api/seller';
+import { mapMutations } from 'vuex';
 export default {
+  props: {
+    showStoreEnrollmentList: {
+      type: String,
+      default: '',
+    },
+  },
   data() {
     return {
-      storeNameArr: [],
-      nomalAddressArr: [],
-      detailAddressArr: [],
-      phoneNumArr: [],
-      comResNumArr: [],
-      thumbnailArr: [],
+      storeNormalInfo: [],
 
       isListBe: false,
       storeId: [],
@@ -54,61 +63,63 @@ export default {
     };
   },
   created() {
-    this.getstoreList();
+    if (this.showStoreEnrollmentList === '수정 목록') {
+      console.log('수정 목록');
+    } else {
+      console.log('신청 목록');
+      this.getstoreList();
+    }
   },
   methods: {
+    ...mapMutations(['setSpinnerState']),
     async getstoreList() {
-      const res = await getStoreEnrollmentList();
-      const data = res.data;
+      this.setSpinnerState(true);
+      const { data } = await getStoreEnrollmentList();
+      this.setSpinnerState(false);
       console.log(data);
 
-      for (let i = 0; i < res.data.length; i++) {
-        this.storeNameArr.push(data[i].name);
-        this.nomalAddressArr.push(data[i].mainAddress);
-        this.detailAddressArr.push(data[i].subAddress);
-        this.phoneNumArr.push(data[i].phoneNum);
-        this.comResNumArr.push(data[i].license);
-        this.thumbnailArr.push(data[i].licenseImg);
-        this.storeId.push(data[i].id);
-      }
-      if (this.storeNameArr.length != 0) {
+      this.storeNormalInfo = data;
+      if (this.storeNormalInfo.length != 0) {
         this.isListBe = true;
       }
-      console.log(this.storeNameArr);
     },
     clickNameList(index) {
       this.order = index;
     },
     async approveEnrollment() {
-      const order = this.order;
-      const storeId = this.storeId;
-      var params = new URLSearchParams();
-      params.append('storeId', storeId[order]);
-      await approveStoreEnrollment({ storeId: storeId[order] });
-      // await approveStoreEnrollment(params);
-      this.resetData();
-      this.getstoreList();
+      try {
+        const order = this.order;
+        const storeId = this.storeNormalInfo[order].id;
+        await approveStoreEnrollment({ storeId: storeId });
+        storeNormalInfo.splice(this.order, 1);
+      } catch (error) {
+        console.log(error);
+      }
     },
     async retireEnrollment() {
       const order = this.order;
-      const storeId = this.storeId;
-      var params = new URLSearchParams();
-      params.append('storeId', storeId[order]);
-      // await retireStoreEnrollment({ storeId: storeId[order] });
-      await retireStoreEnrollment(params);
-      this.resetData();
-      this.getstoreList();
+      console.log('this.storeNormalInfo:', this.storeNormalInfo, order);
+      const storeId = this.storeNormalInfo[order].id;
+
+      // var params = new URLSearchParams();
+      // params.append('storeId', storeId[order]);
+      // await retireStoreEnrollment(params);
+
+      await retireStoreEnrollment({ storeId: storeId });
+      this.storeNormalInfo.splice(this.order, 1);
+      this.storeNormalInfo = [...this.storeNormalInfo];
+      if (this.storeNormalInfo.length == 0) {
+        this.isListBe = false;
+      }
+      this.order = 0;
+      // this.resetData();
+      // this.getstoreList();
+      // }
+
+      //
     },
     resetData() {
-      this.storeNameArr = [];
-      this.nomalAddressArr = [];
-      this.detailAddressArr = [];
-      this.phoneNumArr = [];
-      this.comResNumArr = [];
-      this.thumbnailArr = [];
-      this.storeId = [];
-      this.order = 0;
-      this.isListBe = false;
+      this.storeNormalInfo = [];
     },
   },
 };
@@ -214,7 +225,7 @@ export default {
         order: 2;
         margin: 7px;
       }
-      .info-column {
+      .info-label {
         flex-basis: 30%;
         text-align: left;
         padding-left: 2%;

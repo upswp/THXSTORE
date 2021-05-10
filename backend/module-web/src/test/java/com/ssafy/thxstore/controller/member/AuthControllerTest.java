@@ -163,7 +163,7 @@ public class AuthControllerTest extends BaseControllerTest {
                 .nickname("evan" + index)
                 .password("testpwd1234")
                 .email(emailId+"@gmail.com")
-                .role(MemberRole.USER)
+                .role(MemberRole.ROLE_USER)
                 .build();
 
         this.memberRepository.save(member);
