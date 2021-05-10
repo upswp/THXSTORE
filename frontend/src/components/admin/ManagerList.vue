@@ -45,6 +45,7 @@
 <script>
 import 'url-search-params-polyfill';
 import { getStoreEnrollmentList, approveStoreEnrollment, retireStoreEnrollment } from '@/api/seller';
+import { mapMutations } from 'vuex';
 export default {
   props: {
     showStoreEnrollmentList: {
@@ -70,9 +71,11 @@ export default {
     }
   },
   methods: {
+    ...mapMutations(['setSpinnerState']),
     async getstoreList() {
+      this.setSpinnerState(true);
       const { data } = await getStoreEnrollmentList();
-
+      this.setSpinnerState(false);
       console.log(data);
 
       this.storeNormalInfo = data;

@@ -34,6 +34,7 @@ export default {
 .admin-container {
   min-height: 100vh;
   background-color: $gray100;
+  width: 100%;
   .admin-header {
     width: 100%;
     padding-top: 50px;

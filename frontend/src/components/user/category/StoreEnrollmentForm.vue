@@ -93,7 +93,7 @@ export default {
     return {
       // 모달
       showWaitingModal: false,
-      showReturnModal: false,
+      showReturnModal: true,
       // 신청 정보
       storeInfo: {
         name: '',

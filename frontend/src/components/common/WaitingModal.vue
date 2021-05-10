@@ -17,12 +17,9 @@
                 <br />
                 <p>📞010-9265-5275</p>
                 <div class="close-emoji">
-                  <button class="close-button">확인</button>
+                  <button class="close-button" @click="closeModal">확인</button>
                 </div>
               </slot>
-            </div>
-            <div class="modal-footer">
-              <slot name="footer"> </slot>
             </div>
           </div>
         </div>
@@ -65,21 +62,28 @@ export default {
     text-align: end;
     width: 100%;
     text-decoration: none;
+
     &:hover {
       color: black;
       cursor: pointer;
     }
-    .close-button {
-      color: white;
-      background-color: $blue400;
-      border: none;
-      width: 20%;
-      font-size: 15px;
-      padding: 0.5% 0.5%;
-      transition: background-color 0.3s;
-      &:hover:enabled {
-        background-color: $blue600;
-      }
+  }
+  .close-button {
+    color: white;
+    background-color: $blue400;
+    border: none;
+    width: 20%;
+    font-size: 15px;
+    padding: 1.5% 1.5%;
+    transition: background-color 0.3s;
+    &:hover:enabled {
+      background-color: $blue600;
+    }
+    @include mobile {
+      width: 30%;
+    }
+    @include xs-mobile {
+      width: 30%;
     }
   }
 
