@@ -94,10 +94,19 @@ public class ProductController {
 
     /* 판매자 스토어 페이지(메뉴 관리(3, 메뉴 자세히)) */
     @PutMapping("/product/") //매뉴 수정
-    public ResponseEntity editMenu(@RequestHeader String authorization) {
+    public ResponseEntity editMenu(@RequestHeader String authorization, @RequestBody EditMenuDto editMenuDto) {
         String email = jwtToEmail(authorization);
+        String productImg = null;
+        if(editMenuDto.getProductImg() != null) {
+            try {
+                productImg = imageService.createImage(editMenuDto.getProductImg());
+            } catch (IOException e) {
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
+        }
+        productService.editMenu(productImg, editMenuDto);
 
-        return ResponseEntity.created(null).body(null);
+        return ResponseEntity.created(null).body(HttpStatus.OK);
     }
 
     @PostMapping("/product/") // 메뉴 등록
@@ -109,11 +118,9 @@ public class ProductController {
         }catch (IOException e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        productService.createMenu(productImg, createMenuDto); // 여기 작업 중
+        productService.createMenu(productImg, createMenuDto);
 
-        // 1.
-
-        return ResponseEntity.created(null).body(null);
+        return ResponseEntity.created(null).body(HttpStatus.OK);
     }
 
     @GetMapping("/product/{productId}") // 매뉴 상세 조회

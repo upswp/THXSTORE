@@ -1,5 +1,6 @@
 package com.ssafy.thxstore.product.service;
 
+import com.ssafy.thxstore.image.service.ImageService;
 import com.ssafy.thxstore.product.domain.Product;
 import com.ssafy.thxstore.product.domain.ProductGroup;
 import com.ssafy.thxstore.product.dto.*;
@@ -10,10 +11,13 @@ import com.ssafy.thxstore.store.domain.Store;
 import com.ssafy.thxstore.store.repository.StoreRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,6 +31,7 @@ public class ProductService {
     private final ProductRepository productRepository;
     private final TimeDealRepository timeDealRepository;
     private final StoreRepository storeRepository;
+    private final ImageService imageService;
 
     public void createGroup(CreateGroupDto createGroupDto) {
         Store store = storeRepository.findById(createGroupDto.getStoreId()).get();
@@ -80,5 +85,15 @@ public class ProductService {
 
     public Product findMenu(Long productId) {
         return productRepository.findById(productId).get();
+    }
+
+    public void editMenu(String productImg, EditMenuDto editMenuDto) {
+        Product product = productRepository.findById(editMenuDto.getProductId()).get();
+        product.setName(editMenuDto.getName());
+        product.setPrice(editMenuDto.getPrice());
+        product.setAmount(editMenuDto.getAmount());
+        if(productImg != null){
+            product.setProductImg(productImg);
+        }
     }
 }
