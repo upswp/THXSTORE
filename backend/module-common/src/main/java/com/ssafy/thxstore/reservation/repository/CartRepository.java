@@ -18,10 +18,12 @@ public interface CartRepository extends JpaRepository<Cart, Long> {
 
 
 
+
     @Query(" select new com.ssafy.thxstore.reservation.dto.ReservationDto" +
             " (m.id)"+
             " from Reservation r"+
             " where r.id = :memberId")
     List<ReservationDto> findOrderById(Long memberId);
+
 
 }

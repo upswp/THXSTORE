@@ -81,12 +81,12 @@ public class ReservationServiceImpl implements ReservationService{
     /**
      *
      */
-    @Override
-    public List<ReservationDto> getOrder(Long memberId){
-        List<ReservationDto> list = cartRepository.findOrderById(memberId);
-
-
-        return list;
-    }
+//    @Override
+//    public List<ReservationDto> getOrder(Long memberId){
+//        List<ReservationDto> list = cartRepository.findOrderById(memberId);
+//
+//
+//        return list;
+//    }
 
 }
