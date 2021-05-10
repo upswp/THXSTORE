@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -54,6 +55,7 @@ public class ProductService {
 
     public void deleteGroup(DeleteGroupDto deleteGroupDto) {
         // 그룹 아이디 관련 매뉴 전체 삭제. 그룹 삭제 -> 연관매핑 확인
+        productRepository.deleteByProductGroupId(deleteGroupDto.getGroupId());
         productGroupRepository.deleteById(deleteGroupDto.getGroupId());
     }
 
@@ -61,11 +63,25 @@ public class ProductService {
         productRepository.deleteById(deleteMenuDto.getProductId());
     }
 
-    public Optional<List<Product>> findAllGroupMenu(FindAllGroupMenuDto findAllGroupMenuDto) {
+    public List<FindAllGroupMenuDto> findAllGroupMenu(Long groupId) {
         //
-        Optional<List<Product>> productList = productRepository.findAllByProductGroupId(findAllGroupMenuDto.getGroupId());
+        List<Product> productList = productRepository.findAllByProductGroupId(groupId).get();
 
-        return productList;
+        List<FindAllGroupMenuDto> findAllGroupMenuDto = new ArrayList<>();
+
+        for(int i = 0; i < productList.size(); i++){
+            findAllGroupMenuDto.add(FindAllGroupMenuDto.builder()
+                    .productId(productList.get(i).getId())
+                    .name(productList.get(i).getName())
+                    .price(productList.get(i).getPrice())
+                    .productImg(productList.get(i).getProductImg())
+                    .amount(productList.get(i).getAmount())
+                    .rate(productList.get(i).getRate())
+                    .stock(productList.get(i).getStock())
+                    .build());
+        }
+
+        return findAllGroupMenuDto;
     }
 
     public void createMenu(String productImg, CreateMenuDto createMenuDto) {
@@ -83,8 +99,20 @@ public class ProductService {
 
     }
 
-    public Product findMenu(Long productId) {
-        return productRepository.findById(productId).get();
+    public DetailProductDto findMenu(Long productId) {
+        Product product = productRepository.findById(productId).get();
+
+        DetailProductDto detailProductDto = DetailProductDto.builder()
+                .productId(product.getId())
+                .name(product.getName())
+                .price(product.getPrice())
+                .productImg(product.getProductImg())
+                .amount(product.getAmount())
+                .rate(product.getRate())
+                .stock(product.getStock())
+                .build();
+
+        return detailProductDto;
     }
 
     public void editMenu(String productImg, EditMenuDto editMenuDto) {

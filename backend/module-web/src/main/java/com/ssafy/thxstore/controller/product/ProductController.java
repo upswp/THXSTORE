@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.xml.bind.DatatypeConverter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -60,7 +61,15 @@ public class ProductController {
         Optional<List<ProductGroup>> productGroups = productService.findAllGroup(storeId);
 
         if(productGroups.isPresent()) {
-            return ResponseEntity.created(null).body(productGroups);
+            List<FindAllGroupResponse> findAllGroupResponse = new ArrayList<>();
+            for(int i = 0; i < productGroups.get().size(); i++){
+                findAllGroupResponse.add(FindAllGroupResponse.builder()
+                        .groupId(productGroups.get().get(i).getId())
+                        .name(productGroups.get().get(i).getName())
+                        .build());
+            }
+
+            return ResponseEntity.created(null).body(findAllGroupResponse);
         }
         else {
             return ResponseEntity.created(null).body(null);
@@ -69,17 +78,15 @@ public class ProductController {
 
 
     /* 판매자 스토어 페이지(매뉴관리(2, 그룹 메뉴 리스트)) */
-    @GetMapping("/product/")// 그룹 매뉴 반환(조회)
-    public ResponseEntity findAllGroupMenu(@RequestHeader String authorization, @RequestBody FindAllGroupMenuDto findAllGroupMenuDto) {
-        String email = jwtToEmail(authorization);
-        Optional<List<Product>> productList = productService.findAllGroupMenu(findAllGroupMenuDto);
+    @GetMapping("/productlist/{groupId}")// 그룹 매뉴 반환(조회)
+    public ResponseEntity findAllGroupMenu(@RequestHeader String authorization, @PathVariable(value = "groupId") Long groupId) {
+         String email = jwtToEmail(authorization);
+        List<FindAllGroupMenuDto> productList = productService.findAllGroupMenu(groupId);
 
         //fdf todo optional 생각하자 -> 다른 곳에 해당하는 것이 있는지 product 완료.
-        if(productList.isPresent()){
-            return ResponseEntity.created(null).body(productList.get());
-        }else {
-            return ResponseEntity.created(null).body(null);
-        }
+
+        return ResponseEntity.created(null).body(productList);
+
     }
 
     @DeleteMapping("/product/") // 매뉴 삭제
@@ -94,7 +101,7 @@ public class ProductController {
 
     /* 판매자 스토어 페이지(메뉴 관리(3, 메뉴 자세히)) */
     @PutMapping("/product/") //매뉴 수정
-    public ResponseEntity editMenu(@RequestHeader String authorization, @RequestBody EditMenuDto editMenuDto) {
+    public ResponseEntity editMenu(@RequestHeader String authorization, @ModelAttribute EditMenuDto editMenuDto) {
         String email = jwtToEmail(authorization);
         String productImg = null;
         if(editMenuDto.getProductImg() != null) {
@@ -126,8 +133,8 @@ public class ProductController {
     @GetMapping("/product/{productId}") // 매뉴 상세 조회
     public ResponseEntity findMenu(@RequestHeader String authorization, @PathVariable Long productId) {
         String email = jwtToEmail(authorization);
-        Product product = productService.findMenu(productId);
-        return ResponseEntity.created(null).body(product);
+        DetailProductDto detailProductDto = productService.findMenu(productId);
+        return ResponseEntity.created(null).body(detailProductDto);
     }
 
     /* 판매자 스토어 페이지(타임 딜) */
