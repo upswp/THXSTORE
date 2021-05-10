@@ -15,6 +15,9 @@ public class ReservationDto {
     private Long userId;
 
     @NotBlank
+    private String email;
+
+    @NotBlank
     private Long productId;
 
     @NotBlank
@@ -33,7 +36,7 @@ public class ReservationDto {
     private ReservationStatus reservationStatus;
 
     @Builder
-    public ReservationDto(Long storeId, Long userId, Long productId, String productname, int price, int count,ReservationStatus reservationStatus) {
+    public ReservationDto(String email,Long storeId, Long userId, Long productId, String productname, int price, int count,ReservationStatus reservationStatus) {
         this.userId = userId;
         this.storeId = storeId;
         this.productId = productId;
@@ -41,5 +44,6 @@ public class ReservationDto {
         this.price = price;
         this.count = count;
         this.reservationStatus = reservationStatus;
+        this.email = email;
     }
 }

@@ -35,30 +35,52 @@ public ResponseEntity<String> addReservation(@Valid @RequestBody List<Reservatio
 
     /**
      * 주문 조회
-     * 1. 사용자의 id 전달 받음 -> cart 테이블에서 user_id로 검색 후 상품 dto +수량 전달
+     * 1. 사용자의 id 전달 받음 -> reservation 테이블에서 사용자의 id로 조회
+     * 2. ?? 님의 주문
      */
 
-//    @GetMapping("/reservation/{memberId}")
-//    public ResponseEntity getReservation(@PathVariable Long memberId){
+    @GetMapping("/reservation/{memberId}")
+    public ResponseEntity getReservation(@PathVariable Long memberId){
+
+        List<ReservationDto> li = reservationService.getReservation(memberId);
+
+        return new ResponseEntity<>(li, HttpStatus.OK);
+//        return ResponseEntity.created(li.getUri()).body(li.getOrderResource());
+    }
+
+
+//    /**
+//     * 주문 상태 조회
+//     * 1. 주문 상태 보기
+//     */
 //
-//        List<ReservationDto> li = reservationService.getCart(memberId);
+//    @GetMapping("/reservation/{memberId}")
+//    public ResponseEntity getReservationStatus(@PathVariable Long memberId){
+//
+//        List<ReservationDto> li = reservationService.getReservation(memberId);
 //
 //        return new ResponseEntity<>(li, HttpStatus.OK);
 ////        return ResponseEntity.created(li.getUri()).body(li.getOrderResource());
 //    }
 
-
     /**
-     * 주문 상태 조회
+     *  사장님 or 사용자의 주문 취소 버튼 클릭 후 후 -> 테이블 자체에서 삭제
      */
 
-    /**
-     * 주문 테이블에 들어가게 되면, 수령 확인 주문 테이블에서 없어지는 로직
-     */
+    @DeleteMapping("/reservation/{memberId}/{storeId}")
+    public ResponseEntity deleteReservation(@PathVariable Long memberId,@PathVariable Long storeId){
+
+        reservationService.deleteReservation(memberId,storeId);
+
+        return new ResponseEntity<>("주문 취소 되었습니다.", HttpStatus.OK);
+//        return ResponseEntity.created(li.getUri()).body(li.getOrderResource());
+    }
 
     /**
-     *  판매자의 주문,예약 취소 예약번호 확인 후
+     * 주문 테이블에 들어간 상황 사장님이 수령 확인 버튼 누르면 주문 삭제
+     * 1. memberId(321) 님 이시죠? 물건 주고 버튼 누르면 삭제
      */
+
 
     /**
      * 사용자의 예약 취소 (추가 기능으로)
