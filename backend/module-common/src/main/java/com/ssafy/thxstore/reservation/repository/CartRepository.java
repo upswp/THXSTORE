@@ -1,9 +1,7 @@
 package com.ssafy.thxstore.reservation.repository;
 
 import com.ssafy.thxstore.reservation.domain.Cart;
-import com.ssafy.thxstore.reservation.domain.Reservation;
 import com.ssafy.thxstore.reservation.dto.CartDto;
-import com.ssafy.thxstore.reservation.dto.ReservationDto;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -19,8 +17,8 @@ public interface CartRepository extends JpaRepository<Cart, Long> {
     List<CartDto> findCartlist(Long memberId);
 
 
-    @Query("select new com.ssafy.thxstore.reservation.dto.ReservationDto" +
-            "from Reservation r"
-    )
-    List<ReservationDto> findOrderById(Long memberId);
+//    @Query("select new com.ssafy.thxstore.reservation.dto.ReservationDto" +
+//            "from Reservation r"
+//    )
+//    List<ReservationDto> findOrderById(Long memberId);
 }
