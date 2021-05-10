@@ -12,6 +12,7 @@ export default {
     },
     getUserFromLocalStorage(),
   ),
+  // userInfo: getUserFromLocalStorage() || {},
   token: getTokenFromLocalStorage() || '',
   mainDrawerOpen: false,
   spinnerOn: false,

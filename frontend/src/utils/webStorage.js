@@ -3,17 +3,14 @@ const TOKEN = 'ThxStorage-V1-T';
 
 // 인코딩, 디코딩 함수
 const makeIncodeValue = (key, value) => {
-  // _.*- 을 제외한 특수문자는 사용하지 않을 것이기 때문에 encodeURI는 사용하지 않는다.
-  // const data = encodeURIComponent(JSON.stringify(value));
-
-  const data = JSON.stringify(value);
+  const data = encodeURIComponent(JSON.stringify(value));
+  console.log(data);
   localStorage.setItem(key, btoa(data));
 };
 
 const returnDecodeValue = value => {
   const decode = atob(value);
-  // const data = JSON.parse(decodeURIComponent(decode));
-  const data = JSON.parse(decode);
+  const data = JSON.parse(decodeURIComponent(decode));
   return data;
 };
 
