@@ -37,7 +37,8 @@ subprojects {
         implementation group: 'org.springframework.boot', name: 'spring-boot-starter-hateoas'
         implementation group: 'org.springframework.boot', name: 'spring-boot-starter-web'
         implementation group: 'org.springframework.boot', name: 'spring-boot-starter-validation'
-        implementation group: 'org.springframework.boot', name:'spring-boot-starter-jdbc'
+        implementation group: 'org.springframework.boot', name: 'spring-boot-starter-jdbc'
+        implementation group: 'org.springframework.boot', name: 'spring-boot-starter-data-redis'
         implementation group: 'org.modelmapper', name: 'modelmapper', version: '2.3.8'
 
         // Security
