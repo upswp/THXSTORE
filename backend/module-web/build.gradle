@@ -15,10 +15,12 @@ asciidoctor {
     dependsOn test
 }
 asciidoctor.doFirst {
-    println "=====start asciidoctor====="
+    println "===== start asciidoctor ====="
+    delete(file("src/main/resources/static/docs"))
+    println "===== asciidoctor refresh success ====="
 }
 asciidoctor.doLast {
-    println "=====finish asciidoctor====="
+    println "===== finish asciidoctor ====="
 }
 
 bootJar {

@@ -1,0 +1,39 @@
+ifndef::sub-snippet[]
+:sub-snippet: ../../../../build/generated-snippets
+endif::[]
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 4
+:sectlinks:
+:site-url: /build/asciidoc/html5/state
+
+[[resources-signUp-LOCAL]]
+=== 일반 유저 생성
+
+`POST` 요청을 사용해서 새 일반 유저를 만들 수 있다.
+
+==== Links
+Links:
+include::{sub-snippet}/signUp-LOCAL/links.adoc[]
+
+==== Request
+CURL:
+include::{sub-snippet}/signUp-LOCAL/curl-request.adoc[]
+Http-request:
+include::{sub-snippet}/signUp-LOCAL/http-request.adoc[]
+Request-body:
+include::{sub-snippet}/signUp-LOCAL/request-body.adoc[]
+Request-field:
+include::{sub-snippet}/signUp-LOCAL/request-fields.adoc[]
+
+==== Response
+Http-response:
+include::{sub-snippet}/signUp-LOCAL/http-response.adoc[]
+Response-header
+include::{sub-snippet}/signUp-LOCAL/response-headers.adoc[]
+Response-body:
+include::{sub-snippet}/signUp-LOCAL/response-body.adoc[]
+Response-field
+include::{sub-snippet}/signUp-LOCAL/response-fields.adoc[]
