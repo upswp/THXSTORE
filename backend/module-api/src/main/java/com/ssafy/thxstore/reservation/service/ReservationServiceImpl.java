@@ -17,6 +17,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -70,7 +71,7 @@ public class ReservationServiceImpl implements ReservationService{
         Order order = Order.builder().
                 member(member.get()).
                 cartId(cart.get()).
-                time(DateTime.now()).
+                time(LocalDateTime.now()).
                 orderStatus(orderRequest.getOrderStatus()).
                 build();
 
