@@ -29,6 +29,9 @@ public class Cart {
     @JoinColumn(name = "product_id")
     private Product product;
 
+    @OneToOne(mappedBy = "cartId", fetch = FetchType.LAZY)
+    private Order order;
+
     @Column(name = "count")
     private int count;
 

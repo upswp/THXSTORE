@@ -5,10 +5,14 @@ import com.ssafy.thxstore.member.repository.MemberRepository;
 import com.ssafy.thxstore.product.domain.Product;
 import com.ssafy.thxstore.product.repository.ProductRepository;
 import com.ssafy.thxstore.reservation.domain.Cart;
+import com.ssafy.thxstore.reservation.domain.Order;
 import com.ssafy.thxstore.reservation.dto.CartDto;
+import com.ssafy.thxstore.reservation.dto.OrderRequest;
 import com.ssafy.thxstore.reservation.repository.CartRepository;
+import com.ssafy.thxstore.reservation.repository.OrderRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import org.joda.time.DateTime;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,6 +29,7 @@ public class ReservationServiceImpl implements ReservationService{
     private final CartRepository cartRepository;
     private final ProductRepository productRepository;
     private final MemberRepository memberRepository;
+    private final OrderRepository orderRepository;
 
 
     @Override
@@ -54,5 +59,21 @@ public class ReservationServiceImpl implements ReservationService{
         List<CartDto> list = cartRepository.findCartlist(memberId);
 
         return list;
+    }
+
+    @Override
+    public void addOrder(OrderRequest orderRequest){
+
+        Optional<Cart> cart = cartRepository.findById(orderRequest.getCartId());
+        Optional<Member> member = memberRepository.findById(orderRequest.getUserId());
+
+        Order order = Order.builder().
+                member(member.get()).
+                cartId(cart.get()).
+                time(DateTime.now()).
+                orderStatus(orderRequest.getOrderStatus()).
+                build();
+
+        orderRepository.save(order);
     }
 }
