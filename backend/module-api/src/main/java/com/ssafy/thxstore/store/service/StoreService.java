@@ -8,10 +8,7 @@ import com.ssafy.thxstore.store.domain.CheckStore;
 import com.ssafy.thxstore.store.domain.Store;
 import com.ssafy.thxstore.store.domain.StoreCategory;
 import com.ssafy.thxstore.store.domain.TempStore;
-import com.ssafy.thxstore.store.dto.CreateStoreDto;
-import com.ssafy.thxstore.store.dto.CreateStoreFileDto;
-import com.ssafy.thxstore.store.dto.StoreChangedDto;
-import com.ssafy.thxstore.store.dto.StoreUnchangedDto;
+import com.ssafy.thxstore.store.dto.*;
 import com.ssafy.thxstore.store.repository.StoreRepository;
 import com.ssafy.thxstore.store.repository.TempStoreRepository;
 import lombok.AccessLevel;
@@ -22,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -54,6 +52,8 @@ public class StoreService {
                 .license(createStoreFileDto.getLicense())
                 .licenseImg(imgProfile)
                 .checkStore(CheckStore.APPLICATION_WAITING)
+                .lat(createStoreFileDto.getLat())
+                .lon(createStoreFileDto.getLon())
                 .build();
 
        Store store = modelMapper.map(createStoreDto, Store.class);
@@ -115,6 +115,8 @@ public class StoreService {
                 .phoneNum(storeUnchangedDto.getPhoneNum())
                 .license(storeUnchangedDto.getLicense())
                 .licenseImg(imgProfile)
+                .lat(storeUnchangedDto.getLat())
+                .lon(storeUnchangedDto.getLon())
                 .build();
         TempStore saveTempStore = tempStoreSave(tempStore);
     }
@@ -153,7 +155,28 @@ public class StoreService {
         return store;
     }
 
-    public List<TempStore> storeModifyList() { return tempStoreRepository.findAll(); }
+    public List<StoreModifyListResponse> storeModifyList() {
+
+        List<TempStore> tempStores = tempStoreRepository.findAll();
+        List<StoreModifyListResponse> storeModifyListResponse = new ArrayList<>();
+
+        for(int i = 0; i < tempStores.size(); i++){
+
+            storeModifyListResponse.add(StoreModifyListResponse.builder()
+                    .tempStoreId(tempStores.get(i).getId())
+                    .name(tempStores.get(i).getName())
+                    .mainAddress(tempStores.get(i).getMainAddress())
+                    .phoneNum(tempStores.get(i).getPhoneNum())
+                    .lat(tempStores.get(i).getLat())
+                    .lon(tempStores.get(i).getLon())
+                    .license(tempStores.get(i).getLicense())
+                    .licenseImg(tempStores.get(i).getLicenseImg())
+                    .build());
+
+        }
+
+        return storeModifyListResponse;
+    }
 
     public TempStore tempStoreSave(TempStore tempStore) { return tempStoreRepository.save(tempStore); }
 
@@ -167,6 +190,8 @@ public class StoreService {
         store.setPhoneNum(tempStore.getPhoneNum());
         store.setLicense(tempStore.getLicense());
         store.setLicenseImg(tempStore.getLicenseImg());
+        store.setLat(tempStore.getLat());
+        store.setLon(tempStore.getLon());
 
         tempStoreRepository.deleteById(tempStore.getId()); // 임시 저장소 삭제
 
@@ -186,5 +211,17 @@ public class StoreService {
         Long memberId = member.getId();
         Store store = storeRepository.findByMemberId(memberId).get();
         store.setCheckStore(CheckStore.NORMAL);
+    }
+
+    public DetailStoreResponse detailStoreResopnse(Store store) {
+//        DetailDto detailDto = null;
+      //  NormalDto normalDto = null;
+        sideInfo sideInfo = modelMapper.map(store, sideInfo.class);
+        baseInfo baseInfo = modelMapper.map(store, baseInfo.class);
+        DetailStoreResponse detailStoreResponse = DetailStoreResponse.builder()
+                .sideInfo(sideInfo)
+                .baseInfo(baseInfo)
+                .build();
+        return detailStoreResponse;
     }
 }

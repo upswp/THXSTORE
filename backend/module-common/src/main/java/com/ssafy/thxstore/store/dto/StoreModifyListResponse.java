@@ -1,24 +1,19 @@
 package com.ssafy.thxstore.store.dto;
 
-import com.ssafy.thxstore.member.domain.Member;
-import com.ssafy.thxstore.store.domain.CheckStore;
+import com.ssafy.thxstore.common.ColumnDescription;
 import lombok.*;
 
-import javax.validation.constraints.NotEmpty;
-
+import javax.persistence.Column;
+import javax.persistence.Lob;
 @Data
 @Getter
 @Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class CreateStoreDto {
-    private Member member;
-
-    private Long memberId;
-
+public class StoreModifyListResponse {
+    private Long tempStoreId;
     private String name;
-
     private String mainAddress;
 
     private String subAddress;
@@ -32,6 +27,4 @@ public class CreateStoreDto {
     private String license;
 
     private String licenseImg;
-
-    private CheckStore checkStore;
 }

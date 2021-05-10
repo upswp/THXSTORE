@@ -8,7 +8,7 @@ import lombok.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class FindAllGroupMenuDto {
+public class DetailProductDto {
     Long productId;
     String name;
     Integer price;
