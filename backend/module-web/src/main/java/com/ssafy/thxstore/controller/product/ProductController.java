@@ -1,11 +1,10 @@
 package com.ssafy.thxstore.controller.product;
 
 import com.ssafy.thxstore.controller.config.AppProperties;
+import com.ssafy.thxstore.image.service.ImageService;
+import com.ssafy.thxstore.product.domain.Product;
 import com.ssafy.thxstore.product.domain.ProductGroup;
-import com.ssafy.thxstore.product.dto.CreateGroupDto;
-import com.ssafy.thxstore.product.dto.DeleteGroupDto;
-import com.ssafy.thxstore.product.dto.EditGroupDto;
-import com.ssafy.thxstore.product.dto.FindAllGroupDto;
+import com.ssafy.thxstore.product.dto.*;
 import com.ssafy.thxstore.product.service.ProductService;
 import com.ssafy.thxstore.store.domain.Store;
 import com.ssafy.thxstore.store.dto.CreateStoreFileDto;
@@ -19,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.xml.bind.DatatypeConverter;
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
@@ -28,6 +28,7 @@ public class ProductController {
 
     private final ProductService productService;
     private final AppProperties appProperties;
+    private final ImageService imageService;
 
 /* 판매자 스토어 페이지(메뉴 관리(1, 그룹)) */
 
@@ -45,7 +46,7 @@ public class ProductController {
         return ResponseEntity.created(null).body(HttpStatus.CREATED);
     }
 
-    @DeleteMapping // 그룹 삭제(매뉴 전체)
+    @DeleteMapping // todo 그룹 삭제(매뉴 전체) -> 연관 매핑 확인
     public ResponseEntity deleteGroup(@RequestHeader String authorization, @RequestBody DeleteGroupDto deleteGroupDto) {
         String email = jwtToEmail(authorization);
         productService.deleteGroup(deleteGroupDto);
@@ -56,21 +57,76 @@ public class ProductController {
     @GetMapping // 그룹 전체 조회
     public ResponseEntity findAllGroup(@RequestHeader String authorization, @RequestBody FindAllGroupDto findAllGroupDto) {
         String email = jwtToEmail(authorization);
-        List<ProductGroup> productGroups = productService.findAllGroup(findAllGroupDto);
+        Optional<List<ProductGroup>> productGroups = productService.findAllGroup(findAllGroupDto);
 
-        return ResponseEntity.created(null).body(productGroups);
+        if(productGroups.isPresent()) {
+            return ResponseEntity.created(null).body(productGroups);
+        }
+        else {
+            return ResponseEntity.created(null).body(null);
+        }
     }
 
 
     /* 판매자 스토어 페이지(매뉴관리(2, 그룹 메뉴 리스트)) */
+    @GetMapping("/product/")// 그룹 매뉴 반환(조회)
+    public ResponseEntity findAllGroupMenu(@RequestHeader String authorization, @RequestBody FindAllGroupMenuDto findAllGroupMenuDto) {
+        String email = jwtToEmail(authorization);
+        Optional<List<Product>> productList = productService.findAllGroupMenu(findAllGroupMenuDto);
+
+        //fdf todo optional 생각하자 -> 다른 곳에 해당하는 것이 있는지 product 완료.
+        if(productList.isPresent()){
+            return ResponseEntity.created(null).body(productList.get());
+        }else {
+            return ResponseEntity.created(null).body(null);
+        }
+    }
+
+    @DeleteMapping("/product/") // 매뉴 삭제
+    public ResponseEntity deleteMenu(@RequestHeader String authorization, @RequestBody DeleteMenuDto deleteMenuDto) {
+        String email = jwtToEmail(authorization);
+        productService.deleteMenu(deleteMenuDto);
+        return ResponseEntity.created(null).body(HttpStatus.OK);
+    }
 
 
 
 
     /* 판매자 스토어 페이지(메뉴 관리(3, 메뉴 자세히)) */
+    @PutMapping("/product/") //매뉴 수정
+    public ResponseEntity editMenu(@RequestHeader String authorization) {
+        String email = jwtToEmail(authorization);
 
+        return ResponseEntity.created(null).body(null);
+    }
+
+    @PostMapping("/product/") // 메뉴 등록
+    public ResponseEntity createMenu(@RequestHeader String authorization, @ModelAttribute CreateMenuDto createMenuDto) {
+        String email = jwtToEmail(authorization);
+        String productImg = null;
+        try {
+            productImg = imageService.createImage(createMenuDto.getProductImg());
+        }catch (IOException e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        productService.createMenu(productImg, createMenuDto); // 여기 작업 중
+
+        // 1.
+
+        return ResponseEntity.created(null).body(null);
+    }
+
+    @GetMapping("/product/{productId}") // 매뉴 상세 조회
+    public ResponseEntity findMenu(@RequestHeader String authorization, @RequestParam Long productId) {
+        String email = jwtToEmail(authorization);
+        Product product = productService.findMenu(productId);
+        return ResponseEntity.created(null).body(product);
+    }
 
     /* 판매자 스토어 페이지(타임 딜) */
+
+
+
 
 
 
