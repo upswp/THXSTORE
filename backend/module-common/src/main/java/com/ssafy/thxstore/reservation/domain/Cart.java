@@ -30,7 +30,7 @@ public class Cart {
     private Product product;
 
     @OneToOne(mappedBy = "cartId", fetch = FetchType.LAZY)
-    private Order order;
+    private Reservation reservation;
 
     @Column(name = "count")
     private int count;
