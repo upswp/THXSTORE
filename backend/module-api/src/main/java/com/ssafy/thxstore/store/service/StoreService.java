@@ -54,6 +54,8 @@ public class StoreService {
                 .license(createStoreFileDto.getLicense())
                 .licenseImg(imgProfile)
                 .checkStore(CheckStore.APPLICATION_WAITING)
+                .lat(createStoreFileDto.getLat())
+                .lon(createStoreFileDto.getLon())
                 .build();
 
        Store store = modelMapper.map(createStoreDto, Store.class);
@@ -115,6 +117,8 @@ public class StoreService {
                 .phoneNum(storeUnchangedDto.getPhoneNum())
                 .license(storeUnchangedDto.getLicense())
                 .licenseImg(imgProfile)
+                .lat(storeUnchangedDto.getLat())
+                .lon(storeUnchangedDto.getLon())
                 .build();
         TempStore saveTempStore = tempStoreSave(tempStore);
     }

@@ -42,6 +42,14 @@ public class TempStore {
     @Column(name = "phone_num",nullable = false)
     private String phoneNum;
 
+    @ColumnDescription("위도 37.xx") // enum 수정
+    @Column(name = "lat")
+    private Double lat;
+
+    @ColumnDescription("경도 127.xx") // enum 수정
+    @Column(name = "lon")
+    private Double lon;
+
     @ColumnDescription("사업자등록번호")
     @Column(name = "license",nullable = false)
     private String license;
@@ -52,7 +60,7 @@ public class TempStore {
     private String licenseImg;
 
     @Builder
-    public TempStore(Store store, String name, String phoneNum, String mainAddress, String subAddress, String license, String licenseImg){
+    public TempStore(Store store, String name, String phoneNum, String mainAddress, String subAddress, String license, String licenseImg,Double lat,Double lon){
         this.store = store;
         this.name = name;
         this.mainAddress = mainAddress;
@@ -60,5 +68,7 @@ public class TempStore {
         this.phoneNum = phoneNum;
         this.license = license;
         this.licenseImg = licenseImg;
+        this.lat = lat;
+        this.lon = lon;
     }
 }

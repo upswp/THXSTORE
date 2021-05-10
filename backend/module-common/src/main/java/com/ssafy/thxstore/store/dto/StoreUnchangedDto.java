@@ -15,6 +15,8 @@ public class StoreUnchangedDto {
     String mainAddress;
     String subAddress;
     String phoneNum;
+    Double lat;
+    Double lon;
     String license;
     MultipartFile licenseImg;
 }

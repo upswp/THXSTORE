@@ -100,8 +100,16 @@ public class Store {
     @Column(name = "close_store")
     private Boolean closeStore;
 
+    @ColumnDescription("위도 37.xx") // enum 수정
+    @Column(name = "lat")
+    private Double lat;
+
+    @ColumnDescription("경도 127.xx") // enum 수정
+    @Column(name = "lon")
+    private Double lon;
+
     @Builder
-    public Store(Member member, String name, StoreCategory storeCategory, String phoneNum, String mainAddress, String subAddress,String openTime,String closeTime,String closedDay,String introduce, String thumbImg, String logo, String license, String licenseImg, CheckStore checkStore, Boolean closeStore){
+    public Store(Member member, String name, StoreCategory storeCategory, String phoneNum, String mainAddress, String subAddress,String openTime,String closeTime,String closedDay,String introduce, String thumbImg, String logo, String license, String licenseImg, CheckStore checkStore, Boolean closeStore,Double lat,Double lon){
         this.member = member;
         this.name = name;
         this.storeCategory = storeCategory;
@@ -118,6 +126,8 @@ public class Store {
         this.licenseImg = licenseImg;
         this.checkStore = checkStore;
         this.closeStore = closeStore;
+        this.lat = lat;
+        this.lon = lon;
     }
 
     // todo 정리 필요
