@@ -12,7 +12,7 @@ import javax.validation.constraints.NotBlank;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class OrderRequest {
     @NotBlank
-    private Long memberId;
+    private Long userId;
 
     @NotBlank
     private Long cartId;

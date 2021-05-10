@@ -16,7 +16,6 @@ import javax.persistence.*;
 @Getter
 @Setter
 @NoArgsConstructor
-@Builder
 public class Order {
 
     @Id
@@ -24,14 +23,13 @@ public class Order {
     @Column(name = "order_id")
     private Long id; // pk
 
-    @ColumnDescription("소셜로그인 유저 정보")
-    @Column(name = "order_time")
-    private DateTime time;
+//    @ColumnDescription("소셜로그인 유저 정보")
+//    @Column(name = "order_time")
+//    private DateTime time;
 
-    @ColumnDescription("주문 접수,결제 완료, 수령 대기, 수령완료")
-    @Enumerated(EnumType.STRING)
-    @Column(name = "order_status")
-    private OrderStatus orderStatus;
+//    @ColumnDescription("주문 접수,결제 완료, 수령 대기, 수령완료")
+//    @Column(name = "order_status")
+//    private OrderStatus orderStatus;
 
     @ColumnDescription("cart-product-store 접근 가능")
     @OneToOne(fetch = FetchType.LAZY)
@@ -43,5 +41,11 @@ public class Order {
     @JoinColumn(name = "member_id")
     private Member member;
 
-
+    @Builder
+    public Order(Cart cartId, Member member,DateTime time, OrderStatus orderStatus) {
+        this.cartId = cartId;
+        this.member = member;
+//        this.time =time;
+//        this.orderStatus = orderStatus;
+    }
 }

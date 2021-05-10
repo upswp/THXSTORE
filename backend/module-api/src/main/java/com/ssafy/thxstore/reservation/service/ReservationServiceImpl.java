@@ -65,7 +65,7 @@ public class ReservationServiceImpl implements ReservationService{
     public void addOrder(OrderRequest orderRequest){
 
         Optional<Cart> cart = cartRepository.findById(orderRequest.getCartId());
-        Optional<Member> member = memberRepository.findById(orderRequest.getMemberId());
+        Optional<Member> member = memberRepository.findById(orderRequest.getUserId());
 
         Order order = Order.builder().
                 member(member.get()).

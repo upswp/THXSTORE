@@ -12,9 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.List;
 
-/**
- * 장바구니 생성
- */
+
 @RestController
 @RequiredArgsConstructor
 @CrossOrigin(origins = { "*" }, maxAge = 6000)
@@ -52,7 +50,7 @@ public ResponseEntity<String> addCart(@Valid @RequestBody List<CartDto> cartList
      * 2. OrderRequest -> 주문접수
      */
 
-    @PostMapping("/cart/order")
+    @PostMapping()
     public ResponseEntity<String> addOrder(@RequestBody OrderRequest orderRequest){
 
         reservationService.addOrder(orderRequest);
@@ -62,17 +60,44 @@ public ResponseEntity<String> addCart(@Valid @RequestBody List<CartDto> cartList
     }
 
     /**
-     * 주문 조회
+     * 주문 조회 , 현제 주문내역이 전부 보임
      */
 
-    /**
-     * 결제 정보 조회
-     */
 
     /**
      * 주문 상태 조회
      */
 
+    /**
+     * 주문 테이블에 들어가게 되면, 수령 확인 주문 테이블에서 없어지는 로직
+     */
 
+    /**
+     *  판매자의 주문,예약 취소 예약번호 확인 후
+     */
 
+    /**
+     * 사용자의 예약 취소 (추가 기능으로)
+     */
+
+    /**
+     * 판매자가 예약 번호 조회 가능하게
+     */
+
+    /**
+     * 리뷰 생성 삭제 수정
+     */
+
+    /**
+     * 리뷰에 대한 권한 고민
+     */
+
+    /**
+     * 사장님 답변
+     */
+
+    /**
+     * 리뷰 조회 -> 내 리뷰 조회, 스토어의 리뷰 조회 받는 형식 -> 사용자의아이디 글내용 별점 int
+     * datetime 조회
+     */
 }
