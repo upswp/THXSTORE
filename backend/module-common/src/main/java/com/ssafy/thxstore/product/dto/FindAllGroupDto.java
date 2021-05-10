@@ -8,7 +8,6 @@ import lombok.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class CreateGroupDto {
+public class FindAllGroupDto {
     Long storeId;
-    String name;
 }
