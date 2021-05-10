@@ -63,7 +63,7 @@ public class ProductService {
 
     public Optional<List<Product>> findAllGroupMenu(FindAllGroupMenuDto findAllGroupMenuDto) {
         //
-        Optional<List<Product>> productList = productRepository.findAllByGroupId(findAllGroupMenuDto.getGroupId());
+        Optional<List<Product>> productList = productRepository.findAllByProductGroupId(findAllGroupMenuDto.getGroupId());
 
         return productList;
     }

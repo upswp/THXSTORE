@@ -124,7 +124,7 @@ public class ProductController {
     }
 
     @GetMapping("/product/{productId}") // 매뉴 상세 조회
-    public ResponseEntity findMenu(@RequestHeader String authorization, @RequestParam Long productId) {
+    public ResponseEntity findMenu(@RequestHeader String authorization, @PathVariable Long productId) {
         String email = jwtToEmail(authorization);
         Product product = productService.findMenu(productId);
         return ResponseEntity.created(null).body(product);
