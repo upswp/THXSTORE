@@ -16,6 +16,7 @@ import java.util.Date;
 @NoArgsConstructor
 @Getter
 @Setter
+@EqualsAndHashCode(of = "id")
 public class Reservation {
 
     @Id

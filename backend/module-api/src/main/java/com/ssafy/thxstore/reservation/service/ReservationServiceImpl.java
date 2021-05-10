@@ -8,6 +8,7 @@ import com.ssafy.thxstore.reservation.domain.Cart;
 import com.ssafy.thxstore.reservation.domain.Reservation;
 import com.ssafy.thxstore.reservation.dto.CartDto;
 import com.ssafy.thxstore.reservation.dto.OrderRequest;
+import com.ssafy.thxstore.reservation.dto.ReservationDto;
 import com.ssafy.thxstore.reservation.repository.CartRepository;
 import com.ssafy.thxstore.reservation.repository.OrderRepository;
 import lombok.AccessLevel;
@@ -75,5 +76,11 @@ public class ReservationServiceImpl implements ReservationService{
                 build();
 
         orderRepository.save(reservation);
+    }
+
+    @Override
+    public List<ReservationDto> getOrder(Long memberId){
+        List<ReservationDto> list = cartRepository.findOrderById(memberId);
+        return list;
     }
 }
