@@ -11,7 +11,7 @@ public interface CartRepository extends JpaRepository<Cart, Long> {
 
 
     @Query("select new com.ssafy.thxstore.reservation.dto.CartDto" +
-            " (m.id,p.id,c.productName,c.count,c.price)" +
+            " (c.storeId,m.id,p.id,c.productName,c.count,c.price)" +
             " from Cart c join c.member m join c.product p" +
             " where m.id = :memberId")
     List<CartDto> findCartlist(Long memberId);
@@ -19,11 +19,11 @@ public interface CartRepository extends JpaRepository<Cart, Long> {
 
 
 
-    @Query(" select new com.ssafy.thxstore.reservation.dto.ReservationDto" +
-            " (m.id)"+
-            " from Reservation r"+
-            " where r.id = :memberId")
-    List<ReservationDto> findOrderById(Long memberId);
+//    @Query(" select new com.ssafy.thxstore.reservation.dto.ReservationDto" +
+//            " (m.id)"+
+//            " from Reservation r"+
+//            " where r.id = :memberId")
+//    List<ReservationDto> findOrderById(Long memberId);
 
 
 }

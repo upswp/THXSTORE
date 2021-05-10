@@ -1,5 +1,6 @@
 package com.ssafy.thxstore.reservation.domain;
 
+import com.ssafy.thxstore.common.ColumnDescription;
 import com.ssafy.thxstore.member.domain.Member;
 import com.ssafy.thxstore.product.domain.Product;
 import lombok.Builder;
@@ -41,12 +42,17 @@ public class Cart {
     @Column(name = "prodcut_name")
     private String productName;
 
+    @ColumnDescription("스토어 아이디로 각각의 장바구니 구분")
+    @Column(name = "store_id")
+    private Long storeId;
+
     @Builder
-    public Cart(Member member, Product product, int count, int price, String productName) {
+    public Cart(Member member, Product product, int count, int price, String productName,Long storeId) {
         this.member = member;
         this.product = product;
         this.count = count;
         this.price = price;
         this.productName = productName;
+        this.storeId = storeId;
     }
 }

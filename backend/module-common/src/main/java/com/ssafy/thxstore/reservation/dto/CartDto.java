@@ -25,9 +25,13 @@ public class CartDto {
     @NotBlank
     private int count;
 
+    @NotBlank
+    private Long storeId;
+
     @Builder
-    public CartDto(Long userId, Long productId,String productname, int price, int count) {
+    public CartDto(Long storeId,Long userId, Long productId,String productname, int price, int count) {
         this.userId = userId;
+        this.storeId = storeId;
         this.productId = productId;
         this.productname =productname;
         this.price = price;

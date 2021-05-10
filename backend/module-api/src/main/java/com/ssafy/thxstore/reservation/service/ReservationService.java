@@ -8,7 +8,7 @@ import java.util.List;
 public interface ReservationService {
     void addCart(List<CartDto> cartList);
     List<CartDto> getCart(Long memberId);
-    void addOrder(OrderRequest orderRequest);
+    void addOrder(Long memberId);
 
 //    List<ReservationDto> getOrder(Long memberId);
 }
