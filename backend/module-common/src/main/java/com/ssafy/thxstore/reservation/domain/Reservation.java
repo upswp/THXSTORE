@@ -22,6 +22,7 @@ public class Reservation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "order_id")
+    @ColumnDescription("PK")
     private Long id; // pk
 
     @ColumnDescription("주문 시간")
