@@ -109,7 +109,7 @@ export default {
   padding: 10px;
   cursor: pointer;
   border: 1px solid white;
-  border-bottom: 1px solid $gray600;
+  border-bottom: 1px solid $gray400;
   &:hover {
     color: white;
     background-color: $blue600;

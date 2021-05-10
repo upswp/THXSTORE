@@ -1,7 +1,5 @@
 <template>
   <div class="admin-container">
-    <main-header></main-header>
-    <main-aside></main-aside>
     <div class="admin-header">
       <h1>관리자 페이지</h1>
       <div class="select-container">

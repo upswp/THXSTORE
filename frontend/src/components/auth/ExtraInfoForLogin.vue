@@ -64,6 +64,9 @@ export default {
         alert('로그인에 문제가 생겼습니다. 다시 시도해주세요.');
       }
     },
+    moveToPage(toward) {
+      this.$router.push({ name: toward });
+    },
   },
 };
 </script>
