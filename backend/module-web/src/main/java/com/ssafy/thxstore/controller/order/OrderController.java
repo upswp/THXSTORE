@@ -2,7 +2,6 @@ package com.ssafy.thxstore.controller.order;
 
 import com.ssafy.thxstore.reservation.dto.CartDto;
 import com.ssafy.thxstore.reservation.dto.OrderRequest;
-import com.ssafy.thxstore.reservation.dto.ReservationDto;
 import com.ssafy.thxstore.reservation.service.ReservationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.hateoas.MediaTypes;
@@ -66,14 +65,14 @@ public ResponseEntity<String> addCart(@Valid @RequestBody List<CartDto> cartList
      * 리턴 값 -> 주문자 아이디 , 장바구니 내역(리스트)
      * 1. memId 로 조회
      */
-    @GetMapping("/{memberId}")
-    public ResponseEntity getOrder(@PathVariable Long memberId){
-
-        List<ReservationDto> li = reservationService.getOrder(memberId);
-
-        return new ResponseEntity<>(li, HttpStatus.OK);
-//        return ResponseEntity.created(li.getUri()).body(li.getOrderResource());
-    }
+//    @GetMapping("/{memberId}")
+//    public ResponseEntity getOrder(@PathVariable Long memberId){
+//
+//        List<ReservationDto> li = reservationService.getOrder(memberId);
+//
+//        return new ResponseEntity<>(li, HttpStatus.OK);
+////        return ResponseEntity.created(li.getUri()).body(li.getOrderResource());
+//    }
 
 
     /**
