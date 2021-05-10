@@ -77,9 +77,16 @@ public class ReservationServiceImpl implements ReservationService{
         orderRepository.save(reservation);
     }
 
-//    @Override
-//    public List<ReservationDto> getOrder(Long memberId){
-//        List<ReservationDto> list = cartRepository.findOrderById(memberId);
-//        return list;
-//    }
+
+    /**
+     *
+     */
+    @Override
+    public List<ReservationDto> getOrder(Long memberId){
+        List<ReservationDto> list = cartRepository.findOrderById(memberId);
+
+
+        return list;
+    }
+
 }

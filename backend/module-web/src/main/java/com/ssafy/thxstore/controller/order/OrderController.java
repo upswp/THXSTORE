@@ -49,7 +49,7 @@ public ResponseEntity<String> addCart(@Valid @RequestBody List<CartDto> cartList
      * 1. 장바구니에서 주문(예약) 버튼 눌렀을 경우
      * 2. OrderRequest -> 주문접수
      */
-
+    // TODO: 2021-05-10 같은 cartId memberId 로 요청 예외처리
     @PostMapping()
     public ResponseEntity<String> addOrder(@RequestBody OrderRequest orderRequest){
 
@@ -71,7 +71,7 @@ public ResponseEntity<String> addCart(@Valid @RequestBody List<CartDto> cartList
 //        List<ReservationDto> li = reservationService.getOrder(memberId);
 //
 //        return new ResponseEntity<>(li, HttpStatus.OK);
-////        return ResponseEntity.created(li.getUri()).body(li.getOrderResource());
+
 //    }
 
 
