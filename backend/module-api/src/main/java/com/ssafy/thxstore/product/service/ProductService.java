@@ -47,8 +47,8 @@ public class ProductService {
         productGroup.setName(editGroupDto.getName());
     }
 
-    public Optional<List<ProductGroup>> findAllGroup(FindAllGroupDto findAllGroupDto) {
-        Optional<List<ProductGroup>> productGroups = productGroupRepository.findAllByStoreId(findAllGroupDto.getStoreId());
+    public Optional<List<ProductGroup>> findAllGroup(Long storeId) {
+        Optional<List<ProductGroup>> productGroups = productGroupRepository.findAllByStoreId(storeId);
         return productGroups;
     }
 

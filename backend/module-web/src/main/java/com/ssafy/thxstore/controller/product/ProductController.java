@@ -54,10 +54,10 @@ public class ProductController {
        return ResponseEntity.created(null).body(HttpStatus.OK);
     }
 
-    @GetMapping // 그룹 전체 조회
-    public ResponseEntity findAllGroup(@RequestHeader String authorization, @RequestBody FindAllGroupDto findAllGroupDto) {
+    @GetMapping("{storeId}") // 그룹 전체 조회@RequestBody FindAllGroupDto findAllGroupDto
+    public ResponseEntity findAllGroup(@RequestHeader String authorization, @PathVariable("storeId") Long storeId) {
         String email = jwtToEmail(authorization);
-        Optional<List<ProductGroup>> productGroups = productService.findAllGroup(findAllGroupDto);
+        Optional<List<ProductGroup>> productGroups = productService.findAllGroup(storeId);
 
         if(productGroups.isPresent()) {
             return ResponseEntity.created(null).body(productGroups);

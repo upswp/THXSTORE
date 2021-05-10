@@ -8,10 +8,7 @@ import com.ssafy.thxstore.store.domain.CheckStore;
 import com.ssafy.thxstore.store.domain.Store;
 import com.ssafy.thxstore.store.domain.StoreCategory;
 import com.ssafy.thxstore.store.domain.TempStore;
-import com.ssafy.thxstore.store.dto.CreateStoreDto;
-import com.ssafy.thxstore.store.dto.CreateStoreFileDto;
-import com.ssafy.thxstore.store.dto.StoreChangedDto;
-import com.ssafy.thxstore.store.dto.StoreUnchangedDto;
+import com.ssafy.thxstore.store.dto.*;
 import com.ssafy.thxstore.store.repository.StoreRepository;
 import com.ssafy.thxstore.store.repository.TempStoreRepository;
 import lombok.AccessLevel;
@@ -190,5 +187,17 @@ public class StoreService {
         Long memberId = member.getId();
         Store store = storeRepository.findByMemberId(memberId).get();
         store.setCheckStore(CheckStore.NORMAL);
+    }
+
+    public DetailStoreResponse detailStoreResopnse(Store store) {
+//        DetailDto detailDto = null;
+      //  NormalDto normalDto = null;
+        sideInfo sideInfo = modelMapper.map(store, sideInfo.class);
+        baseInfo baseInfo = modelMapper.map(store, baseInfo.class);
+        DetailStoreResponse detailStoreResponse = DetailStoreResponse.builder()
+                .sideInfo(sideInfo)
+                .baseInfo(baseInfo)
+                .build();
+        return detailStoreResponse;
     }
 }

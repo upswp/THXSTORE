@@ -52,7 +52,9 @@ public class StoreController {
     public ResponseEntity detailStore(@RequestHeader String authorization){
         String email = jwtToEmail(authorization);
         Optional<Store> store = storeService.getStore(email);
-        return ResponseEntity.created(null).body(store.get());
+        DetailStoreResponse detailStoreResponse = storeService.detailStoreResopnse(store.get());
+
+        return ResponseEntity.created(null).body(detailStoreResponse);
     }
 
     @PatchMapping//스토어 정보 수정(개인)
