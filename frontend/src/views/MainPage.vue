@@ -27,7 +27,7 @@ export default {
 .main-contents {
   background-color: $gray100;
   position: absolute;
-  padding: 50px 10px;
+  padding: 50px 0px;
   min-height: 100vh;
   width: 100%;
   @include flexbox;
