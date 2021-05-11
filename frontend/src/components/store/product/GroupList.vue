@@ -141,7 +141,7 @@ export default {
 }
 
 .menu-group-header {
-  margin: 10px;
+  margin: 10px 3px;
   font-weight: bold;
   @include mobile {
     padding-bottom: 10px;
@@ -160,6 +160,11 @@ export default {
   padding: 5px;
 }
 .menu-group-items {
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2) inset;
+  padding: 10px 0;
+  @include lg-pc {
+    box-shadow: none;
+  }
   @include pc {
     overflow-y: scroll;
     height: 110px;

@@ -1,7 +1,7 @@
 <template>
   <div v-if="loaded" class="store-info-container">
     <label for="thumnail-image-upload">
-      <img class="store-thumbnail-image" :src="thumbnailImg" />
+      <img class="store-thumbnail-image" :src="thumbImg" />
       <input id="thumnail-image-upload" type="file" class="thumnail-image-upload" @change="submitThumbnailImage" />
     </label>
     <basic-info v-bind="baseInfo" :logo="sideInfo.logo"></basic-info>
@@ -24,7 +24,7 @@ export default {
       loaded: false,
       baseInfo: '',
       sideInfo: '',
-      thumbnailImg: require('@/assets/image/thumbnail_example.jpg'),
+      thumbImg: require('@/assets/image/thumbnail_example.jpg'),
       thumbnailFile: '',
       storeId: '',
     };
@@ -37,7 +37,7 @@ export default {
       this.baseInfo = baseInfo;
       this.sideInfo = sideInfo;
       this.storeId = baseInfo.storeId;
-      this.thumbnail = sideInfo.thumbnailImg;
+      this.thumbImg = sideInfo.thumbImg;
       console.log('가게정보', data);
       this.loaded = true;
     } catch (error) {
@@ -54,11 +54,11 @@ export default {
       this.thumbnailFile = file;
       try {
         const frm = new FormData();
-        frm.append('thumbnailImg', this.thumbnailFile);
+        frm.append('thumbImg', this.thumbnailFile);
         frm.append('storeId', this.storeId);
         this.setSpinnerState(true);
         await updateStoreSideInfo(frm);
-        this.thumbnailImg = URL.createObjectURL(file);
+        this.thumbImg = URL.createObjectURL(file);
       } catch (error) {
         console.log(error);
         alert('썸네일 업로드에 실패하였습니다');

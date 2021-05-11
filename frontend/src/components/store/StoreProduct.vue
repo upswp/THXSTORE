@@ -1,17 +1,33 @@
 <template>
   <div class="store-product-container">
     <group-list></group-list>
-    <group-detail></group-detail>
+    <group-detail v-show="!editable" @toggleEdit="toggleEdit"></group-detail>
+    <group-edit v-show="editable" :menu="menu" @toggleEdit="toggleEdit"></group-edit>
   </div>
 </template>
 
 <script>
 import GroupList from '@/components/store/product/GroupList';
 import GroupDetail from '@/components/store/product/GroupDetail';
+import GroupEdit from '@/components/store/product/GroupEdit';
 export default {
   components: {
     GroupList,
     GroupDetail,
+    GroupEdit,
+  },
+  data() {
+    return {
+      editable: false,
+      menu: '',
+    };
+  },
+  methods: {
+    toggleEdit(e) {
+      if (e) this.menu = e;
+      else this.menu = '';
+      this.editable = !this.editable;
+    },
   },
 };
 </script>
