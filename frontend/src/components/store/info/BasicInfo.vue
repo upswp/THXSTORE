@@ -40,7 +40,7 @@ export default {
     KakaoMap,
   },
   props: {
-    id: {
+    storeId: {
       type: Number,
       default: 0,
       require: true,
@@ -91,7 +91,7 @@ export default {
       try {
         const frm = new FormData();
         frm.append('logo', this.logoFile);
-        frm.append('storeId', this.id);
+        frm.append('storeId', this.storeId);
         this.setSpinnerState(true);
         await updateStoreSideInfo(frm);
         this.logoImg = URL.createObjectURL(file);

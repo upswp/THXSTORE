@@ -36,7 +36,7 @@ export default {
       const { baseInfo, sideInfo } = data;
       this.baseInfo = baseInfo;
       this.sideInfo = sideInfo;
-      this.storeId = baseInfo.id;
+      this.storeId = baseInfo.storeId;
       this.thumbnail = sideInfo.thumbnailImg;
       console.log('가게정보', data);
       this.loaded = true;

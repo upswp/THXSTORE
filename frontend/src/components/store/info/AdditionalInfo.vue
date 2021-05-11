@@ -33,7 +33,7 @@
             </div>
             <select v-model="closeHour" class="time-select">
               <option value="12">12</option>
-              <option v-for="(i, index) in 11" :key="index" :value="i">
+              <option v-for="(i, index) in 11" :key="index" :value="hourStrConvert(i, 1)">
                 {{ hourStrConvert(i, 1) }}
               </option>
             </select>
@@ -123,7 +123,7 @@ export default {
   },
   data() {
     return {
-      category: 'DEFAULT',
+      category: 'None',
       openMeridiem: undefined,
       openHour: '13',
       openMinute: '99',
@@ -226,8 +226,8 @@ export default {
         alert('오전/오후 변경에서 오류가 생겼습니다.');
       }
     },
-    async category(newValue) {
-      if (newValue === 'DEFAULT') return;
+    async category(newValue, oldValue) {
+      if (newValue === 'DEFAULT' || oldValue === 'None') return;
       try {
         const frm = new FormData();
         frm.append('storeCategory', this.category);

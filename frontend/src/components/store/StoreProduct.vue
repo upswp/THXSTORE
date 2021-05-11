@@ -27,8 +27,6 @@ export default {
     @include justify-content(center);
   }
   @include pc {
-    @include flexbox;
-    @include justify-content(center);
   }
   @include mobile {
     font-size: 14px;

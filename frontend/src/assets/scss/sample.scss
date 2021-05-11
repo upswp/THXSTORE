@@ -3,6 +3,7 @@
 
 .store-product-detail {
   padding: 10px;
+
   width: calc(100% - 200px);
   height: calc(100vh - 80px);
   
@@ -10,24 +11,66 @@
     overflow: auto;
   }
   @include pc{
-    overflow: auto;
+    width: 100% ;
   }
   
   @include mobile{
     width: 100% ;
     height: 100vh;
   }
+  @include xs-mobile{
+    width: 100% ;
+    height: 100vh;
+  }
 }
 .menu-container{
+  width:100%;
+  box-sizing: border-box;
   @include lg-pc{
     @include flexbox;
+    @include flex-wrap(wrap);
   }
+  @include pc{
+    @include flexbox;
+    @include flex-wrap(wrap);
+  }
+  
 }
 
 .menu-wrapper{
   margin: 10px 0;
   padding: 5px;
-  width:50%;
   border: 1px solid $gray400;
+  
   min-height:200px;
+  @include lg-pc{
+    width:50%;
+    @include flexbox;
+  }
+  @include pc{
+    width:100%;
+  }
+  @include mobile{
+    width:100%;
+    @include flexbox;
+  }
+  @include xs-mobile{
+    width:100%;
+  }
+}
+.item-image{
+  width:50%;
+  height:300px;
+}
+.item-info{
+  width:50%;
+}
+.image{
+  width:100%;
+  height:100%;
+  object-fit: cover;
+  object-position: center 50%;
+}
+.item-name{
+  text-align: center;
 }
