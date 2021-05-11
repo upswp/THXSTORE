@@ -4,6 +4,11 @@ import com.ssafy.thxstore.image.service.ImageService;
 import com.ssafy.thxstore.member.domain.Member;
 import com.ssafy.thxstore.member.domain.MemberRole;
 import com.ssafy.thxstore.member.repository.MemberRepository;
+import com.ssafy.thxstore.product.domain.Product;
+import com.ssafy.thxstore.product.domain.TimeDeal;
+import com.ssafy.thxstore.product.dto.TimeDealCreateDto;
+import com.ssafy.thxstore.product.dto.TimeDealProductDto;
+import com.ssafy.thxstore.product.repository.ProductRepository;
 import com.ssafy.thxstore.product.repository.TimeDealRepository;
 import com.ssafy.thxstore.store.domain.CheckStore;
 import com.ssafy.thxstore.store.domain.Store;
@@ -36,6 +41,7 @@ public class StoreService {
     private final StoreRepository storeRepository;
     private final TempStoreRepository tempStoreRepository;
     private final MemberRepository memberRepository;
+    private final ProductRepository productRepository;
     private final TimeDealRepository timeDealRepository;
 
     private final ImageService imageService;
@@ -233,8 +239,32 @@ public class StoreService {
         storeRepository.updateStoreTimeDealCHeck();
     }
 
-    public void timeDealList(Long storeId) {
-        timeDealRepository.findByStoreId(storeId);
+    public Optional<TimeDeal> timeDealList(Long storeId) { // 타임 딜 반환.
+        Optional<TimeDeal> timeDeal = timeDealRepository.findByStoreId(storeId);
+        return timeDeal;
+    }
+
+    public void timeDealCreate(TimeDealCreateDto timeDealCreateDto) { // 타임 딜 생성
+        // TODO 개선 방법을 생각해보자 rate와 stock를 timedeall 영역에 넣는 것이 더 효율적일까?
+         // 생성 방법? 흠
+        // timedeal에 넣고, product를 수정?
+        List<TimeDealProductDto> timeDealProductDtos = timeDealCreateDto.getTimeDealProductDtos();
+        Long storeId = timeDealCreateDto.getStoreId();
+        Store store = storeRepository.findById(storeId).get();
+        String startTime = timeDealCreateDto.getStartTime();
+
+        for(int i = 0 ; i < timeDealProductDtos.size(); i++){
+            Product product = productRepository.findById(timeDealProductDtos.get(i).getProductId()).get();
+            product.setRate(timeDealProductDtos.get(i).getRate());
+            product.setStock(timeDealProductDtos.get(i).getStock());
+            //
+            TimeDeal timeDeal = TimeDeal.builder()
+                    .product(product)
+                    .startTime(startTime)
+                    .store(store)
+                    .build();
+            timeDealRepository.save(timeDeal);
+        }
 
     }
 }
