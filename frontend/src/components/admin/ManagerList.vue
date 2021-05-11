@@ -91,7 +91,7 @@ export default {
         const order = this.order;
         const storeId = this.storeNormalInfo[order].id;
         await approveStoreEnrollment({ storeId: storeId });
-        storeNormalInfo.splice(this.order, 1);
+        this.storeNormalInfo.splice(this.order, 1);
       } catch (error) {
         console.log(error);
       }

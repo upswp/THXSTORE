@@ -10,4 +10,18 @@ function formatNumber(value) {
   }
   return res + unit;
 }
-export { formatNumber };
+function hourStrConvert(num, unit) {
+  if (num === 0) return '00';
+  const str = `${num * unit}`;
+  if (str.length < 2) return '0' + str;
+  else return str;
+}
+function meridiemConvert(value) {
+  const num = parseInt(value);
+  if (num === 0) return [false, '12'];
+  if (num < 12) return [false, hourStrConvert(num, 1)];
+  if (num === 12) return [true, '12'];
+  if (num < 24) return [true, hourStrConvert(num - 12, 1)];
+}
+
+export { formatNumber, hourStrConvert, meridiemConvert };
