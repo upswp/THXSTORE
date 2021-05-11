@@ -4,6 +4,7 @@ import com.ssafy.thxstore.image.service.ImageService;
 import com.ssafy.thxstore.member.domain.Member;
 import com.ssafy.thxstore.member.domain.MemberRole;
 import com.ssafy.thxstore.member.repository.MemberRepository;
+import com.ssafy.thxstore.product.repository.TimeDealRepository;
 import com.ssafy.thxstore.store.domain.CheckStore;
 import com.ssafy.thxstore.store.domain.Store;
 import com.ssafy.thxstore.store.domain.StoreCategory;
@@ -35,6 +36,7 @@ public class StoreService {
     private final StoreRepository storeRepository;
     private final TempStoreRepository tempStoreRepository;
     private final MemberRepository memberRepository;
+    private final TimeDealRepository timeDealRepository;
 
     private final ImageService imageService;
 
@@ -78,7 +80,7 @@ public class StoreService {
         }else if(storeChangedDto.getCloseTime() != null){
             store.setCloseTime(storeChangedDto.getCloseTime());
         }else if(storeChangedDto.getCloseDay() != null){
-            store.setClosedDay(storeChangedDto.getCloseDay());
+            store.setCloseDay(storeChangedDto.getCloseDay());
         }else if(storeChangedDto.getIntroduce() != null){
             store.setIntroduce(storeChangedDto.getIntroduce());
         }else if(storeChangedDto.getThumbnailImg() != null){
@@ -218,6 +220,7 @@ public class StoreService {
         sideInfo sideInfo = modelMapper.map(store, sideInfo.class);
         baseInfo baseInfo = modelMapper.map(store, baseInfo.class);
         baseInfo.setRole(store.getMember().getRole());
+        baseInfo.setStoreId(store.getId());
         DetailStoreResponse detailStoreResponse = DetailStoreResponse.builder()
                 .sideInfo(sideInfo)
                 .baseInfo(baseInfo)
@@ -228,5 +231,10 @@ public class StoreService {
     // 자정 타임딜 초기화
     public void timeDealInit() {
         storeRepository.updateStoreTimeDealCHeck();
+    }
+
+    public void timeDealList(Long storeId) {
+        timeDealRepository.findByStoreId(storeId);
+
     }
 }

@@ -132,6 +132,34 @@ public class StoreController {
         return ResponseEntity.created(null).body(HttpStatus.OK);
     }
 
+
+
+    /* 판매자 스토어 페이지(타임 딜) */
+    // todo next work
+    @GetMapping("/timedeal/{storeId}") // 스토어 수정 실패 확인(판매자가 클릭)
+    public ResponseEntity timeDealList(@RequestHeader String authorization,@PathVariable Long storeId){
+
+        storeService.timeDealList(storeId);
+        String email = jwtToEmail(authorization);
+        storeService.editConfirm(email);
+        return ResponseEntity.created(null).body(HttpStatus.OK);
+    }
+
+    @PostMapping("/timedeal/") // 스토어 수정 실패 확인(판매자가 클릭)
+    public ResponseEntity timeDealCreate(@RequestHeader String authorization,@PathVariable Long storeId){
+
+        storeService.timeDealList(storeId);
+        String email = jwtToEmail(authorization);
+        storeService.editConfirm(email);
+        return ResponseEntity.created(null).body(HttpStatus.OK);
+    }
+
+
+
+
+
+
+
     @PostMapping("/test/")
     public ResponseEntity createStoreTest(@RequestBody CreateStoreDto createStoreDto){
         Store store = storeService.createStoreTest(createStoreDto);
@@ -148,6 +176,12 @@ public class StoreController {
     public String jwtToEmail(String authorization){
         return Jwts.parser().setSigningKey(DatatypeConverter.parseBase64Binary(appProperties.getAuth().getTokenSecret()))
                 .parseClaimsJws(authorization).getBody().getSubject();
+    }
+
+    //자정 시간에 타임딜 초기화 1-> 0. 초 분 시간 일 월 요일. 매일 0시간에 초기화
+    @Scheduled(cron = "0 0 0 * * *")
+    public void timeDealInit(){
+        storeService.timeDealInit();
     }
 
 }
