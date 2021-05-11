@@ -52,14 +52,16 @@ public class StoreController {
     public ResponseEntity detailStore(@RequestHeader String authorization){
         String email = jwtToEmail(authorization);
         Optional<Store> store = storeService.getStore(email);
-        return ResponseEntity.created(null).body(store.get());
+        DetailStoreResponse detailStoreResponse = storeService.detailStoreResopnse(store.get());
+
+        return ResponseEntity.created(null).body(detailStoreResponse);
     }
 
     @PatchMapping//스토어 정보 수정(개인)
     public ResponseEntity patchStore(@RequestHeader String authorization, @ModelAttribute StoreChangedDto storeChangedDto){
         String email = jwtToEmail(authorization);
         Store store = storeService.patchStore(email, storeChangedDto);
-        return ResponseEntity.created(null).body(store);
+        return ResponseEntity.created(null).body(HttpStatus.OK);
     }
 
     @PutMapping// 스토어 정보 수정(불변) 불변 자료만 받아오자
@@ -106,8 +108,8 @@ public class StoreController {
 
     @GetMapping("/modify/")//스토어 수정 리스트
     public ResponseEntity storeModifyList(@RequestHeader String authorization){
-        List<TempStore> storeModifyList = storeService.storeModifyList();
-        return ResponseEntity.created(null).body(storeModifyList);
+        List<StoreModifyListResponse> storeModifyListResponse = storeService.storeModifyList();
+        return ResponseEntity.created(null).body(storeModifyListResponse);
     }
 
     @PostMapping("/modify/success") // 스토어 수정 허가(관리자)

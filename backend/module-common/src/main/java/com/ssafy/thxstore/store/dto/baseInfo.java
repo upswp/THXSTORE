@@ -1,5 +1,7 @@
 package com.ssafy.thxstore.store.dto;
 
+import com.ssafy.thxstore.member.domain.MemberRole;
+import com.ssafy.thxstore.store.domain.CheckStore;
 import lombok.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -9,8 +11,8 @@ import org.springframework.web.multipart.MultipartFile;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class StoreUnchangedDto {
-    Long storeId;
+public class baseInfo {
+    Long id;
     String name;
     String mainAddress;
     String subAddress;
@@ -18,6 +20,7 @@ public class StoreUnchangedDto {
     Double lat;
     Double lon;
     String license;
-    MultipartFile licenseImg;
+    String licenseImg;
+    CheckStore checkStore;
+    MemberRole role;
 }
-//store_id, name, main_address, sub_address, phone_num, license, licesne_img

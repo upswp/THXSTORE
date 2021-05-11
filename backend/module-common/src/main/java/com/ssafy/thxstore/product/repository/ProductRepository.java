@@ -8,4 +8,6 @@ import java.util.Optional;
 
 public interface ProductRepository extends JpaRepository<Product, Long> {
     Optional<List<Product>> findAllByProductGroupId(Long groupId);
+
+    void deleteByProductGroupId(Long groupId);
 }
