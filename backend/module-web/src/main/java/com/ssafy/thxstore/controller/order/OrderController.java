@@ -1,6 +1,8 @@
 package com.ssafy.thxstore.controller.order;
 
+import com.ssafy.thxstore.reservation.domain.ReservationStatus;
 import com.ssafy.thxstore.reservation.dto.ReservationDto;
+import com.ssafy.thxstore.reservation.dto.StatusRequest;
 import com.ssafy.thxstore.reservation.service.ReservationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.hateoas.MediaTypes;
@@ -77,14 +79,19 @@ public ResponseEntity<String> addReservation(@Valid @RequestBody List<Reservatio
     }
 
     /**
-     * 주문 테이블에 들어간 상황 사장님이 수령 확인 버튼 누르면 주문 삭제
-     * 1. memberId(321) 님 이시죠? 물건 주고 버튼 누르면 삭제
+     * 1. 주문 테이블에 들어간 상황 사장님이 수령 확인 버튼 누르면 주문 status 변경 memberId(321) 님 이시죠? 물건 주고 버튼 누르면 주문 테이블에서 상태 변화
+     * 2. DEFAULT -> ACCEPT 주문 승락
+     * 3. ACCEPT -> STAND_BY 상품(음식) 완료 후 수령 대기
+     * 4. STAND_BY -> FINISH 수령 완료
      */
 
+    @PutMapping("/reservation/{memberId}") // v2 mem id로 받아서 검색 후 수정, 받아오는 형식 memformdto
+    public ResponseEntity<String> updateReservation(@PathVariable Long memberId , @RequestBody StatusRequest status) {
 
-    /**
-     * 사용자의 예약 취소 (추가 기능으로)
-     */
+        reservationService.statusUpdate(memberId, status);
+
+        return new ResponseEntity<>("주문 상태를 변경했습니다.", HttpStatus.OK);
+    }//맴버정보보기를 눌러서 확인
 
     /**
      * 판매자가 예약 번호 조회 가능하게
