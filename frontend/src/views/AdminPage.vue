@@ -23,7 +23,7 @@ export default {
   },
   data() {
     return {
-      showStoreEnrollmentList: '신청 목록',
+      showStoreEnrollmentList: 'applyStoreEnrollment',
     };
   },
 };

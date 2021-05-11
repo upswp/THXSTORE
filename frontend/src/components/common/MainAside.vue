@@ -26,7 +26,7 @@
           </span>
           <span class="detail-guide-text">관리자 대시보드</span>
         </div>
-        <div ref="admin-icon" class="drawer-item" @click="moveToPage('login')">
+        <div ref="admin-icon" class="drawer-item" @click="logout()">
           <span class="drawer-icon-wrapper">
             <awesome icon="sign-out-alt"></awesome>
           </span>
@@ -38,16 +38,32 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
-
+import { mapGetters, mapMutations } from 'vuex';
+import { clearLocalStorageItem, USER_INFO, TOKEN } from '@/utils/webStorage';
 export default {
   computed: {
     ...mapGetters(['isMainDrawerOpend']),
   },
   methods: {
+    ...mapMutations(['toggleMainDrawerOpen', 'setToken', 'clearUserInfo']),
     moveToPage(name) {
       if (this.$router.history.current.fullPath.includes(name)) return;
+      this.toggleMainDrawerOpen();
       this.$router.push({ name });
+    },
+    logout() {
+      // 로그아웃을 할 때는 로컬 스토리지를 비워야한다.
+
+      clearLocalStorageItem(USER_INFO);
+      clearLocalStorageItem(TOKEN);
+
+      // vuex도 비운다.
+      this.setToken('');
+      this.clearUserInfo();
+
+      // drawer를 닫는다.
+      this.toggleMainDrawerOpen();
+      this.moveToPage('login');
     },
   },
 };
@@ -85,7 +101,7 @@ export default {
   @include transition(all 0.5s);
   // header 크기가 변함에 따라 top 변경해줘야함.
   width: 100%;
-  font-size: 1.4rem;
+  font-size: 1.2rem;
   background-color: white;
   border: none;
 }

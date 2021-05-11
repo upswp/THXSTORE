@@ -7,16 +7,19 @@
           <div class="additional-item-label">시작 시간</div>
           <div class="time">
             <div class="toggleWrapper">
-              <input id="am-pm-switch1" type="checkbox" class="toggle-switch" />
+              <input id="am-pm-switch1" v-model="openMeridiem" type="checkbox" class="toggle-switch" />
               <label for="am-pm-switch1" class="toggle"><div class="toggle-handler"></div></label>
             </div>
-            <select class="time-select">
-              <option v-for="(i, index) in 12" :key="index" :value="i - 1">{{ i - 1 === 0 ? '00' : i - 1 }}</option>
+            <select v-model="openHour" class="time-select">
+              <option value="12">12</option>
+              <option v-for="(i, index) in 11" :key="index" :value="hourStrConvert(i, 1)">
+                {{ hourStrConvert(i, 1) }}
+              </option>
             </select>
             <span>:</span>
-            <select class="time-select">
-              <option v-for="(i, index) in 6" :key="index" :value="10 * (i - 1)">
-                {{ i - 1 === 0 ? '00' : 10 * (i - 1) }}
+            <select v-model="openMinute" class="time-select">
+              <option v-for="(i, index) in 6" :key="index" :value="hourStrConvert(i - 1, 10)">
+                {{ hourStrConvert(i - 1, 10) }}
               </option>
             </select>
           </div>
@@ -25,16 +28,19 @@
           <div class="additional-item-label">종료 시간</div>
           <div class="time">
             <div class="toggleWrapper">
-              <input id="am-pm-switch2" type="checkbox" class="toggle-switch" />
+              <input id="am-pm-switch2" v-model="closeMeridiem" type="checkbox" class="toggle-switch" />
               <label for="am-pm-switch2" class="toggle"><div class="toggle-handler"></div></label>
             </div>
-            <select class="time-select">
-              <option v-for="(i, index) in 12" :key="index" :value="i - 1">{{ i - 1 === 0 ? '00' : i - 1 }}</option>
+            <select v-model="closeHour" class="time-select">
+              <option value="12">12</option>
+              <option v-for="(i, index) in 11" :key="index" :value="i">
+                {{ hourStrConvert(i, 1) }}
+              </option>
             </select>
             <span>:</span>
-            <select class="time-select">
-              <option v-for="(i, index) in 6" :key="index" :value="10 * (i - 1)">
-                {{ i - 1 === 0 ? '00' : 10 * (i - 1) }}
+            <select v-model="closeMinute" class="time-select">
+              <option v-for="(i, index) in 6" :key="index" :value="hourStrConvert(i - 1, 10)">
+                {{ hourStrConvert(i - 1, 10) }}
               </option>
             </select>
           </div>
@@ -42,30 +48,32 @@
       </div>
       <div class="category-holiday-container">
         <div class="additional-item">
-          <div class="additional-item-label">공휴일</div>
+          <div class="additional-item-label">휴무일</div>
           <div class="flex align-center">
-            <input id="mon" v-model="holidays" type="checkbox" value="MON" class="check-input" />
+            <input id="mon" v-model="closeDay" type="checkbox" value="MON" class="check-input" />
             <label for="mon" class="checkbox">월</label>
-            <input id="tue" v-model="holidays" type="checkbox" value="TUE" class="check-input" />
+            <input id="tue" v-model="closeDay" type="checkbox" value="TUE" class="check-input" />
             <label for="tue" class="checkbox">화</label>
-            <input id="wed" v-model="holidays" type="checkbox" value="WED" class="check-input" />
+            <input id="wed" v-model="closeDay" type="checkbox" value="WED" class="check-input" />
             <label for="wed" class="checkbox">수</label>
-            <input id="thu" v-model="holidays" type="checkbox" value="THU" class="check-input" />
+            <input id="thu" v-model="closeDay" type="checkbox" value="THU" class="check-input" />
             <label for="thu" class="checkbox">목</label>
-            <input id="fri" v-model="holidays" type="checkbox" value="FRI" class="check-input" />
+            <input id="fri" v-model="closeDay" type="checkbox" value="FRI" class="check-input" />
             <label for="fri" class="checkbox">금</label>
-            <input id="sat" v-model="holidays" type="checkbox" value="SAT" class="check-input" />
+            <input id="sat" v-model="closeDay" type="checkbox" value="SAT" class="check-input" />
             <label for="sat" class="checkbox">토</label>
-            <input id="sun" v-model="holidays" type="checkbox" value="SUN" class="check-input" />
+            <input id="sun" v-model="closeDay" type="checkbox" value="SUN" class="check-input" />
             <label for="sun" class="checkbox">일</label>
           </div>
         </div>
         <div class="additional-item">
           <div class="additional-item-label">카테고리</div>
           <div>
-            <select class="store-category">
-              <option value="chineses">중식</option>
-              <option value="japanese">일식</option>
+            <select v-model="category" class="store-category">
+              <option value="DEFAULT">선택</option>
+              <option value="KR_FOOD">한식</option>
+              <option value="CN_FOOD">중식</option>
+              <option value="JP_FOOD">일식</option>
             </select>
           </div>
         </div>
@@ -86,7 +94,7 @@
               key="confirm"
               :icon="['far', 'check-circle']"
               class="confirm-icon"
-              @click="introEdit = false"
+              @click="submitIntroduction"
             ></awesome>
           </transition>
         </div>
@@ -98,13 +106,199 @@
 </template>
 
 <script>
+import { hourStrConvert, meridiemConvert } from '@/utils/filters';
+import { updateStoreSideInfo } from '@/api/store';
 export default {
+  props: {
+    info: {
+      type: Object,
+      default: () => {},
+      require: true,
+    },
+    storeId: {
+      type: Number,
+      default: 0,
+      require: true,
+    },
+  },
   data() {
     return {
-      holidays: ['MON', 'SAT'],
+      category: 'DEFAULT',
+      openMeridiem: undefined,
+      openHour: '13',
+      openMinute: '99',
+      closeMeridiem: undefined,
+      closeHour: '13',
+      closeMinute: '99',
+      closeDay: -1,
       introduction: '',
       introEdit: false,
     };
+  },
+  watch: {
+    async openHour(newValue, oldValue) {
+      // 초기 data를 로드할 때는 watch하면 안된다.
+      if (oldValue === '13') return;
+
+      try {
+        const frm = new FormData();
+        frm.append('openTime', this.hourBy24(this.openMeridiem, newValue) + ':' + this.openMinute);
+        frm.append('storeId', this.storeId);
+        await updateStoreSideInfo(frm);
+      } catch (error) {
+        console.log(error);
+        alert('오픈 시간 변경에서 오류가 생겼습니다.');
+      }
+    },
+    async openMinute(newValue, oldValue) {
+      if (oldValue === '99') return;
+
+      try {
+        const frm = new FormData();
+        frm.append('openTime', this.hourBy24(this.openMeridiem, this.openHour) + ':' + newValue);
+        frm.append('storeId', this.storeId);
+        await updateStoreSideInfo(frm);
+      } catch (error) {
+        console.log(error);
+        alert('오픈 시간 변경에서 오류가 생겼습니다.');
+      }
+    },
+    async closeHour(newValue, oldValue) {
+      // 초기 data를 로드할 때는 watch하면 안된다.
+      if (oldValue === '13') return;
+
+      try {
+        const frm = new FormData();
+        frm.append('closeTime', this.hourBy24(this.closeMeridiem, newValue) + ':' + this.closeMinute);
+        frm.append('storeId', this.storeId);
+        await updateStoreSideInfo(frm);
+      } catch (error) {
+        console.log(error);
+        alert('클로즈 시간 변경에서 오류가 생겼습니다.');
+      }
+    },
+    async closeMinute(newValue, oldValue) {
+      if (oldValue === '99') return;
+
+      try {
+        const frm = new FormData();
+        frm.append('closeTime', this.hourBy24(this.closeMeridiem, this.closeHour) + ':' + newValue);
+        frm.append('storeId', this.storeId);
+        await updateStoreSideInfo(frm);
+      } catch (error) {
+        console.log(error);
+        alert('클로즈 시간 변경에서 오류가 생겼습니다.');
+      }
+    },
+    async openMeridiem(newValue, oldValue) {
+      if (oldValue === undefined) return;
+      try {
+        const frm = new FormData();
+        frm.append('openTime', this.hourBy24(newValue, this.openHour) + ':' + this.openMinute);
+        frm.append('storeId', this.storeId);
+        await updateStoreSideInfo(frm);
+      } catch (error) {
+        console.log(error);
+        alert('오전/오후 변경에서 오류가 생겼습니다.');
+      }
+    },
+    async closeMeridiem(newValue, oldValue) {
+      if (oldValue === undefined) return;
+      try {
+        const frm = new FormData();
+        frm.append('closeTime', this.hourBy24(newValue, this.closeHour) + ':' + this.closeMinute);
+        frm.append('storeId', this.storeId);
+        await updateStoreSideInfo(frm);
+      } catch (error) {
+        console.log(error);
+        alert('오전/오후 변경에서 오류가 생겼습니다.');
+      }
+    },
+    async closeDay(newValue, oldValue) {
+      if (oldValue === -1) return;
+      try {
+        const frm = new FormData();
+        frm.append('closeDay', newValue.join('|'));
+        frm.append('storeId', this.storeId);
+        await updateStoreSideInfo(frm);
+      } catch (error) {
+        console.log(error);
+        alert('오전/오후 변경에서 오류가 생겼습니다.');
+      }
+    },
+    async category(newValue) {
+      if (newValue === 'DEFAULT') return;
+      try {
+        const frm = new FormData();
+        frm.append('storeCategory', this.category);
+        frm.append('storeId', this.storeId);
+        await updateStoreSideInfo(frm);
+      } catch (error) {
+        console.log(error);
+        alert('카테고리 변경에서 오류가 생겼습니다.');
+      }
+    },
+  },
+  created() {
+    this.loadOpenTime(this.info.openTime);
+    this.loadCloseTime(this.info.closeTime);
+    this.loadCloseDay(this.info.closeDay);
+    this.category = this.info.storeCategory;
+    this.introduction = this.info.introduce;
+  },
+  methods: {
+    meridiemConvert,
+    hourStrConvert,
+    loadOpenTime(time) {
+      if (!time) {
+        this.openMeridiem = true;
+        this.openHour = '03';
+        this.openMinute = '00';
+        return;
+      }
+      const openTime = time.split(':');
+      const openSet = meridiemConvert(openTime[0]);
+      this.openMeridiem = openSet[0];
+      this.openHour = openSet[1];
+      this.openMinute = openTime[1];
+    },
+    loadCloseTime(time) {
+      if (!time) {
+        this.closeMeridiem = true;
+        this.closeHour = '11';
+        this.closeMinute = '00';
+        return;
+      }
+      const closeTime = time.split(':');
+      const closeSet = meridiemConvert(closeTime[0]);
+      this.closeMeridiem = closeSet[0];
+      this.closeHour = closeSet[1];
+      this.closeMinute = closeTime[1];
+    },
+    loadCloseDay(days) {
+      this.closeDay = days ? days.split('|') : [];
+    },
+    hourBy24(mode, hour) {
+      let newHour = parseInt(hour);
+      if (mode) {
+        if (newHour !== 12) newHour += 12;
+      } else {
+        if (newHour === 12) newHour = 0;
+      }
+      return hourStrConvert(newHour, 1);
+    },
+    async submitIntroduction() {
+      try {
+        const frm = new FormData();
+        frm.append('introduce', this.introduction);
+        frm.append('storeId', this.storeId);
+        await updateStoreSideInfo(frm);
+        this.introEdit = false;
+      } catch (error) {
+        console.log(error);
+        alert('가게 소개 변경에서 오류가 발생했습니다.');
+      }
+    },
   },
 };
 </script>
