@@ -7,11 +7,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Map;
 
 public class UserPrincipal implements UserDetails {
 	private Member member;
-	private Map<String, Object> attributes;
 
 	private UserPrincipal(Member member) {
 		this.member = member;
@@ -21,12 +19,6 @@ public class UserPrincipal implements UserDetails {
 		return new UserPrincipal(member);
 	}
 
-	public static UserPrincipal create(Member member, Map<String, Object> attributes) {
-		UserPrincipal userPrincipal = UserPrincipal.create(member);
-		userPrincipal.setAttributes(attributes);
-		return userPrincipal;
-	}
-
 	public Member getUser() {
 		return member;
 	}
@@ -34,10 +26,6 @@ public class UserPrincipal implements UserDetails {
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		return Collections.singletonList(new SimpleGrantedAuthority(member.roleName()));
-	}
-
-	public void setAttributes(Map<String, Object> attributes) {
-		this.attributes = attributes;
 	}
 
 	@Override
