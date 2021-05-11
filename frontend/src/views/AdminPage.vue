@@ -9,7 +9,7 @@
         </select>
       </div>
     </div>
-    <manager-list :show-store-enrollment-list="showStoreEnrollmentList"></manager-list>
+    <manager-list :show-store-enrollment-and-modification-list="showStoreEnrollmentList"></manager-list>
     <br />
     <br />
   </div>

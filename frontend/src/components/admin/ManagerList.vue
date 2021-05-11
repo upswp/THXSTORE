@@ -44,11 +44,18 @@
 
 <script>
 import 'url-search-params-polyfill';
-import { getStoreEnrollmentList, approveStoreEnrollment, retireStoreEnrollment } from '@/api/seller';
+import {
+  getStoreEnrollmentList,
+  approveStoreEnrollment,
+  retireStoreEnrollment,
+  getStoreModifyList,
+  approveStoreModification,
+  retireStoreModification,
+} from '@/api/seller';
 import { mapMutations } from 'vuex';
 export default {
   props: {
-    showStoreEnrollmentList: {
+    showStoreEnrollmentAndModificationList: {
       type: String,
       default: '',
     },
@@ -62,21 +69,47 @@ export default {
       order: 0,
     };
   },
+  watch: {
+    showStoreEnrollmentAndModificationList(newValue, oldValue) {
+      if (newValue === oldValue) return;
+      if (newValue === 'applyStoreEnrollment') {
+        console.log('신청목록이 보여진다.');
+        this.getStoreListforEnroll();
+      }
+      // console.log('옵션버튼이 실행된다.');
+      else {
+        console.log('수정목록이 보여진다.');
+        this.getStoreListforModify();
+      }
+    },
+  },
   created() {
-    if (this.showStoreEnrollmentList === '수정 목록') {
-      console.log('수정 목록');
-    } else {
-      console.log('신청 목록');
-      this.getstoreList();
-    }
+    // if (this.showStoreEnrollmentAndModificationList === 'modifyStoreEnrollment') {
+    //   console.log('수정 목록');
+    //   // this.getStoreModifyList();
+    // } else {
+    //   console.log('신청 목록');
+    // }
+    this.getStoreListforEnroll();
   },
   methods: {
     ...mapMutations(['setSpinnerState']),
-    async getstoreList() {
+    async getStoreListforEnroll() {
+      this.resetData();
       this.setSpinnerState(true);
       const { data } = await getStoreEnrollmentList();
       this.setSpinnerState(false);
-      console.log(data);
+      console.log('신청목록 data:', data);
+      this.storeNormalInfo = data;
+      if (this.storeNormalInfo.length != 0) {
+        this.isListBe = true;
+      }
+    },
+    async getStoreListforModify() {
+      this.setSpinnerState(true);
+      const { data } = await getStoreModifyList();
+      this.setSpinnerState(false);
+      console.log('수정목록', data);
 
       this.storeNormalInfo = data;
       if (this.storeNormalInfo.length != 0) {
@@ -89,23 +122,32 @@ export default {
     async approveEnrollment() {
       try {
         const order = this.order;
-        const storeId = this.storeNormalInfo[order].id;
-        await approveStoreEnrollment({ storeId: storeId });
+        if (this.showStoreEnrollmentAndModificationList == 'modifyStoreEnrollment') {
+          const tempStoreId = this.storeNormalInfo[order].tempStoreId;
+          await approveStoreModification({ tempStoreId: tempStoreId });
+        } else {
+          const storeId = this.storeNormalInfo[order].id;
+          await approveStoreEnrollment({ storeId: storeId });
+        }
         this.storeNormalInfo.splice(this.order, 1);
+        this.storeNormalInfo = [...this.storeNormalInfo];
+        if (this.storeNormalInfo.length == 0) {
+          this.isListBe = false;
+        }
+        this.order = 0;
       } catch (error) {
         console.log(error);
       }
     },
     async retireEnrollment() {
       const order = this.order;
-      console.log('this.storeNormalInfo:', this.storeNormalInfo, order);
-      const storeId = this.storeNormalInfo[order].id;
-
-      // var params = new URLSearchParams();
-      // params.append('storeId', storeId[order]);
-      // await retireStoreEnrollment(params);
-
-      await retireStoreEnrollment({ storeId: storeId });
+      if (this.showStoreEnrollmentAndModificationList == 'modifyStoreEnrollment') {
+        const tempStoreId = this.storeNormalInfo[order].tempStoreId;
+        await retireStoreModification({ tempStoreId: tempStoreId });
+      } else {
+        const storeId = this.storeNormalInfo[order].id;
+        await retireStoreEnrollment({ storeId: storeId });
+      }
       this.storeNormalInfo.splice(this.order, 1);
       this.storeNormalInfo = [...this.storeNormalInfo];
       if (this.storeNormalInfo.length == 0) {
@@ -120,6 +162,7 @@ export default {
     },
     resetData() {
       this.storeNormalInfo = [];
+      this.isListBe = false;
     },
   },
 };
