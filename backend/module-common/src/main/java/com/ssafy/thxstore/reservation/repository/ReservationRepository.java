@@ -2,6 +2,7 @@ package com.ssafy.thxstore.reservation.repository;
 
 import com.ssafy.thxstore.member.domain.Member;
 import com.ssafy.thxstore.reservation.domain.Reservation;
+import com.ssafy.thxstore.reservation.domain.ReservationGroup;
 import com.ssafy.thxstore.reservation.domain.ReservationStatus;
 import com.ssafy.thxstore.reservation.dto.ReservationDto;
 import com.ssafy.thxstore.reservation.dto.StatusRequest;
@@ -14,6 +15,13 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ReservationRepository extends JpaRepository<Reservation, Long> {
+
+
+//    @Query("select new com.ssafy.thxstore.reservation.domain.ReservationGroup" +
+//        " (r,r.reservationGroup.count,r.reservationGroup.price,r.reservationGroup.productName,r.reservationGroup.userId,r.reservationStatus)" +
+//        " from Reservation r join r.reservationGroup rg " +
+//        " where m.id = :memberId")
+//    List<ReservationGroup> findReservationlist(Long memberId);
 
 //    @Query("select new com.ssafy.thxstore.reservation.dto.ReservationDto" +
 //            " (r.member.email, r.storeId,r.member.id,r.product.id,r.product.name,r.price,r.count,r.reservationStatus)" +

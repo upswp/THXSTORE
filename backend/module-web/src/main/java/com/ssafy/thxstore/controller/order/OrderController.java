@@ -1,7 +1,9 @@
 package com.ssafy.thxstore.controller.order;
 
+import com.ssafy.thxstore.reservation.domain.ReservationGroup;
 import com.ssafy.thxstore.reservation.domain.ReservationStatus;
 import com.ssafy.thxstore.reservation.dto.ReservationDto;
+import com.ssafy.thxstore.reservation.dto.ReservationGroupDto;
 import com.ssafy.thxstore.reservation.dto.StatusRequest;
 import com.ssafy.thxstore.reservation.service.ReservationService;
 import lombok.RequiredArgsConstructor;
@@ -51,20 +53,19 @@ public ResponseEntity<String> addReservation(@Valid @RequestBody ReservationDto 
     return new ResponseEntity<>("생성완료", HttpStatus.OK);
 }
 
-//    /**
-//     * 주문 조회
-//     * 1. 사용자의 id 전달 받음 -> reservation 테이블에서 사용자의 id로 조회
-//     * 2. ?? 님의 주문
-//     */
-//
-//    @GetMapping("/reservation/{memberId}")
-//    public ResponseEntity getReservation(@PathVariable Long memberId){
-//
-//        List<ReservationDto> li = reservationService.getReservation(memberId);
-//
-//        return new ResponseEntity<>(li, HttpStatus.OK);
-////        return ResponseEntity.created(li.getUri()).body(li.getOrderResource());
-//    }
+    /**
+     * 주문 조회
+     * 1. reservation_group 테이블에서 member_id 로 찾아서 List<ReservationGroup> 형식으로 리턴
+     */
+
+    @GetMapping("/reservation/{memberId}")
+    public ResponseEntity getReservation(@PathVariable Long memberId){
+
+        List<ReservationGroupDto> li = reservationService.getReservation(memberId);
+
+        return new ResponseEntity<>(li, HttpStatus.OK);
+//        return ResponseEntity.created(li.getUri()).body(li.getOrderResource());
+    }
 
 //    /**
 //     *  사장님 or 사용자의 주문 취소 버튼 클릭 후 후 -> 테이블 자체에서 삭제
