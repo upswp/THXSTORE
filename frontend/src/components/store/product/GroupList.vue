@@ -63,7 +63,8 @@ export default {
     box-shadow: 0 10px 10px rgba(0, 0, 0, 0.3);
   }
   @include pc {
-    box-shadow: 0 10px 10px rgba(0, 0, 0, 0.3);
+    width: 100%;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
   }
   @include mobile {
     width: 100%;
@@ -113,6 +114,9 @@ export default {
     -moz-animation: spin 1s ease;
     animation: spin 1s ease;
   }
+  @include pc {
+    text-align: right;
+  }
   @include mobile {
     text-align: right;
   }
@@ -137,9 +141,13 @@ export default {
 }
 
 .menu-group-header {
-  margin: 10px;
+  margin: 10px 3px;
   font-weight: bold;
   @include mobile {
+    padding-bottom: 10px;
+    border-bottom: 1px solid $gray400;
+  }
+  @include xs-mobile {
     padding-bottom: 10px;
     border-bottom: 1px solid $gray400;
   }
@@ -152,6 +160,15 @@ export default {
   padding: 5px;
 }
 .menu-group-items {
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2) inset;
+  padding: 10px 0;
+  @include lg-pc {
+    box-shadow: none;
+  }
+  @include pc {
+    overflow-y: scroll;
+    height: 110px;
+  }
   @include mobile {
     overflow-y: scroll;
     height: 110px;
