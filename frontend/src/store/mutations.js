@@ -5,6 +5,9 @@ export default {
   setUserInfo(state, userInfo) {
     state.userInfo = Object.assign(state.userInfo, userInfo);
   },
+  clearUserInfo(state) {
+    state.userInfo = {};
+  },
   setToken(state, token) {
     state.token = token;
   },

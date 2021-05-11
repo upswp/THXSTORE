@@ -38,6 +38,10 @@ const getTokenFromLocalStorage = () => {
   return null;
 };
 
+const clearLocalStorageItem = item => {
+  localStorage.setItem(item, '');
+};
+
 const saveSessionStorage = (key, value) => {
   sessionStorage.setItem(key, JSON.stringify(value));
 };
@@ -51,6 +55,8 @@ const deleteSessionStorage = key => {
 };
 
 export {
+  USER_INFO,
+  TOKEN,
   saveUserToLocalStorage,
   getUserFromLocalStorage,
   saveTokenToLocalStorage,
@@ -58,4 +64,5 @@ export {
   saveSessionStorage,
   getSessionStorage,
   deleteSessionStorage,
+  clearLocalStorageItem,
 };

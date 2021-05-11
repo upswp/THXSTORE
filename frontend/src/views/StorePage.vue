@@ -40,7 +40,6 @@ export default {
 
 <style lang="scss" scoped>
 .store-container {
-  min-height: 100vh;
   width: 100%;
   @include lg-pc {
     @include flexbox;
