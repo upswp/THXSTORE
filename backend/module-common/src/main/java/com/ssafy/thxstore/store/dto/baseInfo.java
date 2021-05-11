@@ -12,7 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class baseInfo {
-    Long id;
+    Long storeId;
     String name;
     String mainAddress;
     String subAddress;
@@ -23,4 +23,5 @@ public class baseInfo {
     String licenseImg;
     CheckStore checkStore;
     MemberRole role;
+    Boolean timeDealCheck;
 }

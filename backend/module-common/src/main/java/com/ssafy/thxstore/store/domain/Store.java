@@ -5,6 +5,7 @@ import com.ssafy.thxstore.member.domain.Member;
 import com.ssafy.thxstore.product.domain.ProductGroup;
 import com.ssafy.thxstore.product.domain.TimeDeal;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -61,7 +62,7 @@ public class Store {
 
     @ColumnDescription("스토어 휴무일")
     @Column(name = "close_day")
-    private String closedDay;
+    private String closeDay;
 
     @Lob
     @ColumnDescription("스토어 소개")
@@ -104,8 +105,12 @@ public class Store {
     @Column(name = "lon")
     private Double lon;
 
+    @ColumnDescription("타임딜 사용 여부 1 = 사용. 0 노사용.") // enum 수정
+    @Column(name = "time_deal_check")
+    private Boolean timeDealCheck;
+
     @Builder
-    public Store(Member member, String name, StoreCategory storeCategory, String phoneNum, String mainAddress, String subAddress,String openTime,String closeTime,String closedDay,String introduce, String thumbImg, String logo, String license, String licenseImg, CheckStore checkStore, Boolean closeStore,Double lat,Double lon){
+    public Store(Member member, String name, StoreCategory storeCategory, String phoneNum, String mainAddress, String subAddress,String openTime,String closeTime,String closeDay,String introduce, String thumbImg, String logo, String license, String licenseImg, CheckStore checkStore, Boolean closeStore,Double lat,Double lon, Boolean timeDealCheck){
         this.member = member;
         this.name = name;
         this.storeCategory = storeCategory;
@@ -114,7 +119,7 @@ public class Store {
         this.subAddress = subAddress;
         this.openTime = openTime;
         this.closeTime = closeTime;
-        this.closedDay = closedDay;
+        this.closeDay = closeDay;
         this.introduce = introduce;
         this.thumbImg = thumbImg;
         this.logo = logo;
@@ -124,6 +129,7 @@ public class Store {
         this.closeStore = closeStore;
         this.lat = lat;
         this.lon = lon;
+        this.timeDealCheck = timeDealCheck;
     }
 
     // todo 정리 필요
