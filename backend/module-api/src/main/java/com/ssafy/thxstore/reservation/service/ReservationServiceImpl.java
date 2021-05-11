@@ -5,9 +5,11 @@ import com.ssafy.thxstore.member.repository.MemberRepository;
 import com.ssafy.thxstore.product.domain.Product;
 import com.ssafy.thxstore.product.repository.ProductRepository;
 import com.ssafy.thxstore.reservation.domain.Reservation;
+import com.ssafy.thxstore.reservation.domain.ReservationGroup;
 import com.ssafy.thxstore.reservation.domain.ReservationStatus;
 import com.ssafy.thxstore.reservation.dto.ReservationDto;
 import com.ssafy.thxstore.reservation.dto.StatusRequest;
+import com.ssafy.thxstore.reservation.repository.ReservationGroupRepository;
 import com.ssafy.thxstore.reservation.repository.ReservationRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -24,51 +26,52 @@ import java.util.Optional;
 @RequiredArgsConstructor(access = AccessLevel.PUBLIC)
 public class ReservationServiceImpl implements ReservationService{
 
-    private final ProductRepository productRepository;
+    private final ReservationGroupRepository reservationGroupRepository;
     private final MemberRepository memberRepository;
     private final ReservationRepository reservationRepository;
 
 
     @Override
-    public void addReservation(List<ReservationDto> reservationList){
-        List<Reservation> reservationAntityList = new ArrayList<>();
+    public void addReservation(ReservationDto reservationList){
+        Reservation reservation = new Reservation();
+        List<ReservationGroup> reservationAntityList = new ArrayList<>();
+        Optional<Member> member = memberRepository.findById(reservationList.getUserId());
 
-        for(int i =0 ;i<reservationList.size();i++){
-            Optional<Product> product = productRepository.findById(reservationList.get(i).getProductId());
-            Optional<Member> member = memberRepository.findById(reservationList.get(i).getUserId());
+        System.out.println("이거 뭐냐고: "+ reservationList.getReservationGroups().size());
+        for(int i =0 ;i<reservationList.getReservationGroups().size();i++){
 
-            Reservation reservation = Reservation.builder().
-                    count(reservationList.get(i).getCount()).
-                    member(member.get()).
-                    product(product.get()).
-                    price(product.get().getPrice()).
-                    productName(reservationList.get(i).getProductname()).
-                    storeId(reservationList.get(i).getStoreId()).
-                    reservationStatus(reservationList.get(i).getReservationStatus()).
+            ReservationGroup reservationGroup = ReservationGroup.builder().
+                    count(reservationList.getReservationGroups().get(i).getCount()).
+                    reservation(Reservation.builder().member(member.get()).
+                            storeId(reservationList.getStoreId()).
+                            reservationStatus(reservationList.getReservationStatus()).
+                            reservationGroup(reservationAntityList).build()).
+                    price(reservationList.getReservationGroups().get(i).getPrice()).
+                    productName(reservationList.getReservationGroups().get(i).getProductName()).
                     build();
-            reservationAntityList.add(reservation);
+            reservationAntityList.add(reservationGroup);
         }
-        reservationRepository.saveAll(reservationAntityList);
+        reservationGroupRepository.saveAll(reservationAntityList);
     }
 
-    @Override
-    @Transactional
-    public List<ReservationDto> getReservation(Long memberId){
+//    @Override
+//    @Transactional
+//    public List<ReservationDto> getReservation(Long memberId){
+//
+//        List<ReservationDto> list = reservationRepository.findgetReservationlist(memberId);
+//
+//        return list;
+//    }
 
-        List<ReservationDto> list = reservationRepository.findgetReservationlist(memberId);
 
-        return list;
-    }
-
-
-    @Override
-    public void deleteReservation(Long memberId,Long storeId){
-//        Optional<Member> member = memberRepository.findById(memberId);
-        reservationRepository.deleteReservation(memberId,storeId);
-    }
-
-    @Override
-    public void statusUpdate(Long memberId, StatusRequest status){
-        reservationRepository.findReservation(memberId,status.getStoreId(),status.getReservationStatus().name());
-    }
+//    @Override
+//    public void deleteReservation(Long memberId,Long storeId){
+////        Optional<Member> member = memberRepository.findById(memberId);
+//        reservationRepository.deleteReservation(memberId,storeId);
+//    }
+//
+//    @Override
+//    public void statusUpdate(Long memberId, StatusRequest status){
+//        reservationRepository.findReservation(memberId,status.getStoreId(),status.getReservationStatus().name());
+//    }
 }

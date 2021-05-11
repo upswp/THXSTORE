@@ -8,6 +8,8 @@ import lombok.*;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -25,23 +27,13 @@ public class Reservation {
     @JoinColumn(name = "member_id")
     private Member member;
 
-    @ColumnDescription("주문 데이터 하나당 하나의 상품")
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "product_id")
-    private Product product;
-
-    @Column(name = "count")
-    private int count;
-
-    @Column(name = "price")
-    private int price;
-
-    @Column(name = "prodcut_name")
-    private String productName;
-
     @ColumnDescription("스토어 아이디로 각각의 장바구니 구분")
     @Column(name = "store_id")
     private Long storeId;
+
+    @ColumnDescription("양방향 맵핑으로 해당 reservation 에 대한 product 정보 추출 가능")
+    @OneToMany(mappedBy = "reservation", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<ReservationGroup> reservationGroup = new ArrayList<>();
 
     @ColumnDescription("기본,대기,승인,완료")
     @Enumerated(EnumType.STRING)
@@ -49,13 +41,10 @@ public class Reservation {
     private ReservationStatus reservationStatus;
 
     @Builder
-    public Reservation(Member member, Product product, int count, int price, String productName,Long storeId,ReservationStatus reservationStatus) {
+    public Reservation(Member member,Long storeId,ReservationStatus reservationStatus, List<ReservationGroup> reservationGroup) {
         this.member = member;
-        this.product = product;
-        this.count = count;
-        this.price = price;
-        this.productName = productName;
         this.storeId = storeId;
         this.reservationStatus = reservationStatus;
+        this.reservationGroup = reservationGroup;
     }
 }
