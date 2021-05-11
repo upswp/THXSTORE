@@ -8,11 +8,13 @@ import com.ssafy.thxstore.product.dto.*;
 import com.ssafy.thxstore.product.service.ProductService;
 import com.ssafy.thxstore.store.domain.Store;
 import com.ssafy.thxstore.store.dto.CreateStoreFileDto;
+import com.ssafy.thxstore.store.service.StoreService;
 import io.jsonwebtoken.Jwts;
 import lombok.RequiredArgsConstructor;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.*;
 
 import javax.xml.bind.DatatypeConverter;
@@ -30,6 +32,7 @@ public class ProductController {
     private final ProductService productService;
     private final AppProperties appProperties;
     private final ImageService imageService;
+    private final StoreService storeService;
 
 /* 판매자 스토어 페이지(메뉴 관리(1, 그룹)) */
 
@@ -136,13 +139,6 @@ public class ProductController {
         DetailProductDto detailProductDto = productService.findMenu(productId);
         return ResponseEntity.created(null).body(detailProductDto);
     }
-
-    /* 판매자 스토어 페이지(타임 딜) */
-
-
-
-
-
 
     /* etc */
     public String jwtToEmail(String authorization){
