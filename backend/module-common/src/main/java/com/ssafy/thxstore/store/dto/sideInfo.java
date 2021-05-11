@@ -15,6 +15,6 @@ public class sideInfo {
     String closeTime;
     String closeDay;
     String introduce;
-    String thumbnailImg;
+    String thumbImg;
     String logo;
 }

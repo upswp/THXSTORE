@@ -205,7 +205,7 @@ public class StoreService {
         TempStore tempStore = tempStoreRepository.findById(tempStoreId).get();
         Long storeId = tempStore.getStore().getId();
         Store store = storeRepository.findById(storeId).get();
-        store.setCheckStore(CheckStore.APPLICATION_FAILED);
+        store.setCheckStore(CheckStore.EDIT_FAILED);
         tempStoreRepository.deleteById(tempStoreId);
     }
 
