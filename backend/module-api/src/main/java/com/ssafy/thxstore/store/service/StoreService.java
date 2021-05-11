@@ -214,10 +214,9 @@ public class StoreService {
     }
 
     public DetailStoreResponse detailStoreResopnse(Store store) {
-//        DetailDto detailDto = null;
-      //  NormalDto normalDto = null;
         sideInfo sideInfo = modelMapper.map(store, sideInfo.class);
         baseInfo baseInfo = modelMapper.map(store, baseInfo.class);
+        baseInfo.setRole(store.getMember().getRole());
         DetailStoreResponse detailStoreResponse = DetailStoreResponse.builder()
                 .sideInfo(sideInfo)
                 .baseInfo(baseInfo)
