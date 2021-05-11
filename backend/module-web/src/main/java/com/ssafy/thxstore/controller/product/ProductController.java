@@ -8,11 +8,13 @@ import com.ssafy.thxstore.product.dto.*;
 import com.ssafy.thxstore.product.service.ProductService;
 import com.ssafy.thxstore.store.domain.Store;
 import com.ssafy.thxstore.store.dto.CreateStoreFileDto;
+import com.ssafy.thxstore.store.service.StoreService;
 import io.jsonwebtoken.Jwts;
 import lombok.RequiredArgsConstructor;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.*;
 
 import javax.xml.bind.DatatypeConverter;
@@ -30,6 +32,7 @@ public class ProductController {
     private final ProductService productService;
     private final AppProperties appProperties;
     private final ImageService imageService;
+    private final StoreService storeService;
 
 /* 판매자 스토어 페이지(메뉴 관리(1, 그룹)) */
 
@@ -148,5 +151,12 @@ public class ProductController {
     public String jwtToEmail(String authorization){
         return Jwts.parser().setSigningKey(DatatypeConverter.parseBase64Binary(appProperties.getAuth().getTokenSecret()))
                 .parseClaimsJws(authorization).getBody().getSubject();
+    }
+
+
+    //자정 시간에 타임딜 초기화 1-> 0. 초 분 시간 일 월 요일. 매일 0시간에 초기화
+    @Scheduled(cron = "0 0 0 * * *")
+    public void timeDealInit(){
+        storeService.timeDealInit();
     }
 }

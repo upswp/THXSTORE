@@ -57,6 +57,7 @@ public class StoreService {
                 .build();
 
        Store store = modelMapper.map(createStoreDto, Store.class);
+       store.setTimeDealCheck(false);
        storeRepository.save(store);
        return store;
     }
@@ -222,5 +223,10 @@ public class StoreService {
                 .baseInfo(baseInfo)
                 .build();
         return detailStoreResponse;
+    }
+
+    // 자정 타임딜 초기화
+    public void timeDealInit() {
+        storeRepository.updateStoreTimeDealCHeck();
     }
 }
