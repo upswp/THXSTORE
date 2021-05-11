@@ -5,7 +5,9 @@ import com.ssafy.thxstore.member.repository.MemberRepository;
 import com.ssafy.thxstore.product.domain.Product;
 import com.ssafy.thxstore.product.repository.ProductRepository;
 import com.ssafy.thxstore.reservation.domain.Reservation;
+import com.ssafy.thxstore.reservation.domain.ReservationStatus;
 import com.ssafy.thxstore.reservation.dto.ReservationDto;
+import com.ssafy.thxstore.reservation.dto.StatusRequest;
 import com.ssafy.thxstore.reservation.repository.ReservationRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -65,4 +67,8 @@ public class ReservationServiceImpl implements ReservationService{
         reservationRepository.deleteReservation(memberId,storeId);
     }
 
+    @Override
+    public void statusUpdate(Long memberId, StatusRequest status){
+        reservationRepository.findReservation(memberId,status.getStoreId(),status.getReservationStatus().name());
+    }
 }
