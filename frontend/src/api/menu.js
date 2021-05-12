@@ -1,6 +1,7 @@
 import { createInstance, createInstanceWithToken } from '@/api';
 
 const privateAPI = createInstanceWithToken('api/store/group/product/');
+const privateAPI2 = createInstanceWithToken('api/store/group/productlist/');
 
 /**
  * 메뉴 정보
@@ -28,7 +29,7 @@ const privateAPI = createInstanceWithToken('api/store/group/product/');
  * @param {number} groupId
  * @returns {Promise<Array<Menu>>} totalMenuGroup
  */
-const getMenuListByGroup = groupId => privateAPI.get(`productlist/${groupId}`);
+const getMenuListByGroup = groupId => privateAPI2.get(`${groupId}`);
 /**
  * 메뉴 상세 정보 불러오기
  * @typedef {function} getMenu

@@ -1,7 +1,7 @@
 <template>
   <div v-if="loaded" class="store-product-container">
     <group-list :group-list="groupList" @updateGroupList="loadGroupList" @pointing="pointGroup"></group-list>
-    <group-detail v-if="!editable" @toggleEdit="toggleEdit" @pointing="pointMenu"></group-detail>
+    <group-detail v-if="!editable" :group-id="groupId" @toggleEdit="toggleEdit" @pointing="pointMenu"></group-detail>
     <group-edit v-else :product-id="productId" :group-id="groupId" @toggleEdit="toggleEdit"></group-edit>
   </div>
 </template>

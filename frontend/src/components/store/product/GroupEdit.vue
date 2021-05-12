@@ -111,7 +111,7 @@ export default {
         frm.append('name', this.menu.name);
         frm.append('price', this.menu.price);
         frm.append('amount', this.menu.amount);
-        // frm.append('introduce', this.menu.introduce);
+        frm.append('introduce', this.menu.introduce);
         frm.append('productImg', this.menuFile);
         await registerMenuByGroup(frm);
         this.setSpinnerState(false);
@@ -130,7 +130,7 @@ export default {
         if (this.origin.name !== this.menu.name) frm.append('name', this.menu.name);
         if (this.origin.price !== this.menu.price) frm.append('price', this.menu.price);
         if (this.origin.amount !== this.menu.amount) frm.append('amount', this.menu.amount);
-        // if (this.origin.introduce !== this.menu.introduce) frm.append('introduce', this.menu.introduce);
+        if (this.origin.introduce !== this.menu.introduce) frm.append('introduce', this.menu.introduce);
         if (this.menuFile) frm.append('productImg', this.menuFile);
 
         await updateMenu(frm);

@@ -187,6 +187,7 @@ export default {
   }
 }
 .group-name-label {
+  cursor: pointer;
   display: inline-flex;
   vertical-align: center;
   div {
@@ -194,7 +195,7 @@ export default {
     text-overflow: ellipsis;
     white-space: nowrap;
   }
-  width: 120px;
+  width: 110px;
   @include pc {
     width: 90%;
   }
