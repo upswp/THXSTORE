@@ -27,25 +27,30 @@ public class Review {
     @Column(name = "comment",length = 100)
     private String comment;
 
+    @ColumnDescription("memberId")
+    @Column(name = "member_id")
+    private Long memberId;
+
     @Column(name = "star")
     private int star;
 
+    @Column(name = "store_name")
+    private String storeName;
+
+    @Column(name = "store_id")
+    private Long storeId;
+
     @ColumnDescription("스토어 아이디로 각각의 장바구니 구분")
-    @Column(name = "order_time")
+    @Column(name = "write_time")
     private String dateTime;
 
-    @Column(name = "prodcut_name")
-    private String productName;
-
-    @ColumnDescription("Reservation에 대한 양방향 맵핑")
-    @OneToMany(mappedBy = "reservation", fetch = FetchType.LAZY)
-    private List<Reservation> reservations = new ArrayList<>();
-
     @Builder
-    public Review(String comment, int star, String dateTime, String productName) {
+    public Review(String comment, int star, String dateTime,Long memberId,String storeName,Long storeId) {
         this.comment = comment;
         this.star =star;
         this.dateTime = dateTime;
-        this.productName = productName;
+        this.memberId = memberId;
+        this.storeName =storeName;
+        this.storeId = storeId;
     }
 }

@@ -46,6 +46,14 @@ public class ReservationServiceImpl implements ReservationService{
 
         Optional<Member> member = memberRepository.findById(reservationList.getUserId());
 
+        Reservation reservation = Reservation.builder().
+                reservationStatus(ReservationStatus.DEFAULT).
+                storeId(reservationList.getStoreId()).
+                member(member.get()).
+                dateTime(dateFormat.format(DateTime.now().toDate()) + " " + time).build();
+
+        reservationRepository.save(reservation);
+
         for(int i =0 ;i<reservationList.getReservationGroups().size();i++){
 
             List<ReservationGroup> reservationAntityList = new ArrayList<>();
@@ -53,12 +61,7 @@ public class ReservationServiceImpl implements ReservationService{
                     storeId(reservationList.getStoreId()).
                     userId(reservationList.getUserId()).
                     count(reservationList.getReservationGroups().get(i).getCount()).
-                    reservation(Reservation.builder().
-                            member(member.get()).
-                            dateTime(dateFormat.format(DateTime.now().toDate()) + " " + time).
-                            storeId(reservationList.getStoreId()).
-                            reservationStatus(ReservationStatus.DEFAULT).
-                            reservationGroup(reservationAntityList).build()).
+                    reservation(reservation).
                     price(reservationList.getReservationGroups().get(i).getPrice()).
                     productName(reservationList.getReservationGroups().get(i).getProductName()).
                     build();
@@ -72,7 +75,7 @@ public class ReservationServiceImpl implements ReservationService{
     @Transactional
     public List<ReservationGroupDto> getReservation(Long Id,String type){
         List<ReservationGroupDto> reservationGroupDtoList = new LinkedList<>();
-        List<ReservationGroup> list = new LinkedList<>();
+        List<ReservationGroup> list;
         //dto 엔티티 매핑
         if(type == "member") {
             list = reservationGroupRepository.findReservationlistByMemberId(Id);

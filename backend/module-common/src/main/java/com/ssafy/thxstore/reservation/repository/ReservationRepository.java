@@ -4,6 +4,7 @@ import com.ssafy.thxstore.member.domain.Member;
 import com.ssafy.thxstore.reservation.domain.Reservation;
 import com.ssafy.thxstore.reservation.domain.ReservationGroup;
 import com.ssafy.thxstore.reservation.domain.ReservationStatus;
+import com.ssafy.thxstore.reservation.domain.Review;
 import com.ssafy.thxstore.reservation.dto.ReservationDto;
 import com.ssafy.thxstore.reservation.dto.StatusRequest;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -38,4 +39,7 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
     @Transactional
     @Query(value = "update reservation set status = :newStatus where member_id = :memberId and store_id = :storeId",nativeQuery = true)
     void findReservation(Long memberId, Long storeId , String newStatus);
+
+    @Query(value = "select * from reservation where review_id = :reviewId",nativeQuery = true)
+    Reservation findByreviewId(Long reviewId);
 }

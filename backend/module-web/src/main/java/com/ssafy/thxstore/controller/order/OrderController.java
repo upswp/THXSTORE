@@ -1,10 +1,8 @@
 package com.ssafy.thxstore.controller.order;
 
-import com.ssafy.thxstore.reservation.domain.ReservationGroup;
-import com.ssafy.thxstore.reservation.domain.ReservationStatus;
 import com.ssafy.thxstore.reservation.dto.ReservationDto;
 import com.ssafy.thxstore.reservation.dto.ReservationGroupDto;
-import com.ssafy.thxstore.reservation.dto.ReviewRequest;
+import com.ssafy.thxstore.reservation.dto.ReviewDto;
 import com.ssafy.thxstore.reservation.dto.StatusRequest;
 import com.ssafy.thxstore.reservation.service.ReservationService;
 import com.ssafy.thxstore.reservation.service.ReviewService;
@@ -114,16 +112,29 @@ public ResponseEntity<String> addReservation(@Valid @RequestBody ReservationDto 
     /**
      * 리뷰 생성 삭제 수정
      */
-    @PostMapping("/reservation")
-    public ResponseEntity<String> createReview(@RequestBody ReviewRequest reviewRequest){
+    @PostMapping("/reservation/review")
+    public ResponseEntity<String> createReview(@RequestBody ReviewDto reviewDto){
 
-        reviewService.createReview(reviewRequest);
+        reviewService.createReview(reviewDto);
 
         return new ResponseEntity<>("생성완료", HttpStatus.OK);
     }
-    /**
-     * 리뷰에 대한 권한 고민
-     */
+
+    @DeleteMapping("/reservation/review/{reviewId}")
+    public ResponseEntity<String> deleteReview(@PathVariable Long reviewId){
+
+        reviewService.deleteReview(reviewId);
+
+        return new ResponseEntity<>("삭제완료", HttpStatus.OK);
+    }
+
+    @PutMapping("/reservation/review/update/{reviewId}")
+    public ResponseEntity<String> updateReview(@PathVariable Long reviewId,@RequestBody ReviewDto reviewDto){
+
+        reviewService.updateReview(reviewId, reviewDto);
+
+        return new ResponseEntity<>("수정완료", HttpStatus.OK);
+    }
 
     /**
      * 사장님 답변
@@ -134,4 +145,21 @@ public ResponseEntity<String> addReservation(@Valid @RequestBody ReservationDto 
      * datetime 조회
      */
 
+    @GetMapping("/reservation/review/{memberId}")
+    public ResponseEntity getReviewBymember(@PathVariable Long memberId){
+
+        List<ReviewDto> ReviewList = reviewService.getReview(memberId,"member");
+
+        return new ResponseEntity<>(ReviewList, HttpStatus.OK);
+//        return ResponseEntity.created(li.getUri()).body(li.getOrderResource());
+    }
+
+    @GetMapping("/reservation/review/store/{storeId}")
+    public ResponseEntity getReviewByStore(@PathVariable Long storeId){
+
+        List<ReviewDto> ReviewList = reviewService.getReview(storeId,"store");
+
+        return new ResponseEntity<>(ReviewList, HttpStatus.OK);
+//        return ResponseEntity.created(li.getUri()).body(li.getOrderResource());
+    }
 }

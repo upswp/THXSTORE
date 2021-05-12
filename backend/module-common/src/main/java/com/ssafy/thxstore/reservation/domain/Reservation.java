@@ -11,10 +11,10 @@ import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Entity
 @Getter
-@Setter
 @NoArgsConstructor
 @EqualsAndHashCode(of = "id")
 public class Reservation {
@@ -28,8 +28,8 @@ public class Reservation {
     @JoinColumn(name = "member_id")
     private Member member;
 
-    @ColumnDescription("주문 데이터 여러개(하나의 주문) 당 연결되는 리뷰 한 개 - 나중에 변경가능")
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ColumnDescription("하나의 주문 당 연결되는 리뷰 한 개")
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "review_id")
     private Review review;
 
@@ -57,5 +57,13 @@ public class Reservation {
         this.storeId = storeId;
         this.reservationStatus = reservationStatus;
         this.reservationGroup = reservationGroup;
+    }
+
+    public void setReview(Review review) {
+        this.review = review;
+    }
+
+    public void deleteReview() {
+        this.review = null;
     }
 }
