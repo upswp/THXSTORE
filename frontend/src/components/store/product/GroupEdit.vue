@@ -85,12 +85,23 @@ export default {
       menuFile: '',
     };
   },
+  computed: {
+    validateForm() {
+      return (
+        this.menu.name !== '' &&
+        this.menu.price !== '' &&
+        this.menu.amount !== '' &&
+        this.menu.introduce !== '' &&
+        this.menu.menuFile !== ''
+      );
+    },
+  },
   async created() {
     if (this.productId === -1) return;
     try {
       const { data } = await getMenu(this.productId);
       this.origin = data;
-      console.log(data);
+      this.menu = Object.assign(this.menu, data);
     } catch (error) {
       console.log(error);
       alert('메뉴 상세 조회에 실패하였습니다.');
@@ -143,6 +154,11 @@ export default {
       }
     },
     submit() {
+      if (!this.validateForm) {
+        alert('모든 빈칸을 채워주세요');
+        return;
+      }
+
       if (this.productId === -1) this.createMenu();
       else this.updateMenu();
     },

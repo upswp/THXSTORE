@@ -54,7 +54,14 @@ export default {
       try {
         this.setSpinnerState(true);
         const { data } = await getMenuListByGroup(newValue);
-        this.menus = data;
+        this.menus = data.map(x =>
+          Object.assign(
+            {
+              editting: false,
+            },
+            x,
+          ),
+        );
       } catch (error) {
         console.log(error);
         alert('그룹 별 메뉴 조회에 실패했습니다.');
@@ -68,7 +75,14 @@ export default {
     try {
       this.setSpinnerState(true);
       const { data } = await getMenuListByGroup(this.groupId);
-      this.menus = data;
+      this.menus = data.map(x =>
+        Object.assign(
+          {
+            editting: false,
+          },
+          x,
+        ),
+      );
     } catch (error) {
       console.log(error);
       alert('그룹 별 메뉴 조회에 실패했습니다.');

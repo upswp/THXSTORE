@@ -39,8 +39,10 @@ export default {
   methods: {
     ...mapMutations(['setSpinnerState']),
     toggleEdit(e) {
-      if (e) this.menu = e;
-      else this.menu = '';
+      if (e) {
+        this.menu = e;
+        this.productId = this.menu.productId;
+      } else this.menu = '';
       this.editable = !this.editable;
     },
     async loadGroupList() {

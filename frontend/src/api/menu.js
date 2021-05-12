@@ -51,7 +51,7 @@ const registerMenuByGroup = menuData => privateAPI.post('', menuData);
  * @param {Menu} menuData
  * @returns {Promise<Boolean>} isUpdated
  */
-const updateMenu = menuData => privateAPI.patch('', groupData);
+const updateMenu = menuData => privateAPI.patch('', menuData);
 
 /**
  * 메뉴 삭제하기
