@@ -38,8 +38,6 @@ private final ReservationService reservationService;
              * [{불닭 ,},{},{}] -> 그룹 엔티티 하나 만들고 연결하자   --  list  -- dto로 전할때는 build로 넣어줘
      *
      * },
- *
- *
  * ]
  */
 @PostMapping("/reservation")
@@ -64,18 +62,19 @@ public ResponseEntity<String> addReservation(@Valid @RequestBody ReservationDto 
 //        return ResponseEntity.created(li.getUri()).body(li.getOrderResource());
     }
 
-//    /**
-//     *  사장님 or 사용자의 주문 취소 버튼 클릭 후 후 -> 테이블 자체에서 삭제
-//     */
-//
-//    @DeleteMapping("/reservation/{memberId}/{storeId}")
-//    public ResponseEntity deleteReservation(@PathVariable Long memberId,@PathVariable Long storeId){
-//
-//        reservationService.deleteReservation(memberId,storeId);
-//
-//        return new ResponseEntity<>("주문 취소 되었습니다.", HttpStatus.OK);
-////        return ResponseEntity.created(li.getUri()).body(li.getOrderResource());
-//    }
+    /**
+     *  사장님 or 사용자의 주문 취소 버튼 클릭 후 후 -> 테이블 자체에서 삭제
+     *  member_id와 store_id 로 reservation 테이블에서 삭제한다.
+     */
+
+    @DeleteMapping("/reservation/{memberId}/{storeId}")
+    public ResponseEntity deleteReservation(@PathVariable Long memberId,@PathVariable Long storeId){
+
+        reservationService.deleteReservation(memberId,storeId);
+
+        return new ResponseEntity<>("주문 취소 되었습니다.", HttpStatus.OK);
+//        return ResponseEntity.created(li.getUri()).body(li.getOrderResource());
+    }
 
 
 //    /**
@@ -108,5 +107,13 @@ public ResponseEntity<String> addReservation(@Valid @RequestBody ReservationDto 
     /**
      * 리뷰 조회 -> 내 리뷰 조회, 스토어의 리뷰 조회 받는 형식 -> 사용자의아이디 글내용 별점 int
      * datetime 조회
+     */
+
+    /**
+     * 타임딜 관련해서 채크 여러개 했을 때 구매가 불가능한 품목만 리턴
+     */
+
+    /**
+     * 사장님 입장에서 조회
      */
 }

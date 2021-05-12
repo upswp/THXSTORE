@@ -26,8 +26,12 @@ public class ReservationGroup {
     @JoinColumn(name = "reservation_id")
     private Reservation reservation;
 
-    @Column(name = "userId")
+    @Column(name = "user_id")
     private Long userId;
+
+    @ColumnDescription("삭제 시 필요 연관관계 없음")
+    @Column(name = "store_id")
+    private Long storeId;
 
     @Column(name = "count")
     private int count;
@@ -43,8 +47,9 @@ public class ReservationGroup {
     private ReservationStatus reservationStatus;
 
     @Builder
-    public ReservationGroup(Reservation reservation, int count, int price, String productName,Long userId,ReservationStatus reservationStatus) {
+    public ReservationGroup(Reservation reservation, int count, int price, String productName,Long userId,ReservationStatus reservationStatus,Long storeId) {
         this.userId = userId;
+        this.storeId = storeId;
         this.reservation = reservation;
         this.count = count;
         this.price = price;
@@ -52,9 +57,9 @@ public class ReservationGroup {
         this.reservationStatus = reservationStatus;
     }
 
-    public ReservationGroup(int count, int price, String productName,Long userId,ReservationStatus reservationStatus) {
+    public ReservationGroup(Reservation reservation,int count, int price, String productName,Long userId,ReservationStatus reservationStatus) {
         this.userId = userId;
-//        this.reservation = reservation;
+        this.reservation = reservation;
         this.count = count;
         this.price = price;
         this.productName = productName;
