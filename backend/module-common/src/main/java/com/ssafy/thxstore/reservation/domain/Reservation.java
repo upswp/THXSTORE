@@ -32,7 +32,7 @@ public class Reservation {
     private Long storeId;
 
     @ColumnDescription("양방향 맵핑으로 해당 reservation 에 대한 product 정보 추출 가능")
-    @OneToMany(mappedBy = "reservation", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "reservation", fetch = FetchType.LAZY)
     private List<ReservationGroup> reservationGroup = new ArrayList<>();
 
     @ColumnDescription("기본,대기,승인,완료")

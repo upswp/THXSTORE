@@ -45,9 +45,6 @@ private final ReservationService reservationService;
 @PostMapping("/reservation")
 public ResponseEntity<String> addReservation(@Valid @RequestBody ReservationDto reservation){
 
-    System.out.println("받아온거 확인");
-    System.out.println("유저아이디: " + reservation.getUserId());
-    System.out.println("주문 그룹: " + reservation.getReservationGroups());
     reservationService.addReservation(reservation);
 
     return new ResponseEntity<>("생성완료", HttpStatus.OK);

@@ -38,7 +38,6 @@ public class ReservationServiceImpl implements ReservationService{
     public void addReservation(ReservationDto reservationList){
         Optional<Member> member = memberRepository.findById(reservationList.getUserId());
 
-        System.out.println("이거 뭐냐고: "+ reservationList.getReservationGroups().size());
         for(int i =0 ;i<reservationList.getReservationGroups().size();i++){
 
             List<ReservationGroup> reservationAntityList = new ArrayList<>();
@@ -86,7 +85,7 @@ public class ReservationServiceImpl implements ReservationService{
 ////        Optional<Member> member = memberRepository.findById(memberId);
 //        reservationRepository.deleteReservation(memberId,storeId);
 //    }
-//
+
 //    @Override
 //    public void statusUpdate(Long memberId, StatusRequest status){
 //        reservationRepository.findReservation(memberId,status.getStoreId(),status.getReservationStatus().name());
