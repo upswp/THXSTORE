@@ -4,7 +4,6 @@ const STORE_ID = 'ThxStoreage-V1-S';
 // 인코딩, 디코딩 함수
 const makeIncodeValue = (key, value) => {
   const data = encodeURIComponent(JSON.stringify(value));
-  console.log(data);
   localStorage.setItem(key, btoa(data));
 };
 

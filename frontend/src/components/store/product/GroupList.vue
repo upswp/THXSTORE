@@ -2,14 +2,26 @@
   <aside class="store-product-group-list">
     <div class="menu-group-header">메뉴 그룹 관리</div>
     <ul class="menu-group-items">
-      <li
-        v-for="(group, index) in menuGroupList"
-        :ref="`group-name-${index}`"
-        :key="index"
-        class="group-name"
-        @click="activeItem(index)"
-      >
-        {{ group }}
+      <li v-for="(group, index) in menuGroupList" :ref="`group-name-${index}`" :key="index" class="group-name">
+        <span class="group-name-label" @click="activeItem(index)">
+          <div v-if="!group.selected">{{ group.name }}</div>
+          <input
+            v-else
+            v-model="group.name"
+            type="text"
+            class="group-name-input"
+            @keydown.enter="updateGroupName(group)"
+          />
+        </span>
+        <span v-show="!group.selected" class="group-name-revise" @click="group.selected = true">
+          <awesome icon="pencil-alt"></awesome>
+        </span>
+        <span v-show="group.selected" class="group-name-confirm" @click="updateGroupName(group)">
+          <awesome :icon="['far', 'check-circle']"></awesome>
+        </span>
+        <span class="group-name-delete" @click="removeGroup(group.groupId)">
+          <awesome icon="eraser"></awesome>
+        </span>
       </li>
     </ul>
     <div class="add-group-button">
@@ -26,13 +38,41 @@
 </template>
 
 <script>
+import { registerMenuGroup, updateMenuGroup, deleteMenuGroup } from '@/api/menuGroup';
+import { mapMutations } from 'vuex';
 export default {
+  props: {
+    groupList: {
+      type: Array,
+      default: () => [],
+      require: true,
+    },
+  },
   data() {
     return {
-      menuGroupList: ['group1', 'group2', 'group3', 'group4 group4 group4 group4 group4 group4 group4'],
+      menuGroupList: this.groupList.map(x =>
+        Object.assign(
+          {
+            selected: false,
+          },
+          x,
+        ),
+      ),
       newGroupName: '',
       active: 0,
     };
+  },
+  watch: {
+    groupList(newValue) {
+      this.menuGroupList = this.groupList.map(x =>
+        Object.assign(
+          {
+            selected: false,
+          },
+          x,
+        ),
+      );
+    },
   },
   mounted() {
     if (this.$refs[`group-name-0`]) {
@@ -40,14 +80,51 @@ export default {
     }
   },
   methods: {
-    addNewGroup() {
-      this.menuGroupList.push(this.newGroupName);
-      this.newGroupName = '';
+    ...mapMutations(['setSpinnerState']),
+    async addNewGroup() {
+      // this.grouList.push(this.newGroupName);
+      try {
+        this.setSpinnerState(true);
+        await registerMenuGroup(this.newGroupName);
+        this.newGroupName = '';
+        this.$emit('updateGroupList');
+      } catch (error) {
+        console.log(error);
+        this.setSpinnerState(false);
+        alert('새로운 그룹 생성에 실패했습니다.');
+      }
+    },
+    async removeGroup(groupId) {
+      try {
+        this.setSpinnerState(true);
+        await deleteMenuGroup(groupId);
+        this.$emit('updateGroupList');
+      } catch (error) {
+        console.log(error);
+        this.setSpinnerState(false);
+        alert('메뉴 그룹 삭제에 실패하였습니다.');
+      }
     },
     activeItem(index) {
       this.$refs[`group-name-${this.active}`][0].classList.toggle('active');
       this.$refs[`group-name-${index}`][0].classList.toggle('active');
       this.active = index;
+      this.$emit('pointing', index);
+    },
+    async updateGroupName(group) {
+      try {
+        this.setSpinnerState(true);
+        await updateMenuGroup({
+          groupId: group.groupId,
+          name: group.name,
+        });
+        group.selected = false;
+        this.$emit('updateGroupList');
+      } catch (error) {
+        console.log(error);
+        this.setSpinnerState(false);
+        alert('그룹 이름 변경에 실패하였습니다.');
+      }
     },
   },
 };
@@ -75,17 +152,23 @@ export default {
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
   }
 }
-
+.group-name-input {
+  width: 120px;
+  background: inherit;
+  border: none;
+  border-bottom: 1px solid white;
+  color: inherit;
+}
 .group-name {
   line-height: 22px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+
   padding: 4px;
   &:hover {
-    background-color: $blue200;
-    // color:rgb(90, 86, 119);
-    color: white;
+    .group-name-revise,
+    .group-name-delete,
+    .group-name-confirm {
+      display: inline;
+    }
   }
   &.active {
     background-color: $blue200 !important;
@@ -102,7 +185,25 @@ export default {
     border-radius: 50%;
     margin-right: 5px;
   }
-  cursor: pointer;
+}
+.group-name-label {
+  display: inline-flex;
+  vertical-align: center;
+  div {
+    overflow-x: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  width: 120px;
+  @include pc {
+    width: 90%;
+  }
+  @include mobile {
+    width: 90%;
+  }
+  @include xs-mobile {
+    width: 90%;
+  }
 }
 .add-group-button {
   cursor: pointer;
@@ -176,6 +277,23 @@ export default {
   @include xs-mobile {
     overflow-y: scroll;
     height: 110px;
+  }
+}
+.group-name-revise,
+.group-name-delete,
+.group-name-confirm {
+  cursor: pointer;
+  margin-left: 2px;
+  @include lg-pc {
+    display: none;
+  }
+  @include pc {
+    display: none;
+  }
+  &:hover {
+    svg {
+      transform: scale(1.1);
+    }
   }
 }
 </style>

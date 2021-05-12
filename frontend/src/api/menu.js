@@ -8,10 +8,20 @@ const privateAPI = createInstanceWithToken('api/store/group/product/');
  * @property {number} productId - 메뉴 아이디
  * @property {string} name - 메뉴 이름
  * @property {string} price - 메뉴 가격
+ * @property {string} introduce - 메뉴 소개
  * @property {string} productImg - 메뉴 사진
  * @property {string} amount - 메뉴 단위
  */
-
+/**
+ * 메뉴 등록 정보
+ * @typedef {object} AddMenu
+ * @property {number} groupId - 메뉴 아이디
+ * @property {string} name - 메뉴 이름
+ * @property {string} price - 메뉴 가격
+ *  * @property {string} introduce - 메뉴 소개
+ * @property {string} productImg - 메뉴 사진
+ * @property {string} amount - 메뉴 단위
+ */
 /**
  * 그룹 별 메뉴 목록 불러오기
  * @typedef {function} getMenuListByGroup
@@ -20,7 +30,7 @@ const privateAPI = createInstanceWithToken('api/store/group/product/');
  */
 const getMenuListByGroup = groupId => privateAPI.get(`productlist/${groupId}`);
 /**
- * 그룹 별 메뉴 목록 불러오기
+ * 메뉴 상세 정보 불러오기
  * @typedef {function} getMenu
  * @param {number} productId
  * @returns {Promise<Menu>} menu
@@ -29,7 +39,7 @@ const getMenu = productId => privateAPI.get(`${productId}`);
 /**
  * 그룹 별 메뉴 생성하기
  * @typedef {function} registerMenuByGroup
- * @param {Menu} menuData (productId 제외)
+ * @param {AddMenu} menuData
  * @returns {Promise<Boolean>} isRegistered
  */
 const registerMenuByGroup = menuData => privateAPI.post('', menuData);

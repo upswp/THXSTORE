@@ -1,8 +1,8 @@
 <template>
   <div v-if="loaded" class="store-info-container">
-    <label for="thumnail-image-upload">
+    <label for="thumbnail-image-upload">
       <img class="store-thumbnail-image" :src="thumbImg" />
-      <input id="thumnail-image-upload" type="file" class="thumnail-image-upload" @change="submitThumbnailImage" />
+      <input id="thumbnail-image-upload" type="file" class="thumbnail-image-upload" @change="submitThumbnailImage" />
     </label>
     <basic-info v-bind="baseInfo" :logo="sideInfo.logo"></basic-info>
     <additional-info :info="sideInfo" :store-id="storeId"></additional-info>
@@ -12,7 +12,7 @@
 <script>
 import BasicInfo from '@/components/store/info/BasicInfo';
 import AdditionalInfo from '@/components/store/info/AdditionalInfo';
-import { saveStoreIdToLocalStorage } from '@/utils/webStorage';
+
 import { getStoreInfo, updateStoreSideInfo } from '@/api/store';
 import { mapMutations } from 'vuex';
 export default {
@@ -38,7 +38,6 @@ export default {
       this.baseInfo = baseInfo;
       this.sideInfo = sideInfo;
       this.storeId = baseInfo.storeId;
-      saveStoreIdToLocalStorage(this.storeId);
       if (sideInfo.thumbImg) this.thumbImg = sideInfo.thumbImg;
       console.log('가게정보', data);
       this.loaded = true;
@@ -90,7 +89,7 @@ export default {
   object-position: center 50%;
   cursor: pointer;
 }
-.thumnail-image-upload {
+.thumbnail-image-upload {
   display: none;
 }
 </style>

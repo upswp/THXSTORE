@@ -19,6 +19,8 @@ import {
   faMapMarkerAlt,
   faPhoneAlt,
   faSignOutAlt,
+  faEraser,
+  faPencilAlt,
 } from '@fortawesome/free-solid-svg-icons';
 library.add(
   faStore,
@@ -36,6 +38,8 @@ library.add(
   faMapMarkerAlt,
   faPhoneAlt,
   faSignOutAlt,
+  faEraser,
+  faPencilAlt,
 );
 
 import {

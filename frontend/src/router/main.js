@@ -9,7 +9,7 @@ const routesForMain = [
     component: () => import('@/views/MainPage.vue'),
     children: [
       {
-        path: 'user',
+        path: '/user',
         name: 'user',
         component: () => import('@/views/UserPage.vue'),
       },
