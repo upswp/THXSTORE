@@ -9,7 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class sideInfo {
+public class SideInfo {
     String storeCategory;
     String openTime;
     String closeTime;

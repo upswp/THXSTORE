@@ -16,6 +16,6 @@ public class StoreChangedDto {
     String closeTime;
     String closeDay;
     String introduce;
-    MultipartFile thumbnailImg;
+    MultipartFile thumbImg;
     MultipartFile logo;
 }
