@@ -82,12 +82,19 @@
 
 <script>
 import SetRoadName from '@/components/common/SetRoadName.vue';
-import WaitingModal from '@/components/common/WaitingModal.vue';
-import ReturnModal from '@/components/common/ReturnModal.vue';
-import { registerStore, getCheckOfStore, deletePreStoreEnrollment, modifyStoreBaseInfo } from '@/api/seller';
+import WaitingModal from '@/components/user/modal/WaitingModal.vue';
+import ReturnModal from '@/components/user/modal/ReturnModal.vue';
+import {
+  registerStore,
+  getCheckOfStore,
+  deletePreStoreEnrollment,
+  modifyStoreBaseInfo,
+  deletePreStoreModification,
+} from '@/api/seller';
 import { validationPhoneNumber, validationComResNum } from '@/utils/validation';
 import { mapMutations } from 'vuex';
 import { handleException } from '@/utils/handler.js';
+import { findAddressAPI } from '@/api/map.js';
 
 export default {
   components: {
@@ -121,7 +128,7 @@ export default {
     validForm() {
       return (
         this.storeInfo.name !== '' &&
-        this.storeInfo.nomalAddress !== '' &&
+        this.storeInfo.mainAddress !== '' &&
         this.storeInfo.phoneNum !== '' &&
         this.storeInfo.license !== '' &&
         this.storeInfo.licenseImg !== ''
@@ -134,19 +141,22 @@ export default {
   methods: {
     ...mapMutations(['setSpinnerState']),
     async decideRole() {
-      console.log('decideRole함수 시작됩니다.');
-      const { data } = await getCheckOfStore('');
-      const role = data.baseInfo.role;
-      data.baseInfo.licenseImg = '';
-
-      if (role == 'ROLE_MANAGER') {
-        this.storeInfo = data.baseInfo;
-        this.modifyButtonLoad = true;
-        this.decideModificationModal();
-        // console.log('fileValue');
-      } else {
-        console.log('decideApplicationModal함수 실행');
-        this.decideApplicationModal();
+      try {
+        this.setSpinnerState(true);
+        const { data } = await getCheckOfStore('');
+        const role = data.baseInfo.role;
+        data.baseInfo.licenseImg = '';
+        this.setSpinnerState(false);
+        if (role == 'ROLE_MANAGER') {
+          this.storeInfo = data.baseInfo;
+          this.modifyButtonLoad = true;
+          this.decideModificationModal();
+        } else {
+          this.decideApplicationModal();
+        }
+      } catch (error) {
+        this.checkStore = '일반고객';
+        this.setSpinnerState(false);
       }
     },
 
@@ -159,12 +169,14 @@ export default {
         } else if (this.checkStore === 'APPLICATION_FAILED') {
           this.showReturnModal = true;
         }
+        this.setSpinnerState(false);
       } catch (error) {
-        this.checkStore = '일반고객';
+        this.setSpinnerState(false);
       }
     },
     async decideModificationModal() {
       try {
+        this.setSpinnerState(true);
         const { data } = await getCheckOfStore('');
         this.checkStore = data.baseInfo.checkStore;
         if (this.checkStore == 'EDIT_WAITING') {
@@ -172,20 +184,20 @@ export default {
         } else if (this.checkStore === 'EDIT_FAILED') {
           this.showReturnModal = true;
         }
+        this.setSpinnerState(false);
       } catch (error) {
         this.checkStore = '일반고객';
+        this.setSpinnerState(false);
       }
     },
     getComResNum(comResNum) {
       if (!comResNum) return comResNum;
       let res = validationComResNum(comResNum);
-      console.log('서버넘어가는값', res);
       this.storeInfo.license = res;
     },
     getPhoneNumber(phoneNumber) {
       if (!phoneNumber) return phoneNumber;
       let res = validationPhoneNumber(phoneNumber);
-      console.log('서버넘어가는값', res);
       this.storeInfo.phoneNum = res;
     },
 
@@ -197,51 +209,46 @@ export default {
     rewriteStoreEnrollment() {
       this.showReturnModal = false;
       this.checkStore = '';
-      deletePreStoreEnrollment();
-      console.log('삭제요청했어요.');
+      const role = this.storeInfo.role;
+      if (role == 'ROLE_MANAGER') {
+        deletePreStoreModification();
+      } else {
+        deletePreStoreEnrollment();
+      }
     },
     async submitForm() {
-      // try {
-      if (!this.validForm) {
-        alert('항목을 모두 채워주세요');
-      } else {
-        // this.setSpinnerState(true);
-        const formData = new FormData();
-        for (const key in this.storeInfo) {
-          formData.append(key, this.storeInfo[key]);
-        }
-        if (this.modifyButtonLoad == true) {
-          // formData.append('lat', 37.3132);
-          // formData.append('lon', 127.132);
-          formData.delete('checkStore');
-          formData.delete('role');
-          formData.delete('id');
-          formData.delete('lat');
-          formData.delete('lon');
-          formData.append('lat', 51);
-          formData.append('lon', 4);
-          formData.append('storeId', this.storeInfo.id);
-          await modifyStoreBaseInfo(formData);
-          console.log('수정버튼 눌러서 함수실행합니다.');
+      try {
+        if (!this.validForm) {
+          alert('항목을 모두 채워주세요');
         } else {
-          await registerStore(formData);
+          this.setSpinnerState(true);
+          const { data } = await findAddressAPI(this.storeInfo.mainAddress);
+          this.storeInfo.lon = data.documents[0].x;
+          this.storeInfo.lat = data.documents[0].y;
+          const formData = new FormData();
+          for (const key in this.storeInfo) {
+            formData.append(key, this.storeInfo[key]);
+          }
+          if (this.modifyButtonLoad == true) {
+            formData.delete('checkStore');
+            formData.delete('role');
+            await modifyStoreBaseInfo(formData);
+          } else {
+            await registerStore(formData);
+            this.setSpinnerState(false);
+          }
+          this.setSpinnerState(false);
+          this.$emit('changeTab', 'UserProfile');
         }
+      } catch (error) {
+        alert('스토어 등록에 문제가 생겼습니다. 다시 시도해주세요.');
         this.setSpinnerState(false);
-        //
-        // console.log(res);
-
-        this.$emit('changeTab', 'UserProfile');
       }
-      // } catch (error) {
-      // alert('스토어 등록에 문제가 생겼습니다. 다시 시도해주세요.');
-      // }
     },
     insertedFile(event) {
       const file = event.target.files[0];
-      console.log('새 파일file:', file);
       // this.licenseImg = URL.createObjectURL(file);
       this.storeInfo.licenseImg = file;
-      console.log('라이센스이미지', this.storeInfo.licenseImg);
       const fileValue = file.name;
       this.fileValue = fileValue;
 

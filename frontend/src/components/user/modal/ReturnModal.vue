@@ -35,13 +35,10 @@
 </template>
 
 <script>
-import { deletePreStoreEnrollment } from '@/api/seller.js';
 export default {
   methods: {
     async closeModal() {
       this.$emit('close');
-      // await deletePreStoreEnrollment();
-      // console.log('삭제요청했어요.');
     },
   },
 };

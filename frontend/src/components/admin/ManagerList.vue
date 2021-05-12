@@ -16,11 +16,9 @@
         </div>
         <div class="manager-info-bottom">
           <div class="info-label">스토어 명:</div>
-          <!-- <div class="info-data">{{ storeNameArr[order] }}</div> -->
           <div class="info-data">{{ storeNormalInfo[order].name }}</div>
           <div class="info-label">전화번호:</div>
           <div class="info-data">{{ storeNormalInfo[order].phoneNum }}</div>
-          <!-- <div class="info-data">{{ phoneNumArr[order] }}</div> -->
           <div class="info-label">스토어 주소:</div>
           <div class="info-data">
             {{ storeNormalInfo[order].mainAddress }} <br />
@@ -73,47 +71,42 @@ export default {
     showStoreEnrollmentAndModificationList(newValue, oldValue) {
       if (newValue === oldValue) return;
       if (newValue === 'applyStoreEnrollment') {
-        console.log('신청목록이 보여진다.');
         this.getStoreListforEnroll();
-      }
-      // console.log('옵션버튼이 실행된다.');
-      else {
-        console.log('수정목록이 보여진다.');
+      } else {
         this.getStoreListforModify();
       }
     },
   },
   created() {
-    // if (this.showStoreEnrollmentAndModificationList === 'modifyStoreEnrollment') {
-    //   console.log('수정 목록');
-    //   // this.getStoreModifyList();
-    // } else {
-    //   console.log('신청 목록');
-    // }
     this.getStoreListforEnroll();
   },
   methods: {
     ...mapMutations(['setSpinnerState']),
     async getStoreListforEnroll() {
-      this.resetData();
-      this.setSpinnerState(true);
-      const { data } = await getStoreEnrollmentList();
-      this.setSpinnerState(false);
-      console.log('신청목록 data:', data);
-      this.storeNormalInfo = data;
-      if (this.storeNormalInfo.length != 0) {
-        this.isListBe = true;
+      try {
+        this.resetData();
+        this.setSpinnerState(true);
+        const { data } = await getStoreEnrollmentList();
+        this.setSpinnerState(false);
+        this.storeNormalInfo = data;
+        if (this.storeNormalInfo.length != 0) {
+          this.isListBe = true;
+        }
+      } catch (error) {
+        this.setSpinnerState(false);
       }
     },
     async getStoreListforModify() {
-      this.setSpinnerState(true);
-      const { data } = await getStoreModifyList();
-      this.setSpinnerState(false);
-      console.log('수정목록', data);
-
-      this.storeNormalInfo = data;
-      if (this.storeNormalInfo.length != 0) {
-        this.isListBe = true;
+      try {
+        this.setSpinnerState(true);
+        const { data } = await getStoreModifyList();
+        this.setSpinnerState(false);
+        this.storeNormalInfo = data;
+        if (this.storeNormalInfo.length != 0) {
+          this.isListBe = true;
+        }
+      } catch (error) {
+        this.setSpinnerState(false);
       }
     },
     clickNameList(index) {
@@ -154,11 +147,6 @@ export default {
         this.isListBe = false;
       }
       this.order = 0;
-      // this.resetData();
-      // this.getstoreList();
-      // }
-
-      //
     },
     resetData() {
       this.storeNormalInfo = [];
