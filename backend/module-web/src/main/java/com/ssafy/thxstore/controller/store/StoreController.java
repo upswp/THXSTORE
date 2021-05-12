@@ -2,8 +2,11 @@ package com.ssafy.thxstore.controller.store;
 
 import com.ssafy.thxstore.controller.config.AppProperties;
 import com.ssafy.thxstore.image.service.ImageService;
+import com.ssafy.thxstore.product.domain.Product;
 import com.ssafy.thxstore.product.domain.TimeDeal;
+import com.ssafy.thxstore.product.dto.AllProductListResponse;
 import com.ssafy.thxstore.product.dto.TimeDealCreateDto;
+import com.ssafy.thxstore.product.dto.TimeDealProductResponse;
 import com.ssafy.thxstore.store.domain.CheckStore;
 import com.ssafy.thxstore.store.domain.Store;
 import com.ssafy.thxstore.store.domain.TempStore;
@@ -137,29 +140,24 @@ public class StoreController {
 
 
     /* 판매자 스토어 페이지(타임 딜) */
-    // todo next work
     @GetMapping("/timedeal/{storeId}")  // 타임딜 조회
     public ResponseEntity timeDealList(@RequestHeader String authorization,@PathVariable Long storeId){
-// String email = jwtToEmail(authorization);
-//        storeService.editConfirm(email);
-        Optional<TimeDeal> timeDeal = storeService.timeDealList(storeId);
+        List<TimeDealProductResponse> timeDeal = storeService.timeDealList(storeId);
         return ResponseEntity.created(null).body(timeDeal);
-    } // test 필요.
+    }
 
     @PostMapping("/timedeal/")  // 타임딜 생성
     public ResponseEntity timeDealCreate(@RequestHeader String authorization, @RequestBody TimeDealCreateDto timeDealCreateDto){
-
         storeService.timeDealCreate(timeDealCreateDto);
-//        String email = jwtToEmail(authorization);
-//        storeService.editConfirm(email);
         return ResponseEntity.created(null).body(HttpStatus.OK);
     }
 
-
-
-
-
-
+    // 모든 매뉴 반환
+    @GetMapping("/product/{storeId}")
+    public ResponseEntity productAll(@RequestHeader String authorization, @PathVariable Long storeId){
+        List<AllProductListResponse> product = storeService.productAll(storeId);
+        return ResponseEntity.created(null).body(product);
+    }
 
     @PostMapping("/test/")
     public ResponseEntity createStoreTest(@RequestBody CreateStoreDto createStoreDto){

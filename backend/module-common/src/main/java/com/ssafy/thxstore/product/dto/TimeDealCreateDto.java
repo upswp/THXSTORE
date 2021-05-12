@@ -13,5 +13,5 @@ import java.util.List;
 public class TimeDealCreateDto {
     Long storeId;
     String startTime;
-    List<TimeDealProductDto> timeDealProductDtos;
+    List<TimeDealProductDto> timeDealList;
 }

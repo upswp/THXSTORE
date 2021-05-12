@@ -5,9 +5,13 @@ import com.ssafy.thxstore.member.domain.Member;
 import com.ssafy.thxstore.member.domain.MemberRole;
 import com.ssafy.thxstore.member.repository.MemberRepository;
 import com.ssafy.thxstore.product.domain.Product;
+import com.ssafy.thxstore.product.domain.ProductGroup;
 import com.ssafy.thxstore.product.domain.TimeDeal;
+import com.ssafy.thxstore.product.dto.AllProductListResponse;
 import com.ssafy.thxstore.product.dto.TimeDealCreateDto;
 import com.ssafy.thxstore.product.dto.TimeDealProductDto;
+import com.ssafy.thxstore.product.dto.TimeDealProductResponse;
+import com.ssafy.thxstore.product.repository.ProductGroupRepository;
 import com.ssafy.thxstore.product.repository.ProductRepository;
 import com.ssafy.thxstore.product.repository.TimeDealRepository;
 import com.ssafy.thxstore.store.domain.CheckStore;
@@ -20,6 +24,7 @@ import com.ssafy.thxstore.store.repository.TempStoreRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeToken;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -43,6 +48,7 @@ public class StoreService {
     private final MemberRepository memberRepository;
     private final ProductRepository productRepository;
     private final TimeDealRepository timeDealRepository;
+    private final ProductGroupRepository productGroupRepository;
 
     private final ImageService imageService;
 
@@ -239,16 +245,24 @@ public class StoreService {
         storeRepository.updateStoreTimeDealCHeck();
     }
 
-    public Optional<TimeDeal> timeDealList(Long storeId) { // 타임 딜 반환.
-        Optional<TimeDeal> timeDeal = timeDealRepository.findByStoreId(storeId);
-        return timeDeal;
+    public List<TimeDealProductResponse> timeDealList(Long storeId) { // 타임 딜 반환.
+        List<TimeDeal> timeDeal = timeDealRepository.findAllByStoreId(storeId).get();
+        List<TimeDealProductResponse> timeDealProductResponses = new ArrayList<>();
+
+        for(int i = 0; i < timeDeal.size(); i++){
+            timeDealProductResponses.add(
+                    modelMapper.map(timeDeal.get(i).getProduct(), TimeDealProductResponse.class)
+            );
+            timeDealProductResponses.get(i).setProductId(timeDeal.get(i).getProduct().getId());
+        }
+        return timeDealProductResponses;
     }
 
     public void timeDealCreate(TimeDealCreateDto timeDealCreateDto) { // 타임 딜 생성
         // TODO 개선 방법을 생각해보자 rate와 stock를 timedeall 영역에 넣는 것이 더 효율적일까?
-         // 생성 방법? 흠
-        // timedeal에 넣고, product를 수정?
-        List<TimeDealProductDto> timeDealProductDtos = timeDealCreateDto.getTimeDealProductDtos();
+
+        List<TimeDealProductDto> timeDealProductDtos = timeDealCreateDto.getTimeDealList();
+
         Long storeId = timeDealCreateDto.getStoreId();
         Store store = storeRepository.findById(storeId).get();
         String startTime = timeDealCreateDto.getStartTime();
@@ -257,7 +271,7 @@ public class StoreService {
             Product product = productRepository.findById(timeDealProductDtos.get(i).getProductId()).get();
             product.setRate(timeDealProductDtos.get(i).getRate());
             product.setStock(timeDealProductDtos.get(i).getStock());
-            //
+
             TimeDeal timeDeal = TimeDeal.builder()
                     .product(product)
                     .startTime(startTime)
@@ -265,6 +279,19 @@ public class StoreService {
                     .build();
             timeDealRepository.save(timeDeal);
         }
+    }
 
+    // TODO : group에서 prodcut포함하도록 리펙토링 필요
+    public List<AllProductListResponse> productAll(Long storeId) {
+        List<ProductGroup> productGroup = productGroupRepository.findAllByStoreId(storeId).get();
+
+        List<Product> productList = new ArrayList<>();
+        for(int i = 0; i < productGroup.size(); i++){
+            Long groupId = productGroup.get(i).getId();
+            productList.addAll(productRepository.findAllByProductGroupId(groupId).get());
+        }
+        List<AllProductListResponse> allProductListResponses = modelMapper.map(productList, new TypeToken<List<AllProductListResponse>>(){}.getType());
+
+        return allProductListResponses;
     }
 }
