@@ -42,6 +42,7 @@ public class ReservationServiceImpl implements ReservationService{
 
             List<ReservationGroup> reservationAntityList = new ArrayList<>();
             ReservationGroup reservationGroup = ReservationGroup.builder().
+                    storeId(reservationList.getStoreId()).
                     reservationStatus(reservationList.getReservationStatus()).
                     userId(reservationList.getUserId()).
                     count(reservationList.getReservationGroups().get(i).getCount()).
@@ -80,11 +81,12 @@ public class ReservationServiceImpl implements ReservationService{
     }
 
 
-//    @Override
-//    public void deleteReservation(Long memberId,Long storeId){
-////        Optional<Member> member = memberRepository.findById(memberId);
-//        reservationRepository.deleteReservation(memberId,storeId);
-//    }
+    @Override
+    @Transactional
+    public void deleteReservation(Long memberId,Long storeId){
+        List<ReservationGroup> member = reservationGroupRepository.findAllByUserIdAndStoreId(storeId,memberId);
+        reservationGroupRepository.deleteAll(member);
+    }
 
 //    @Override
 //    public void statusUpdate(Long memberId, StatusRequest status){

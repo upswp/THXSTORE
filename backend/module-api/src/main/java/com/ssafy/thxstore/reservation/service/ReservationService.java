@@ -11,7 +11,7 @@ import java.util.List;
 public interface ReservationService {
     void addReservation(ReservationDto reservationList);
     List<ReservationGroupDto> getReservation(Long memberId);
-//    void deleteReservation(Long memberId,Long storeId);
+    void deleteReservation(Long memberId,Long storeId);
 //    void statusUpdate(Long memberId, StatusRequest status);
 
 
