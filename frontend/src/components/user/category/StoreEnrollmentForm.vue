@@ -139,7 +139,7 @@ export default {
     this.decideRole();
   },
   methods: {
-    ...mapMutations(['setSpinnerState']),
+    ...mapMutations(['setSpinnerState', 'setUserInfo']),
     async decideRole() {
       try {
         this.setSpinnerState(true);
@@ -148,6 +148,7 @@ export default {
         data.baseInfo.licenseImg = '';
         this.setSpinnerState(false);
         if (role == 'ROLE_MANAGER') {
+          this.setUserInfo({ role: 'ROLE_MANAGER' });
           this.storeInfo = data.baseInfo;
           this.modifyButtonLoad = true;
           this.decideModificationModal();
