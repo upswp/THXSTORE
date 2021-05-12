@@ -16,4 +16,5 @@ export default {
   token: getTokenFromLocalStorage() || '',
   mainDrawerOpen: false,
   spinnerOn: false,
+  storeId: null,
 };

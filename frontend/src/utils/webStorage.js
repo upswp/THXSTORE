@@ -1,6 +1,6 @@
 const USER_INFO = 'ThxStorage-V1-U';
 const TOKEN = 'ThxStorage-V1-T';
-
+const STORE_ID = 'ThxStoreage-V1-S';
 // 인코딩, 디코딩 함수
 const makeIncodeValue = (key, value) => {
   const data = encodeURIComponent(JSON.stringify(value));
@@ -38,6 +38,18 @@ const getTokenFromLocalStorage = () => {
   return null;
 };
 
+// 로컬스토리지 관련 함수(user)
+const saveStoreIdToLocalStorage = storeId => {
+  makeIncodeValue(STORE_ID, storeId);
+};
+
+const getStoreIdFromLocalStorage = () => {
+  if (localStorage.getItem(STORE_ID)) {
+    return returnDecodeValue(localStorage.getItem(STORE_ID));
+  }
+  return null;
+};
+
 const clearLocalStorageItem = item => {
   localStorage.setItem(item, '');
 };
@@ -61,6 +73,8 @@ export {
   getUserFromLocalStorage,
   saveTokenToLocalStorage,
   getTokenFromLocalStorage,
+  saveStoreIdToLocalStorage,
+  getStoreIdFromLocalStorage,
   saveSessionStorage,
   getSessionStorage,
   deleteSessionStorage,

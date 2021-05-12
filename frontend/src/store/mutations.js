@@ -17,4 +17,7 @@ export default {
   setSpinnerState(state, status) {
     state.spinnerOn = status;
   },
+  setStoreId(state, storeId) {
+    state.storeId = storeId;
+  },
 };

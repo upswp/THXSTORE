@@ -12,6 +12,7 @@
 <script>
 import BasicInfo from '@/components/store/info/BasicInfo';
 import AdditionalInfo from '@/components/store/info/AdditionalInfo';
+import { saveStoreIdToLocalStorage } from '@/utils/webStorage';
 import { getStoreInfo, updateStoreSideInfo } from '@/api/store';
 import { mapMutations } from 'vuex';
 export default {
@@ -37,7 +38,8 @@ export default {
       this.baseInfo = baseInfo;
       this.sideInfo = sideInfo;
       this.storeId = baseInfo.storeId;
-      this.thumbImg = sideInfo.thumbImg;
+      saveStoreIdToLocalStorage(this.storeId);
+      if (sideInfo.thumbImg) this.thumbImg = sideInfo.thumbImg;
       console.log('가게정보', data);
       this.loaded = true;
     } catch (error) {
