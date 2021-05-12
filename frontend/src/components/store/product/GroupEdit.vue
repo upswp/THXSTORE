@@ -1,59 +1,62 @@
 <template>
   <div class="edit-container">
-    <section class="edit-wrapper">
-      <label for="upload-button" class="upload-button-wrapper">
-        <img :src="menu.productImg" class="menu-image" />
-        <input id="upload-button" type="file" @change="uploadImg" />
-      </label>
-      <div class="menu-name">
-        <label for="menu-name-label">
-          <div class="menu-label">상품명</div>
-          <input
-            id="menu-name-label"
-            v-model="menu.name"
-            type="text"
-            class="menu-input"
-            placeholder="name"
-            maxlength="30"
-          />
+    <div class="edit-container-inner">
+      <div class="go-retrieve" @click="$emit('toggleEdit', false)">메뉴 조회로 이동하기</div>
+      <section class="edit-wrapper">
+        <label for="upload-button" class="upload-button-wrapper">
+          <img :src="menu.productImg" class="menu-image" />
+          <input id="upload-button" type="file" @change="uploadImg" />
         </label>
-      </div>
-      <div class="menu-price-amount">
-        <div class="menu-price">
-          <label for="menu-price-label">
-            <div class="menu-label">가격</div>
+        <div class="menu-name">
+          <label for="menu-name-label">
+            <div class="menu-label">상품명</div>
             <input
-              id="menu-price-label"
-              v-model="menu.price"
+              id="menu-name-label"
+              v-model="menu.name"
               type="text"
               class="menu-input"
-              placeholder="price"
-              maxlength="10"
+              placeholder="name"
+              maxlength="30"
             />
           </label>
         </div>
-        <div class="menu-amount">
-          <label for="menu-amount-label">
-            <div class="menu-label">단위</div>
-            <input
-              id="menu-amount-label"
-              v-model="menu.amount"
-              type="text"
-              class="menu-input"
-              placeholder="amount"
-              maxlength="20"
-            />
+        <div class="menu-price-amount">
+          <div class="menu-price">
+            <label for="menu-price-label">
+              <div class="menu-label">가격</div>
+              <input
+                id="menu-price-label"
+                v-model="menu.price"
+                type="text"
+                class="menu-input"
+                placeholder="price"
+                maxlength="10"
+              />
+            </label>
+          </div>
+          <div class="menu-amount">
+            <label for="menu-amount-label">
+              <div class="menu-label">단위</div>
+              <input
+                id="menu-amount-label"
+                v-model="menu.amount"
+                type="text"
+                class="menu-input"
+                placeholder="amount"
+                maxlength="20"
+              />
+            </label>
+          </div>
+        </div>
+        <div class="menu-intro">
+          <label for="menu-intro-label">
+            <div class="menu-label">메뉴 설명</div>
+            <textarea id="menu-intro-label" v-model="menu.introduce" class="menu-textarea" maxlength="300"></textarea>
           </label>
         </div>
-      </div>
-      <div class="menu-intro">
-        <label for="menu-intro-label">
-          <div class="menu-label">메뉴 설명</div>
-          <textarea id="menu-intro-label" v-model="menu.introduce" class="menu-textarea" maxlength="300"></textarea>
-        </label>
-      </div>
-      <button class="submit-button" @click="submit">완료</button>
-    </section>
+        <button class="submit-button" @click="submit">완료</button>
+      </section>
+    </div>
   </div>
 </template>
 <script>
@@ -172,6 +175,9 @@ export default {
   @include flexbox;
   @include justify-content(center);
   @include align-items(center);
+  @include pc {
+    width: 100%;
+  }
   @include mobile {
     font-size: 14px;
     width: 100%;
@@ -248,5 +254,18 @@ export default {
     background-color: $purple600;
     color: white;
   }
+}
+.go-retrieve {
+  width: clamp(300px, 100%, 600px);
+  cursor: pointer;
+  color: $gray400;
+  text-align: right;
+  margin: 10px 0 8px 0;
+  &:hover {
+    color: $navy400;
+  }
+}
+.edit-container-inner {
+  width: clamp(300px, 100%, 600px);
 }
 </style>

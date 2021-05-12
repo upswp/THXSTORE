@@ -1,7 +1,7 @@
 <template>
   <main class="store-product-detail">
     <div class="group-name-wrapper">
-      <div class="group-name">Group1</div>
+      <div class="group-name">{{ groupName }}</div>
       <div class="menu-add-button" @click="editOn(false)">새 메뉴 추가하기</div>
     </div>
     <div class="menu-container">
@@ -38,6 +38,11 @@ import { getMenuListByGroup, deleteMenu } from '@/api/menu';
 import { mapMutations } from 'vuex';
 export default {
   props: {
+    groupName: {
+      type: String,
+      default: '',
+      require: true,
+    },
     groupId: {
       type: Number,
       default: -1,
