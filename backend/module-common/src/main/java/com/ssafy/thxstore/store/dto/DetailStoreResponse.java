@@ -9,6 +9,6 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class DetailStoreResponse {
-    private sideInfo sideInfo;
-    private baseInfo baseInfo;
+    private SideInfo sideInfo;
+    private BaseInfo baseInfo;
 }

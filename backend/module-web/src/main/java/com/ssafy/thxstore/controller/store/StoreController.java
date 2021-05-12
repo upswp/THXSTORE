@@ -63,6 +63,13 @@ public class StoreController {
         return ResponseEntity.created(null).body(detailStoreResponse);
     }
 
+    @GetMapping("/id") // 스토어 상세 조회
+    public ResponseEntity getStoreId(@RequestHeader String authorization){
+        String email = jwtToEmail(authorization);
+        Optional<Store> store = storeService.getStore(email);
+        return ResponseEntity.created(null).body(store.get().getId());
+    }
+
     @PatchMapping//스토어 정보 수정(개인)
     public ResponseEntity patchStore(@RequestHeader String authorization, @ModelAttribute StoreChangedDto storeChangedDto){
         String email = jwtToEmail(authorization);

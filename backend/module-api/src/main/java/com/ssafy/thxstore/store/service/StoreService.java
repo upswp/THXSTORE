@@ -95,10 +95,10 @@ public class StoreService {
             store.setCloseDay(storeChangedDto.getCloseDay());
         }else if(storeChangedDto.getIntroduce() != null){
             store.setIntroduce(storeChangedDto.getIntroduce());
-        }else if(storeChangedDto.getThumbnailImg() != null){
+        }else if(storeChangedDto.getThumbImg() != null){
             String imgProfile = null;
             try {
-                imgProfile = imageService.createImage(storeChangedDto.getThumbnailImg());
+                imgProfile = imageService.createImage(storeChangedDto.getThumbImg());
             }catch (IOException e) {
                 return null;
             }
@@ -229,8 +229,8 @@ public class StoreService {
     }
 
     public DetailStoreResponse detailStoreResopnse(Store store) {
-        sideInfo sideInfo = modelMapper.map(store, sideInfo.class);
-        baseInfo baseInfo = modelMapper.map(store, baseInfo.class);
+        SideInfo sideInfo = modelMapper.map(store, SideInfo.class);
+        BaseInfo baseInfo = modelMapper.map(store, BaseInfo.class);
         baseInfo.setRole(store.getMember().getRole());
         baseInfo.setStoreId(store.getId());
         DetailStoreResponse detailStoreResponse = DetailStoreResponse.builder()
