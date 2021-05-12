@@ -78,6 +78,7 @@ public class ProductService {
                     .amount(productList.get(i).getAmount())
                     .rate(productList.get(i).getRate())
                     .stock(productList.get(i).getStock())
+                    .introduce(productList.get(i).getIntroduce())
                     .build());
         }
 
@@ -93,6 +94,7 @@ public class ProductService {
                 .productImg(productImg)
                 .amount(createMenuDto.getAmount())
                 .productGroup(productGroup)
+                .introduce(createMenuDto.getIntroduce())
                 .build();
 
         productRepository.save(product);
@@ -110,6 +112,7 @@ public class ProductService {
                 .amount(product.getAmount())
                 .rate(product.getRate())
                 .stock(product.getStock())
+                .introduce(product.getIntroduce())
                 .build();
 
         return detailProductDto;
@@ -124,6 +127,8 @@ public class ProductService {
             product.setAmount(editMenuDto.getAmount());
         }else if(editMenuDto.getPrice() != null){
             product.setPrice(editMenuDto.getPrice());
+        }else if(editMenuDto.getIntroduce() != null){
+            product.setIntroduce(editMenuDto.getIntroduce());
         }else if(editMenuDto.getProductImg() != null) {
             try {
                 productImg = imageService.createImage(editMenuDto.getProductImg());

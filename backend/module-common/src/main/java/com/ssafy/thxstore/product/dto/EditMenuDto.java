@@ -15,4 +15,5 @@ public class EditMenuDto {
     Integer price;
     MultipartFile productImg;
     String amount;
+    String introduce;
 }
