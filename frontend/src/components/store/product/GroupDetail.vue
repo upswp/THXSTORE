@@ -18,7 +18,7 @@
             </div>
             <div v-show="menu.editting" class="setting-wrapper">
               <div class="menu-update" @click="editOn(menu)">수정하기</div>
-              <div class="menu-delete">삭제하기</div>
+              <div class="menu-delete" @click="deleteItem(menu.productId)">삭제하기</div>
             </div>
             <div class="item-name">{{ menu.name }}</div>
             <div class="item-intro">{{ menu.introduce }}</div>
@@ -34,7 +34,7 @@
 </template>
 
 <script>
-import { getMenuListByGroup } from '@/api/menu';
+import { getMenuListByGroup, deleteMenu } from '@/api/menu';
 import { mapMutations } from 'vuex';
 export default {
   props: {
@@ -51,44 +51,12 @@ export default {
   },
   watch: {
     async groupId(newValue) {
-      try {
-        this.setSpinnerState(true);
-        const { data } = await getMenuListByGroup(newValue);
-        this.menus = data.map(x =>
-          Object.assign(
-            {
-              editting: false,
-            },
-            x,
-          ),
-        );
-      } catch (error) {
-        console.log(error);
-        alert('그룹 별 메뉴 조회에 실패했습니다.');
-      } finally {
-        this.setSpinnerState(false);
-      }
+      await this.loadMenuList(newValue);
     },
   },
   async created() {
     if (this.groupId === -1) return;
-    try {
-      this.setSpinnerState(true);
-      const { data } = await getMenuListByGroup(this.groupId);
-      this.menus = data.map(x =>
-        Object.assign(
-          {
-            editting: false,
-          },
-          x,
-        ),
-      );
-    } catch (error) {
-      console.log(error);
-      alert('그룹 별 메뉴 조회에 실패했습니다.');
-    } finally {
-      this.setSpinnerState(false);
-    }
+    await this.loadMenuList(this.groupId);
   },
   methods: {
     ...mapMutations(['setSpinnerState']),
@@ -98,6 +66,38 @@ export default {
     },
     toggleEditButton(menu) {
       menu.editting = !menu.editting;
+    },
+    async deleteItem(productId) {
+      try {
+        this.setSpinnerState(true);
+        await deleteMenu(productId);
+        await this.loadMenuList(this.groupId);
+      } catch (error) {
+        console.log(error);
+        alert('메뉴 삭제가 실패했습니다.');
+      } finally {
+        this.setSpinnerState(false);
+      }
+    },
+    async loadMenuList(groupId) {
+      try {
+        this.setSpinnerState(true);
+        const { data } = await getMenuListByGroup(groupId);
+        this.menus = data.map(x =>
+          Object.assign(
+            {
+              editting: false,
+            },
+            x,
+          ),
+        );
+        return data;
+      } catch (error) {
+        console.log(error);
+        alert('그룹 별 메뉴 조회에 실패했습니다.');
+      } finally {
+        this.setSpinnerState(false);
+      }
     },
   },
 };

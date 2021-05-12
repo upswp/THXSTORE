@@ -168,15 +168,17 @@ export default {
 
 <style lang="scss" scoped>
 .edit-container {
-  width: 100%;
+  width: calc(100% - 200px);
   @include flexbox;
   @include justify-content(center);
   @include align-items(center);
   @include mobile {
     font-size: 14px;
+    width: 100%;
   }
   @include xs-mobile {
     font-size: 12px;
+    width: 100%;
   }
 }
 .edit-image-wrapper {

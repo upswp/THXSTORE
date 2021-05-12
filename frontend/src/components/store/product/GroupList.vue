@@ -195,7 +195,7 @@ export default {
     text-overflow: ellipsis;
     white-space: nowrap;
   }
-  width: 110px;
+  width: 120px;
   @include pc {
     width: 90%;
   }
