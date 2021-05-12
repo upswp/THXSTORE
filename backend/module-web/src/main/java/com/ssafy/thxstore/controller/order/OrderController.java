@@ -79,7 +79,8 @@ public ResponseEntity<String> addReservation(@Valid @RequestBody ReservationDto 
 //        return new ResponseEntity<>("주문 취소 되었습니다.", HttpStatus.OK);
 ////        return ResponseEntity.created(li.getUri()).body(li.getOrderResource());
 //    }
-//
+
+
 //    /**
 //     * 1. 주문 테이블에 들어간 상황 사장님이 수령 확인 버튼 누르면 주문 status 변경 memberId(321) 님 이시죠? 물건 주고 버튼 누르면 주문 테이블에서 상태 변화
 //     * 2. DEFAULT -> ACCEPT 주문 승락
