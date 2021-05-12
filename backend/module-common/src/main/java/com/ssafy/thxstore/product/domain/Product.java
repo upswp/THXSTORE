@@ -53,12 +53,16 @@ public class Product {
     @ColumnDescription("재고")
     private Integer stock;
 
+    @Column(name = "introduce")
+    @ColumnDescription("상품 소개")
+    private String introduce;
+
 
 
 
 
     @Builder
-    public Product(ProductGroup productGroup, String name, Integer price, String productImg, String amount, Integer rate, Integer stock){
+    public Product(ProductGroup productGroup, String name, Integer price, String productImg, String amount, Integer rate, Integer stock, String introduce){
         this.productGroup = productGroup;
         this.name = name;
         this.price = price;
@@ -66,5 +70,6 @@ public class Product {
         this.amount = amount;
         this.rate = rate;
         this.stock = stock;
+        this.introduce = introduce;
     }
 }

@@ -16,4 +16,5 @@ public class AllProductListResponse {
     private String amount;
     private Integer rate;
     private Integer stock;
+    private String introduce;
 }

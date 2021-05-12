@@ -15,6 +15,7 @@ public class CreateMenuDto {
     Integer price;
     MultipartFile productImg;
     String amount;
+    String introduce;
     // Integer rate;
     // Integer stock;
 }

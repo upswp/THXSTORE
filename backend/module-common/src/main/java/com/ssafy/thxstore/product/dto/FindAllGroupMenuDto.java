@@ -16,4 +16,5 @@ public class FindAllGroupMenuDto {
     String amount;
     Integer rate;
     Integer stock;
+    String introduce;
 }
