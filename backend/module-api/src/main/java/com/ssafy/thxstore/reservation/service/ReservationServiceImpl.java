@@ -43,12 +43,12 @@ public class ReservationServiceImpl implements ReservationService{
             List<ReservationGroup> reservationAntityList = new ArrayList<>();
             ReservationGroup reservationGroup = ReservationGroup.builder().
                     storeId(reservationList.getStoreId()).
-                    reservationStatus(reservationList.getReservationStatus()).
+                    reservationStatus(ReservationStatus.DEFAULT).
                     userId(reservationList.getUserId()).
                     count(reservationList.getReservationGroups().get(i).getCount()).
                     reservation(Reservation.builder().member(member.get()).
                             storeId(reservationList.getStoreId()).
-                            reservationStatus(reservationList.getReservationStatus()).
+                            reservationStatus(ReservationStatus.DEFAULT).
                             reservationGroup(reservationAntityList).build()).
                     price(reservationList.getReservationGroups().get(i).getPrice()).
                     productName(reservationList.getReservationGroups().get(i).getProductName()).
