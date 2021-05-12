@@ -16,11 +16,9 @@
         </div>
         <div class="manager-info-bottom">
           <div class="info-label">스토어 명:</div>
-          <!-- <div class="info-data">{{ storeNameArr[order] }}</div> -->
           <div class="info-data">{{ storeNormalInfo[order].name }}</div>
           <div class="info-label">전화번호:</div>
           <div class="info-data">{{ storeNormalInfo[order].phoneNum }}</div>
-          <!-- <div class="info-data">{{ phoneNumArr[order] }}</div> -->
           <div class="info-label">스토어 주소:</div>
           <div class="info-data">
             {{ storeNormalInfo[order].mainAddress }} <br />
@@ -44,11 +42,18 @@
 
 <script>
 import 'url-search-params-polyfill';
-import { getStoreEnrollmentList, approveStoreEnrollment, retireStoreEnrollment } from '@/api/seller';
+import {
+  getStoreEnrollmentList,
+  approveStoreEnrollment,
+  retireStoreEnrollment,
+  getStoreModifyList,
+  approveStoreModification,
+  retireStoreModification,
+} from '@/api/seller';
 import { mapMutations } from 'vuex';
 export default {
   props: {
-    showStoreEnrollmentList: {
+    showStoreEnrollmentAndModificationList: {
       type: String,
       default: '',
     },
@@ -62,25 +67,46 @@ export default {
       order: 0,
     };
   },
+  watch: {
+    showStoreEnrollmentAndModificationList(newValue, oldValue) {
+      if (newValue === oldValue) return;
+      if (newValue === 'applyStoreEnrollment') {
+        this.getStoreListforEnroll();
+      } else {
+        this.getStoreListforModify();
+      }
+    },
+  },
   created() {
-    if (this.showStoreEnrollmentList === '수정 목록') {
-      console.log('수정 목록');
-    } else {
-      console.log('신청 목록');
-      this.getstoreList();
-    }
+    this.getStoreListforEnroll();
   },
   methods: {
     ...mapMutations(['setSpinnerState']),
-    async getstoreList() {
-      this.setSpinnerState(true);
-      const { data } = await getStoreEnrollmentList();
-      this.setSpinnerState(false);
-      console.log(data);
-
-      this.storeNormalInfo = data;
-      if (this.storeNormalInfo.length != 0) {
-        this.isListBe = true;
+    async getStoreListforEnroll() {
+      try {
+        this.resetData();
+        this.setSpinnerState(true);
+        const { data } = await getStoreEnrollmentList();
+        this.setSpinnerState(false);
+        this.storeNormalInfo = data;
+        if (this.storeNormalInfo.length != 0) {
+          this.isListBe = true;
+        }
+      } catch (error) {
+        this.setSpinnerState(false);
+      }
+    },
+    async getStoreListforModify() {
+      try {
+        this.setSpinnerState(true);
+        const { data } = await getStoreModifyList();
+        this.setSpinnerState(false);
+        this.storeNormalInfo = data;
+        if (this.storeNormalInfo.length != 0) {
+          this.isListBe = true;
+        }
+      } catch (error) {
+        this.setSpinnerState(false);
       }
     },
     clickNameList(index) {
@@ -89,37 +115,42 @@ export default {
     async approveEnrollment() {
       try {
         const order = this.order;
-        const storeId = this.storeNormalInfo[order].id;
-        await approveStoreEnrollment({ storeId: storeId });
+        if (this.showStoreEnrollmentAndModificationList == 'modifyStoreEnrollment') {
+          const tempStoreId = this.storeNormalInfo[order].tempStoreId;
+          await approveStoreModification({ tempStoreId: tempStoreId });
+        } else {
+          const storeId = this.storeNormalInfo[order].id;
+          await approveStoreEnrollment({ storeId: storeId });
+        }
         this.storeNormalInfo.splice(this.order, 1);
+        this.storeNormalInfo = [...this.storeNormalInfo];
+        if (this.storeNormalInfo.length == 0) {
+          this.isListBe = false;
+        }
+        this.order = 0;
       } catch (error) {
         console.log(error);
       }
     },
     async retireEnrollment() {
       const order = this.order;
-      console.log('this.storeNormalInfo:', this.storeNormalInfo, order);
-      const storeId = this.storeNormalInfo[order].id;
-
-      // var params = new URLSearchParams();
-      // params.append('storeId', storeId[order]);
-      // await retireStoreEnrollment(params);
-
-      await retireStoreEnrollment({ storeId: storeId });
+      if (this.showStoreEnrollmentAndModificationList == 'modifyStoreEnrollment') {
+        const tempStoreId = this.storeNormalInfo[order].tempStoreId;
+        await retireStoreModification({ tempStoreId: tempStoreId });
+      } else {
+        const storeId = this.storeNormalInfo[order].id;
+        await retireStoreEnrollment({ storeId: storeId });
+      }
       this.storeNormalInfo.splice(this.order, 1);
       this.storeNormalInfo = [...this.storeNormalInfo];
       if (this.storeNormalInfo.length == 0) {
         this.isListBe = false;
       }
       this.order = 0;
-      // this.resetData();
-      // this.getstoreList();
-      // }
-
-      //
     },
     resetData() {
       this.storeNormalInfo = [];
+      this.isListBe = false;
     },
   },
 };

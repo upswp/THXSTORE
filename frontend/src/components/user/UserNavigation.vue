@@ -9,7 +9,7 @@
       <span>|</span>
       <button ref="RecentReviews" @click="selectComponent('RecentReviews')">최근 리뷰</button>
       <span>|</span>
-      <button ref="StoreEnrollmentForm" @click="selectComponent('StoreEnrollmentForm')">판매자 신청</button>
+      <button ref="StoreEnrollmentForm" @click="selectComponent('StoreEnrollmentForm')">판매자 신청/수정</button>
     </div>
   </nav>
 </template>
