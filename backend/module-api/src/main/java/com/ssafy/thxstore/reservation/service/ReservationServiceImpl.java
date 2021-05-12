@@ -14,15 +14,14 @@ import com.ssafy.thxstore.reservation.repository.ReservationGroupRepository;
 import com.ssafy.thxstore.reservation.repository.ReservationRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import org.joda.time.DateTime;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Optional;
+import java.text.DateFormat;
+import java.util.*;
 
 @Service
 @Component
@@ -35,7 +34,12 @@ public class ReservationServiceImpl implements ReservationService{
 
 
     @Override
+    @Transactional
     public void addReservation(ReservationDto reservationList){
+        DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.FULL);
+        DateFormat timeFormat = DateFormat.getTimeInstance(DateFormat.DEFAULT);
+        String time = timeFormat.format(new Date());
+
         Optional<Member> member = memberRepository.findById(reservationList.getUserId());
 
         for(int i =0 ;i<reservationList.getReservationGroups().size();i++){
@@ -46,7 +50,9 @@ public class ReservationServiceImpl implements ReservationService{
                     reservationStatus(ReservationStatus.DEFAULT).
                     userId(reservationList.getUserId()).
                     count(reservationList.getReservationGroups().get(i).getCount()).
-                    reservation(Reservation.builder().member(member.get()).
+                    reservation(Reservation.builder().
+                            member(member.get()).
+                            dateTime(dateFormat.format(DateTime.now().toDate()) + " " + time).
                             storeId(reservationList.getStoreId()).
                             reservationStatus(ReservationStatus.DEFAULT).
                             reservationGroup(reservationAntityList).build()).
@@ -68,6 +74,7 @@ public class ReservationServiceImpl implements ReservationService{
 
         for(int i =0 ;i<list.size(); i++){
             ReservationGroupDto reservationGroupDto = ReservationGroupDto.builder().
+                    orderTime(list.get(i).getReservation().getDateTime()).
                     userId(list.get(i).getUserId()).
                     count(list.get(i).getCount()).
                     price(list.get(i).getPrice()).

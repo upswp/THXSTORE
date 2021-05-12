@@ -57,9 +57,9 @@ public class ReservationGroup {
         this.reservationStatus = reservationStatus;
     }
 
-    public ReservationGroup(int count, int price, String productName,Long userId,ReservationStatus reservationStatus) {
+    public ReservationGroup(Reservation reservation,int count, int price, String productName,Long userId,ReservationStatus reservationStatus) {
         this.userId = userId;
-//        this.reservation = reservation;
+        this.reservation = reservation;
         this.count = count;
         this.price = price;
         this.productName = productName;
