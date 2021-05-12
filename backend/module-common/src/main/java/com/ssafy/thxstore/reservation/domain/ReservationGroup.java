@@ -42,19 +42,14 @@ public class ReservationGroup {
     @Column(name = "product_name")
     private String productName;
 
-    @Column(name = "status")
-    @Enumerated(EnumType.STRING)
-    private ReservationStatus reservationStatus;
-
     @Builder
-    public ReservationGroup(Reservation reservation, int count, int price, String productName,Long userId,ReservationStatus reservationStatus,Long storeId) {
+    public ReservationGroup(Reservation reservation, int count, int price, String productName,Long userId,Long storeId) {
         this.userId = userId;
         this.storeId = storeId;
         this.reservation = reservation;
         this.count = count;
         this.price = price;
         this.productName = productName;
-        this.reservationStatus = reservationStatus;
     }
 
     public ReservationGroup(Reservation reservation,int count, int price, String productName,Long userId,ReservationStatus reservationStatus) {
@@ -63,6 +58,5 @@ public class ReservationGroup {
         this.count = count;
         this.price = price;
         this.productName = productName;
-        this.reservationStatus = reservationStatus;
     }
 }

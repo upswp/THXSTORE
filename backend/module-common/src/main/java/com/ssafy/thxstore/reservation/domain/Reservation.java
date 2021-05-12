@@ -28,6 +28,11 @@ public class Reservation {
     @JoinColumn(name = "member_id")
     private Member member;
 
+    @ColumnDescription("주문 데이터 여러개(하나의 주문) 당 연결되는 리뷰 한 개 - 나중에 변경가능")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "review_id")
+    private Review review;
+
     @ColumnDescription("스토어 아이디로 각각의 장바구니 구분")
     @Column(name = "store_id")
     private Long storeId;

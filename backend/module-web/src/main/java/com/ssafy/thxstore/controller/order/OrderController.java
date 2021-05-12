@@ -4,8 +4,10 @@ import com.ssafy.thxstore.reservation.domain.ReservationGroup;
 import com.ssafy.thxstore.reservation.domain.ReservationStatus;
 import com.ssafy.thxstore.reservation.dto.ReservationDto;
 import com.ssafy.thxstore.reservation.dto.ReservationGroupDto;
+import com.ssafy.thxstore.reservation.dto.ReviewRequest;
 import com.ssafy.thxstore.reservation.dto.StatusRequest;
 import com.ssafy.thxstore.reservation.service.ReservationService;
+import com.ssafy.thxstore.reservation.service.ReviewService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.http.HttpStatus;
@@ -22,6 +24,7 @@ import java.util.List;
 @RequestMapping(value = "/order", produces = MediaTypes.HAL_JSON_VALUE)
 public class OrderController {
 private final ReservationService reservationService;
+private final ReviewService reviewService;
 
 /**
  * 주문 생성
@@ -56,7 +59,7 @@ public ResponseEntity<String> addReservation(@Valid @RequestBody ReservationDto 
     @GetMapping("/reservation/{memberId}")
     public ResponseEntity getReservation(@PathVariable Long memberId){
 
-        List<ReservationGroupDto> li = reservationService.getReservation(memberId);
+        List<ReservationGroupDto> li = reservationService.getReservation(memberId,"member");
 
         return new ResponseEntity<>(li, HttpStatus.OK);
 //        return ResponseEntity.created(li.getUri()).body(li.getOrderResource());
@@ -67,8 +70,8 @@ public ResponseEntity<String> addReservation(@Valid @RequestBody ReservationDto 
      *  member_id와 store_id 로 reservation 테이블에서 삭제한다.
      */
 
-    @DeleteMapping("/reservation/{memberId}/{storeId}")
-    public ResponseEntity deleteReservation(@PathVariable Long memberId,@PathVariable Long storeId){
+    @DeleteMapping("/reservation/delete")
+    public ResponseEntity deleteReservation(@RequestParam("memberId") Long memberId,@RequestParam("storeId") Long storeId){
 
         reservationService.deleteReservation(memberId,storeId);
 
@@ -76,26 +79,48 @@ public ResponseEntity<String> addReservation(@Valid @RequestBody ReservationDto 
 //        return ResponseEntity.created(li.getUri()).body(li.getOrderResource());
     }
 
+    /**
+     * 1. 주문 테이블에 들어간 상황 사장님이 수령 확인 버튼 누르면 주문 status 변경 memberId(321) 님 이시죠? 물건 주고 버튼 누르면 주문 테이블에서 상태 변화
+     * 2. DEFAULT -> ACCEPT 주문 승락
+     * 3. ACCEPT -> STAND_BY 상품(음식) 완료 후 수령 대기
+     * 4. STAND_BY -> FINISH 수령 완료
+     */
 
-//    /**
-//     * 1. 주문 테이블에 들어간 상황 사장님이 수령 확인 버튼 누르면 주문 status 변경 memberId(321) 님 이시죠? 물건 주고 버튼 누르면 주문 테이블에서 상태 변화
-//     * 2. DEFAULT -> ACCEPT 주문 승락
-//     * 3. ACCEPT -> STAND_BY 상품(음식) 완료 후 수령 대기
-//     * 4. STAND_BY -> FINISH 수령 완료
-//     */
-//
-//    @PutMapping("/reservation/{memberId}") // v2 mem id로 받아서 검색 후 수정, 받아오는 형식 memformdto
-//    public ResponseEntity<String> updateReservation(@PathVariable Long memberId , @RequestBody StatusRequest status) {
-//
-//        reservationService.statusUpdate(memberId, status);
-//
-//        return new ResponseEntity<>("주문 상태를 변경했습니다.", HttpStatus.OK);
-//    }//맴버정보보기를 눌러서 확인
+    @PutMapping("/reservation/statusupdate") // v2 mem id로 받아서 검색 후 수정, 받아오는 형식 memformdto
+    public ResponseEntity<String> updateStatusToAccept(@RequestBody StatusRequest status) {
+
+        reservationService.statusUpdate(status);
+
+        return new ResponseEntity<>("주문 상태를 변경했습니다.", HttpStatus.OK);
+    }//맴버정보보기를 눌러서 확인
+
+    /**
+     * 사장님 입장에서 조회 ->본인의 가게에 들어온 주문 내역만
+     */
+
+    @GetMapping("/reservation/store/{storeId}")
+    public ResponseEntity getStoreReservation(@PathVariable Long storeId){
+
+        List<ReservationGroupDto> li = reservationService.getReservation(storeId,"store");
+
+        return new ResponseEntity<>(li, HttpStatus.OK);
+//        return ResponseEntity.created(li.getUri()).body(li.getOrderResource());
+    }
+
+    /**
+     * 타임딜 관련해서 채크 여러개 했을 때 구매가 불가능한 품목만 리턴
+     */
 
     /**
      * 리뷰 생성 삭제 수정
      */
+    @PostMapping("/reservation")
+    public ResponseEntity<String> createReview(@RequestBody ReviewRequest reviewRequest){
 
+        reviewService.createReview(reviewRequest);
+
+        return new ResponseEntity<>("생성완료", HttpStatus.OK);
+    }
     /**
      * 리뷰에 대한 권한 고민
      */
@@ -109,11 +134,4 @@ public ResponseEntity<String> addReservation(@Valid @RequestBody ReservationDto 
      * datetime 조회
      */
 
-    /**
-     * 타임딜 관련해서 채크 여러개 했을 때 구매가 불가능한 품목만 리턴
-     */
-
-    /**
-     * 사장님 입장에서 조회
-     */
 }

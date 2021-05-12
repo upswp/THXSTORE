@@ -33,6 +33,10 @@ public class ReservationServiceImpl implements ReservationService{
     private final ReservationRepository reservationRepository;
 
 
+    /**
+     * reservation을 생성하고
+     * group을 리스트로 saveAll하자
+     */
     @Override
     @Transactional
     public void addReservation(ReservationDto reservationList){
@@ -47,7 +51,6 @@ public class ReservationServiceImpl implements ReservationService{
             List<ReservationGroup> reservationAntityList = new ArrayList<>();
             ReservationGroup reservationGroup = ReservationGroup.builder().
                     storeId(reservationList.getStoreId()).
-                    reservationStatus(ReservationStatus.DEFAULT).
                     userId(reservationList.getUserId()).
                     count(reservationList.getReservationGroups().get(i).getCount()).
                     reservation(Reservation.builder().
@@ -67,10 +70,15 @@ public class ReservationServiceImpl implements ReservationService{
 
     @Override
     @Transactional
-    public List<ReservationGroupDto> getReservation(Long memberId){
+    public List<ReservationGroupDto> getReservation(Long Id,String type){
         List<ReservationGroupDto> reservationGroupDtoList = new LinkedList<>();
+        List<ReservationGroup> list = new LinkedList<>();
         //dto 엔티티 매핑
-        List<ReservationGroup> list = reservationGroupRepository.findReservationlist(memberId);
+        if(type == "member") {
+            list = reservationGroupRepository.findReservationlistByMemberId(Id);
+        }else{
+            list = reservationGroupRepository.findReservationlistByStoreId(Id);
+        }
 
         for(int i =0 ;i<list.size(); i++){
             ReservationGroupDto reservationGroupDto = ReservationGroupDto.builder().
@@ -79,7 +87,7 @@ public class ReservationServiceImpl implements ReservationService{
                     count(list.get(i).getCount()).
                     price(list.get(i).getPrice()).
                     productName(list.get(i).getProductName()).
-                    reservationStatus(list.get(i).getReservationStatus()).
+                    reservationStatus(list.get(i).getReservation().getReservationStatus()).
                     build();
 
             reservationGroupDtoList.add(reservationGroupDto);
@@ -91,12 +99,12 @@ public class ReservationServiceImpl implements ReservationService{
     @Override
     @Transactional
     public void deleteReservation(Long memberId,Long storeId){
-        List<ReservationGroup> member = reservationGroupRepository.findAllByUserIdAndStoreId(storeId,memberId);
-        reservationGroupRepository.deleteAll(member);
+        List<ReservationGroup> order = reservationGroupRepository.findAllByUserIdAndStoreId(memberId,storeId);
+        reservationGroupRepository.deleteAll(order);
     }
 
-//    @Override
-//    public void statusUpdate(Long memberId, StatusRequest status){
-//        reservationRepository.findReservation(memberId,status.getStoreId(),status.getReservationStatus().name());
-//    }
+    @Override
+    public void statusUpdate(StatusRequest status){
+        reservationRepository.findReservation(status.getMemberId(),status.getStoreId(),status.getReservationStatus().name());
+    }
 }

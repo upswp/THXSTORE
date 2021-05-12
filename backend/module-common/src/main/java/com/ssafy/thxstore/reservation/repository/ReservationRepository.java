@@ -34,8 +34,8 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
 //    @Query(value = "delete from reservation where member_id = :memberId and store_id = :storeId",nativeQuery = true)
 //    void deleteReservation(Long memberId, Long storeId);
 //
-//    @Modifying
-//    @Transactional
-//    @Query(value = "update reservation set status = :newStatus where member_id = :memberId and store_id = :storeId",nativeQuery = true)
-//    void findReservation(Long memberId, Long storeId , String newStatus);
+    @Modifying
+    @Transactional
+    @Query(value = "update reservation set status = :newStatus where member_id = :memberId and store_id = :storeId",nativeQuery = true)
+    void findReservation(Long memberId, Long storeId , String newStatus);
 }
