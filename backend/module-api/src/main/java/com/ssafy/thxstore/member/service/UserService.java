@@ -6,6 +6,7 @@ import com.ssafy.thxstore.member.dto.request.ModifyPatchMemberRequest;
 import com.ssafy.thxstore.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -17,7 +18,8 @@ public class UserService {
     private final ModelMapper modelMapper;
     private final MemberRepository memberRepository;
 
-    public Member patchMember(Member existingMember, ModifyPatchMemberRequest modifyPatchMemberRequest) throws IOException {
+    public Member patchMember(String email, ModifyPatchMemberRequest modifyPatchMemberRequest) throws IOException {
+        Member existingMember = memberRepository.findByEmail(email).orElseThrow(()-> new UsernameNotFoundException(email));;
         if (modifyPatchMemberRequest.getNickname() != null) {
             this.modelMapper.map(modifyPatchMemberRequest.getNickname(), existingMember.getNickname());
         } else if (modifyPatchMemberRequest.getPhoneNumber() != null) {
