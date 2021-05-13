@@ -1,5 +1,9 @@
 package com.ssafy.thxstore.controller.order;
 
+import com.ssafy.thxstore.controller.member.AuthController;
+import com.ssafy.thxstore.controller.member.Resource.MemberResource;
+import com.ssafy.thxstore.controller.order.Resource.ReviewResource;
+import com.ssafy.thxstore.reservation.domain.Review;
 import com.ssafy.thxstore.reservation.dto.ReservationDto;
 import com.ssafy.thxstore.reservation.dto.ReservationGroupDto;
 import com.ssafy.thxstore.reservation.dto.ReviewDto;
@@ -7,13 +11,18 @@ import com.ssafy.thxstore.reservation.dto.StatusRequest;
 import com.ssafy.thxstore.reservation.service.ReservationService;
 import com.ssafy.thxstore.reservation.service.ReviewService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.hateoas.Link;
 import org.springframework.hateoas.MediaTypes;
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.net.URI;
 import java.util.List;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
 
 @RestController
@@ -113,11 +122,16 @@ public ResponseEntity<String> addReservation(@Valid @RequestBody ReservationDto 
      * 리뷰 생성 삭제 수정
      */
     @PostMapping("/reservation/review")
-    public ResponseEntity<String> createReview(@RequestBody ReviewDto reviewDto){
+    public ResponseEntity createReview(@RequestBody ReviewDto reviewDto){
+        Review newReview = reviewService.createReview(reviewDto);
 
-        reviewService.createReview(reviewDto);
+        WebMvcLinkBuilder selfLinkBuilder = linkTo(OrderController.class).slash("reservation/review").slash(newReview.getId());
+        URI createUri = selfLinkBuilder.toUri();
 
-        return new ResponseEntity<>("생성완료", HttpStatus.OK);
+        ReviewResource reviewResource = new ReviewResource(newReview);
+        reviewResource.add(Link.of("/api/docs/index.html#resources-create-review").withRel("profile"));
+
+        return ResponseEntity.created(createUri).body(reviewResource);
     }
 
     @DeleteMapping("/reservation/review/{reviewId}")
@@ -163,3 +177,12 @@ public ResponseEntity<String> addReservation(@Valid @RequestBody ReservationDto 
 //        return ResponseEntity.created(li.getUri()).body(li.getOrderResource());
     }
 }
+
+
+/**
+ * 주문 승락 상태에서 주문 취소 들어오면 오류 반환 예외처리하자
+ */
+
+/**
+ * 리스트 리스폰스 형식 배열 이쁘게~
+ */

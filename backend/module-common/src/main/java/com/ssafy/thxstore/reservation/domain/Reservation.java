@@ -51,8 +51,9 @@ public class Reservation {
     private ReservationStatus reservationStatus;
 
     @Builder
-    public Reservation(Member member,Long storeId,ReservationStatus reservationStatus, List<ReservationGroup> reservationGroup,String dateTime) {
+    public Reservation(Long id,Member member,Long storeId,ReservationStatus reservationStatus, List<ReservationGroup> reservationGroup,String dateTime) {
         this.member = member;
+        this.id = id;
         this.dateTime =dateTime;
         this.storeId = storeId;
         this.reservationStatus = reservationStatus;

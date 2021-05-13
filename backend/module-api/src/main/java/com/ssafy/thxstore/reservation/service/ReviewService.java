@@ -31,14 +31,13 @@ public class ReviewService {
     private final ReservationRepository reservationRepository;
     private final StoreRepository storeRepository;
 
-    public void createReview(ReviewDto reviewDto) {
+    public Review createReview(ReviewDto reviewDto) {
         DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.FULL);
         DateFormat timeFormat = DateFormat.getTimeInstance(DateFormat.DEFAULT);
         String time = timeFormat.format(new Date());
 
         Optional<Reservation> reservation = reservationRepository.findById(reviewDto.getReservationId());
         Optional<Store> store = storeRepository.findById(reviewDto.getStoreId());
-
         Review review = Review.builder().
                 dateTime(dateFormat.format(DateTime.now().toDate()) + " " + time).
                 comment(reviewDto.getComment()).
@@ -51,6 +50,8 @@ public class ReviewService {
         reservation.get().setReview(review);
 
         reviewRepository.save(review);
+
+        return review;
     }
 
     @Transactional
