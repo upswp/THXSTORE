@@ -21,14 +21,18 @@ public class UserService {
     public Member patchMember(String email, ModifyPatchMemberRequest modifyPatchMemberRequest) throws IOException {
         Member existingMember = memberRepository.findByEmail(email).orElseThrow(()-> new UsernameNotFoundException(email));
         if (modifyPatchMemberRequest.getNickname() != null) {
-            this.modelMapper.map(modifyPatchMemberRequest.getNickname(), existingMember.getNickname());
+//            this.modelMapper.map(modifyPatchMemberRequest.getNickname(), existingMember.getNickname());
+            existingMember.setNickname(modifyPatchMemberRequest.getNickname());
         } else if (modifyPatchMemberRequest.getPhoneNumber() != null) {
-            this.modelMapper.map(modifyPatchMemberRequest.getPhoneNumber(), existingMember.getPhoneNumber());
+//            this.modelMapper.map(modifyPatchMemberRequest.getPhoneNumber(), existingMember.getPhoneNumber());
+            existingMember.setPhoneNumber(modifyPatchMemberRequest.getPhoneNumber());
         } else if (modifyPatchMemberRequest.getPassword() != null) {
-            this.modelMapper.map(modifyPatchMemberRequest.getPassword(), existingMember.getPassword());
+//            this.modelMapper.map(modifyPatchMemberRequest.getPassword(), existingMember.getPassword());
+            existingMember.setPassword(modifyPatchMemberRequest.getPassword());
         } else if (modifyPatchMemberRequest.getProfileImage() != null) {
             String imgProfile = imageService.createImage(modifyPatchMemberRequest.getProfileImage());
-            this.modelMapper.map(imgProfile, existingMember.getProfileImage());
+//            this.modelMapper.map(imgProfile, existingMember.getProfileImage());
+            existingMember.setProfileImage(imgProfile);
         }
         return this.memberRepository.save(existingMember);
     }
