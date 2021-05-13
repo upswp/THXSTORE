@@ -85,7 +85,9 @@
 
 <script>
 import { getTimeDeal, registerTimeDeal } from '@/api/timeDeal';
+import { getTotalMenu } from '@/api/menu';
 import { timeStrConvert } from '@/utils/filters';
+import { mapGetters } from 'vuex';
 export default {
   data() {
     return {
@@ -134,7 +136,21 @@ export default {
       ],
     };
   },
-  created() {},
+
+  computed: {
+    ...mapGetters(['getStoreId']),
+  },
+  async created() {
+    try {
+      console.log(this.getStoreId);
+      const { data } = await getTimeDeal(this.getStoreId);
+      // const {data} = await getTimeDeal(this.getStoreId);
+      console.log(data);
+    } catch (error) {
+      console.log(error);
+      alert('타임딜 조회에 실패하였습니다.');
+    }
+  },
   methods: {
     timeStrConvert,
     discounting(menu) {

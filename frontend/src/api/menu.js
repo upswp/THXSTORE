@@ -2,7 +2,7 @@ import { createInstance, createInstanceWithToken } from '@/api';
 
 const menuGroupAPI = createInstanceWithToken('api/store/group/product/');
 const menuGroupListAPI = createInstanceWithToken('api/store/group/productlist/');
-const menuListAPI = createInstanceWithToken('api/store/group/productlist/');
+const menuListAPI = createInstanceWithToken('api/store/product/');
 /**
  * 메뉴 정보
  * @typedef {object} Menu

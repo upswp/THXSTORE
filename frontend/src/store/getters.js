@@ -14,4 +14,7 @@ export default {
   getSpinnerState(state) {
     return state.spinnerOn;
   },
+  getStoreId(state) {
+    return state.storeId;
+  },
 };
