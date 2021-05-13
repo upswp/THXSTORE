@@ -46,6 +46,17 @@ public class UserController {
         return ResponseEntity.ok(memberResource);
     }
 
+    @DeleteMapping
+    public ResponseEntity deleteUser(@RequestHeader String authorization) {
+        String email = jwtToEmail(authorization);
+        MemberResource memberResource;
+        Member patchMember = userService.deleteMember(email);
+        memberResource = new MemberResource(patchMember);
+        memberResource.add(linkTo(UserController.class).withRel("delete-member"));
+        memberResource.add(Link.of("/api/docs/index.html#resources-delete-member"));
+        return ResponseEntity.ok(memberResource);
+    }
+
     public String jwtToEmail(String authorization){
         return Jwts.parser().setSigningKey(DatatypeConverter.parseBase64Binary(appProperties.getAuth().getTokenSecret()))
                 .parseClaimsJws(authorization).getBody().getSubject();

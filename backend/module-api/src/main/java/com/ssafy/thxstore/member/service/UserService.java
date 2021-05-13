@@ -19,7 +19,7 @@ public class UserService {
     private final MemberRepository memberRepository;
 
     public Member patchMember(String email, ModifyPatchMemberRequest modifyPatchMemberRequest) throws IOException {
-        Member existingMember = memberRepository.findByEmail(email).orElseThrow(()-> new UsernameNotFoundException(email));;
+        Member existingMember = memberRepository.findByEmail(email).orElseThrow(()-> new UsernameNotFoundException(email));
         if (modifyPatchMemberRequest.getNickname() != null) {
             this.modelMapper.map(modifyPatchMemberRequest.getNickname(), existingMember.getNickname());
         } else if (modifyPatchMemberRequest.getPhoneNumber() != null) {
@@ -31,5 +31,11 @@ public class UserService {
             this.modelMapper.map(imgProfile, existingMember.getProfileImage());
         }
         return this.memberRepository.save(existingMember);
+    }
+
+    public Member deleteMember(String email) {
+        Member existingMember = memberRepository.findByEmail(email).orElseThrow(()-> new UsernameNotFoundException(email));
+        memberRepository.deleteById(existingMember.getId());
+        return existingMember;
     }
 }
