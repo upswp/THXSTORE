@@ -38,8 +38,6 @@ public class ReviewService {
 
         Optional<Reservation> reservation = reservationRepository.findById(reviewDto.getReservationId());
         Optional<Store> store = storeRepository.findById(reviewDto.getStoreId());
-        System.out.println("reviewDto.getStoreId(): " +reviewDto.getStoreId() +reviewDto.getStoreId().getClass().getName());
-        System.out.println("asdfasdfwegew"+store);
         Review review = Review.builder().
                 dateTime(dateFormat.format(DateTime.now().toDate()) + " " + time).
                 comment(reviewDto.getComment()).
