@@ -145,4 +145,22 @@ public class ProductService {
 //        }
 
     }
+
+    public List<GroupProductListResponse> getStoreGroupProductList(Long storeId) {
+        Optional<List<ProductGroup>> productGroups = productGroupRepository.findAllByStoreId(storeId);
+        List<GroupProductListResponse> groupProductListResponse = new ArrayList<>();
+
+        for(int i = 0; i < productGroups.get().size(); i++){
+            // groupid로 product 가져오자
+            //productGroups.get().get(i).getId()
+            List<FindAllGroupMenuDto> product = findAllGroupMenu(productGroups.get().get(i).getId());
+            //productGroups.get().get(i).getId()
+            groupProductListResponse.add(GroupProductListResponse.builder()
+                    .groupId(productGroups.get().get(i).getId())
+                    .name(productGroups.get().get(i).getName())
+                    .product(product)
+                    .build());
+        }
+        return groupProductListResponse;
+    }
 }

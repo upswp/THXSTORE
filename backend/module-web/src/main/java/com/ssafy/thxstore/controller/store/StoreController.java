@@ -2,11 +2,15 @@ package com.ssafy.thxstore.controller.store;
 
 import com.ssafy.thxstore.controller.config.AppProperties;
 import com.ssafy.thxstore.image.service.ImageService;
+import com.ssafy.thxstore.member.domain.Member;
 import com.ssafy.thxstore.product.domain.Product;
+import com.ssafy.thxstore.product.domain.ProductGroup;
 import com.ssafy.thxstore.product.domain.TimeDeal;
 import com.ssafy.thxstore.product.dto.AllProductListResponse;
+import com.ssafy.thxstore.product.dto.GroupProductListResponse;
 import com.ssafy.thxstore.product.dto.TimeDealCreateDto;
 import com.ssafy.thxstore.product.dto.TimeDealProductResponse;
+import com.ssafy.thxstore.product.service.ProductService;
 import com.ssafy.thxstore.store.domain.CheckStore;
 import com.ssafy.thxstore.store.domain.Store;
 import com.ssafy.thxstore.store.domain.TempStore;
@@ -25,7 +29,10 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.xml.bind.DatatypeConverter;
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.net.URI;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -40,6 +47,7 @@ public class StoreController {
     private final StoreService storeService;
     private final ImageService imageService;
     private final AppProperties appProperties;
+    private final ProductService productService;
 
     @PostMapping // 스토어 생성
     public ResponseEntity createStore(@RequestHeader String authorization, @ModelAttribute CreateStoreFileDto createStoreFileDto){
@@ -63,7 +71,7 @@ public class StoreController {
         return ResponseEntity.created(null).body(detailStoreResponse);
     }
 
-    @GetMapping("/id") // 스토어 상세 조회
+    @GetMapping("/id") // 스토어 id 조회
     public ResponseEntity getStoreId(@RequestHeader String authorization){
         String email = jwtToEmail(authorization);
         Optional<Store> store = storeService.getStore(email);
@@ -166,6 +174,89 @@ public class StoreController {
         return ResponseEntity.created(null).body(product);
     }
 
+
+    /* user 관점에서의 Store 작성 */
+    @GetMapping("/user/") // 처음 접속했을 때, 타임딜 하고 있는 항목들을 보는 곳 거리에 따라
+    public ResponseEntity getUserStoreList(@RequestHeader String authorization){
+
+        // todo 0.초기화?? 타임딜 진행되는 거거
+        // 현재 시간 -2시간 보다 작은 것이 있으면 다 제거 합시다.
+        // 새벽 2시일 때, 10~12시것도 처리
+        Date date_now = new Date(System.currentTimeMillis()); // 현재시간을 가져와 Date형으로 저장한다
+// 년월일시분초 14자리 포멧
+        SimpleDateFormat fourteen_format = new SimpleDateFormat("HHmm");
+        System.out.println(fourteen_format.format(date_now)); // 14자리 포멧으로 출력한다
+        System.out.println(date_now.getClass().getName()); // 14자리 포멧으로 출력한다
+        String a = fourteen_format.format(date_now);
+        int b = Integer.parseInt(a.substring(0,2));
+        int c = Integer.parseInt(a.substring(2));
+        int hour = Integer.parseInt(a);
+        System.out.println(b);
+        System.out.println(c);
+        if(b < 2){
+
+        }
+
+
+       // 여기 헤더에서 사용되는 값은 위치정보를 꺼내야함. 가능.
+        // 1. 처음에는 무조건 로그인 화면이고, 로그인하면 무조건 타임딜 진행중인 가게가 보이는 화면인지 체크 필요.
+        // 시간을 먼저 체크할까 타임딜을 먼저 체크할까
+        // 시간을 먼저 -> 시간에 따른 값을 꺼내오고, 타임딜 시간 계산하고, 
+        // 타임딜 먼저 -> 
+        // 타임딜 조건 -> 1이고, 아직 2시간 안지난것(timedeal에서 삭제가 없어야함.)
+
+
+        // 1. member 정보 가져오기 -> 위도 경도 꺼내야합니다.
+        String email = jwtToEmail(authorization);
+        Optional<Member> member = storeService.getMemberInfo(email);
+        if(!member.isPresent()){ // 멤버가 없을 경우
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        // todo 타임딜 체크는 언제할 까요.여기서 같이 체크요~ + 휴무일 시간체크는 언제 체크요~
+
+        // 2. 위도 경도 스토어들 찾기 -> 5km. 페이징 기법으로.. dist 값 확인
+        // store는 되는데 이건 안된다? store로 받아서 추가 작업이 필요할 듯
+        // 하면서 페이징 기법도 찾아보자
+        // sql문도 짜보고;
+        List<StoreAndDistanceDto> timeDealStoreList = storeService.findLocation(member);
+//        if(!timeDealStoreList.isPresent()){
+//            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+//        }
+        // 3. 뭘 해야하오 ~ 여기서 타임딜 체크인가~ timedeal에 있는 store 값들만 가져오기
+        // 일단 꺼내오기맘ㄴ 했엉
+        // 현재 timedeal 테이블에 storeid가 있는지 있는지 체크 -> timedeal 값ㅇ ㅣ있는지 체크
+
+
+
+        //List<StoreAndDistanceDto> timeDealList = storeService.findtimeDealStore(timeDealStoreList);
+
+
+        // 하 쉬바 생각하니 close도 해야되네 close open day 등등도
+        return ResponseEntity.created(null).body(timeDealStoreList);
+    }
+
+    // 그룹별 매뉴로 상품정보 반환
+    @GetMapping("/user/product/") 
+    public ResponseEntity getStoreGroupProductList(@RequestHeader String authorization, @RequestParam("storeId") Long storeId){ // 쿼리 문으로 requestparams
+       // Optional<List<ProductGroup>> productGroups = productService.findAllGroup(storeId);
+        List<GroupProductListResponse> groupProductListResponseList = productService.getStoreGroupProductList(storeId);
+
+        // 그룹 정보 담을 수 있는 것과 product 담을 수 있는 것
+        // 모든 그룹과 메뉴 반환
+       //  List<AllProductListResponse> product = storeService.productAll(storeId);
+        return ResponseEntity.created(null).body(groupProductListResponseList);
+    }
+
+    // 타임딜 항목 반환 -> 이건 재활용 가능할 수도 -> store/timedeal/ 이미 만들었음. 제작 x
+//    @GetMapping("/user/timedeal/")
+//    public ResponseEntity getStoreTimeDealList(@RequestHeader String authorization){
+//        List<AllProductListResponse> product = storeService.productAll(storeId);
+//        return ResponseEntity.created(null).body(product);
+//    }
+
+
+
     @PostMapping("/test/")
     public ResponseEntity createStoreTest(@RequestBody CreateStoreDto createStoreDto){
         Store store = storeService.createStoreTest(createStoreDto);
@@ -189,5 +280,4 @@ public class StoreController {
     public void timeDealInit(){
         storeService.timeDealInit();
     }
-
 }

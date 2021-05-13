@@ -34,6 +34,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static java.lang.Math.*;
+
 // todo 필요없는 주석 처리.
 @Service
 @Component
@@ -265,6 +267,7 @@ public class StoreService {
 
         Long storeId = timeDealCreateDto.getStoreId();
         Store store = storeRepository.findById(storeId).get();
+        store.setTimeDealCheck(true); // 타임 딜 시작을 확인하는 셋팅
         String startTime = timeDealCreateDto.getStartTime();
 
         for(int i = 0 ; i < timeDealProductDtos.size(); i++){
@@ -293,5 +296,66 @@ public class StoreService {
         List<AllProductListResponse> allProductListResponses = modelMapper.map(productList, new TypeToken<List<AllProductListResponse>>(){}.getType());
 
         return allProductListResponses;
+    }
+
+    // 멤버 정보
+    public Optional<Member> getMemberInfo(String email) {
+        return memberRepository.findByEmail(email);
+    }
+
+    // 위도경도
+    public List<StoreAndDistanceDto> findLocation(Optional<Member> member) {
+        // todo 여기 member 들어오면 변경
+        //StoreAndDistanceDto
+        Optional<List<Store>> storeList = storeRepository.findByLocation(36.42583333272267, 127.38674024126392);
+
+        List<StoreAndDistanceDto> storeAndDistanceDto = new ArrayList<>();
+
+        for(int i = 0; i < storeList.get().size(); i++){
+            Optional<List<TimeDeal>> timeDealList = timeDealRepository.findAllByStoreId(storeList.get().get(i).getId());
+            if(!timeDealList.isPresent()){
+                continue;
+            }
+            //  타임딜이 존재한다면. todo 다른곳 remove 찾기
+            StoreAndDistanceDto storeAndDistanceDto1 = modelMapper.map(storeList.get().get(i), new TypeToken<StoreAndDistanceDto>(){}.getType());
+
+
+            storeAndDistanceDto1.setDistance( 6371*acos(cos(toRadians(36.42583333272267))*cos(toRadians(storeList.get().get(i).getLat()))*cos(toRadians(storeList.get().get(i).getLon())
+                    -toRadians(127.38674024126392))+sin(toRadians(36.42583333272267))*sin(toRadians(storeList.get().get(i).getLat()))));
+
+            storeAndDistanceDto1.setTimeDealStart(timeDealList.get().get(0).getStartTime());
+            // 해당 상품만!
+            //List<TimeDeal> timeDealList
+            List<Product> products = new ArrayList<>();
+            for(int j = 0; j < timeDealList.get().size(); j++){ //timeDealList.get().get(j).getProduct().
+                products.add(Product.builder()
+                        .id(timeDealList.get().get(j).getProduct().getId())
+                        .name(timeDealList.get().get(j).getProduct().getName())
+                        .introduce(timeDealList.get().get(j).getProduct().getIntroduce())
+                        .amount(timeDealList.get().get(j).getProduct().getAmount())
+                        .rate(timeDealList.get().get(j).getProduct().getRate())
+                        .stock(timeDealList.get().get(j).getProduct().getStock())
+                        .price(timeDealList.get().get(j).getProduct().getPrice())
+                        .productImg(timeDealList.get().get(j).getProduct().getProductImg())
+                        .build());
+            }
+            storeAndDistanceDto1.setTimeDealList(products);
+            storeAndDistanceDto.add(storeAndDistanceDto1);
+        }
+
+        return storeAndDistanceDto;
+    }
+
+    public List<StoreAndDistanceDto> findtimeDealStore(Optional<List<StoreAndDistanceDto>> timeDealStoreList) {
+        List<StoreAndDistanceDto> timeDeal = timeDealStoreList.get();
+
+        // 타임딜 항목이 없으면 제거
+        for(int i = 0; i < timeDeal.size();i++){
+            if(timeDeal.get(i).getTimeDealList().size() == 0){
+                timeDeal.remove(i);
+                i--;
+            }
+        }
+        return timeDeal; // 타임딜만 있는 상태
     }
 }
