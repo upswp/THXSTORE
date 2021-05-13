@@ -29,6 +29,13 @@ export default {
       to: 'UserProfile',
     };
   },
+  created() {
+    if (this.$store.state.rewriteBaseInfo) {
+      this.nav = 'StoreEnrollmentForm';
+      this.to = 'StoreEnrollmentForm';
+      this.$store.commit('setRewriteBaseInfo', false);
+    }
+  },
   methods: {
     clickButton(e) {
       this.nav = e;

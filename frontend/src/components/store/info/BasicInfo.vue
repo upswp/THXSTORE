@@ -10,7 +10,7 @@
     <article class="essential-info-container">
       <div class="essential-title">
         ※ 기본 정보
-        <awesome icon="pen-square" class="correct-icon"></awesome>
+        <awesome icon="pen-square" class="correct-icon" @click="moveToRewrite"></awesome>
       </div>
       <div class="essential-items">
         <div class="essential-item">
@@ -84,7 +84,11 @@ export default {
     };
   },
   methods: {
-    ...mapMutations(['setSpinnerState']),
+    ...mapMutations(['setSpinnerState', 'setRewriteBaseInfo']),
+    moveToRewrite() {
+      this.setRewriteBaseInfo(true);
+      this.$router.push({ name: 'user' });
+    },
     async submitLogo(e) {
       const file = e.target.files[0];
       this.logoFile = file;

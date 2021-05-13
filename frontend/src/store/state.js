@@ -17,4 +17,5 @@ export default {
   mainDrawerOpen: false,
   spinnerOn: false,
   storeId: null,
+  rewriteBaseInfo: false,
 };

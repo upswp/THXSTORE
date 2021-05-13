@@ -200,10 +200,10 @@ export default {
     width: 90%;
   }
   @include mobile {
-    width: 90%;
+    width: 85%;
   }
   @include xs-mobile {
-    width: 90%;
+    width: 80%;
   }
 }
 .add-group-button {
