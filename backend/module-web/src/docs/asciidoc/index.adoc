@@ -107,7 +107,7 @@ include::{root}/store/store-index.adoc[]
 
 include::{root}/store/create-store.adoc[]
 
-include::{root}/review/review-index.adoc[]
+include::{root}/review/order-index.adoc[]
 
 include::{root}/review/create-review.adoc[]
 
