@@ -19,7 +19,7 @@
         </div>
         <div class="essential-item">
           <awesome icon="phone-alt" class="icon"></awesome>
-          {{ phoneNumber ? phoneNumber : '미등록' }}
+          {{ phoneNum ? phoneNum : '미등록' }}
         </div>
         <div class="essential-item">
           <awesome icon="map-marker-alt" class="icon"></awesome>
@@ -60,7 +60,7 @@ export default {
       default: '',
       require: true,
     },
-    phoneNumber: {
+    phoneNum: {
       type: String,
       default: '',
       require: true,

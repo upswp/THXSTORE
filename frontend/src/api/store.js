@@ -53,4 +53,11 @@ const updateStoreSideInfo = storeSideData => privateAPI.patch('', storeSideData)
  */
 const getStoreInfo = () => privateAPI.get('');
 
-export { updateStoreSideInfo, getStoreInfo };
+/**
+ * 가게 아이디 불러오기
+ * @typedef {function} getStoreId
+ * @returns {Promise<Number>} storeId
+ */
+const getStoreId = () => privateAPI.get('id/');
+
+export { updateStoreSideInfo, getStoreInfo, getStoreId };

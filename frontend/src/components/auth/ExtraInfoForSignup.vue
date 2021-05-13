@@ -74,7 +74,7 @@ export default {
           password: this.userData.password1,
         });
         this.setSpinnerState(false);
-        this.$router.push({ name: 'main' });
+        this.$router.push({ name: 'user' });
       } catch (error) {
         this.setSpinnerState(false);
         alert('회원가입에 문제가 생겼습니다. 다시 시도해주세요.');

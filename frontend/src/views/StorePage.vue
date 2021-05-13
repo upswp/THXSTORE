@@ -9,7 +9,9 @@
 
 <script>
 import StoreNavigation from '@/components/store/StoreNavigation';
-
+import { saveStoreIdToLocalStorage } from '@/utils/webStorage';
+import { getStoreId } from '@/api/store';
+import { mapMutations } from 'vuex';
 export default {
   components: { StoreNavigation },
   data() {
@@ -17,7 +19,18 @@ export default {
       tap: 'info',
     };
   },
+  async created() {
+    try {
+      const { data } = await getStoreId();
+      this.setStoreId(data);
+      saveStoreIdToLocalStorage(data);
+    } catch (error) {
+      console.log(error);
+      alert('스토어 아이디를 불러오는데 실패했습니다.');
+    }
+  },
   methods: {
+    ...mapMutations(['setStoreId']),
     changeTap(selection) {
       switch (selection) {
         case 'info':
@@ -26,7 +39,7 @@ export default {
         case 'product':
           this.$router.push({ name: 'storeProduct' });
           break;
-        case 'timeDeal':
+        case 'deal':
           this.$router.push({ name: 'storeTimeDeal' });
           break;
         case 'live':

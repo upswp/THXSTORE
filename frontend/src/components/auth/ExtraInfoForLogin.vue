@@ -58,7 +58,7 @@ export default {
         this.setSpinnerState(true);
         await this.$store.dispatch('LOGIN', userData);
         this.setSpinnerState(false);
-        this.$router.push({ name: 'main' });
+        this.$router.push({ name: 'user' });
       } catch (error) {
         this.setSpinnerState(false);
         console.log(error);

@@ -79,7 +79,7 @@ export default {
           password: this.userData.password,
         });
         this.setSpinnerState(false);
-        this.$router.push({ name: 'main' });
+        this.$router.push({ name: 'user' });
       } catch (error) {
         console.log(error);
         this.setSpinnerState(false);

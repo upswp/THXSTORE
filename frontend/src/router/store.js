@@ -16,7 +16,7 @@ const routesForStore = [
         component: () => import('@/components/store/StoreProduct.vue'),
       },
       {
-        path: 'time-deal',
+        path: 'deal',
         name: 'storeTimeDeal',
         component: () => import('@/components/store/StoreTimeDeal.vue'),
       },
