@@ -33,6 +33,10 @@ public class ReservationServiceImpl implements ReservationService{
     private final ReservationRepository reservationRepository;
 
 
+    /**
+     * reservation을 생성하고
+     * group을 리스트로 saveAll하자
+     */
     @Override
     @Transactional
     public void addReservation(ReservationDto reservationList){
@@ -42,20 +46,22 @@ public class ReservationServiceImpl implements ReservationService{
 
         Optional<Member> member = memberRepository.findById(reservationList.getUserId());
 
+        Reservation reservation = Reservation.builder().
+                reservationStatus(ReservationStatus.DEFAULT).
+                storeId(reservationList.getStoreId()).
+                member(member.get()).
+                dateTime(dateFormat.format(DateTime.now().toDate()) + " " + time).build();
+
+        reservationRepository.save(reservation);
+
         for(int i =0 ;i<reservationList.getReservationGroups().size();i++){
 
             List<ReservationGroup> reservationAntityList = new ArrayList<>();
             ReservationGroup reservationGroup = ReservationGroup.builder().
                     storeId(reservationList.getStoreId()).
-                    reservationStatus(ReservationStatus.DEFAULT).
                     userId(reservationList.getUserId()).
                     count(reservationList.getReservationGroups().get(i).getCount()).
-                    reservation(Reservation.builder().
-                            member(member.get()).
-                            dateTime(dateFormat.format(DateTime.now().toDate()) + " " + time).
-                            storeId(reservationList.getStoreId()).
-                            reservationStatus(ReservationStatus.DEFAULT).
-                            reservationGroup(reservationAntityList).build()).
+                    reservation(reservation).
                     price(reservationList.getReservationGroups().get(i).getPrice()).
                     productName(reservationList.getReservationGroups().get(i).getProductName()).
                     build();
@@ -67,10 +73,15 @@ public class ReservationServiceImpl implements ReservationService{
 
     @Override
     @Transactional
-    public List<ReservationGroupDto> getReservation(Long memberId){
+    public List<ReservationGroupDto> getReservation(Long Id,String type){
         List<ReservationGroupDto> reservationGroupDtoList = new LinkedList<>();
+        List<ReservationGroup> list;
         //dto 엔티티 매핑
-        List<ReservationGroup> list = reservationGroupRepository.findReservationlist(memberId);
+        if(type == "member") {
+            list = reservationGroupRepository.findReservationlistByMemberId(Id);
+        }else{
+            list = reservationGroupRepository.findReservationlistByStoreId(Id);
+        }
 
         for(int i =0 ;i<list.size(); i++){
             ReservationGroupDto reservationGroupDto = ReservationGroupDto.builder().
@@ -79,7 +90,7 @@ public class ReservationServiceImpl implements ReservationService{
                     count(list.get(i).getCount()).
                     price(list.get(i).getPrice()).
                     productName(list.get(i).getProductName()).
-                    reservationStatus(list.get(i).getReservationStatus()).
+                    reservationStatus(list.get(i).getReservation().getReservationStatus()).
                     build();
 
             reservationGroupDtoList.add(reservationGroupDto);
@@ -91,12 +102,12 @@ public class ReservationServiceImpl implements ReservationService{
     @Override
     @Transactional
     public void deleteReservation(Long memberId,Long storeId){
-        List<ReservationGroup> member = reservationGroupRepository.findAllByUserIdAndStoreId(storeId,memberId);
-        reservationGroupRepository.deleteAll(member);
+        List<ReservationGroup> order = reservationGroupRepository.findAllByUserIdAndStoreId(memberId,storeId);
+        reservationGroupRepository.deleteAll(order);
     }
 
-//    @Override
-//    public void statusUpdate(Long memberId, StatusRequest status){
-//        reservationRepository.findReservation(memberId,status.getStoreId(),status.getReservationStatus().name());
-//    }
+    @Override
+    public void statusUpdate(StatusRequest status){
+        reservationRepository.findReservation(status.getMemberId(),status.getStoreId(),status.getReservationStatus().name());
+    }
 }
