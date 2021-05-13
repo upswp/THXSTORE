@@ -64,7 +64,6 @@ public class ProductService {
     }
 
     public List<FindAllGroupMenuDto> findAllGroupMenu(Long groupId) {
-        //
         List<Product> productList = productRepository.findAllByProductGroupId(groupId).get();
 
         List<FindAllGroupMenuDto> findAllGroupMenuDto = new ArrayList<>();
@@ -86,7 +85,6 @@ public class ProductService {
     }
 
     public void createMenu(String productImg, CreateMenuDto createMenuDto) {
-        //
         ProductGroup productGroup = productGroupRepository.findById(createMenuDto.getGroupId()).get();
         Product product = Product.builder()
                 .name(createMenuDto.getName())
@@ -137,13 +135,6 @@ public class ProductService {
             }
             product.setProductImg(productImg);
         }
-//        product.setName(editMenuDto.getName());
-//        product.setPrice(editMenuDto.getPrice());
-//        product.setAmount(editMenuDto.getAmount());
-//        if(productImg != null){
-//            product.setProductImg(productImg);
-//        }
-
     }
 
     public List<GroupProductListResponse> getStoreGroupProductList(Long storeId) {
@@ -151,10 +142,7 @@ public class ProductService {
         List<GroupProductListResponse> groupProductListResponse = new ArrayList<>();
 
         for(int i = 0; i < productGroups.get().size(); i++){
-            // groupid로 product 가져오자
-            //productGroups.get().get(i).getId()
             List<FindAllGroupMenuDto> product = findAllGroupMenu(productGroups.get().get(i).getId());
-            //productGroups.get().get(i).getId()
             groupProductListResponse.add(GroupProductListResponse.builder()
                     .groupId(productGroups.get().get(i).getId())
                     .name(productGroups.get().get(i).getName())

@@ -7,10 +7,7 @@ import com.ssafy.thxstore.member.repository.MemberRepository;
 import com.ssafy.thxstore.product.domain.Product;
 import com.ssafy.thxstore.product.domain.ProductGroup;
 import com.ssafy.thxstore.product.domain.TimeDeal;
-import com.ssafy.thxstore.product.dto.AllProductListResponse;
-import com.ssafy.thxstore.product.dto.TimeDealCreateDto;
-import com.ssafy.thxstore.product.dto.TimeDealProductDto;
-import com.ssafy.thxstore.product.dto.TimeDealProductResponse;
+import com.ssafy.thxstore.product.dto.*;
 import com.ssafy.thxstore.product.repository.ProductGroupRepository;
 import com.ssafy.thxstore.product.repository.ProductRepository;
 import com.ssafy.thxstore.product.repository.TimeDealRepository;
@@ -30,7 +27,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -247,7 +247,8 @@ public class StoreService {
         storeRepository.updateStoreTimeDealCHeck();
     }
 
-    public List<TimeDealProductResponse> timeDealList(Long storeId) { // 타임 딜 반환.
+    public TimeDealProductInfoResponse timeDealList(Long storeId){ // 타임 딜 반환.
+        Store store = storeRepository.findById(storeId).get();
         List<TimeDeal> timeDeal = timeDealRepository.findAllByStoreId(storeId).get();
         List<TimeDealProductResponse> timeDealProductResponses = new ArrayList<>();
 
@@ -257,7 +258,48 @@ public class StoreService {
             );
             timeDealProductResponses.get(i).setProductId(timeDeal.get(i).getProduct().getId());
         }
-        return timeDealProductResponses;
+        String status;
+        String startTime = timeDeal.get(0).getStartTime();
+
+// NORMAL, RESERVATION, PROGRESS, COMPLETE
+        if(timeDealProductResponses.size() == 0){ // 타임딜이 존재하지 않는 다면
+            if(store.getTimeDealCheck() == true){ // 닫혀있다.  완료됌.
+                status = "COMPLETE";
+            }
+            else{ // 열려있다.
+                status = "NORMAL";
+            }
+        }
+        else { // RESERVATION, PROGRESS
+            // 시간 비교해서 현재 시간이 더 작으면 reservation, 크면 progress
+            //timeDeal.get(0).getStartTime();
+            //String localTime;
+            SimpleDateFormat fourteen_format = new SimpleDateFormat("HH:mm");
+            Date date_now = new Date(System.currentTimeMillis()); // 현재 시간
+            String a = fourteen_format.format(date_now); // 현재 시간 포맷팅
+            Date data1 = null; // 현재시간
+            Date data2 = null; // data1에는 현재 시간 포맷팅, 2는 타임딜 시간 포맷팅
+            try {
+                data1 = fourteen_format.parse(a);
+                data2 = fourteen_format.parse(startTime);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+            //Date localTime = fourteen_format.format(date_now);
+            //String a = fourteen_format.format(date_now);
+
+            if(data2.compareTo(data1) > 0){ //시간 비교해서 현재 시간이 더 작으면 reservation
+                status = "RESERVATION";
+            }
+            else{ // 크거나 같으면 progress
+                status = "PROGRESS";
+            }
+        }
+
+        TimeDealProductInfoResponse timeDealProductInfoResponse = new TimeDealProductInfoResponse(status,startTime,timeDealProductResponses);
+
+        return timeDealProductInfoResponse;
     }
 
     public void timeDealCreate(TimeDealCreateDto timeDealCreateDto) { // 타임 딜 생성
@@ -357,5 +399,9 @@ public class StoreService {
             }
         }
         return timeDeal; // 타임딜만 있는 상태
+    }
+
+    public Optional<Store> getStoreId(Long storeId) {
+        return storeRepository.findById(storeId);
     }
 }
