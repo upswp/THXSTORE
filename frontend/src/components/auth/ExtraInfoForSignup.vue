@@ -51,9 +51,12 @@ export default {
         email: '',
         password1: '',
         password2: '',
+        lat: '',
+        lon: '',
       },
       this.getTempUserInfo,
     );
+    this.getLatLong();
   },
   methods: {
     ...mapMutations(['setSpinnerState']),
@@ -68,6 +71,7 @@ export default {
           profileImage: this.userData.profileImage,
         };
         this.setSpinnerState(true);
+        // 현재 위치 들어갈 자리
         await registerUser(userData);
         await this.$store.dispatch('LOGIN', {
           email: this.userData.email,
@@ -82,6 +86,18 @@ export default {
     },
     moveToPage(toward) {
       this.$router.push({ name: toward });
+    },
+    getLatLong() {
+      if ('geolocation' in navigator) {
+        navigator.geolocation.getCurrentPosition(position => {
+          let geocoder = new kakao.maps.services.Geocoder();
+          let coord = new kakao.maps.LatLng(position.coords.latitude, position.coords.longitude);
+          this.userData.lat = position.coords.latitude;
+          this.userData.lon = position.coords.longitude;
+        });
+      } else {
+        /* 위치정보 사용 불가능 */
+      }
     },
   },
 };

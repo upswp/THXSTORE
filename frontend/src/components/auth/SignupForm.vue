@@ -56,8 +56,13 @@ export default {
         password1: '',
         password2: '',
         nickname: '',
+        lat: '',
+        lon: '',
       },
     };
+  },
+  created() {
+    this.getLatLong();
   },
   mounted() {
     this.googleLoad();
@@ -101,6 +106,19 @@ export default {
         console.log(error);
         this.setSpinnerState(false);
         alert('회원가입에 문제가 생겼습니다. 다시 시도해주세요.');
+      }
+    },
+    getLatLong() {
+      if ('geolocation' in navigator) {
+        navigator.geolocation.getCurrentPosition(position => {
+          let geocoder = new kakao.maps.services.Geocoder();
+          let coord = new kakao.maps.LatLng(position.coords.latitude, position.coords.longitude);
+          this.userData.lat = position.coords.latitude;
+          this.userData.lon = position.coords.longitude;
+        });
+      } else {
+        /* 위치정보 사용 불가능 */
+        console.log('위치 정보 사용 불가능');
       }
     },
   },
