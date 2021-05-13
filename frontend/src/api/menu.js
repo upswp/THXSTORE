@@ -71,6 +71,6 @@ const deleteMenu = productId =>
  * @param {number} storeId
  * @returns {Promise<Menu>} menuItem
  */
-const getTotalMenu = storeId => privateAPI.get(`${storeId}`);
+const getTotalMenu = storeId => menuListAPI.get(`${storeId}`);
 
 export { getMenuListByGroup, getMenu, registerMenuByGroup, updateMenu, deleteMenu, getTotalMenu };

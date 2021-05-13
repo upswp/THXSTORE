@@ -10,7 +10,7 @@ function formatNumber(value) {
   }
   return res + unit;
 }
-function hourStrConvert(num, unit) {
+function timeStrConvert(num, unit) {
   if (num === 0) return '00';
   const str = `${num * unit}`;
   if (str.length < 2) return '0' + str;
@@ -19,9 +19,9 @@ function hourStrConvert(num, unit) {
 function meridiemConvert(value) {
   const num = parseInt(value);
   if (num === 0) return [false, '12'];
-  if (num < 12) return [false, hourStrConvert(num, 1)];
+  if (num < 12) return [false, timeStrConvert(num, 1)];
   if (num === 12) return [true, '12'];
-  if (num < 24) return [true, hourStrConvert(num - 12, 1)];
+  if (num < 24) return [true, timeStrConvert(num - 12, 1)];
 }
 
-export { formatNumber, hourStrConvert, meridiemConvert };
+export { formatNumber, timeStrConvert, meridiemConvert };

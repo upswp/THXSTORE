@@ -195,6 +195,7 @@
   -webkit-box-orient: vertical;
   word-wrap: break-word;
   word-break: $word-break;
+
 }
 @mixin ellipsis-one{
   overflow: hidden;
