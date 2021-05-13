@@ -7,10 +7,7 @@ import com.ssafy.thxstore.member.repository.MemberRepository;
 import com.ssafy.thxstore.product.domain.Product;
 import com.ssafy.thxstore.product.domain.ProductGroup;
 import com.ssafy.thxstore.product.domain.TimeDeal;
-import com.ssafy.thxstore.product.dto.AllProductListResponse;
-import com.ssafy.thxstore.product.dto.TimeDealCreateDto;
-import com.ssafy.thxstore.product.dto.TimeDealProductDto;
-import com.ssafy.thxstore.product.dto.TimeDealProductResponse;
+import com.ssafy.thxstore.product.dto.*;
 import com.ssafy.thxstore.product.repository.ProductGroupRepository;
 import com.ssafy.thxstore.product.repository.ProductRepository;
 import com.ssafy.thxstore.product.repository.TimeDealRepository;
@@ -30,9 +27,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+
+import static java.lang.Math.*;
 
 // todo 필요없는 주석 처리.
 @Service
@@ -245,7 +247,8 @@ public class StoreService {
         storeRepository.updateStoreTimeDealCHeck();
     }
 
-    public List<TimeDealProductResponse> timeDealList(Long storeId) { // 타임 딜 반환.
+    public TimeDealProductInfoResponse timeDealList(Long storeId){ // 타임 딜 반환.
+        Store store = storeRepository.findById(storeId).get();
         List<TimeDeal> timeDeal = timeDealRepository.findAllByStoreId(storeId).get();
         List<TimeDealProductResponse> timeDealProductResponses = new ArrayList<>();
 
@@ -255,7 +258,48 @@ public class StoreService {
             );
             timeDealProductResponses.get(i).setProductId(timeDeal.get(i).getProduct().getId());
         }
-        return timeDealProductResponses;
+        String status;
+        String startTime = timeDeal.get(0).getStartTime();
+
+// NORMAL, RESERVATION, PROGRESS, COMPLETE
+        if(timeDealProductResponses.size() == 0){ // 타임딜이 존재하지 않는 다면
+            if(store.getTimeDealCheck() == true){ // 닫혀있다.  완료됌.
+                status = "COMPLETE";
+            }
+            else{ // 열려있다.
+                status = "NORMAL";
+            }
+        }
+        else { // RESERVATION, PROGRESS
+            // 시간 비교해서 현재 시간이 더 작으면 reservation, 크면 progress
+            //timeDeal.get(0).getStartTime();
+            //String localTime;
+            SimpleDateFormat fourteen_format = new SimpleDateFormat("HH:mm");
+            Date date_now = new Date(System.currentTimeMillis()); // 현재 시간
+            String a = fourteen_format.format(date_now); // 현재 시간 포맷팅
+            Date data1 = null; // 현재시간
+            Date data2 = null; // data1에는 현재 시간 포맷팅, 2는 타임딜 시간 포맷팅
+            try {
+                data1 = fourteen_format.parse(a);
+                data2 = fourteen_format.parse(startTime);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+            //Date localTime = fourteen_format.format(date_now);
+            //String a = fourteen_format.format(date_now);
+
+            if(data2.compareTo(data1) > 0){ //시간 비교해서 현재 시간이 더 작으면 reservation
+                status = "RESERVATION";
+            }
+            else{ // 크거나 같으면 progress
+                status = "PROGRESS";
+            }
+        }
+
+        TimeDealProductInfoResponse timeDealProductInfoResponse = new TimeDealProductInfoResponse(status,startTime,timeDealProductResponses);
+
+        return timeDealProductInfoResponse;
     }
 
     public void timeDealCreate(TimeDealCreateDto timeDealCreateDto) { // 타임 딜 생성
@@ -265,6 +309,7 @@ public class StoreService {
 
         Long storeId = timeDealCreateDto.getStoreId();
         Store store = storeRepository.findById(storeId).get();
+        store.setTimeDealCheck(true); // 타임 딜 시작을 확인하는 셋팅
         String startTime = timeDealCreateDto.getStartTime();
 
         for(int i = 0 ; i < timeDealProductDtos.size(); i++){
@@ -293,5 +338,70 @@ public class StoreService {
         List<AllProductListResponse> allProductListResponses = modelMapper.map(productList, new TypeToken<List<AllProductListResponse>>(){}.getType());
 
         return allProductListResponses;
+    }
+
+    // 멤버 정보
+    public Optional<Member> getMemberInfo(String email) {
+        return memberRepository.findByEmail(email);
+    }
+
+    // 위도경도
+    public List<StoreAndDistanceDto> findLocation(Optional<Member> member) {
+        // todo 여기 member 들어오면 변경
+        //StoreAndDistanceDto
+        Optional<List<Store>> storeList = storeRepository.findByLocation(36.42583333272267, 127.38674024126392);
+
+        List<StoreAndDistanceDto> storeAndDistanceDto = new ArrayList<>();
+
+        for(int i = 0; i < storeList.get().size(); i++){
+            Optional<List<TimeDeal>> timeDealList = timeDealRepository.findAllByStoreId(storeList.get().get(i).getId());
+            if(!timeDealList.isPresent()){
+                continue;
+            }
+            //  타임딜이 존재한다면. todo 다른곳 remove 찾기
+            StoreAndDistanceDto storeAndDistanceDto1 = modelMapper.map(storeList.get().get(i), new TypeToken<StoreAndDistanceDto>(){}.getType());
+
+
+            storeAndDistanceDto1.setDistance( 6371*acos(cos(toRadians(36.42583333272267))*cos(toRadians(storeList.get().get(i).getLat()))*cos(toRadians(storeList.get().get(i).getLon())
+                    -toRadians(127.38674024126392))+sin(toRadians(36.42583333272267))*sin(toRadians(storeList.get().get(i).getLat()))));
+
+            storeAndDistanceDto1.setTimeDealStart(timeDealList.get().get(0).getStartTime());
+            // 해당 상품만!
+            //List<TimeDeal> timeDealList
+            List<Product> products = new ArrayList<>();
+            for(int j = 0; j < timeDealList.get().size(); j++){ //timeDealList.get().get(j).getProduct().
+                products.add(Product.builder()
+                        .id(timeDealList.get().get(j).getProduct().getId())
+                        .name(timeDealList.get().get(j).getProduct().getName())
+                        .introduce(timeDealList.get().get(j).getProduct().getIntroduce())
+                        .amount(timeDealList.get().get(j).getProduct().getAmount())
+                        .rate(timeDealList.get().get(j).getProduct().getRate())
+                        .stock(timeDealList.get().get(j).getProduct().getStock())
+                        .price(timeDealList.get().get(j).getProduct().getPrice())
+                        .productImg(timeDealList.get().get(j).getProduct().getProductImg())
+                        .build());
+            }
+            storeAndDistanceDto1.setTimeDealList(products);
+            storeAndDistanceDto.add(storeAndDistanceDto1);
+        }
+
+        return storeAndDistanceDto;
+    }
+
+    public List<StoreAndDistanceDto> findtimeDealStore(Optional<List<StoreAndDistanceDto>> timeDealStoreList) {
+        List<StoreAndDistanceDto> timeDeal = timeDealStoreList.get();
+
+        // 타임딜 항목이 없으면 제거
+        for(int i = 0; i < timeDeal.size();i++){
+            if(timeDeal.get(i).getTimeDealList().size() == 0){
+                timeDeal.remove(i);
+                i--;
+            }
+        }
+        return timeDeal; // 타임딜만 있는 상태
+    }
+
+    public Optional<Store> getStoreId(Long storeId) {
+        return storeRepository.findById(storeId);
     }
 }

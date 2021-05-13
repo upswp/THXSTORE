@@ -6,6 +6,8 @@ import com.ssafy.thxstore.store.domain.Store;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @AllArgsConstructor
@@ -36,6 +38,10 @@ public class ProductGroup {
         this.store = store;
         this.name = name;
     }
+
+    @ColumnDescription("product")
+    @OneToMany
+    private List<Product> productList = new ArrayList<>();
 
 
 }
