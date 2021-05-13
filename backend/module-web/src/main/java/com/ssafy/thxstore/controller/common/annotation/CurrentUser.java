@@ -1,4 +1,4 @@
-package com.ssafy.thxstore.controller.common;
+package com.ssafy.thxstore.controller.common.annotation;
 
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 

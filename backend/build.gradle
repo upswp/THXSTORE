@@ -40,6 +40,8 @@ subprojects {
         implementation group: 'org.springframework.boot', name: 'spring-boot-starter-jdbc'
         implementation group: 'org.springframework.boot', name: 'spring-boot-starter-data-redis'
         implementation group: 'org.modelmapper', name: 'modelmapper', version: '2.3.8'
+        implementation group: 'io.rest-assured', name: 'rest-assured-common', version: '4.3.3'
+
 
         // Security
         implementation group: 'org.springframework.boot', name: 'spring-boot-starter-security', version: '2.3.9.RELEASE'
@@ -58,6 +60,8 @@ subprojects {
         testImplementation 'org.springframework.boot:spring-boot-starter-test'
         testImplementation 'org.springframework.security:spring-security-test'
         testCompile group: 'junit', name: 'junit', version: '4.12'
+        testImplementation group: 'io.rest-assured', name: 'spring-mock-mvc', version: '4.3.3'
+
 
         implementation platform('com.amazonaws:aws-java-sdk-bom:1.11.934')
         implementation 'com.amazonaws:aws-java-sdk-s3'

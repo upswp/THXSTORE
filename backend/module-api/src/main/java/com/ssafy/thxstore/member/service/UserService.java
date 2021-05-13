@@ -1,17 +1,33 @@
 package com.ssafy.thxstore.member.service;
 
+import com.ssafy.thxstore.image.service.ImageService;
+import com.ssafy.thxstore.member.domain.Member;
+import com.ssafy.thxstore.member.dto.request.ModifyPatchMemberRequest;
 import com.ssafy.thxstore.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
+
 @Service
 @RequiredArgsConstructor
 public class UserService {
-
+    private final ImageService imageService;
     private final ModelMapper modelMapper;
     private final MemberRepository memberRepository;
 
-
-
+    public Member patchMember(Member existingMember, ModifyPatchMemberRequest modifyPatchMemberRequest) throws IOException {
+        if (modifyPatchMemberRequest.getNickname() != null) {
+            this.modelMapper.map(modifyPatchMemberRequest.getNickname(), existingMember.getNickname());
+        } else if (modifyPatchMemberRequest.getPhoneNumber() != null) {
+            this.modelMapper.map(modifyPatchMemberRequest.getPhoneNumber(), existingMember.getPhoneNumber());
+        } else if (modifyPatchMemberRequest.getPassword() != null) {
+            this.modelMapper.map(modifyPatchMemberRequest.getPassword(), existingMember.getPassword());
+        } else if (modifyPatchMemberRequest.getProfileImage() != null) {
+            String imgProfile = imageService.createImage(modifyPatchMemberRequest.getProfileImage());
+            this.modelMapper.map(imgProfile, existingMember.getProfileImage());
+        }
+        return this.memberRepository.save(existingMember);
+    }
 }

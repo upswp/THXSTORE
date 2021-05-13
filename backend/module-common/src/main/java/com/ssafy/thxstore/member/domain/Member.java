@@ -14,7 +14,7 @@ import java.util.List;
 
 @Entity
 @AllArgsConstructor
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PUBLIC)
 @Getter
 @Setter
 @EqualsAndHashCode(of = "id", callSuper = false)
@@ -48,6 +48,14 @@ public class Member extends BaseTimeEntity {
     @ColumnDescription("유저 위치정보")
     @Column(name = "address")
     private String address;
+
+    @ColumnDescription("유저 위치정보 위도")
+    @Column(name = "lat")
+    private Double lat;
+
+    @ColumnDescription("유저 위치정보 경도")
+    @Column(name = "lon")
+    private Double lon;
 
     @ColumnDescription("유저 닉네임")
     @Column(name = "nickname", nullable = false)

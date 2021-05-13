@@ -13,7 +13,6 @@ public class AppProperties {
 		return auth;
 	}
 
-
 	public static class Auth {
 		private String tokenSecret;
 		private long tokenExpirationMsec;
