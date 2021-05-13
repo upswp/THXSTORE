@@ -83,6 +83,7 @@ export default {
     ...mapMutations(['setSpinnerState']),
     async addNewGroup() {
       // this.grouList.push(this.newGroupName);
+      if (this.newGroupName === '') return;
       try {
         this.setSpinnerState(true);
         await registerMenuGroup(this.newGroupName);

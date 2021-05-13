@@ -1,9 +1,14 @@
 <template>
-  <main v-if="loaded" class="store-product-detail">
-    <template v-if="menus.length === 0">
-      <div class="no-menu">등록된 메뉴가 없습니다.</div>
+  <main class="store-product-detail">
+    <template v-if="menus.length === 0 && loaded">
+      <div class="width:100%">
+        <div class="no-menu">등록된 메뉴가 없습니다.</div>
+        <div class="menu-add-button2" @click="editOn(false)">
+          <div>새 메뉴 추가하기</div>
+        </div>
+      </div>
     </template>
-    <template v-else>
+    <template v-if="menus.length > 0 && loaded">
       <div class="group-name-wrapper">
         <div class="group-name">{{ groupName }}</div>
         <div class="menu-add-button" @click="editOn(false)">새 메뉴 추가하기</div>
@@ -336,6 +341,23 @@ export default {
   &:hover {
     background-color: $red400;
     color: white;
+  }
+}
+.menu-add-button2 {
+  @include flexbox;
+  @include justify-content(center);
+  div {
+    margin-top: 10px;
+    padding: 5px;
+    text-align: center;
+    background-color: $red100;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    &:hover {
+      background-color: $red400;
+      color: white;
+    }
   }
 }
 .setting-wrapper {

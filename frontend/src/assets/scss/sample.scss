@@ -1,3 +1,34 @@
 // @import '@/assets/scss/sample';
-
-
+.time-deal-container{
+  width:100%;
+}
+.time-deal-accordian{
+  width:100%;
+}
+ul{display: block;
+  width:100%;
+}
+li{display: block;
+  width:100%;
+}
+.menu-content{
+  transition: all 0.3s;
+  height:0;
+  overflow: hidden;
+}
+.menu-item-radio{
+  display: none;
+  
+  &:checked + .menu-content{
+    display: block;
+    height:300px;
+  }
+}
+.menu-item-label{
+  display: block;
+  width:100%;
+  background-color: $red200;
+  color:white;
+  border:1px solid $gray400;
+  
+}

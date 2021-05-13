@@ -1,8 +1,8 @@
 import { createInstance, createInstanceWithToken } from '@/api';
 
-const privateAPI = createInstanceWithToken('api/store/group/product/');
-const privateAPI2 = createInstanceWithToken('api/store/group/productlist/');
-
+const menuGroupAPI = createInstanceWithToken('api/store/group/product/');
+const menuGroupListAPI = createInstanceWithToken('api/store/group/productlist/');
+const menuListAPI = createInstanceWithToken('api/store/group/productlist/');
 /**
  * 메뉴 정보
  * @typedef {object} Menu
@@ -29,21 +29,21 @@ const privateAPI2 = createInstanceWithToken('api/store/group/productlist/');
  * @param {number} groupId
  * @returns {Promise<Array<Menu>>} totalMenuGroup
  */
-const getMenuListByGroup = groupId => privateAPI2.get(`${groupId}`);
+const getMenuListByGroup = groupId => menuGroupListAPI.get(`${groupId}`);
 /**
  * 메뉴 상세 정보 불러오기
  * @typedef {function} getMenu
  * @param {number} productId
  * @returns {Promise<Menu>} menu
  */
-const getMenu = productId => privateAPI.get(`${productId}`);
+const getMenu = productId => menuGroupAPI.get(`${productId}`);
 /**
  * 그룹 별 메뉴 생성하기
  * @typedef {function} registerMenuByGroup
  * @param {AddMenu} menuData
  * @returns {Promise<Boolean>} isRegistered
  */
-const registerMenuByGroup = menuData => privateAPI.post('', menuData);
+const registerMenuByGroup = menuData => menuGroupAPI.post('', menuData);
 
 /**
  * 메뉴 수정하기
@@ -51,7 +51,7 @@ const registerMenuByGroup = menuData => privateAPI.post('', menuData);
  * @param {Menu} menuData
  * @returns {Promise<Boolean>} isUpdated
  */
-const updateMenu = menuData => privateAPI.patch('', menuData);
+const updateMenu = menuData => menuGroupAPI.patch('', menuData);
 
 /**
  * 메뉴 삭제하기
@@ -60,10 +60,17 @@ const updateMenu = menuData => privateAPI.patch('', menuData);
  * @returns {Promise<Boolean>} isDeleted
  */
 const deleteMenu = productId =>
-  privateAPI.delete('', {
+  menuGroupAPI.delete('', {
     params: {
       productId,
     },
   });
+/**
+ * 판매자 입장에서 메뉴 전체 조회
+ * @typedef {function} getTotalMenu
+ * @param {number} storeId
+ * @returns {Promise<Menu>} menuItem
+ */
+const getTotalMenu = storeId => privateAPI.get(`${storeId}`);
 
-export { getMenuListByGroup, getMenu, registerMenuByGroup, updateMenu, deleteMenu };
+export { getMenuListByGroup, getMenu, registerMenuByGroup, updateMenu, deleteMenu, getTotalMenu };
