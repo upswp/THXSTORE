@@ -8,7 +8,7 @@ import lombok.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class FindAllGroupMenuDto {
+public class TimeDealProductResponse {
     Long productId;
     String name;
     Integer price;
@@ -16,5 +16,4 @@ public class FindAllGroupMenuDto {
     String amount;
     Integer rate;
     Integer stock;
-    String introduce;
 }

@@ -16,4 +16,5 @@ public class DetailProductDto {
     String amount;
     Integer rate;
     Integer stock;
+    String introduce;
 }

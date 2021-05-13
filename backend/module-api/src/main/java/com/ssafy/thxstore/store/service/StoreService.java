@@ -4,6 +4,15 @@ import com.ssafy.thxstore.image.service.ImageService;
 import com.ssafy.thxstore.member.domain.Member;
 import com.ssafy.thxstore.member.domain.MemberRole;
 import com.ssafy.thxstore.member.repository.MemberRepository;
+import com.ssafy.thxstore.product.domain.Product;
+import com.ssafy.thxstore.product.domain.ProductGroup;
+import com.ssafy.thxstore.product.domain.TimeDeal;
+import com.ssafy.thxstore.product.dto.AllProductListResponse;
+import com.ssafy.thxstore.product.dto.TimeDealCreateDto;
+import com.ssafy.thxstore.product.dto.TimeDealProductDto;
+import com.ssafy.thxstore.product.dto.TimeDealProductResponse;
+import com.ssafy.thxstore.product.repository.ProductGroupRepository;
+import com.ssafy.thxstore.product.repository.ProductRepository;
 import com.ssafy.thxstore.product.repository.TimeDealRepository;
 import com.ssafy.thxstore.store.domain.CheckStore;
 import com.ssafy.thxstore.store.domain.Store;
@@ -15,6 +24,7 @@ import com.ssafy.thxstore.store.repository.TempStoreRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeToken;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,7 +46,9 @@ public class StoreService {
     private final StoreRepository storeRepository;
     private final TempStoreRepository tempStoreRepository;
     private final MemberRepository memberRepository;
+    private final ProductRepository productRepository;
     private final TimeDealRepository timeDealRepository;
+    private final ProductGroupRepository productGroupRepository;
 
     private final ImageService imageService;
 
@@ -83,10 +95,10 @@ public class StoreService {
             store.setCloseDay(storeChangedDto.getCloseDay());
         }else if(storeChangedDto.getIntroduce() != null){
             store.setIntroduce(storeChangedDto.getIntroduce());
-        }else if(storeChangedDto.getThumbnailImg() != null){
+        }else if(storeChangedDto.getThumbImg() != null){
             String imgProfile = null;
             try {
-                imgProfile = imageService.createImage(storeChangedDto.getThumbnailImg());
+                imgProfile = imageService.createImage(storeChangedDto.getThumbImg());
             }catch (IOException e) {
                 return null;
             }
@@ -217,8 +229,8 @@ public class StoreService {
     }
 
     public DetailStoreResponse detailStoreResopnse(Store store) {
-        sideInfo sideInfo = modelMapper.map(store, sideInfo.class);
-        baseInfo baseInfo = modelMapper.map(store, baseInfo.class);
+        SideInfo sideInfo = modelMapper.map(store, SideInfo.class);
+        BaseInfo baseInfo = modelMapper.map(store, BaseInfo.class);
         baseInfo.setRole(store.getMember().getRole());
         baseInfo.setStoreId(store.getId());
         DetailStoreResponse detailStoreResponse = DetailStoreResponse.builder()
@@ -233,8 +245,53 @@ public class StoreService {
         storeRepository.updateStoreTimeDealCHeck();
     }
 
-    public void timeDealList(Long storeId) {
-        timeDealRepository.findByStoreId(storeId);
+    public List<TimeDealProductResponse> timeDealList(Long storeId) { // 타임 딜 반환.
+        List<TimeDeal> timeDeal = timeDealRepository.findAllByStoreId(storeId).get();
+        List<TimeDealProductResponse> timeDealProductResponses = new ArrayList<>();
 
+        for(int i = 0; i < timeDeal.size(); i++){
+            timeDealProductResponses.add(
+                    modelMapper.map(timeDeal.get(i).getProduct(), TimeDealProductResponse.class)
+            );
+            timeDealProductResponses.get(i).setProductId(timeDeal.get(i).getProduct().getId());
+        }
+        return timeDealProductResponses;
+    }
+
+    public void timeDealCreate(TimeDealCreateDto timeDealCreateDto) { // 타임 딜 생성
+        // TODO 개선 방법을 생각해보자 rate와 stock를 timedeall 영역에 넣는 것이 더 효율적일까?
+
+        List<TimeDealProductDto> timeDealProductDtos = timeDealCreateDto.getTimeDealList();
+
+        Long storeId = timeDealCreateDto.getStoreId();
+        Store store = storeRepository.findById(storeId).get();
+        String startTime = timeDealCreateDto.getStartTime();
+
+        for(int i = 0 ; i < timeDealProductDtos.size(); i++){
+            Product product = productRepository.findById(timeDealProductDtos.get(i).getProductId()).get();
+            product.setRate(timeDealProductDtos.get(i).getRate());
+            product.setStock(timeDealProductDtos.get(i).getStock());
+
+            TimeDeal timeDeal = TimeDeal.builder()
+                    .product(product)
+                    .startTime(startTime)
+                    .store(store)
+                    .build();
+            timeDealRepository.save(timeDeal);
+        }
+    }
+
+    // TODO : group에서 prodcut포함하도록 리펙토링 필요
+    public List<AllProductListResponse> productAll(Long storeId) {
+        List<ProductGroup> productGroup = productGroupRepository.findAllByStoreId(storeId).get();
+
+        List<Product> productList = new ArrayList<>();
+        for(int i = 0; i < productGroup.size(); i++){
+            Long groupId = productGroup.get(i).getId();
+            productList.addAll(productRepository.findAllByProductGroupId(groupId).get());
+        }
+        List<AllProductListResponse> allProductListResponses = modelMapper.map(productList, new TypeToken<List<AllProductListResponse>>(){}.getType());
+
+        return allProductListResponses;
     }
 }

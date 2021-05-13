@@ -11,7 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class baseInfo {
+public class BaseInfo {
     Long storeId;
     String name;
     String mainAddress;

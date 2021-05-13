@@ -36,31 +36,31 @@ public class ProductController {
 
 /* 판매자 스토어 페이지(메뉴 관리(1, 그룹)) */
 
-    @PatchMapping // 그룹 수정
+    @PutMapping // 그룹 수정
     public ResponseEntity editGroup(@RequestHeader String authorization, @RequestBody EditGroupDto editGroupDto) {
-        String email = jwtToEmail(authorization);
+       // String email = jwtToEmail(authorization);
         productService.editGroup(editGroupDto);
         return ResponseEntity.created(null).body(HttpStatus.OK);
     }
 
     @PostMapping // 그룹 등록
     public ResponseEntity createGroup(@RequestHeader String authorization, @RequestBody CreateGroupDto createGroupDto) {
-        String email = jwtToEmail(authorization);
+       // String email = jwtToEmail(authorization);
         productService.createGroup(createGroupDto);
         return ResponseEntity.created(null).body(HttpStatus.CREATED);
     }
 
-    @DeleteMapping // todo 그룹 삭제(매뉴 전체) -> 연관 매핑 확인
-    public ResponseEntity deleteGroup(@RequestHeader String authorization, @RequestBody DeleteGroupDto deleteGroupDto) {
-        String email = jwtToEmail(authorization);
-        productService.deleteGroup(deleteGroupDto);
+    @DeleteMapping// todo 그룹 삭제(매뉴 전체) -> 연관 매핑 확인
+    public ResponseEntity deleteGroup(@RequestHeader String authorization, @RequestParam("groupId") Long groupId) {
+        //String email = jwtToEmail(authorization);
+        productService.deleteGroup(groupId);
 
        return ResponseEntity.created(null).body(HttpStatus.OK);
     }
 
     @GetMapping("{storeId}") // 그룹 전체 조회@RequestBody FindAllGroupDto findAllGroupDto
     public ResponseEntity findAllGroup(@RequestHeader String authorization, @PathVariable("storeId") Long storeId) {
-        String email = jwtToEmail(authorization);
+       // String email = jwtToEmail(authorization);
         Optional<List<ProductGroup>> productGroups = productService.findAllGroup(storeId);
 
         if(productGroups.isPresent()) {
@@ -93,9 +93,9 @@ public class ProductController {
     }
 
     @DeleteMapping("/product/") // 매뉴 삭제
-    public ResponseEntity deleteMenu(@RequestHeader String authorization, @RequestBody DeleteMenuDto deleteMenuDto) {
-        String email = jwtToEmail(authorization);
-        productService.deleteMenu(deleteMenuDto);
+    public ResponseEntity deleteMenu(@RequestHeader String authorization,@RequestParam("productId") Long productId) {
+        //String email = jwtToEmail(authorization);
+        productService.deleteMenu(productId);
         return ResponseEntity.created(null).body(HttpStatus.OK);
     }
 
@@ -103,18 +103,11 @@ public class ProductController {
 
 
     /* 판매자 스토어 페이지(메뉴 관리(3, 메뉴 자세히)) */
-    @PutMapping("/product/") //매뉴 수정
+    @PatchMapping("/product/") //매뉴 수정
     public ResponseEntity editMenu(@RequestHeader String authorization, @ModelAttribute EditMenuDto editMenuDto) {
-        String email = jwtToEmail(authorization);
-        String productImg = null;
-        if(editMenuDto.getProductImg() != null) {
-            try {
-                productImg = imageService.createImage(editMenuDto.getProductImg());
-            } catch (IOException e) {
-                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-            }
-        }
-        productService.editMenu(productImg, editMenuDto);
+        //String email = jwtToEmail(authorization);
+
+        productService.editMenu(editMenuDto);
 
         return ResponseEntity.created(null).body(HttpStatus.OK);
     }

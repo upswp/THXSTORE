@@ -117,7 +117,7 @@ export default {
   height: 100%;
   background-color: rgba(0, 0, 0, 0.5);
   display: table;
-  transition: opacity 0.3s ease;
+  transition: opacity 0.1s ease;
   @include flexbox;
   @include justify-content(center);
   @include align-items(center);
@@ -129,7 +129,7 @@ export default {
   background-color: #fff;
   border-radius: 2px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);
-  transition: all 0.3s ease;
+  transition: all 0.1s ease;
   font-family: Helvetica, Arial, sans-serif;
   /* 내가 추가한 것 */
   max-height: 600px;

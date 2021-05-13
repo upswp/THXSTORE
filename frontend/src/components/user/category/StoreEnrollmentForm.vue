@@ -14,11 +14,11 @@
             </div>
           </li>
           <li>
-            <set-road-name v-if="loaded" @newAddress="setLocationByRoadName">스토어 주소 등록</set-road-name>
+            <set-road-name v-if="addressAPILoad" @newAddress="setLocationByRoadName">스토어 주소 등록</set-road-name>
             <label for="nomalAddress">스토어 주소</label>
             <div class="input-content">
               <input id="nomalAddress" v-model="storeInfo.mainAddress" type="text" placeholder="주소" />
-              <button id="addressButton" type="reset" @click="loaded = true">주소 찾기</button>
+              <button id="addressButton" type="reset" @click="addressAPILoad = true">주소 찾기</button>
               <input id="detailAddress" v-model="storeInfo.subAddress" type="text" placeholder="상세주소" />
             </div>
           </li>
@@ -63,7 +63,12 @@
                 </div>
               </div>
             </div>
-            <div class="submit-button">
+            <div v-if="modifyButtonLoad" class="submit-button">
+              <button type="submit">
+                <b>수정 완료</b>
+              </button>
+            </div>
+            <div v-else class="submit-button">
               <button type="submit">
                 <b>신청 완료</b>
               </button>
@@ -77,11 +82,19 @@
 
 <script>
 import SetRoadName from '@/components/common/SetRoadName.vue';
-import WaitingModal from '@/components/common/WaitingModal.vue';
-import ReturnModal from '@/components/common/ReturnModal.vue';
-import { registerStore, getCheckOfStore, deletePreStoreEnrollment } from '@/api/seller';
+import WaitingModal from '@/components/user/modal/WaitingModal.vue';
+import ReturnModal from '@/components/user/modal/ReturnModal.vue';
+import {
+  registerStore,
+  getCheckOfStore,
+  deletePreStoreEnrollment,
+  modifyStoreBaseInfo,
+  deletePreStoreModification,
+} from '@/api/seller';
 import { validationPhoneNumber, validationComResNum } from '@/utils/validation';
+import { mapMutations } from 'vuex';
 import { handleException } from '@/utils/handler.js';
+import { findAddressAPI } from '@/api/map.js';
 
 export default {
   components: {
@@ -93,7 +106,7 @@ export default {
     return {
       // 모달
       showWaitingModal: false,
-      showReturnModal: true,
+      showReturnModal: false,
       // 신청 정보
       storeInfo: {
         name: '',
@@ -105,56 +118,87 @@ export default {
       },
       // 그 외
       fileValue: '',
-      loaded: false,
+      addressAPILoad: false,
+      modifyButtonLoad: false,
       checkStore: '',
+      role: '',
     };
   },
   computed: {
     validForm() {
       return (
         this.storeInfo.name !== '' &&
-        this.storeInfo.nomalAddress !== '' &&
+        this.storeInfo.mainAddress !== '' &&
         this.storeInfo.phoneNum !== '' &&
         this.storeInfo.license !== '' &&
         this.storeInfo.licenseImg !== ''
       );
     },
   },
-  created() {
-    this.decideModal();
-    console.log('created 실행되고있는가?');
+  activated() {
+    this.decideRole();
   },
   methods: {
-    async decideModal() {
+    ...mapMutations(['setSpinnerState', 'setUserInfo']),
+    async decideRole() {
       try {
-        console.log('dicideModal 함수 시작됨');
+        this.setSpinnerState(true);
         const { data } = await getCheckOfStore('');
-        console.log(data);
+        const role = data.baseInfo.role;
+        data.baseInfo.licenseImg = '';
+        this.setSpinnerState(false);
+        if (role == 'ROLE_MANAGER') {
+          this.setUserInfo({ role: 'ROLE_MANAGER' });
+          this.storeInfo = data.baseInfo;
+          this.modifyButtonLoad = true;
+          this.decideModificationModal();
+        } else {
+          this.decideApplicationModal();
+        }
+      } catch (error) {
+        this.checkStore = '일반고객';
+        this.setSpinnerState(false);
+      }
+    },
 
-        console.log('data.checkStore:', data.checkStore);
-        this.checkStore = data.checkStore;
-        console.log('checkStore의 값은?', this.checkStore);
-        console.log('this.checkStore의 값은?', this.checkStore);
+    async decideApplicationModal() {
+      try {
+        const { data } = await getCheckOfStore('');
+        this.checkStore = data.baseInfo.checkStore;
         if (this.checkStore == 'APPLICATION_WAITING') {
-          console.log('참이라고');
           this.showWaitingModal = true;
         } else if (this.checkStore === 'APPLICATION_FAILED') {
           this.showReturnModal = true;
         }
+        this.setSpinnerState(false);
+      } catch (error) {
+        this.setSpinnerState(false);
+      }
+    },
+    async decideModificationModal() {
+      try {
+        this.setSpinnerState(true);
+        const { data } = await getCheckOfStore('');
+        this.checkStore = data.baseInfo.checkStore;
+        if (this.checkStore == 'EDIT_WAITING') {
+          this.showWaitingModal = true;
+        } else if (this.checkStore === 'EDIT_FAILED') {
+          this.showReturnModal = true;
+        }
+        this.setSpinnerState(false);
       } catch (error) {
         this.checkStore = '일반고객';
+        this.setSpinnerState(false);
       }
     },
     getComResNum(comResNum) {
       if (!comResNum) return comResNum;
       let res = validationComResNum(comResNum);
-      console.log('서버넘어가는값', res);
       this.storeInfo.license = res;
     },
     getPhoneNumber(phoneNumber) {
       if (!phoneNumber) return phoneNumber;
       let res = validationPhoneNumber(phoneNumber);
-      console.log('서버넘어가는값', res);
       this.storeInfo.phoneNum = res;
     },
 
@@ -166,32 +210,46 @@ export default {
     rewriteStoreEnrollment() {
       this.showReturnModal = false;
       this.checkStore = '';
-      deletePreStoreEnrollment();
-      console.log('삭제요청했어요.');
+      const role = this.storeInfo.role;
+      if (role == 'ROLE_MANAGER') {
+        deletePreStoreModification();
+      } else {
+        deletePreStoreEnrollment();
+      }
     },
     async submitForm() {
       try {
         if (!this.validForm) {
           alert('항목을 모두 채워주세요');
         } else {
+          this.setSpinnerState(true);
+          const { data } = await findAddressAPI(this.storeInfo.mainAddress);
+          this.storeInfo.lon = data.documents[0].x;
+          this.storeInfo.lat = data.documents[0].y;
           const formData = new FormData();
           for (const key in this.storeInfo) {
             formData.append(key, this.storeInfo[key]);
           }
-          const res = await registerStore(formData);
-          console.log(res);
-
+          if (this.modifyButtonLoad == true) {
+            formData.delete('checkStore');
+            formData.delete('role');
+            await modifyStoreBaseInfo(formData);
+          } else {
+            await registerStore(formData);
+            this.setSpinnerState(false);
+          }
+          this.setSpinnerState(false);
           this.$emit('changeTab', 'UserProfile');
         }
       } catch (error) {
         alert('스토어 등록에 문제가 생겼습니다. 다시 시도해주세요.');
+        this.setSpinnerState(false);
       }
     },
     insertedFile(event) {
       const file = event.target.files[0];
       // this.licenseImg = URL.createObjectURL(file);
       this.storeInfo.licenseImg = file;
-      console.log('라이센스이미지', this.licenseImg);
       const fileValue = file.name;
       this.fileValue = fileValue;
 
@@ -200,7 +258,7 @@ export default {
       }
     },
     setLocationByRoadName(data) {
-      this.loaded = false;
+      this.addressAPILoad = false;
       this.storeInfo.mainAddress = data;
     },
   },

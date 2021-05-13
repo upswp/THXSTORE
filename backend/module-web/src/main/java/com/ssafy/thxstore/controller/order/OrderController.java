@@ -1,7 +1,9 @@
 package com.ssafy.thxstore.controller.order;
 
+import com.ssafy.thxstore.reservation.domain.ReservationGroup;
 import com.ssafy.thxstore.reservation.domain.ReservationStatus;
 import com.ssafy.thxstore.reservation.dto.ReservationDto;
+import com.ssafy.thxstore.reservation.dto.ReservationGroupDto;
 import com.ssafy.thxstore.reservation.dto.StatusRequest;
 import com.ssafy.thxstore.reservation.service.ReservationService;
 import lombok.RequiredArgsConstructor;
@@ -26,47 +28,43 @@ private final ReservationService reservationService;
  * 스토어의 매뉴 창에서 메뉴 선택 후 바로 주문 한다.  STAND_BY
  * 주문 테이블에 넣어줌
  * reservationStatus   --- >   STAND_BY   -> 사장님 승인 후 ->  ACCEPT   -> 사장님 수령 확인 완료 후  --> FINISH
+ * [
+     * {
+     *
+         * reser_id :12,(pk)
+         * user_id :1,
+         * store_id :3,
+         * reservationStatus : stand_by
+             * [{불닭 ,},{},{}] -> 그룹 엔티티 하나 만들고 연결하자   --  list  -- dto로 전할때는 build로 넣어줘
+     *
+     * },
+ * ]
  */
 @PostMapping("/reservation")
-public ResponseEntity<String> addReservation(@Valid @RequestBody List<ReservationDto> reservationList){
+public ResponseEntity<String> addReservation(@Valid @RequestBody ReservationDto reservation){
 
-    reservationService.addReservation(reservationList);
+    reservationService.addReservation(reservation);
 
     return new ResponseEntity<>("생성완료", HttpStatus.OK);
 }
 
     /**
      * 주문 조회
-     * 1. 사용자의 id 전달 받음 -> reservation 테이블에서 사용자의 id로 조회
-     * 2. ?? 님의 주문
+     * 1. reservation_group 테이블에서 member_id 로 찾아서 List<ReservationGroup> 형식으로 리턴
      */
 
     @GetMapping("/reservation/{memberId}")
     public ResponseEntity getReservation(@PathVariable Long memberId){
 
-        List<ReservationDto> li = reservationService.getReservation(memberId);
+        List<ReservationGroupDto> li = reservationService.getReservation(memberId);
 
         return new ResponseEntity<>(li, HttpStatus.OK);
 //        return ResponseEntity.created(li.getUri()).body(li.getOrderResource());
     }
 
-
-//    /**
-//     * 주문 상태 조회
-//     * 1. 주문 상태 보기
-//     */
-//
-//    @GetMapping("/reservation/{memberId}")
-//    public ResponseEntity getReservationStatus(@PathVariable Long memberId){
-//
-//        List<ReservationDto> li = reservationService.getReservation(memberId);
-//
-//        return new ResponseEntity<>(li, HttpStatus.OK);
-////        return ResponseEntity.created(li.getUri()).body(li.getOrderResource());
-//    }
-
     /**
      *  사장님 or 사용자의 주문 취소 버튼 클릭 후 후 -> 테이블 자체에서 삭제
+     *  member_id와 store_id 로 reservation 테이블에서 삭제한다.
      */
 
     @DeleteMapping("/reservation/{memberId}/{storeId}")
@@ -78,24 +76,21 @@ public ResponseEntity<String> addReservation(@Valid @RequestBody List<Reservatio
 //        return ResponseEntity.created(li.getUri()).body(li.getOrderResource());
     }
 
-    /**
-     * 1. 주문 테이블에 들어간 상황 사장님이 수령 확인 버튼 누르면 주문 status 변경 memberId(321) 님 이시죠? 물건 주고 버튼 누르면 주문 테이블에서 상태 변화
-     * 2. DEFAULT -> ACCEPT 주문 승락
-     * 3. ACCEPT -> STAND_BY 상품(음식) 완료 후 수령 대기
-     * 4. STAND_BY -> FINISH 수령 완료
-     */
 
-    @PutMapping("/reservation/{memberId}") // v2 mem id로 받아서 검색 후 수정, 받아오는 형식 memformdto
-    public ResponseEntity<String> updateReservation(@PathVariable Long memberId , @RequestBody StatusRequest status) {
-
-        reservationService.statusUpdate(memberId, status);
-
-        return new ResponseEntity<>("주문 상태를 변경했습니다.", HttpStatus.OK);
-    }//맴버정보보기를 눌러서 확인
-
-    /**
-     * 판매자가 예약 번호 조회 가능하게
-     */
+//    /**
+//     * 1. 주문 테이블에 들어간 상황 사장님이 수령 확인 버튼 누르면 주문 status 변경 memberId(321) 님 이시죠? 물건 주고 버튼 누르면 주문 테이블에서 상태 변화
+//     * 2. DEFAULT -> ACCEPT 주문 승락
+//     * 3. ACCEPT -> STAND_BY 상품(음식) 완료 후 수령 대기
+//     * 4. STAND_BY -> FINISH 수령 완료
+//     */
+//
+//    @PutMapping("/reservation/{memberId}") // v2 mem id로 받아서 검색 후 수정, 받아오는 형식 memformdto
+//    public ResponseEntity<String> updateReservation(@PathVariable Long memberId , @RequestBody StatusRequest status) {
+//
+//        reservationService.statusUpdate(memberId, status);
+//
+//        return new ResponseEntity<>("주문 상태를 변경했습니다.", HttpStatus.OK);
+//    }//맴버정보보기를 눌러서 확인
 
     /**
      * 리뷰 생성 삭제 수정
@@ -112,5 +107,13 @@ public ResponseEntity<String> addReservation(@Valid @RequestBody List<Reservatio
     /**
      * 리뷰 조회 -> 내 리뷰 조회, 스토어의 리뷰 조회 받는 형식 -> 사용자의아이디 글내용 별점 int
      * datetime 조회
+     */
+
+    /**
+     * 타임딜 관련해서 채크 여러개 했을 때 구매가 불가능한 품목만 리턴
+     */
+
+    /**
+     * 사장님 입장에서 조회
      */
 }

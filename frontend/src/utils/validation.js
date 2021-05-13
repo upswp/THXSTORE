@@ -40,7 +40,6 @@ function validationPhoneNumber(phoneNumber) {
 }
 function validationComResNum(comResNum) {
   comResNum = comResNum.replace(/[^0-9]/g, '');
-  console.log('comResNum', comResNum);
   if (comResNum.length < 4) {
     return comResNum;
   } else {

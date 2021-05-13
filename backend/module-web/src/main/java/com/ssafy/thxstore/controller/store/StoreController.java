@@ -2,6 +2,11 @@ package com.ssafy.thxstore.controller.store;
 
 import com.ssafy.thxstore.controller.config.AppProperties;
 import com.ssafy.thxstore.image.service.ImageService;
+import com.ssafy.thxstore.product.domain.Product;
+import com.ssafy.thxstore.product.domain.TimeDeal;
+import com.ssafy.thxstore.product.dto.AllProductListResponse;
+import com.ssafy.thxstore.product.dto.TimeDealCreateDto;
+import com.ssafy.thxstore.product.dto.TimeDealProductResponse;
 import com.ssafy.thxstore.store.domain.CheckStore;
 import com.ssafy.thxstore.store.domain.Store;
 import com.ssafy.thxstore.store.domain.TempStore;
@@ -56,6 +61,13 @@ public class StoreController {
         DetailStoreResponse detailStoreResponse = storeService.detailStoreResopnse(store.get());
 
         return ResponseEntity.created(null).body(detailStoreResponse);
+    }
+
+    @GetMapping("/id") // 스토어 상세 조회
+    public ResponseEntity getStoreId(@RequestHeader String authorization){
+        String email = jwtToEmail(authorization);
+        Optional<Store> store = storeService.getStore(email);
+        return ResponseEntity.created(null).body(store.get().getId());
     }
 
     @PatchMapping//스토어 정보 수정(개인)
@@ -135,30 +147,24 @@ public class StoreController {
 
 
     /* 판매자 스토어 페이지(타임 딜) */
-    // todo next work
-    @GetMapping("/timedeal/{storeId}") // 스토어 수정 실패 확인(판매자가 클릭)
+    @GetMapping("/timedeal/{storeId}")  // 타임딜 조회
     public ResponseEntity timeDealList(@RequestHeader String authorization,@PathVariable Long storeId){
+        List<TimeDealProductResponse> timeDeal = storeService.timeDealList(storeId);
+        return ResponseEntity.created(null).body(timeDeal);
+    }
 
-        storeService.timeDealList(storeId);
-        String email = jwtToEmail(authorization);
-        storeService.editConfirm(email);
+    @PostMapping("/timedeal/")  // 타임딜 생성
+    public ResponseEntity timeDealCreate(@RequestHeader String authorization, @RequestBody TimeDealCreateDto timeDealCreateDto){
+        storeService.timeDealCreate(timeDealCreateDto);
         return ResponseEntity.created(null).body(HttpStatus.OK);
     }
 
-    @PostMapping("/timedeal/") // 스토어 수정 실패 확인(판매자가 클릭)
-    public ResponseEntity timeDealCreate(@RequestHeader String authorization,@PathVariable Long storeId){
-
-        storeService.timeDealList(storeId);
-        String email = jwtToEmail(authorization);
-        storeService.editConfirm(email);
-        return ResponseEntity.created(null).body(HttpStatus.OK);
+    // 모든 매뉴 반환
+    @GetMapping("/product/{storeId}")
+    public ResponseEntity productAll(@RequestHeader String authorization, @PathVariable Long storeId){
+        List<AllProductListResponse> product = storeService.productAll(storeId);
+        return ResponseEntity.created(null).body(product);
     }
-
-
-
-
-
-
 
     @PostMapping("/test/")
     public ResponseEntity createStoreTest(@RequestBody CreateStoreDto createStoreDto){

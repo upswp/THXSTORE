@@ -53,14 +53,14 @@ public class ProductService {
         return productGroups;
     }
 
-    public void deleteGroup(DeleteGroupDto deleteGroupDto) {
+    public void deleteGroup(Long groupId) {
         // 그룹 아이디 관련 매뉴 전체 삭제. 그룹 삭제 -> 연관매핑 확인
-        productRepository.deleteByProductGroupId(deleteGroupDto.getGroupId());
-        productGroupRepository.deleteById(deleteGroupDto.getGroupId());
+        productRepository.deleteByProductGroupId(groupId);
+        productGroupRepository.deleteById(groupId);
     }
 
-    public void deleteMenu(DeleteMenuDto deleteMenuDto) {
-        productRepository.deleteById(deleteMenuDto.getProductId());
+    public void deleteMenu(Long productId) {
+        productRepository.deleteById(productId);
     }
 
     public List<FindAllGroupMenuDto> findAllGroupMenu(Long groupId) {
@@ -78,6 +78,7 @@ public class ProductService {
                     .amount(productList.get(i).getAmount())
                     .rate(productList.get(i).getRate())
                     .stock(productList.get(i).getStock())
+                    .introduce(productList.get(i).getIntroduce())
                     .build());
         }
 
@@ -93,6 +94,7 @@ public class ProductService {
                 .productImg(productImg)
                 .amount(createMenuDto.getAmount())
                 .productGroup(productGroup)
+                .introduce(createMenuDto.getIntroduce())
                 .build();
 
         productRepository.save(product);
@@ -110,18 +112,37 @@ public class ProductService {
                 .amount(product.getAmount())
                 .rate(product.getRate())
                 .stock(product.getStock())
+                .introduce(product.getIntroduce())
                 .build();
 
         return detailProductDto;
     }
 
-    public void editMenu(String productImg, EditMenuDto editMenuDto) {
+    public void editMenu(EditMenuDto editMenuDto) {
         Product product = productRepository.findById(editMenuDto.getProductId()).get();
-        product.setName(editMenuDto.getName());
-        product.setPrice(editMenuDto.getPrice());
-        product.setAmount(editMenuDto.getAmount());
-        if(productImg != null){
+        String productImg = null;
+        if(editMenuDto.getName() != null){
+            product.setName(editMenuDto.getName());
+        }else if(editMenuDto.getAmount() != null){
+            product.setAmount(editMenuDto.getAmount());
+        }else if(editMenuDto.getPrice() != null){
+            product.setPrice(editMenuDto.getPrice());
+        }else if(editMenuDto.getIntroduce() != null){
+            product.setIntroduce(editMenuDto.getIntroduce());
+        }else if(editMenuDto.getProductImg() != null) {
+            try {
+                productImg = imageService.createImage(editMenuDto.getProductImg());
+            } catch (IOException e) {
+                return;
+            }
             product.setProductImg(productImg);
         }
+//        product.setName(editMenuDto.getName());
+//        product.setPrice(editMenuDto.getPrice());
+//        product.setAmount(editMenuDto.getAmount());
+//        if(productImg != null){
+//            product.setProductImg(productImg);
+//        }
+
     }
 }
