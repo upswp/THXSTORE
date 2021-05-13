@@ -38,7 +38,7 @@ public class UserController {
             Member patchMember = userService.patchMember(email,modifyPatchMemberRequest);
             memberResource = new MemberResource(patchMember);
             memberResource.add(linkTo(UserController.class).withRel("patch-member"));
-            memberResource.add(Link.of("/api/docs/index.html#resources-patch-member"));
+            memberResource.add(Link.of("/api/docs/index.html#resources-patch-member").withRel("profile"));
         } catch (IOException e) {
             return badRequest(ErrorCode.INVALID_INPUT_VALUE);
         }
