@@ -20,6 +20,8 @@ public class AuthResponse {
     private String location;
     private String phoneNumber;
     private MemberRole role;
+    private Double lat;
+    private Double lon;
 
     public AuthResponse(String accessToken, Member member) {
         this.id = member.getId();
@@ -31,6 +33,8 @@ public class AuthResponse {
         this.location = member.getAddress();
         this.phoneNumber = member.getPhoneNumber();
         this.role = member.getRole();
+        this.lat = member.getLat();
+        this.lon = member.getLon();
     }
 
 }
