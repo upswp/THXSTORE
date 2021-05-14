@@ -53,7 +53,7 @@
                 <th>할인 적용</th>
                 <tr>
                   <td>{{ menu.price }}</td>
-                  <td>{{ menu.discount }}</td>
+                  <td>{{ menu.discounted }}</td>
                 </tr>
               </table>
             </div>
@@ -95,45 +95,7 @@ export default {
       selectedMenus: [],
       startHour: '00',
       startMinute: '00',
-      menus: [
-        {
-          productId: 1,
-          name: '우육면 우육면 우육면 우육면 우육면 우육면 우육면 우육면 우육면 우육면',
-          price: 9000,
-          productImg:
-            'https://images.unsplash.com/photo-1432139509613-5c4255815697?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=632&q=80',
-          amount: '1인분',
-          introduce:
-            '따뜻한 우육면 한사발따뜻한 우육면 한사발 따뜻한 우육면 따뜻한 우육면 발따뜻한 우육면 한사발따뜻한 우육면 한사발따뜻한 우육면 한사발따뜻한 우육면 한사발따뜻한 우육면 한사발따뜻한 우육면 한사발따뜻한 우육면 한사발따뜻한 우육면 한사발따뜻한 우육면 한사발따뜻한 우육면 한사발따뜻한 우육면 한사발따뜻한 우육면 한사발',
-          rate: 0,
-          stock: 0,
-          discount: 9000,
-        },
-        {
-          productId: 2,
-          name: '마파두부',
-          price: 12000,
-          productImg:
-            'https://images.unsplash.com/photo-1432139509613-5c4255815697?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=632&q=80',
-          amount: '1인분',
-          introduce: '따뜻한 마파두부 덮밥',
-          rate: 0,
-          stock: 0,
-          discount: 12000,
-        },
-        {
-          productId: 3,
-          name: '햄버거',
-          price: 7000,
-          productImg:
-            'https://images.unsplash.com/photo-1432139509613-5c4255815697?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=632&q=80',
-          amount: '1인분',
-          introduce: '치즈 듬뿍 햄버거',
-          rate: 0,
-          stock: 0,
-          discount: 7000,
-        },
-      ],
+      menus: [],
     };
   },
 
@@ -155,7 +117,13 @@ export default {
       if (error.response.status === 400) {
         try {
           const response = await getTotalMenu(this.getStoreId);
-          this.menus = response.data;
+          this.menus = response.data.map(x =>
+            Object.assign(x, {
+              rate: 0,
+              stock: 0,
+              discounted: x.price,
+            }),
+          );
           this.setSpinnerState(false);
         } catch (error) {
           alert('메뉴 조회에 실패하였습니다.');
@@ -172,7 +140,7 @@ export default {
     timeStrConvert,
     discounting(menu) {
       const origin = (menu.price / 100) * (100 - parseInt(menu.rate));
-      menu.discount = Math.floor(origin / 100) * 100;
+      menu.discounted = Math.floor(origin / 100) * 100;
     },
     limit(menu, target) {
       if (target === 'rate') {
