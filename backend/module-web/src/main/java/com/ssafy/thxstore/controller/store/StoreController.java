@@ -209,7 +209,7 @@ public class StoreController {
 
     // 그룹별 매뉴로 상품정보 반환
     @GetMapping("/user/product/") 
-    public ResponseEntity getStoreGroupProductList(@RequestHeader String authorization, @RequestParam("storeId") Long storeId){ // 쿼리 문으로 requestparams
+    public ResponseEntity getStoreGroupProductList(@RequestParam("storeId") Long storeId){ // 쿼리 문으로 requestparams
         List<GroupProductListResponse> groupProductListResponseList = productService.getStoreGroupProductList(storeId);
         return ResponseEntity.created(null).body(groupProductListResponseList);
     }
