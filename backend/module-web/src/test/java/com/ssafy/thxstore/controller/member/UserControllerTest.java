@@ -54,14 +54,15 @@ public class UserControllerTest extends AcceptanceTest {
     @Test
     @DisplayName("현재 유저의 정보를 수정한다.")
     public void modifyMember() throws Exception {
-        generateMember();
+        String email = "modifypatch@email.com";
+        generateMember(email,"modify");
         ModifyPatchMemberRequest modifyPatchMemberRequest = ModifyPatchMemberRequest.builder()
                 .id(1L)
                 .nickname("IU")
                 .build();
 
         this.mockMvc.perform(patch("/user/")
-                .header("authorization", getExampleToken())
+                .header("authorization", getExampleToken(email))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(this.objectMapper.writeValueAsString(modifyPatchMemberRequest)))
                 .andExpect(status().isOk())
@@ -69,29 +70,41 @@ public class UserControllerTest extends AcceptanceTest {
                 .andDo(UserDocumentation.modifyPatchMember());
     }
 
-    private void generateMember() {
-        SignUpRequest signUpRequest = new SignUpRequest(
-                "a@email.com",
-                "password123",
-                "evan",
-                "image.com",
-                KAKAO,
-                "providerID"
-        );
+    //TODO DELETE member 관련 test 필요
+//    @Test
+//    @DisplayName("현재 유저의 정보를 삭제한다.")
+//    public void deleteMember() throws Exception {
+//        String email = "delete@gmail.com";
+//        generateMember(email,"delete");
+//        this.mockMvc.perform(delete("/user/")
+//                .header("authorization", getExampleToken("delete@gmail.com"))
+//                .contentType(MediaType.APPLICATION_JSON)
+//                .content(this.objectMapper.writeValueAsString(email)))
+//                .andExpect(status().isOk())
+//                .andDo(print())
+//                .andDo(UserDocumentation.deleteMember());
+//    }
+
+    private void generateMember(String email,String userId) {
+        SignUpRequest signUpRequest = SignUpRequest.builder()
+                .email(email)
+                .nickname("evan")
+                .password("password123")
+                .profileImage("default image url")
+                .social(KAKAO)
+                .userId(userId)
+                .build();
 
         this.authService.registerMember(signUpRequest);
     }
 
-
-
-    public String getExampleToken(){
-        LoginRequest loginRequest = new LoginRequest("a@email.com", "password123");
-
+    private String getExampleToken(String email){
+        LoginRequest loginRequest = new LoginRequest(email, "password123");
         ExtractableResponse<Response> response = requestLogin(loginRequest);
         return response.body().jsonPath().getString("accessToken");
     }
 
-    public static ExtractableResponse<Response> requestLogin(LoginRequest loginRequest) {
+    private static ExtractableResponse<Response> requestLogin(LoginRequest loginRequest) {
         return given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(loginRequest)
