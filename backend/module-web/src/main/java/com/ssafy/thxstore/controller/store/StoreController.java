@@ -158,6 +158,8 @@ public class StoreController {
     /* 판매자 스토어 페이지(타임 딜) */
     @GetMapping("/timedeal/{storeId}")  // 타임딜 조회
     public ResponseEntity timeDealList(@RequestHeader String authorization,@PathVariable Long storeId) throws BadHttpRequest {
+        // 여기서 타임딜 초기화
+        storeService.timeDealStatusInit(); // 새로 추가
         TimeDealProductInfoResponse timeDeal = storeService.timeDealList(storeId);
         if(timeDeal.getStatus().equals("NORMAL")){
             return ResponseEntity.badRequest().body("400");
