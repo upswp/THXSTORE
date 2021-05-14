@@ -37,6 +37,10 @@ public class Reservation {
     @Column(name = "store_id")
     private Long storeId;
 
+    @ColumnDescription("예약자의 닉네임")
+    @Column(name = "nickname")
+    private String nickname;
+
     @ColumnDescription("스토어 아이디로 각각의 장바구니 구분")
     @Column(name = "order_time")
     private String dateTime;
@@ -51,8 +55,9 @@ public class Reservation {
     private ReservationStatus reservationStatus;
 
     @Builder
-    public Reservation(Long id,Member member,Long storeId,ReservationStatus reservationStatus, List<ReservationGroup> reservationGroup,String dateTime) {
+    public Reservation(String nickname,Long id,Member member,Long storeId,ReservationStatus reservationStatus, List<ReservationGroup> reservationGroup,String dateTime) {
         this.member = member;
+        this.nickname = nickname;
         this.id = id;
         this.dateTime =dateTime;
         this.storeId = storeId;

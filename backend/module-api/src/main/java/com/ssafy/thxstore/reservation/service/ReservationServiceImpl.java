@@ -47,6 +47,7 @@ public class ReservationServiceImpl implements ReservationService{
         Optional<Member> member = memberRepository.findById(reservationList.getUserId());
 
         Reservation reservation = Reservation.builder().
+                nickname(reservationList.getNickname()).
                 reservationStatus(ReservationStatus.DEFAULT).
                 storeId(reservationList.getStoreId()).
                 member(member.get()).
@@ -57,7 +58,9 @@ public class ReservationServiceImpl implements ReservationService{
         for(int i =0 ;i<reservationList.getReservationGroups().size();i++){
 
             List<ReservationGroup> reservationAntityList = new ArrayList<>();
+
             ReservationGroup reservationGroup = ReservationGroup.builder().
+                    rate(reservationList.getReservationGroups().get(i).getRate()).
                     storeId(reservationList.getStoreId()).
                     userId(reservationList.getUserId()).
                     count(reservationList.getReservationGroups().get(i).getCount()).
@@ -71,31 +74,53 @@ public class ReservationServiceImpl implements ReservationService{
         }
     }
 
+    /**
+     *
+     *
+     */
     @Override
     @Transactional
-    public List<ReservationGroupDto> getReservation(Long Id,String type){
+    public List<ReservationDto> getReservation(Long Id,String type){
         List<ReservationGroupDto> reservationGroupDtoList = new LinkedList<>();
+        List<ReservationDto> reservationDtoList = new LinkedList<>();
         List<ReservationGroup> list;
+        List<Reservation> reservationlist;
         //dto 엔티티 매핑
+        //memberid 검색 storeid 검색 각각 주문 size 구하자
         if(type == "member") {
             list = reservationGroupRepository.findReservationlistByMemberId(Id);
+            reservationlist = reservationRepository.findReservationByMemberId(Id);
         }else{
             list = reservationGroupRepository.findReservationlistByStoreId(Id);
+            reservationlist = reservationRepository.findReservationByStoreId(Id);
         }
 
+        //주문 - 주문 내용
         for(int i =0 ;i<list.size(); i++){
             ReservationGroupDto reservationGroupDto = ReservationGroupDto.builder().
-                    orderTime(list.get(i).getReservation().getDateTime()).
-                    userId(list.get(i).getUserId()).
                     count(list.get(i).getCount()).
                     price(list.get(i).getPrice()).
+                    rate(list.get(i).getRate()).
                     productName(list.get(i).getProductName()).
-                    reservationStatus(list.get(i).getReservation().getReservationStatus()).
                     build();
 
             reservationGroupDtoList.add(reservationGroupDto);
         }
-        return reservationGroupDtoList;
+
+        for(int i =0 ;i<reservationlist.size(); i++) {
+            ReservationDto reservationDto = ReservationDto.builder().
+                    storeId(reservationlist.get(i).getStoreId()).
+                    reservationStatus(reservationlist.get(i).getReservationStatus()).
+                    nickname(reservationlist.get(i).getNickname()).
+                    orderTime(reservationlist.get(i).getDateTime()).
+                    userId(reservationlist.get(i).getMember().getId()).
+                    reservationGroups(reservationGroupDtoList).
+                    build();
+
+            reservationDtoList.add(reservationDto);
+        }
+
+        return reservationDtoList;
     }
 
 
