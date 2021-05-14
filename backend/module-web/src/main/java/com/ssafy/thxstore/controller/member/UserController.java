@@ -23,7 +23,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 @RestController
 @RequiredArgsConstructor
 @CrossOrigin(origins = {"*"}, maxAge = 6000)
-@RequestMapping(value = "/user", produces = MediaTypes.HAL_JSON_VALUE)
+@RequestMapping(value = "/user/", produces = MediaTypes.HAL_JSON_VALUE)
 public class UserController {
 
     private final UserService userService;
@@ -38,7 +38,7 @@ public class UserController {
             Member patchMember = userService.patchMember(email,modifyPatchMemberRequest);
             memberResource = new MemberResource(patchMember);
             memberResource.add(linkTo(UserController.class).withRel("patch-member"));
-            memberResource.add(Link.of("/api/docs/index.html#resources-patch-member"));
+            memberResource.add(Link.of("/api/docs/index.html#resources-patch-member").withRel("profile"));
         } catch (IOException e) {
             return badRequest(ErrorCode.INVALID_INPUT_VALUE);
         }
@@ -50,10 +50,10 @@ public class UserController {
     public ResponseEntity deleteUser(@RequestHeader String authorization) {
         String email = jwtToEmail(authorization);
         MemberResource memberResource;
-        Member patchMember = userService.deleteMember(email);
-        memberResource = new MemberResource(patchMember);
+        Member deleteMember = userService.deleteMember(email);
+        memberResource = new MemberResource(deleteMember);
         memberResource.add(linkTo(UserController.class).withRel("delete-member"));
-        memberResource.add(Link.of("/api/docs/index.html#resources-delete-member"));
+        memberResource.add(Link.of("/api/docs/index.html#resources-delete-member").withRel("profile"));
         return ResponseEntity.ok(memberResource);
     }
 
