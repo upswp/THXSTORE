@@ -288,7 +288,6 @@ public class StoreService {
             } catch (ParseException e) {
                 e.printStackTrace();
             }
-
             //Date localTime = fourteen_format.format(date_now);
             //String a = fourteen_format.format(date_now);
 
@@ -354,22 +353,17 @@ public class StoreService {
         //StoreAndDistanceDto
         // 해당 member와 위도 경도로 찾기 일단 거리 가까운 친구들 찾음.
         Optional<List<Store>> storeList = storeRepository.findByLocation(36.42583333272267, 127.38674024126392);
-
         List<StoreAndDistanceDto> storeAndDistanceDto = new ArrayList<>();
-
         // 타임딜이 진행한지 확인
         for(int i = 0; i < storeList.get().size(); i++){
             Optional<List<TimeDeal>> timeDealList = timeDealRepository.findAllByStoreId(storeList.get().get(i).getId());
-            if(!timeDealList.isPresent()){
+            if(!timeDealList.isPresent() || timeDealList.get().size() == 0){
                 continue;
             }
-
             //  타임딜이 존재한다면. todo 다른곳 remove 찾기
-
             // 해당 거리 값과 타임딜 시간 정보 넣기,.
             // 이것은 스토어 정보
             StoreAndDistanceDto storeInfo = modelMapper.map(storeList.get().get(i), new TypeToken<StoreAndDistanceDto>(){}.getType());
-
 
             storeInfo.setDistance( 6371*acos(cos(toRadians(36.42583333272267))*cos(toRadians(storeList.get().get(i).getLat()))*cos(toRadians(storeList.get().get(i).getLon())
                     -toRadians(127.38674024126392))+sin(toRadians(36.42583333272267))*sin(toRadians(storeList.get().get(i).getLat()))));
@@ -393,7 +387,6 @@ public class StoreService {
             storeInfo.setTimeDealList(products);
             storeAndDistanceDto.add(storeInfo);
         }
-
         return storeAndDistanceDto;
     }
 
@@ -426,8 +419,9 @@ public class StoreService {
         }
 
         List<TimeDeal> timeDealList = timeDealRepository.findAll();
+        int timeDealListSize = timeDealList.size();
 
-        for(int i = 0; i < timeDealList.size(); i++){
+        for(int i = 0; i < timeDealListSize; i++){
             Date date2 = null;
             String startTime = timeDealList.get(i).getStartTime();
             try {
@@ -441,16 +435,14 @@ public class StoreService {
                 Product product = productRepository.findById(timeDealList.get(i).getProduct().getId()).get();
                 product.setStock(null);
                 product.setRate(null);
-                timeDealList.remove(i);
-                i--;
+                timeDealRepository.deleteById(timeDealList.get(i).getId());
             }
             else if(date1.getTime() - date2.getTime() < 0){ // 만약 date2의 시간이 22시를 넘어간다면
                 if(date1.getTime()+86400000 - date2.getTime() > 7200000){
                     Product product = productRepository.findById(timeDealList.get(i).getProduct().getId()).get();
                     product.setStock(null);
                     product.setRate(null);
-                    timeDealList.remove(i);
-                    i--;
+                    timeDealRepository.deleteById(timeDealList.get(i).getId());
                 }
             }
         }
