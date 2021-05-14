@@ -43,7 +43,9 @@ public class AuthDocumentation {
                 requestFields(
                         fieldWithPath("nickname").type(JsonFieldType.STRING).description("회원가입할 닉네임"),
                         fieldWithPath("email").type(JsonFieldType.STRING).description("회원가입할 E-mail"),
-                        fieldWithPath("password").type(JsonFieldType.STRING).description("회원가입할 패스워드")
+                        fieldWithPath("password").type(JsonFieldType.STRING).description("회원가입할 패스워드"),
+                        fieldWithPath("lat").type(JsonFieldType.NUMBER).description("위도"),
+                        fieldWithPath("lon").type(JsonFieldType.NUMBER).description("경도")
                 ).and(subsectionWithPath("profileImage").type(JsonFieldType.NULL).description("회원 프로필 이미지"),
                         subsectionWithPath("social").type(JsonFieldType.NULL).description("회원 소셜 종류 판단"),
                         subsectionWithPath("userId").type(JsonFieldType.NULL).description("소셜 유저 아이디")),
@@ -56,6 +58,8 @@ public class AuthDocumentation {
                         fieldWithPath("email").type(JsonFieldType.STRING).description("유저 이메일"),
                         fieldWithPath("password").type(JsonFieldType.STRING).description("유저 비밀번호"),
                         fieldWithPath("nickname").type(JsonFieldType.STRING).description("유저 닉네임"),
+                        fieldWithPath("lat").type(JsonFieldType.NUMBER).description("위도"),
+                        fieldWithPath("lon").type(JsonFieldType.NUMBER).description("경도"),
                         fieldWithPath("_links.self.href").description("link to self"),
                         fieldWithPath("_links.signUp-LOCAL.href").description("link to query event list")
                 )
@@ -80,6 +84,8 @@ public class AuthDocumentation {
                         fieldWithPath("password").type(JsonFieldType.STRING).description("회원가입할 패스워드"),
                         fieldWithPath("profileImage").type(JsonFieldType.STRING).description("회원 프로필 이미지"),
                         fieldWithPath("social").type(JsonFieldType.STRING).description("회원 소셜 종류 판단"),
+                        fieldWithPath("lat").type(JsonFieldType.NUMBER).description("위도"),
+                        fieldWithPath("lon").type(JsonFieldType.NUMBER).description("경도"),
                         fieldWithPath("userId").type(JsonFieldType.STRING).description("소셜 유저 아이디")
                 ),
                 responseHeaders(
@@ -94,6 +100,8 @@ public class AuthDocumentation {
                         fieldWithPath("profileImage").type(JsonFieldType.STRING).description("회원 프로필 이미지"),
                         fieldWithPath("social").type(JsonFieldType.STRING).description("회원 소셜 종류 판단"),
                         fieldWithPath("userId").type(JsonFieldType.STRING).description("소셜 유저 아이디"),
+                        fieldWithPath("lat").type(JsonFieldType.NUMBER).description("위도"),
+                        fieldWithPath("lon").type(JsonFieldType.NUMBER).description("경도"),
                         fieldWithPath("_links.self.href").description("link to self"),
                         fieldWithPath("_links.signUp-SOCIAL.href").description("link to query event list"),
                         fieldWithPath("_links.profile.href").description("link to profile")

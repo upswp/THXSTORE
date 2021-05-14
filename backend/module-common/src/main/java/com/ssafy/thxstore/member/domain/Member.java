@@ -81,11 +81,12 @@ public class Member extends BaseTimeEntity {
     private List<Reservation> reservations = new ArrayList<>();
 
     @Builder
-    public Member(String userId, @Email String email, String password, String address, String nickname, String profileImage, String phoneNumber, MemberRole role, Social social) {
+    public Member(String userId, @Email String email, String password, Double lat, Double lon, String nickname, String profileImage, String phoneNumber, MemberRole role, Social social) {
         this.userId = userId;
         this.email = email;
         this.password = password;
-        this.address = address;
+        this.lat = lat;
+        this.lon = lon;
         this.nickname = nickname;
         this.profileImage = profileImage;
         this.phoneNumber = phoneNumber;

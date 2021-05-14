@@ -43,6 +43,8 @@ public class AuthService {
                     .social(Social.LOCAL)
                     .userId(null)
                     .profileImage(null)
+                    .lat(signUpRequest.getLat())
+                    .lon(signUpRequest.getLon())
                     .build();
         } else {
             member = Member.builder()
@@ -53,6 +55,8 @@ public class AuthService {
                     .social(signUpRequest.getSocial())
                     .profileImage(signUpRequest.getProfileImage())
                     .userId(signUpRequest.getUserId())
+                    .lat(signUpRequest.getLat())
+                    .lon(signUpRequest.getLon())
                     .build();
         }
         member.setPassword(passwordEncoder.encode(member.getPassword()));

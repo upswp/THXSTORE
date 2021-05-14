@@ -56,6 +56,8 @@ public class AuthControllerTest extends BaseControllerTest {
                 .email("test456@gmail.com")
                 .password("Pasword123!")
                 .nickname("helloTest456")
+                .lat(37.33)
+                .lon(126.59)
                 .build();
 
         mockMvc.perform(post("/auth/")
@@ -76,6 +78,8 @@ public class AuthControllerTest extends BaseControllerTest {
                 .social(Social.KAKAO)
                 .userId("hello")
                 .profileImage("Default Profile link")
+                .lat(37.33)
+                .lon(126.59)
                 .build();
 
         mockMvc.perform(post("/auth/")
@@ -164,6 +168,8 @@ public class AuthControllerTest extends BaseControllerTest {
                 .password("testpwd1234")
                 .email(emailId+"@gmail.com")
                 .role(MemberRole.ROLE_USER)
+                .lat(37.33)
+                .lon(126.59)
                 .build();
 
         this.memberRepository.save(member);
