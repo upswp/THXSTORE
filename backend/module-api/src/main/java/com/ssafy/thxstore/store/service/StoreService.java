@@ -259,8 +259,9 @@ public class StoreService {
             timeDealProductResponses.get(i).setProductId(timeDeal.get(i).getProduct().getId());
         }
         String status;
+
         // 이거 애러
-        String startTime = timeDeal.get(0).getStartTime();
+        String startTime = null;
 
 // NORMAL, RESERVATION, PROGRESS, COMPLETE
         if(timeDealProductResponses.size() == 0){ // 타임딜이 존재하지 않는 다면
@@ -275,6 +276,7 @@ public class StoreService {
             // 시간 비교해서 현재 시간이 더 작으면 reservation, 크면 progress
             //timeDeal.get(0).getStartTime();
             //String localTime;
+            startTime = timeDeal.get(0).getStartTime();
             SimpleDateFormat fourteen_format = new SimpleDateFormat("HH:mm");
             Date date_now = new Date(System.currentTimeMillis()); // 현재 시간
             String a = fourteen_format.format(date_now); // 현재 시간 포맷팅

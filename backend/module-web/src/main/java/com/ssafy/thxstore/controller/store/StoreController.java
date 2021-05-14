@@ -155,6 +155,9 @@ public class StoreController {
     @GetMapping("/timedeal/{storeId}")  // 타임딜 조회
     public ResponseEntity timeDealList(@RequestHeader String authorization,@PathVariable Long storeId){
         TimeDealProductInfoResponse timeDeal = storeService.timeDealList(storeId);
+        if(timeDeal.getStatus().equals("NORMAL")){
+            return ResponseEntity.created(null).body(HttpStatus.BAD_REQUEST);
+        }
         return ResponseEntity.created(null).body(timeDeal);
     }
 
