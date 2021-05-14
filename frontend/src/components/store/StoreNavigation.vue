@@ -12,6 +12,9 @@
 
       <label ref="live" class="nav-item" for="live-radio">라이브 커머스</label>
       <input id="live-radio" v-model="tap" type="radio" value="live" style="display: none" />
+
+      <label ref="reservation" class="nav-item" for="reservation-radio">예약 관리</label>
+      <input id="reservation-radio" v-model="tap" type="radio" value="reservation" style="display: none" />
     </div>
   </div>
 </template>
@@ -33,7 +36,7 @@ export default {
     },
   },
   created() {
-    for (const name of ['info', 'product', 'deal', 'live']) {
+    for (const name of ['info', 'product', 'deal', 'live', 'reservation']) {
       if (this.$router.history.current.fullPath.includes(name)) {
         this.tap = name;
       }

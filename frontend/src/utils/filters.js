@@ -23,5 +23,7 @@ function meridiemConvert(value) {
   if (num === 12) return [true, '12'];
   if (num < 24) return [true, timeStrConvert(num - 12, 1)];
 }
-
-export { formatNumber, timeStrConvert, meridiemConvert };
+function oneTrans(num) {
+  return num.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ',');
+}
+export { formatNumber, timeStrConvert, meridiemConvert, oneTrans };

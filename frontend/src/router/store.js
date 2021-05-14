@@ -25,6 +25,11 @@ const routesForStore = [
         name: 'storeLive',
         component: () => import('@/components/store/StoreLive.vue'),
       },
+      {
+        path: 'reservation',
+        name: 'storeReservation',
+        component: () => import('@/components/store/StoreReservation.vue'),
+      },
     ],
   },
 ];

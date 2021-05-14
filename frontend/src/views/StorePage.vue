@@ -47,6 +47,9 @@ export default {
         case 'live':
           this.$router.push({ name: 'storeLive' });
           break;
+        case 'reservation':
+          this.$router.push({ name: 'storeReservation' });
+          break;
       }
     },
   },

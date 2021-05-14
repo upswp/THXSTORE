@@ -1,225 +1,132 @@
 // @import '@/assets/scss/sample';
-@mixin color-pattern {
-  background-color: $green200;
-  color:white;
-}
-
-.time-deal-container{
-  padding-top:10px;
-  width: clamp(320px, 100%, 1000px);
-  @include mobile{
-    font-size: 14px;
-  }@include xs-mobile{
-    font-size: 12px;
-  }
-}
-
-.time-deal-title{
-  text-align: center;
-  font-weight: bold;
-  font-size: 22px;
-  @include pc{
-    font-size: 20px;
-  }@include mobile{
-    font-size: 18px;
-  }@include xs-mobile{
-    font-size: 16px;
-  }
-  margin-bottom: 20px;
-}
-
-.time-deal-accordian-container{
+.store-reservation-container{
   width:100%;
-}
-.time-deal-accordian{
-  display: block;
-  width:100%;
-}
-.accordian-item{
-  display: block;
-  width:100%;
-
-  
-}
-.menu-content{
-  transition: all 0.3s;
-  height:0;
-  overflow: hidden;
-  border: {
-    right: 1px solid $gray400;
-    left: 1px solid $gray400;
-    bottom: 1px solid $gray400;
-  }
-  margin-bottom:2px;
-
- 
-}
-.menu-item-radio{
-  display: none;
-  &:checked ~ .menu-item-label{
-   @include color-pattern;
-  }
-  &:checked ~ .menu-content{
-    padding:5px;
-    @include flexbox;
-    height:113px;
-  }
-}
-.menu-item-label{
-  padding:5px;
-  @include flexbox;
-  @include align-items(center);
-
-  width:100%;
-  background-color: white;
- 
-  border:1px solid $gray400;
-  cursor: pointer;
-  transition: background-color 0.2s ease-out;
-  &:hover{
-    @include color-pattern;
-  }
-}
-.menu-img{
-  width:100px;
-  height:102px;
-  object-fit: cover;
-  object-position: 50% center;
-  display: inline-block;
-}
-.check-input {
-  display: none;
-  &:checked + .checkbox::before {
-    content: '\2713';
-    font-weight: bold;
-    color:  $green600;
-  }
-}
-.checkbox {
-  display: inline-block;
-  margin-right: 5px;
-  &::before {
-    display: inline-block;
-    margin-right: 1px;
-    width: 20px;
-    height: 20px;
-    border: 1px solid $gray600;
-    background-color: white;
-    content: '';
-    cursor: pointer;
-    border-radius: 3px;
-    @include flexbox;
-    @include justify-content(center);
-    @include align-items(center);
-  }
-}
-
-.counter-input{
-  margin-bottom:10px;
-  padding-left:15px;
-  padding-top:2px;
-  border:none;
-  text-align: center;
-  background-color:$red100;
-}
-
-.menu-discount-info{
-  width: calc(100% - 100px);
-  padding: 0 10px;
-}
-
-.time-deal-variable{
-  width:100%;
-  th{
-    width:50%;
-    text-align:center;
-    background-color: $gray100;
-  }
-  td{
-    padding-top:5px;
-    text-align: center;
-  }
-}
-.time-deal-price{
-  width:100%;
-  th{
-    width:50%;
-    text-align:center;
-    background-color: $gray100;
-  }
-  td{
-    padding-top:5px;
-    text-align: center;
-  }
-}
-.time-select {
-  display: block;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
-  &::-ms-expand {
-    display: none;
-  }
-  width: 60px;
-  height: 32px;
-  @include mobile {
-    height: 28px;
-  }
-  @include xs-mobile {
-    height: 28px;
-  }
-  border: 2px solid;
-  border-color: $blue400;
-  color: $gray800;
-  padding: 0 20px 0 8px;
-  border-radius: 4px;
-  // line-height: var(--leading-tight);
-  background: url('../../assets/image/arrow.svg') no-repeat 90% 50%;
-  background-size: 10px;
-  text-indent: 0;
-  cursor: pointer;
-  padding: 5px;
-}
-.time-deal-start{
-  @include flexbox;
-  @include justify-content(center);
-  @include align-items(center);
-  margin-bottom: 40px;
-}
-.time-deal-button-wrapper{
-  text-align: center;
-}
-.time-deal-button{
-  margin:10px auto;
-  width:200px;
-  background-color: $gray200;
-  padding:10px;
-  border-radius: 10px;
-  cursor: pointer;
-  transition: all 0.2s;
-  &:hover{
-    background-color: $blue400;
-    color:white;
-  }
-}
-.tiem-deal-accordian-container{
-  margin-bottom: 30px;
-  box-shadow: 0 0 10px rgba(0,0,0,0.3);
-}
-.time-deal-start-header{
-  text-align: center;
-  font-weight: bold;
-  margin-bottom: 10px;
   @include lg-pc{
-    font-size:20px;
-  }
-  @include pc{
-    font-size:18px;
-  }
-  @include mobile{
     font-size:16px;
   }
-  @include xs-mobile{
+  @include pc{
     font-size:14px;
+  }
+  @include mobile{
+    font-size:12px;
+  }
+  @include xs-mobile{
+    font-size:10px;
+  }
+  
+}
+.reservation-header{
+  text-align:center;
+  font-weight: bold;
+  margin-bottom:20px;
+  @include lg-pc{
+    font-size:22px;
+  }
+  @include pc{
+    font-size:20px;
+  }
+  @include mobile{
+    font-size:18px;
+  }
+  @include xs-mobile{
+    font-size:16px;
+  }
+}
+.reservation-body{
+  @include flexbox;
+  @include justify-content(center);
+  min-height: 100%;
+}
+.reservation-table{
+  width: 100%;
+  border: 1px solid $gray400;
+  th{
+    background-color: $green200;
+    color:rgb(5, 6, 68);
+    padding:10px 0;
+  }
+  td{
+    text-align: center;
+    border: 1px solid $gray400;
+    padding:5px 0;
+    &.name{
+      background-color: $gray100;
+      color:rgba(255, 4, 4, 0.767);
+      font-weight: bold;
+    }
+    &.computed{
+      background-color: $gray100;
+      color:rgba(255, 4, 4, 0.767);
+      font-weight: bold;
+    }
+    &.amount{
+      background-color: $gray100;
+      color:rgba(9, 5, 68, 0.767);
+      font-weight: bold;
+    }
+  }
+}
+.standBy-wrapper{
+  @include lg-pc{
+   @include flexbox;
+   @include justify-content(space-around); 
+  }
+  @include lg-pc{
+    @include flexbox;
+    @include justify-content(space-around); 
+   }
+   @include mobile{
+    @include flexbox;
+    @include justify-content(space-around); 
+   }
+}
+.status-button{
+  display: inline-block;
+  width:30%;
+  text-align: center;
+  padding:10px 5px;
+  border-radius: 5px;
+  margin-right:5px;
+  @include xs-mobile{
+    display: block;
+    width:100%;
+    padding:5px 2px;
+    margin-bottom:3px;
+    margin-right:0px;
+   }
+}
+.order-accept{
+  background-color: $blue400;
+  color:white;  
+  cursor:pointer;
+  &:hover{
+    background-color: $blue600;
+  }
+  margin-right:5px;
+}
+.order-fail{
+  background-color: $red400;
+  color:white;  
+  cursor:pointer;
+  &:hover{
+    background-color: $red600;
+  }
+}
+.status-label{
+  font-weight: bold;
+  margin-bottom:5px;
+}
+.next-status{
+  cursor: pointer;
+  width:auto;
+  @include xs-mobile{
+    display: block;
+    width:100%;
+    padding:5px 2px;
+   }
+  background-color: rgba(20, 187, 20, 0.609);
+  color:white;
+  &:hover{
+    background-color: rgba(20, 187, 20, 0.87);
   }
 }
