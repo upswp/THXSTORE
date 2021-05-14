@@ -155,6 +155,9 @@ public class StoreController {
     @GetMapping("/timedeal/{storeId}")  // 타임딜 조회
     public ResponseEntity timeDealList(@RequestHeader String authorization,@PathVariable Long storeId){
         TimeDealProductInfoResponse timeDeal = storeService.timeDealList(storeId);
+        if(timeDeal.getStatus().equals("NORMAL")){
+            return ResponseEntity.created(null).body(HttpStatus.BAD_REQUEST);
+        }
         return ResponseEntity.created(null).body(timeDeal);
     }
 
@@ -182,21 +185,7 @@ public class StoreController {
     /* user 관점에서의 Store 작성 */
     @GetMapping("/user/") // 처음 접속했을 때, 타임딜 하고 있는 항목들을 보는 곳 거리에 따라
     public ResponseEntity getUserStoreList(@RequestHeader String authorization){
-
         // todo 0.초기화?? 타임딜 진행되는 거거
-        // 현재 시간 -2시간 보다 작은 것이 있으면 다 제거 합시다.
-        // 새벽 2시일 때, 10~12시것도 처리
-        Date date_now = new Date(System.currentTimeMillis()); // 현재시간을 가져와 Date형으로 저장한다
-// 년월일시분초 14자리 포멧
-        SimpleDateFormat fourteen_format = new SimpleDateFormat("HH:mm");
-
-       // 여기 헤더에서 사용되는 값은 위치정보를 꺼내야함. 가능.
-        // 1. 처음에는 무조건 로그인 화면이고, 로그인하면 무조건 타임딜 진행중인 가게가 보이는 화면인지 체크 필요.
-        // 시간을 먼저 체크할까 타임딜을 먼저 체크할까
-        // 시간을 먼저 -> 시간에 따른 값을 꺼내오고, 타임딜 시간 계산하고, 
-        // 타임딜 먼저 -> 
-        // 타임딜 조건 -> 1이고, 아직 2시간 안지난것(timedeal에서 삭제가 없어야함.)
-
 
         // 1. member 정보 가져오기 -> 위도 경도 꺼내야합니다.
         String email = jwtToEmail(authorization);
@@ -205,22 +194,12 @@ public class StoreController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
+        // 여기서 타임딜 초기화
+        storeService.timeDealStatusInit();
+
         // todo 타임딜 체크는 언제할 까요.여기서 같이 체크요~ + 휴무일 시간체크는 언제 체크요~
-        // 2. 위도 경도 스토어들 찾기 -> 5km. 페이징 기법으로.. dist 값 확인
-        // store는 되는데 이건 안된다? store로 받아서 추가 작업이 필요할 듯
-        // 하면서 jpa 꺼내온 후 후작업이 필요한데 ->  페이징 기법은 어디서?
         List<StoreAndDistanceDto> timeDealStoreList = storeService.findLocation(member);
-//        if(!timeDealStoreList.isPresent()){
-//            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-//        }
-        // 3여기서 타임딜 체크 timedeal에 있는 store 값들만 가져오기
-        // 현재 timedeal 테이블에 storeid가 있는지 있는지 체크 -> timedeal 값ㅇ ㅣ있는지 체크
 
-
-        //List<StoreAndDistanceDto> timeDealList = storeService.findtimeDealStore(timeDealStoreList);
-
-
-        // close도 해야되네 close open day 등등
         return ResponseEntity.created(null).body(timeDealStoreList);
     }
 
@@ -230,7 +209,6 @@ public class StoreController {
         List<GroupProductListResponse> groupProductListResponseList = productService.getStoreGroupProductList(storeId);
         return ResponseEntity.created(null).body(groupProductListResponseList);
     }
-
 
 
 

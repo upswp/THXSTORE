@@ -9,7 +9,7 @@ endif::[]
 :sectlinks:
 :site-url: /build/asciidoc/html5/state
 
-[[resources-signUp-SOCIAL]]
+[[resources-patch-member]]
 === 소셜 유저 생성
 
 `Patch` 요청을 사용해서 유저의 정보 일부를 수정한다.

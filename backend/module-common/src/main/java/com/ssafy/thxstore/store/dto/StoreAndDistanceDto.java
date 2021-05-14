@@ -37,5 +37,5 @@ public class StoreAndDistanceDto {
     private String logo;
     private Double distance;
     private String timeDealStart;
-    private List<Product> timeDealList = new ArrayList<>();
+    private List<Product> timeDealList;
 }

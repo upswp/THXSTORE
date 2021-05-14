@@ -9,7 +9,7 @@ endif::[]
 :sectlinks:
 :site-url: /build/asciidoc/html5/state
 
-[[resources-signUp-SOCIAL]]
+[[resources-create-review]]
 === 리뷰 생성
 
 `POST` 요청을 사용해서 새 리뷰를 만들 수 있다.

@@ -259,7 +259,9 @@ public class StoreService {
             timeDealProductResponses.get(i).setProductId(timeDeal.get(i).getProduct().getId());
         }
         String status;
-        String startTime = timeDeal.get(0).getStartTime();
+
+        // 이거 애러
+        String startTime = null;
 
 // NORMAL, RESERVATION, PROGRESS, COMPLETE
         if(timeDealProductResponses.size() == 0){ // 타임딜이 존재하지 않는 다면
@@ -274,6 +276,7 @@ public class StoreService {
             // 시간 비교해서 현재 시간이 더 작으면 reservation, 크면 progress
             //timeDeal.get(0).getStartTime();
             //String localTime;
+            startTime = timeDeal.get(0).getStartTime();
             SimpleDateFormat fourteen_format = new SimpleDateFormat("HH:mm");
             Date date_now = new Date(System.currentTimeMillis()); // 현재 시간
             String a = fourteen_format.format(date_now); // 현재 시간 포맷팅
@@ -285,7 +288,6 @@ public class StoreService {
             } catch (ParseException e) {
                 e.printStackTrace();
             }
-
             //Date localTime = fourteen_format.format(date_now);
             //String a = fourteen_format.format(date_now);
 
@@ -349,24 +351,25 @@ public class StoreService {
     public List<StoreAndDistanceDto> findLocation(Optional<Member> member) {
         // todo 여기 member 들어오면 변경
         //StoreAndDistanceDto
+        // 해당 member와 위도 경도로 찾기 일단 거리 가까운 친구들 찾음.
         Optional<List<Store>> storeList = storeRepository.findByLocation(36.42583333272267, 127.38674024126392);
-
         List<StoreAndDistanceDto> storeAndDistanceDto = new ArrayList<>();
-
+        // 타임딜이 진행한지 확인
         for(int i = 0; i < storeList.get().size(); i++){
             Optional<List<TimeDeal>> timeDealList = timeDealRepository.findAllByStoreId(storeList.get().get(i).getId());
-            if(!timeDealList.isPresent()){
+            if(!timeDealList.isPresent() || timeDealList.get().size() == 0){
                 continue;
             }
             //  타임딜이 존재한다면. todo 다른곳 remove 찾기
-            StoreAndDistanceDto storeAndDistanceDto1 = modelMapper.map(storeList.get().get(i), new TypeToken<StoreAndDistanceDto>(){}.getType());
+            // 해당 거리 값과 타임딜 시간 정보 넣기,.
+            // 이것은 스토어 정보
+            StoreAndDistanceDto storeInfo = modelMapper.map(storeList.get().get(i), new TypeToken<StoreAndDistanceDto>(){}.getType());
 
-
-            storeAndDistanceDto1.setDistance( 6371*acos(cos(toRadians(36.42583333272267))*cos(toRadians(storeList.get().get(i).getLat()))*cos(toRadians(storeList.get().get(i).getLon())
+            storeInfo.setDistance( 6371*acos(cos(toRadians(36.42583333272267))*cos(toRadians(storeList.get().get(i).getLat()))*cos(toRadians(storeList.get().get(i).getLon())
                     -toRadians(127.38674024126392))+sin(toRadians(36.42583333272267))*sin(toRadians(storeList.get().get(i).getLat()))));
 
-            storeAndDistanceDto1.setTimeDealStart(timeDealList.get().get(0).getStartTime());
-            // 해당 상품만!
+            storeInfo.setTimeDealStart(timeDealList.get().get(0).getStartTime());
+            // 해당 상품들을 모아서 넣기
             //List<TimeDeal> timeDealList
             List<Product> products = new ArrayList<>();
             for(int j = 0; j < timeDealList.get().size(); j++){ //timeDealList.get().get(j).getProduct().
@@ -381,10 +384,9 @@ public class StoreService {
                         .productImg(timeDealList.get().get(j).getProduct().getProductImg())
                         .build());
             }
-            storeAndDistanceDto1.setTimeDealList(products);
-            storeAndDistanceDto.add(storeAndDistanceDto1);
+            storeInfo.setTimeDealList(products);
+            storeAndDistanceDto.add(storeInfo);
         }
-
         return storeAndDistanceDto;
     }
 
@@ -403,5 +405,46 @@ public class StoreService {
 
     public Optional<Store> getStoreId(Long storeId) {
         return storeRepository.findById(storeId);
+    }
+
+    public void timeDealStatusInit() {
+        SimpleDateFormat fourteen_format = new SimpleDateFormat("HH:mm");
+        Date date_now = new Date(System.currentTimeMillis()); // 현재 시간
+        String a = fourteen_format.format(date_now); // 현재 시간 포맷팅
+        Date date1 = null; // 현재시간
+        try {
+            date1 = fourteen_format.parse(a);;
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        List<TimeDeal> timeDealList = timeDealRepository.findAll();
+        int timeDealListSize = timeDealList.size();
+
+        for(int i = 0; i < timeDealListSize; i++){
+            Date date2 = null;
+            String startTime = timeDealList.get(i).getStartTime();
+            try {
+                date2 = fourteen_format.parse(startTime);
+            }catch (ParseException e) {
+                e.printStackTrace();
+            }
+            // 2시간 전이란 것을 비교해야함 date1과 date2
+            // 현재 시간과 date2시간이 2시간 넘게 차이남다면(+로)
+            if(date1.getTime() - date2.getTime() > 7200000){
+                Product product = productRepository.findById(timeDealList.get(i).getProduct().getId()).get();
+                product.setStock(null);
+                product.setRate(null);
+                timeDealRepository.deleteById(timeDealList.get(i).getId());
+            }
+            else if(date1.getTime() - date2.getTime() < 0){ // 만약 date2의 시간이 22시를 넘어간다면
+                if(date1.getTime()+86400000 - date2.getTime() > 7200000){
+                    Product product = productRepository.findById(timeDealList.get(i).getProduct().getId()).get();
+                    product.setStock(null);
+                    product.setRate(null);
+                    timeDealRepository.deleteById(timeDealList.get(i).getId());
+                }
+            }
+        }
     }
 }
