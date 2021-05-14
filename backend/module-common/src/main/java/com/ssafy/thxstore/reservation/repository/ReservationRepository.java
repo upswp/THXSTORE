@@ -42,4 +42,16 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
 
     @Query(value = "select * from reservation where review_id = :reviewId",nativeQuery = true)
     Reservation findByreviewId(Long reviewId);
+
+//    @Query("select all" +
+//            " from Reservation r " +
+//            " where rg.userId = :Id")
+    @Query(value = "select * from reservation where member_id = :id",nativeQuery = true)
+    List<Reservation> findReservationByMemberId(Long id);
+
+//    @Query("select all" +
+//            " from Reservation r " +
+//            " where rg.storeId = :Id")
+    @Query(value = "select * from reservation where store_id = :id",nativeQuery = true)
+    List<Reservation> findReservationByStoreId(Long id);
 }

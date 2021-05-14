@@ -17,31 +17,28 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ReservationGroupDto {
 
-    @NotBlank
-    private Long userId;
+//    private Long userId;
 
-    @NotBlank
     private int price;
 
-    @NotBlank
     private int count;
 
-    @NotBlank
-    private String orderTime;
+    private int rate;
 
-    @NotBlank
+//    private String orderTime;
+
     private String productName;
 
-    @NotBlank
-    private ReservationStatus reservationStatus;
+//    private ReservationStatus reservationStatus;
 
     @Builder
-    public ReservationGroupDto(Long id, Long userId, int price,int count,String productName,Reservation reservation,ReservationStatus reservationStatus,String orderTime) {
-        this.orderTime = orderTime;
-        this.userId = userId;
+    public ReservationGroupDto(int rate,Long id, Long userId, int price,int count,String productName,Reservation reservation,ReservationStatus reservationStatus,String orderTime) {
+        this.rate = rate;
+//        this.orderTime = orderTime;
+//        this.userId = userId;
         this.price = price;
         this.count = count;
         this.productName = productName;
-        this.reservationStatus = reservationStatus;
+//        this.reservationStatus = reservationStatus;
     }
 }

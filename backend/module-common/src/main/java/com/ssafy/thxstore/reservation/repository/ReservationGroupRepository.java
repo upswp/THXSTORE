@@ -14,13 +14,13 @@ import java.util.Optional;
 public interface ReservationGroupRepository extends JpaRepository<ReservationGroup, Long> {
 
         @Query("select new com.ssafy.thxstore.reservation.domain.ReservationGroup" +
-        " (rg.reservation,rg.count,rg.price,rg.productName,rg.userId,rg.reservation.reservationStatus)" +
+        " (rg.reservation,rg.count,rg.price,rg.productName,rg.userId,rg.reservation.reservationStatus,rg.rate)" +
         " from ReservationGroup rg join rg.reservation r " +
         " where rg.userId = :Id")
     List<ReservationGroup> findReservationlistByMemberId(Long Id);
 
     @Query("select new com.ssafy.thxstore.reservation.domain.ReservationGroup" +
-            " (rg.reservation,rg.count,rg.price,rg.productName,rg.userId,rg.reservation.reservationStatus)" +
+            " (rg.reservation,rg.count,rg.price,rg.productName,rg.userId,rg.reservation.reservationStatus,rg.rate)" +
             " from ReservationGroup rg join rg.reservation r " +
             " where rg.storeId = :Id")
     List<ReservationGroup> findReservationlistByStoreId(Long Id);

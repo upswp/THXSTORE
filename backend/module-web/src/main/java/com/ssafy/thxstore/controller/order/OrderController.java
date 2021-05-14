@@ -66,7 +66,7 @@ public ResponseEntity<String> addReservation(@Valid @RequestBody ReservationDto 
     @GetMapping("/reservation/{memberId}")
     public ResponseEntity getReservation(@PathVariable Long memberId){
 
-        List<ReservationGroupDto> li = reservationService.getReservation(memberId,"member");
+        List<ReservationDto> li = reservationService.getReservation(memberId,"member");
 
         return new ResponseEntity<>(li, HttpStatus.OK);
 //        return ResponseEntity.created(li.getUri()).body(li.getOrderResource());
@@ -88,9 +88,10 @@ public ResponseEntity<String> addReservation(@Valid @RequestBody ReservationDto 
 
     /**
      * 1. 주문 테이블에 들어간 상황 사장님이 수령 확인 버튼 누르면 주문 status 변경 memberId(321) 님 이시죠? 물건 주고 버튼 누르면 주문 테이블에서 상태 변화
-     * 2. DEFAULT -> ACCEPT 주문 승락
-     * 3. ACCEPT -> STAND_BY 상품(음식) 완료 후 수령 대기
-     * 4. STAND_BY -> FINISH 수령 완료
+     *
+     * 2. DEFAULT -> ACCEPT 주문 승락 버튼
+     * 3. ACCEPT -> STAND_BY 상품(음식) 조리 완료 후 수령 대기 버튼
+     * 4. STAND_BY -> FINISH 수령 완료 버튼
      */
 
     @PutMapping("/reservation/statusupdate") // v2 mem id로 받아서 검색 후 수정, 받아오는 형식 memformdto
@@ -108,7 +109,7 @@ public ResponseEntity<String> addReservation(@Valid @RequestBody ReservationDto 
     @GetMapping("/reservation/store/{storeId}")
     public ResponseEntity getStoreReservation(@PathVariable Long storeId){
 
-        List<ReservationGroupDto> li = reservationService.getReservation(storeId,"store");
+        List<ReservationDto> li = reservationService.getReservation(storeId,"store");
 
         return new ResponseEntity<>(li, HttpStatus.OK);
 //        return ResponseEntity.created(li.getUri()).body(li.getOrderResource());

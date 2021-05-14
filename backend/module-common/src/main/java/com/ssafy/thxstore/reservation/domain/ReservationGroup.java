@@ -38,11 +38,16 @@ public class ReservationGroup {
     @Column(name = "price")
     private int price;
 
+    @ColumnDescription("상품별 할인율")
+    @Column(name = "rate")
+    private int rate;
+
     @Column(name = "product_name")
     private String productName;
 
     @Builder
-    public ReservationGroup(Reservation reservation, int count, int price, String productName,Long userId,Long storeId) {
+    public ReservationGroup(Reservation reservation, int count, int price, String productName,Long userId,Long storeId,int rate) {
+        this.rate =rate;
         this.userId = userId;
         this.storeId = storeId;
         this.reservation = reservation;
@@ -51,8 +56,9 @@ public class ReservationGroup {
         this.productName = productName;
     }
 
-    public ReservationGroup(Reservation reservation,int count, int price, String productName,Long userId,ReservationStatus reservationStatus) {
+    public ReservationGroup(Reservation reservation,int count, int price, String productName,Long userId,ReservationStatus reservationStatus,int rate) {
         this.userId = userId;
+        this.rate =rate;
         this.reservation = reservation;
         this.count = count;
         this.price = price;
