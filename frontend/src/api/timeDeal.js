@@ -31,7 +31,7 @@ const getTimeDeal = storeId => privateAPI.get(`${storeId}`);
  * 타임딜 등록 정보
  * @typedef {object} TimeDealForRegister
  * @property {string} startTime - 타임딜 시작 시간
- * @property {Array<Product>} - 타임딜 품목 리스트
+ * @property {Array<Product>} timeDealList - 타임딜 품목 리스트
  */
 /**
  * 타임딜 등록

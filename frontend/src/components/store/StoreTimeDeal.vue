@@ -77,7 +77,9 @@
         </select>
       </div>
       <div class="time-deal-button-wrapper">
-        <div class="time-deal-button">타임딜 시작</div>
+        <button v-if="!reservation" class="time-deal-button" :disabled="!validForm" @click="goTimeDeal">
+          타임딜 시작
+        </button>
       </div>
     </footer>
   </div>
@@ -96,11 +98,16 @@ export default {
       startHour: '00',
       startMinute: '00',
       menus: [],
+      reservation: false,
     };
   },
 
   computed: {
     ...mapGetters(['getStoreId']),
+    validForm() {
+      if (this.selectedMenus.length === 0) return false;
+      return true;
+    },
   },
   async created() {
     try {
@@ -110,6 +117,7 @@ export default {
       if (data.status === 'PROGRESS' || data.status === 'COMPLETE') {
         this.$router.push({ name: 'storeReservation' });
       } else {
+        this.reservation = true;
         // 타임딜이 대기 중인 상태에서는 selectedMenus의 정보를 변경해야한다.
         // 추가적으로 타임딜 시작 버튼을 제거하고, 현재 타임딜 시작까지 몇 분 남았는지 알려줘야한다.
       }
@@ -136,6 +144,13 @@ export default {
     }
   },
   methods: {
+    timeValid() {
+      // 2. 현재 시간이 설정한 시간 보다 짧을 경우
+      const now = new Date();
+      const start = new Date(now.getFullYear(), now.getMonth(), now.getDate(), this.startHour, this.startMinute);
+      if (now >= start) return false;
+      return true;
+    },
     ...mapMutations(['setSpinnerState']),
     timeStrConvert,
     discounting(menu) {
@@ -158,6 +173,28 @@ export default {
         }
         const num = parseInt(menu.stock);
         menu.stock = Math.min(100, Math.max(0, num));
+      }
+    },
+    async goTimeDeal() {
+      if (!this.timeValid()) {
+        alert('타임딜 시작 시간은 현재 시각보다 이후로 설정해주세요.');
+        return;
+      }
+      try {
+        await registerTimeDeal({
+          storeId: this.getStoreId,
+          startTime: this.startHour + ':' + this.startMinute,
+          timeDealList: this.selectedMenus.map(index => {
+            return {
+              productId: this.menus[index].id,
+              stock: this.menus[index].stock,
+              rate: this.menus[index].rate,
+            };
+          }),
+        });
+      } catch (error) {
+        console.error(error);
+        alert('타임딜 등록에 실패하였습니다.');
       }
     },
   },
