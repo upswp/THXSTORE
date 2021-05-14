@@ -29,10 +29,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static java.lang.Math.*;
 
@@ -278,6 +275,7 @@ public class StoreService {
             //String localTime;
             startTime = timeDeal.get(0).getStartTime();
             SimpleDateFormat fourteen_format = new SimpleDateFormat("HH:mm");
+            fourteen_format.setTimeZone(TimeZone.getTimeZone("Asia/Seoul"));
             Date date_now = new Date(System.currentTimeMillis()); // 현재 시간
             String a = fourteen_format.format(date_now); // 현재 시간 포맷팅
             Date data1 = null; // 현재시간
