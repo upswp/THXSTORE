@@ -30,7 +30,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-// @import '@/assets/sample2.scss';
 .admin-container {
   min-height: 100vh;
   background-color: $gray100;

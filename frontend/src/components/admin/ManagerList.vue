@@ -157,7 +157,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '@/assets/scss/sample2';
 .manager-list-container {
   width: 95%;
   padding: 3% 3% 2% 3%;

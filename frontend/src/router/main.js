@@ -1,5 +1,6 @@
 import routesForStore from '@/router/store';
 import routesForAdmin from '@/router/admin';
+import routesForUserStore from '@/router/userStore';
 
 const routesForMain = [
   {
@@ -15,6 +16,7 @@ const routesForMain = [
       },
       ...routesForStore,
       ...routesForAdmin,
+      ...routesForUserStore,
     ],
   },
 ];
