@@ -14,6 +14,7 @@ import com.ssafy.thxstore.store.domain.TempStore;
 import com.ssafy.thxstore.store.dto.*;
 import com.ssafy.thxstore.store.service.StoreService;
 import io.jsonwebtoken.Jwts;
+import javassist.tools.web.BadHttpRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.MediaTypes;
@@ -24,6 +25,8 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.*;
 
 
+import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.core.Response;
 import javax.xml.bind.DatatypeConverter;
 import java.io.IOException;
 import java.lang.reflect.Type;
@@ -32,6 +35,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
@@ -153,10 +157,10 @@ public class StoreController {
 
     /* 판매자 스토어 페이지(타임 딜) */
     @GetMapping("/timedeal/{storeId}")  // 타임딜 조회
-    public ResponseEntity timeDealList(@RequestHeader String authorization,@PathVariable Long storeId){
+    public ResponseEntity timeDealList(@RequestHeader String authorization,@PathVariable Long storeId) throws BadHttpRequest {
         TimeDealProductInfoResponse timeDeal = storeService.timeDealList(storeId);
         if(timeDeal.getStatus().equals("NORMAL")){
-            return ResponseEntity.created(null).body(HttpStatus.BAD_REQUEST);
+            return ResponseEntity.badRequest().body("400");
         }
         return ResponseEntity.created(null).body(timeDeal);
     }
