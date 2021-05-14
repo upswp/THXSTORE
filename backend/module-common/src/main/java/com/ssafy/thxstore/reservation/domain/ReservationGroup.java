@@ -11,7 +11,6 @@ import java.util.List;
 
 @Entity
 @Getter
-@Setter
 @NoArgsConstructor
 @EqualsAndHashCode(of = "id")
 public class ReservationGroup {
