@@ -14,8 +14,8 @@
               :value="index"
               class="check-input"
             />
-            <label :for="`menu-check-${index}`" class="checkbox"></label>
-            {{ menu.name }}</label
+            <label v-if="!reservation" :for="`menu-check-${index}`" class="checkbox"></label>
+            {{ index + 1 }}. {{ menu.name }}</label
           >
           <div class="menu-content">
             <img :src="menu.productImg" class="menu-img" />
@@ -25,7 +25,9 @@
                 <th>재고</th>
                 <tr>
                   <td>
+                    <input v-if="reservation" v-model="menu.rate" type="text" disabled class="counter-input-disabled" />
                     <input
+                      v-else
                       v-model="menu.rate"
                       type="number"
                       step="1"
@@ -37,6 +39,14 @@
                   </td>
                   <td>
                     <input
+                      v-if="reservation"
+                      v-model="menu.stock"
+                      type="text"
+                      disabled
+                      class="counter-input-disabled"
+                    />
+                    <input
+                      v-else
                       v-model="menu.stock"
                       type="number"
                       step="1"
@@ -62,8 +72,8 @@
       </ul>
     </section>
     <footer>
-      <div class="time-deal-start-header">시작 시간</div>
-      <div class="time-deal-start">
+      <div class="time-deal-start-header">{{ reservation ? '타임딜까지 남은 시간' : '시작 시간' }}</div>
+      <div v-if="!reservation" class="time-deal-start">
         <select v-model="startHour" class="time-select">
           <option v-for="(i, index) in 24" :key="index" :value="timeStrConvert(i - 1, 1)">
             {{ timeStrConvert(i - 1, 1) }}
@@ -76,10 +86,12 @@
           </option>
         </select>
       </div>
+      <div v-else class="time-deal-ready"></div>
       <div class="time-deal-button-wrapper">
         <button v-if="!reservation" class="time-deal-button" :disabled="!validForm" @click="goTimeDeal">
           타임딜 시작
         </button>
+        <div v-else><span ref="time" class="tiem-deal-counter"></span></div>
       </div>
     </footer>
   </div>
@@ -90,6 +102,7 @@ import { getTimeDeal, registerTimeDeal } from '@/api/timeDeal';
 import { getTotalMenu } from '@/api/menu';
 import { timeStrConvert } from '@/utils/filters';
 import { mapGetters, mapMutations } from 'vuex';
+import { endTime, countDownTimer } from '@/utils/time';
 export default {
   data() {
     return {
@@ -109,6 +122,14 @@ export default {
       return true;
     },
   },
+  mounted() {
+    if (this.reservation) {
+      const start = new Date();
+      start.setHours(this.startHour);
+      start.setMinutes(this.startMinute);
+      this.countDownTimer(start, this);
+    }
+  },
   async created() {
     try {
       this.setSpinnerState(true);
@@ -117,9 +138,21 @@ export default {
       if (data.status === 'PROGRESS' || data.status === 'COMPLETE') {
         this.$router.push({ name: 'storeReservation' });
       } else {
-        this.reservation = true;
         // 타임딜이 대기 중인 상태에서는 selectedMenus의 정보를 변경해야한다.
-        // 추가적으로 타임딜 시작 버튼을 제거하고, 현재 타임딜 시작까지 몇 분 남았는지 알려줘야한다.
+        this.openTab = Array.from({ length: data.timeDeal.length }, (v, i) => i);
+        const [startHour, startMinute] = data.startTime.split(':');
+        this.startHour = startHour;
+        this.startMinute = startMinute;
+        this.selectedMenus = [...this.openTab];
+        this.menus = data.timeDeal;
+        this.menus.forEach(menu => this.discounting(menu));
+        this.reservation = true;
+        this.$nextTick(() => {
+          const start = new Date();
+          start.setHours(this.startHour);
+          start.setMinutes(this.startMinute);
+          countDownTimer(start, this);
+        });
       }
     } catch (error) {
       if (error.response.status === 400) {
@@ -144,6 +177,7 @@ export default {
     }
   },
   methods: {
+    countDownTimer,
     timeValid() {
       // 2. 현재 시간이 설정한 시간 보다 짧을 경우
       const now = new Date();
@@ -184,16 +218,18 @@ export default {
         await registerTimeDeal({
           storeId: this.getStoreId,
           startTime: this.startHour + ':' + this.startMinute,
-          timeDealList: this.selectedMenus.map(index => {
-            return {
-              productId: this.menus[index].id,
-              stock: this.menus[index].stock,
-              rate: this.menus[index].rate,
-            };
-          }),
+          timeDealList: this.selectedMenus
+            .filter(index => this.menus[index].stock > 0 && this.menus[index].rate > 0)
+            .map(index => {
+              return {
+                productId: this.menus[index].id,
+                stock: this.menus[index].stock,
+                rate: this.menus[index].rate,
+              };
+            }),
         });
       } catch (error) {
-        console.error(error);
+        console.log(error);
         alert('타임딜 등록에 실패하였습니다.');
       }
     },
@@ -206,7 +242,18 @@ export default {
   background-color: $green200;
   color: white;
 }
-
+.tiem-deal-counter {
+  font-size: 20px;
+  @include pc {
+    font-size: 18px;
+  }
+  @include mobile {
+    font-size: 16px;
+  }
+  @include xs-mobile {
+    font-size: 16px;
+  }
+}
 .time-deal-container {
   padding-top: 10px;
   width: clamp(320px, 100%, 1000px);
@@ -324,7 +371,15 @@ export default {
   text-align: center;
   background-color: $red100;
 }
-
+.counter-input-disabled {
+  display: inline-block;
+  width: 40px;
+  margin-bottom: 10px;
+  padding-top: 2px;
+  border: none;
+  text-align: center;
+  background-color: $red100;
+}
 .menu-discount-info {
   width: calc(100% - 100px);
   padding: 0 10px;
@@ -424,5 +479,7 @@ export default {
   @include xs-mobile {
     font-size: 14px;
   }
+}
+.time-deal-ready {
 }
 </style>
