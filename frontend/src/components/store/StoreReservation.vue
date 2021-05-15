@@ -12,9 +12,9 @@
         <th>메뉴 별 금액</th>
         <th>총 합</th>
         <th>상태</th>
-        <template v-for="(order, i) in orders">
-          <tr v-for="(product, j) in order.reservationGroups" :key="j">
-            <td v-if="j === 0" :rowspan="order.reservationGroups.length">{{ i + 1 }}</td>
+        <template v-for="(order, i) in reverseOrders">
+          <tr v-for="(product, j) in order.reservationGroups" :key="`${i} ${j}`">
+            <td v-if="j === 0" :rowspan="order.reservationGroups.length">{{ order.index }}</td>
             <td v-if="j === 0" :rowspan="order.reservationGroups.length" width="15%">
               {{ dateTrans(order.orderTime) }}
             </td>
@@ -64,25 +64,44 @@ export default {
   data() {
     return {
       orders: [],
+      pusher: '',
     };
   },
   computed: {
     ...mapGetters(['getStoreId']),
+    reverseOrders() {
+      return [...this.orders].reverse();
+    },
   },
   async created() {
     try {
       this.setSpinnerState(true);
+      // order 등록
       const { data } = await getTotalOrders(this.getStoreId);
-      for (const order of data) {
-        this.computeAfterLoad(order);
+      for (let i = 0; i < data.length; i++) {
+        this.computeAfterLoad(data[i], i + 1);
       }
       this.orders = data;
+
+      // pusher 등록
+      this.pusher = new Pusher(process.env.VUE_APP_PUSHER_APP_KEY, {
+        cluster: process.env.VUE_APP_PUSHER_APP_CLUSTER,
+      });
+      let channel = this.pusher.subscribe(`${this.getStoreId}-channel`);
+      channel.bind('my-event', data => {
+        this.computeAfterLoad(data, this.orders.length + 1);
+        data['reservationStatus'] = 'DEFAULT';
+        this.orders.push(data);
+      });
       this.setSpinnerState(false);
     } catch (error) {
       this.setSpinnerState(false);
       console.log(error);
       alert('주문 내역 불러오기를 실패했습니다.');
     }
+  },
+  beforeDestroy() {
+    this.pusher.disconnect();
   },
   methods: {
     ...mapMutations(['setSpinnerState']),
@@ -92,13 +111,14 @@ export default {
       const origin = ((100 - rate) / 100) * price;
       return Math.floor(origin / 100) * 100;
     },
-    computeAfterLoad(order) {
+    computeAfterLoad(order, index) {
       let total = 0;
       order.reservationGroups.forEach(p => {
         p['discounted'] = this.discounting(p.rate, p.price);
         p['computed'] = p.discounted * p.count;
         total += p.computed;
       });
+      order['index'] = index;
       order['total'] = total;
     },
     async changeState(state, order) {

@@ -1,6 +1,6 @@
 import { createInstance, createInstanceWithToken } from '@/api/index.js';
 const publicAPI = createInstance('api/order/');
-// const privateAPI = createInstanceWithToken('api/order/');
+const privateAPI = createInstanceWithToken('api/order/');
 
 /**
  * 품목 정보
@@ -25,10 +25,9 @@ const publicAPI = createInstance('api/order/');
 /**
  * 판매자 입장에서 주문 내역 전체 조회
  * @typedef {function} getTotalOrders
- * @param {number} storeId
  * @returns {Promise<Array<Order>>} totalOrders
  */
-const getTotalOrders = storeId => publicAPI.get(`reservation/store/${storeId}`);
+const getTotalOrders = () => privateAPI.get('reservation/store');
 
 /**
  * 주문 상태 변경 정보
