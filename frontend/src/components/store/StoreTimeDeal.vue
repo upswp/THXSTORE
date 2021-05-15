@@ -181,6 +181,7 @@ export default {
   },
   methods: {
     countDownTimer,
+    ...mapMutations(['setSpinnerState']),
     timeValid() {
       // 2. 현재 시간이 설정한 시간 보다 짧을 경우
       const now = new Date();
@@ -188,7 +189,6 @@ export default {
       if (now >= start) return false;
       return true;
     },
-    ...mapMutations(['setSpinnerState']),
     timeStrConvert,
     discounting(menu) {
       const origin = (menu.price / 100) * (100 - parseInt(menu.rate));
@@ -225,6 +225,7 @@ export default {
           alert('유효한 할인율과 재고를 적어주세요');
           return;
         }
+        this.setSpinnerState(true);
         await registerTimeDeal({
           storeId: this.getStoreId,
           startTime: this.startHour + ':' + this.startMinute,
@@ -236,10 +237,12 @@ export default {
             };
           }),
         });
+        this.setSpinnerState(false);
         alert('성공적으로 타임딜이 등록 되었습니다.');
         this.$router.go(0);
       } catch (error) {
         console.log(error);
+        this.setSpinnerState(false);
         alert('타임딜 등록에 실패하였습니다.');
       }
     },

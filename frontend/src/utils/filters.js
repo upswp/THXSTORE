@@ -24,6 +24,7 @@ function meridiemConvert(value) {
   if (num < 24) return [true, timeStrConvert(num - 12, 1)];
 }
 function oneTrans(num) {
+  console.log(num);
   return num.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ',');
 }
 export { formatNumber, timeStrConvert, meridiemConvert, oneTrans };
