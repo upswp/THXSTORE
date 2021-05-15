@@ -1,5 +1,5 @@
 <template>
-  <div class="store-container">
+  <div v-if="loaded" class="store-container">
     <store-navigation class="store-aside" @changeTap="changeTap"></store-navigation>
     <div class="store-main">
       <router-view></router-view>
@@ -17,6 +17,7 @@ export default {
   data() {
     return {
       tap: 'info',
+      loaded: false,
     };
   },
   async created() {
@@ -24,6 +25,7 @@ export default {
       const { data } = await getStoreId();
       this.setStoreId(data);
       saveStoreIdToLocalStorage(data);
+      this.loaded = true;
     } catch (error) {
       console.log(error);
       alert('스토어 아이디를 불러오는데 실패했습니다.');
@@ -44,6 +46,9 @@ export default {
           break;
         case 'live':
           this.$router.push({ name: 'storeLive' });
+          break;
+        case 'reservation':
+          this.$router.push({ name: 'storeReservation' });
           break;
       }
     },

@@ -20,6 +20,9 @@ export default {
   setStoreId(state, storeId) {
     state.storeId = storeId;
   },
+  setRewriteBaseInfo(state, status) {
+    state.rewriteBaseInfo = status;
+  },
   setWatchedStore(state, store) {
     state.watchedStore = store;
   },

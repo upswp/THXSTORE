@@ -12,14 +12,14 @@
             </div>
             <select v-model="openHour" class="time-select">
               <option value="12">12</option>
-              <option v-for="(i, index) in 11" :key="index" :value="hourStrConvert(i, 1)">
-                {{ hourStrConvert(i, 1) }}
+              <option v-for="(i, index) in 11" :key="index" :value="timeStrConvert(i, 1)">
+                {{ timeStrConvert(i, 1) }}
               </option>
             </select>
             <span>:</span>
             <select v-model="openMinute" class="time-select">
-              <option v-for="(i, index) in 6" :key="index" :value="hourStrConvert(i - 1, 10)">
-                {{ hourStrConvert(i - 1, 10) }}
+              <option v-for="(i, index) in 6" :key="index" :value="timeStrConvert(i - 1, 10)">
+                {{ timeStrConvert(i - 1, 10) }}
               </option>
             </select>
           </div>
@@ -33,14 +33,14 @@
             </div>
             <select v-model="closeHour" class="time-select">
               <option value="12">12</option>
-              <option v-for="(i, index) in 11" :key="index" :value="hourStrConvert(i, 1)">
-                {{ hourStrConvert(i, 1) }}
+              <option v-for="(i, index) in 11" :key="index" :value="timeStrConvert(i, 1)">
+                {{ timeStrConvert(i, 1) }}
               </option>
             </select>
             <span>:</span>
             <select v-model="closeMinute" class="time-select">
-              <option v-for="(i, index) in 6" :key="index" :value="hourStrConvert(i - 1, 10)">
-                {{ hourStrConvert(i - 1, 10) }}
+              <option v-for="(i, index) in 6" :key="index" :value="timeStrConvert(i - 1, 10)">
+                {{ timeStrConvert(i - 1, 10) }}
               </option>
             </select>
           </div>
@@ -106,7 +106,7 @@
 </template>
 
 <script>
-import { hourStrConvert, meridiemConvert } from '@/utils/filters';
+import { timeStrConvert, meridiemConvert } from '@/utils/filters';
 import { updateStoreSideInfo } from '@/api/store';
 export default {
   props: {
@@ -248,7 +248,7 @@ export default {
   },
   methods: {
     meridiemConvert,
-    hourStrConvert,
+    timeStrConvert,
     loadOpenTime(time) {
       if (!time) {
         this.openMeridiem = true;
@@ -285,7 +285,7 @@ export default {
       } else {
         if (newHour === 12) newHour = 0;
       }
-      return hourStrConvert(newHour, 1);
+      return timeStrConvert(newHour, 1);
     },
     async submitIntroduction() {
       try {

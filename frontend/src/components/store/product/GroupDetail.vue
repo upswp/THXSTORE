@@ -1,35 +1,45 @@
 <template>
   <main class="store-product-detail">
-    <div class="group-name-wrapper">
-      <div class="group-name">{{ groupName }}</div>
-      <div class="menu-add-button" @click="editOn(false)">새 메뉴 추가하기</div>
-    </div>
-    <div class="menu-container">
-      <div v-for="(menu, index) in menus" :key="index" class="menu-wrapper">
-        <div class="item-image">
-          <img :src="menu.productImg" class="image" />
+    <template v-if="menus.length === 0 && loaded">
+      <div class="width:100%">
+        <div class="no-menu">등록된 메뉴가 없습니다.</div>
+        <div class="menu-add-button2" @click="editOn(false)">
+          <div>새 메뉴 추가하기</div>
         </div>
-        <div class="item-info">
-          <div class="info-header">
-            <div class="setting-button" @click="toggleEditButton(menu)">
-              <span></span>
-              <span></span>
-              <span></span>
-            </div>
-            <div v-show="menu.editting" class="setting-wrapper">
-              <div class="menu-update" @click="editOn(menu)">수정하기</div>
-              <div class="menu-delete" @click="deleteItem(menu.productId)">삭제하기</div>
-            </div>
-            <div class="item-name">{{ menu.name }}</div>
-            <div class="item-intro">{{ menu.introduce }}</div>
+      </div>
+    </template>
+    <template v-if="menus.length > 0 && loaded">
+      <div class="group-name-wrapper">
+        <div class="group-name">{{ groupName }}</div>
+        <div class="menu-add-button" @click="editOn(false)">새 메뉴 추가하기</div>
+      </div>
+      <div class="menu-container">
+        <div v-for="(menu, index) in menus" :key="index" class="menu-wrapper">
+          <div class="item-image">
+            <img :src="menu.productImg" class="image" />
           </div>
-          <div class="info-footer">
-            <div class="item-price">가격: {{ menu.price }}</div>
-            <div class="item-unit">판매단위: {{ menu.amount }}</div>
+          <div class="item-info">
+            <div class="info-header">
+              <div class="setting-button" @click="toggleEditButton(menu)">
+                <span></span>
+                <span></span>
+                <span></span>
+              </div>
+              <div v-show="menu.editting" class="setting-wrapper">
+                <div class="menu-update" @click="editOn(menu)">수정하기</div>
+                <div class="menu-delete" @click="deleteItem(menu.productId)">삭제하기</div>
+              </div>
+              <div class="item-name">{{ menu.name }}</div>
+              <div class="item-intro">{{ menu.introduce }}</div>
+            </div>
+            <div class="info-footer">
+              <div class="item-price">가격: {{ menu.price }}</div>
+              <div class="item-unit">판매단위: {{ menu.amount }}</div>
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </template>
   </main>
 </template>
 
@@ -52,6 +62,7 @@ export default {
   data() {
     return {
       menus: [],
+      loaded: false,
     };
   },
   watch: {
@@ -60,8 +71,12 @@ export default {
     },
   },
   async created() {
-    if (this.groupId === -1) return;
+    if (this.groupId === -1) {
+      this.loaded = true;
+      return;
+    }
     await this.loadMenuList(this.groupId);
+    this.loaded = true;
   },
   methods: {
     ...mapMutations(['setSpinnerState']),
@@ -146,7 +161,13 @@ export default {
     @include flex-wrap(wrap);
   }
 }
-
+.no-menu {
+  min-height: 100%;
+  @include flexbox;
+  @include justify-content(center);
+  color: $gray600;
+  padding-top: 50px;
+}
 .menu-wrapper {
   margin: 10px 0;
   padding: 5px;
@@ -320,6 +341,23 @@ export default {
   &:hover {
     background-color: $red400;
     color: white;
+  }
+}
+.menu-add-button2 {
+  @include flexbox;
+  @include justify-content(center);
+  div {
+    margin-top: 10px;
+    padding: 5px;
+    text-align: center;
+    background-color: $red100;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    &:hover {
+      background-color: $red400;
+      color: white;
+    }
   }
 }
 .setting-wrapper {

@@ -83,6 +83,7 @@ export default {
     ...mapMutations(['setSpinnerState']),
     async addNewGroup() {
       // this.grouList.push(this.newGroupName);
+      if (this.newGroupName === '') return;
       try {
         this.setSpinnerState(true);
         await registerMenuGroup(this.newGroupName);
@@ -200,10 +201,10 @@ export default {
     width: 90%;
   }
   @include mobile {
-    width: 90%;
+    width: 85%;
   }
   @include xs-mobile {
-    width: 90%;
+    width: 80%;
   }
 }
 .add-group-button {
