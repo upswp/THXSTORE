@@ -59,7 +59,7 @@ public class ReservationServiceImpl implements ReservationService{
          * 1. 회원이 스토어 등록한다 -> 사장님됨 storeId를 가지고 다녀야 됨
          * 2. 로그인 후 예약페이지 들어갔을 때 if (사장님이면) -> 우축 하단(미정) 채널 구독 상태로 channel-{storeId} 가지고 다니기 (디폴트 안보이게 -> 이벤트 오면 보이게)
          *
-         * 로그인할 때 채널 구분       */
+         * 로그인할 때 채널 구분      */
 
 
         DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.FULL);
@@ -75,7 +75,7 @@ public class ReservationServiceImpl implements ReservationService{
                 reservationStatus(ReservationStatus.DEFAULT).
                 storeId(reservationList.getStoreId()).
                 member(member.get()).
-                dateTime(DateTime.now() + " " + time).build();
+                dateTime(DateTime.now().toString()).build();
 
         reservationRepository.save(reservation);
         List<ReservationGroup> reservationAntityList = new ArrayList<>();
@@ -98,7 +98,7 @@ public class ReservationServiceImpl implements ReservationService{
 
         Pusher pusher = new Pusher("1203876", "c961ac666cf7baaf084c", "43c7f358035c2a712f23");
         pusher.setCluster("ap3");
-        reservationList.updateOrderTime(DateTime.now() + " " + time);
+        reservationList.updateOrderTime(DateTime.now().toString());
 
 //            pusher.trigger(reservationList.getStoreId()+"-channel", "my-event", Collections.singletonMap("message","회원번호: "+reservationList.getUserId()+ "님의 주문이 등록되었습니다."));
         pusher.trigger(reservationList.getStoreId()+"-channel", "my-event", reservationList);
