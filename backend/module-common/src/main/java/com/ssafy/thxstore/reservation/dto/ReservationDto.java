@@ -38,4 +38,8 @@ public class ReservationDto {
         this.reservationGroups = reservationGroups;
         this.reservationStatus = reservationStatus;
     }
+
+    public void updateOrderTime(String orderTime) {
+        this.orderTime = orderTime;
+    }
 }

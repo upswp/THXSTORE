@@ -27,9 +27,9 @@
       cluster: 'ap3'
     });
 
-    var channel = pusher.subscribe('my-channel');
+    var channel = pusher.subscribe('2-channel');
     channel.bind('my-event', function(data) {
-      app.messages.push(JSON.stringify(data));
+      app.messages.push(data);
     });
 
     // Vue application
