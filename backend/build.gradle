@@ -63,8 +63,8 @@ subprojects {
         testImplementation 'org.springframework.boot:spring-boot-starter-test'
         testImplementation 'org.springframework.security:spring-security-test'
         testCompile group: 'junit', name: 'junit', version: '4.12'
-        implementation group: 'io.rest-assured', name: 'rest-assured-common', version: '4.1.0'
-        testImplementation group: 'io.rest-assured', name: 'spring-mock-mvc', version: '4.1.0'
+//        implementation group: 'io.rest-assured', name: 'rest-assured-common', version: '4.1.0'
+//        testImplementation group: 'io.rest-assured', name: 'spring-mock-mvc', version: '4.1.0'
 
         implementation platform('com.amazonaws:aws-java-sdk-bom:1.11.934')
         implementation 'com.amazonaws:aws-java-sdk-s3'
