@@ -29,4 +29,36 @@ const publicAPI = createInstance('api/order/');
  * @returns {Promise<Array<Order>>} totalOrders
  */
 const getTotalOrders = storeId => publicAPI.get(`reservation/store/${storeId}`);
-export { getTotalOrders };
+
+/**
+ * 주문 상태 변경 정보
+ * @typedef {object} OrderStatus
+ * @property {number} memberId - 주문자 id
+ * @property {number} storeId - 가게 id
+ * @property {string} reservationStatus - 주문 상태
+ */
+/**
+/**
+ * 판매자 입장에서 주문 상태 변경
+ * @typedef {function} setReservationStatus
+ * @param {OrderStatus} orderStatus
+ * @param {OrderStatus} orderStatus
+ * @returns {Promise<Boolean>} isChanged
+ */
+const setReservationStatus = orderStatus => publicAPI.put('reservation/statusupdate', orderStatus);
+/**
+ * 판매자 입장에서 주문 취소
+ * @typedef {function} cancelOrder
+ * @param {number} memberId
+ * @param {number} storeId
+ * @returns {Promise<Boolean>} isCanceled
+ */
+const cancelOrder = (memberId, storeId) =>
+  publicAPI.put('reservation/delete', {
+    params: {
+      memberId,
+      storeId,
+    },
+  });
+
+export { getTotalOrders, setReservationStatus, cancelOrder };

@@ -15,7 +15,9 @@
         <template v-for="(order, i) in orders">
           <tr v-for="(product, j) in order.reservationGroups" :key="j">
             <td v-if="j === 0" :rowspan="order.reservationGroups.length">{{ i + 1 }}</td>
-            <td v-if="j === 0" :rowspan="order.reservationGroups.length" width="15%">{{ order.orderTime }}</td>
+            <td v-if="j === 0" :rowspan="order.reservationGroups.length" width="15%">
+              {{ dateTrans(order.orderTime) }}
+            </td>
             <td v-if="j === 0" :rowspan="order.reservationGroups.length">{{ order.nickname }}</td>
             <td class="name">{{ product.productName }}</td>
             <td class="amount">{{ product.count }}</td>
@@ -52,8 +54,8 @@
 </template>
 
 <script>
-import { oneTrans } from '@/utils/filters';
-import { getTotalOrders } from '@/api/order';
+import { oneTrans, dateTrans } from '@/utils/filters';
+import { getTotalOrders, setReservationStatus, cancelOrder } from '@/api/order';
 import { mapMutations, mapGetters } from 'vuex';
 export default {
   data() {
@@ -89,6 +91,7 @@ export default {
   methods: {
     ...mapMutations(['setSpinnerState']),
     oneTrans,
+    dateTrans,
     discounting(rate, price) {
       const origin = ((100 - rate) / 100) * price;
       return Math.floor(origin / 100) * 100;
