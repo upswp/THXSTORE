@@ -75,7 +75,7 @@ public class ReservationServiceImpl implements ReservationService{
                 reservationStatus(ReservationStatus.DEFAULT).
                 storeId(reservationList.getStoreId()).
                 member(member.get()).
-                dateTime(dateFormat.format(DateTime.now().toDate()) + " " + time).build();
+                dateTime(DateTime.now() + " " + time).build();
 
         reservationRepository.save(reservation);
         List<ReservationGroup> reservationAntityList = new ArrayList<>();
@@ -98,12 +98,11 @@ public class ReservationServiceImpl implements ReservationService{
 
         Pusher pusher = new Pusher("1203876", "c961ac666cf7baaf084c", "43c7f358035c2a712f23");
         pusher.setCluster("ap3");
-        reservationList.updateOrderTime(dateFormat.format(DateTime.now().toDate()) + " " + time);
+        reservationList.updateOrderTime(DateTime.now() + " " + time);
 
 //            pusher.trigger(reservationList.getStoreId()+"-channel", "my-event", Collections.singletonMap("message","회원번호: "+reservationList.getUserId()+ "님의 주문이 등록되었습니다."));
         pusher.trigger(reservationList.getStoreId()+"-channel", "my-event", reservationList);
     }
-
 
     /**
      * 대서버 -> storeId
