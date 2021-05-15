@@ -37,6 +37,6 @@ public interface ReservationGroupRepository extends JpaRepository<ReservationGro
     @Query("select new com.ssafy.thxstore.reservation.domain.ReservationGroup" +
             " (rg.reservation,rg.count,rg.price,rg.productName,rg.userId,rg.reservation.reservationStatus,rg.rate)" +
             " from ReservationGroup rg join rg.reservation r " +
-            " where rg.reservation.email = :email and rg.storeId.storeId = :storeId")
-    List<ReservationGroup> findAllByEmailAndStoreId(String email, Long storeId);
+            " where rg.reservation.id = :Id and rg.storeId.storeId = :storeId")
+    List<ReservationGroup> findAllByMemIdAndStoreId(Long Id, Long storeId);
 }

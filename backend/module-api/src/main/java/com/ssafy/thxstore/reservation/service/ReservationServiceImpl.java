@@ -208,9 +208,19 @@ public class ReservationServiceImpl implements ReservationService{
 
     @Override
     @Transactional
-    public void deleteReservation(String email,Long storeId){
-        List<ReservationGroup> order = reservationGroupRepository.findAllByEmailAndStoreId(email,storeId);
-        reservationGroupRepository.deleteAll(order);
+    public void deleteReservation(String email,Long Id,String type){
+
+        if(type == "store"){
+            Optional<Store> store= storeRepository.findByEmailJoin(email);
+
+            List<ReservationGroup> order = reservationGroupRepository.findAllByMemIdAndStoreId(Id,store.get().getId());
+            reservationGroupRepository.deleteAll(order);
+        }else{
+            Optional<Member> member= memberRepository.findByEmail(email);
+
+            List<ReservationGroup> order = reservationGroupRepository.findAllByMemIdAndStoreId(member.get().getId(),Id);
+            reservationGroupRepository.deleteAll(order);
+        }
     }
 
     @Override
