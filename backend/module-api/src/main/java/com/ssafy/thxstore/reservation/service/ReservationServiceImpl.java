@@ -55,13 +55,11 @@ public class ReservationServiceImpl implements ReservationService{
          * 가게를 등록할 때 이벤트를 발생시키고
          * 이벤트가 발생되었다고 프론트에 전달하자
          * 이걸 해당 사장님한테만 전달해야함..
-         */
-
-
-        Pusher pusher = new Pusher("1203876", "c961ac666cf7baaf084c", "43c7f358035c2a712f23");
-        pusher.setCluster("ap3");
-
-        pusher.trigger("my-channel", "my-event", Collections.singletonMap("message", "~~님의 주문이 등록되었습니다."));
+         *
+         * 1. 회원이 스토어 등록한다 -> 사장님됨 storeId를 가지고 다녀야 됨
+         * 2. 로그인 후 예약페이지 들어갔을 때 if (사장님이면) -> 우축 하단(미정) 채널 구독 상태로 channel-{storeId} 가지고 다니기 (디폴트 안보이게 -> 이벤트 오면 보이게)
+         *
+         * 로그인할 때 채널 구분       */
 
 
         DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.FULL);
@@ -69,6 +67,8 @@ public class ReservationServiceImpl implements ReservationService{
         String time = timeFormat.format(new Date());
 
         Optional<Member> member = memberRepository.findById(reservationList.getUserId());
+        List<ReservationGroupDto> reservationGroupDtoList = new LinkedList<>();
+        List<ReservationDto> reservationDtoList = new LinkedList<>();
 
         Reservation reservation = Reservation.builder().
                 nickname(reservationList.getNickname()).
@@ -78,10 +78,9 @@ public class ReservationServiceImpl implements ReservationService{
                 dateTime(dateFormat.format(DateTime.now().toDate()) + " " + time).build();
 
         reservationRepository.save(reservation);
+        List<ReservationGroup> reservationAntityList = new ArrayList<>();
 
         for(int i =0 ;i<reservationList.getReservationGroups().size();i++){
-
-            List<ReservationGroup> reservationAntityList = new ArrayList<>();
 
             ReservationGroup reservationGroup = ReservationGroup.builder().
                     rate(reservationList.getReservationGroups().get(i).getRate()).
@@ -94,9 +93,17 @@ public class ReservationServiceImpl implements ReservationService{
                     build();
 
             reservationAntityList.add(reservationGroup);
-            reservationGroupRepository.saveAll(reservationAntityList);
         }
+        reservationGroupRepository.saveAll(reservationAntityList);
+
+        Pusher pusher = new Pusher("1203876", "c961ac666cf7baaf084c", "43c7f358035c2a712f23");
+        pusher.setCluster("ap3");
+        reservationList.updateOrderTime(dateFormat.format(DateTime.now().toDate()) + " " + time);
+
+//            pusher.trigger(reservationList.getStoreId()+"-channel", "my-event", Collections.singletonMap("message","회원번호: "+reservationList.getUserId()+ "님의 주문이 등록되었습니다."));
+        pusher.trigger(reservationList.getStoreId()+"-channel", "my-event", reservationList);
     }
+
 
     /**
      * 대서버 -> storeId
@@ -105,49 +112,6 @@ public class ReservationServiceImpl implements ReservationService{
     @Override
     @Transactional
     public List<ReservationDto> getReservation(Long Id,String type){
-
-
-        //        if(type =="store") {  //사장님이 본인 가게에 들어온 주문 확인할때 알림 기능 온
-//
-////            HttpAuthorizer authorizer = new HttpAuthorizer("http://localhost:8080/api/order/reservation/store/"+Id);
-////            PusherOptions options = new PusherOptions().setCluster("ap3").setAuthorizer(authorizer);
-////            Pusher pusher = new Pusher(YOUR_APP_KEY, options);
-//
-//            PusherOptions options = new PusherOptions().setCluster("ap3");
-//            Pusher pusher = new Pusher("c961ac666cf7baaf084c", options);  //푸셔 인스턴스를 만들고
-//            pusher.connect(); //연결하고 disconnect 언제하지?
-//
-//
-//            pusher.connect(new ConnectionEventListener() {
-//                @Override
-//                public void onConnectionStateChange(ConnectionStateChange change) {
-//                    System.out.println("State changed to " + change.getCurrentState() +
-//                            " from " + change.getPreviousState());
-//                }
-//
-//                @Override
-//                public void onError(String message, String code, Exception e) {
-//                    System.out.println("There was a problem connecting!");
-//                }
-//            }, ConnectionState.ALL);
-//
-//
-//            //프론트엔드에서 예약주문했을때 서버에 이벤트 보내주고 사장님 채널에 메세지
-//            Channel channel = pusher.subscribe("store"+Id+"-channel", new ChannelEventListener() {
-//                @Override
-//                public void onEvent(PusherEvent event) {
-//                    System.out.println("Received event with data: " + event.toString());
-//                }
-//
-//                @Override
-//                public void onSubscriptionSucceeded(String channelName) {
-//                    System.out.println("Subscribed to channel: " + channelName);
-//                }
-//                // Other ChannelEventListener methods
-//            });
-//
-//
-//        }
 
         List<ReservationGroupDto> reservationGroupDtoList = new LinkedList<>();
         List<ReservationDto> reservationDtoList = new LinkedList<>();

@@ -71,6 +71,19 @@ public ResponseEntity<String> addReservation(@Valid @RequestBody ReservationDto 
 //        return ResponseEntity.created(li.getUri()).body(li.getOrderResource());
     }
 
+//    /**
+//     * 사장님 입장 주문 갱신
+//     * ->pusher 이벤트 들어오면 한번 호출 -> 새롭게 들어온 주문 목록을 리턴한다.
+//     */
+//
+//    @GetMapping("/reservation/store/{storeId}")
+//    public ResponseEntity reflashReservation(@PathVariable Long storeId){
+//
+//        List<ReservationDto> li = reservationService.getReservation(storeId,"store");
+//        return new ResponseEntity<>(li, HttpStatus.OK);
+////        return ResponseEntity.created(li.getUri()).body(li.getOrderResource());
+//    }
+
     /**
      *  사장님 or 사용자의 주문 취소 버튼 클릭 후 후 -> 테이블 자체에서 삭제
      *  member_id와 store_id 로 reservation 테이블에서 삭제한다.
