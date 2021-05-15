@@ -10,16 +10,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class ModifyPutMemberResponse {
     private Long id;
-    private String address;
     private Double lat;
     private Double lon;
 
     public static ModifyPutMemberResponse of(Member member) {
-        return new ModifyPutMemberResponse(
-                member.getId(),
-                member.getAddress(),
-                member.getLat(),
-                member.getLon()
-                );
+        return new ModifyPutMemberResponse(member.getId(), member.getLat(), member.getLon());
     }
 }

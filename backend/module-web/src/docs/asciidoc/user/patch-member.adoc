@@ -1,41 +1,41 @@
-ifndef::sub-snippet[]
-:sub-snippet: ../../../../build/generated-snippets
-endif::[]
-:doctype: book
-:icons: font
-:source-highlighter: highlightjs
-:toc: left
-:toclevels: 4
-:sectlinks:
-:site-url: /build/asciidoc/html5/state
-
-[[resources-patch-member]]
-=== 소셜 유저 생성
-
-`Patch` 요청을 사용해서 유저의 정보 일부를 수정한다.
-
-==== Links
-Links:
-include::{sub-snippet}/patch-member/links.adoc[]
-
-==== Request
-CURL:
-include::{sub-snippet}/patch-member/curl-request.adoc[]
-Http-request:
-include::{sub-snippet}/patch-member/http-request.adoc[]
-Request-headers:
-include::{sub-snippet}/patch-member/request-headers.adoc[]
-Request-body:
-include::{sub-snippet}/patch-member/request-body.adoc[]
-Request-field:
-include::{sub-snippet}/patch-member/request-fields.adoc[]
-
-==== Response
-Http-response:
-include::{sub-snippet}/patch-member/http-response.adoc[]
-Response-headers:
-include::{sub-snippet}/patch-member/response-headers.adoc[]
-Response-body:
-include::{sub-snippet}/patch-member/response-body.adoc[]
-Response-field
-include::{sub-snippet}/patch-member/response-fields.adoc[]
+//ifndef::sub-snippet[]
+//:sub-snippet: ../../../../build/generated-snippets
+//endif::[]
+//:doctype: book
+//:icons: font
+//:source-highlighter: highlightjs
+//:toc: left
+//:toclevels: 4
+//:sectlinks:
+//:site-url: /build/asciidoc/html5/state
+//
+//[[resources-patch-member]]
+//=== 유저 정보 수정
+//
+//`Patch` 요청을 사용해서 유저의 정보 일부를 수정한다.
+//
+//==== Links
+//Links:
+//include::{sub-snippet}/patch-member/links.adoc[]
+//
+//==== Request
+//CURL:
+//include::{sub-snippet}/patch-member/curl-request.adoc[]
+//Http-request:
+//include::{sub-snippet}/patch-member/http-request.adoc[]
+//Request-headers:
+//include::{sub-snippet}/patch-member/request-headers.adoc[]
+//Request-body:
+//include::{sub-snippet}/patch-member/request-body.adoc[]
+//Request-field:
+//include::{sub-snippet}/patch-member/request-fields.adoc[]
+//
+//==== Response
+//Http-response:
+//include::{sub-snippet}/patch-member/http-response.adoc[]
+//Response-headers:
+//include::{sub-snippet}/patch-member/response-headers.adoc[]
+//Response-body:
+//include::{sub-snippet}/patch-member/response-body.adoc[]
+//Response-field
+//include::{sub-snippet}/patch-member/response-fields.adoc[]
