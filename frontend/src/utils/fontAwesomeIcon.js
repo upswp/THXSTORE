@@ -19,13 +19,10 @@ import {
   faMapMarkerAlt,
   faPhoneAlt,
   faSignOutAlt,
-<<<<<<< HEAD
   faEraser,
   faPencilAlt,
-=======
   faChevronDown,
   faChevronUp,
->>>>>>> a7885c0 ([S04P31B202-284] feat: 일반사용자용 스토어페이지 뼈대 만들기)
 } from '@fortawesome/free-solid-svg-icons';
 library.add(
   faStore,
@@ -43,13 +40,10 @@ library.add(
   faMapMarkerAlt,
   faPhoneAlt,
   faSignOutAlt,
-<<<<<<< HEAD
   faEraser,
   faPencilAlt,
-=======
   faChevronDown,
   faChevronUp,
->>>>>>> a7885c0 ([S04P31B202-284] feat: 일반사용자용 스토어페이지 뼈대 만들기)
 );
 
 import {

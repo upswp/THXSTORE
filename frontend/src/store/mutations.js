@@ -20,4 +20,7 @@ export default {
   setStoreId(state, storeId) {
     state.storeId = storeId;
   },
+  setWatchedStore(state, store) {
+    state.watchedStore = store;
+  },
 };

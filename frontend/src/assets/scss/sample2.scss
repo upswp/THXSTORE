@@ -136,6 +136,7 @@
                 width: 30%;
                 text-align: center;
                 img {
+                    
                     object-fit: contain;
                     border-radius: 5%;
                     @include lg-pc{

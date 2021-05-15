@@ -7,7 +7,7 @@ const routesForUserStore = [
     children: [
       {
         path: 'menu-list/:storeId',
-        name: 'menulist',
+        name: 'menu-list',
         component: () => import('@/components/storeForUser/UserStoreMenuList.vue'),
       },
       {
@@ -17,12 +17,12 @@ const routesForUserStore = [
       },
       {
         path: 'timedeal-list/:storeId',
-        name: 'timedealList',
+        name: 'timedea-lList',
         component: () => import('@/components/storeForUser/TimedealList.vue'),
       },
       {
         path: 'live-commerce/:storeId',
-        name: 'liveCommerce',
+        name: 'live-Commerce',
         component: () => import('@/components/storeForUser/UserStoreLiveCommerce.vue'),
       },
     ],

@@ -1,165 +1,26 @@
 <template>
   <div class="userstore-menu-containter">
-    <div class="menu-group-container">
+    <div v-for="(menuGroupContainer, index) in storeMenuArr" :key="index" class="menu-group-container">
       <div class="menu-group-title" @click="showAccordion">
-        <div class="group-title">돈가쓰류</div>
+        <div class="group-title">{{ menuGroupContainer.name }}</div>
         <awesome icon="chevron-up" class="chevron-up"></awesome>
       </div>
       <div class="transition-div">
         <div class="menu-list-container">
-          <div class="menu-list-item">
+          <div v-for="(menuList, menuIndex) in menuGroupContainer.product" :key="menuIndex" class="menu-list-item">
             <div class="menu-list-info">
-              <div class="info-name"><b>돈까스</b></div>
+              <div class="info-name">
+                <b>{{ menuList.name }}</b>
+              </div>
               <div class="info-content">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Dignissimos ipsa earum quos eos a! Incidunt
-                sapiente accusamus aperiam eum, eos cupiditate, animi quos autem quasi similique iste minima adipisci
-                eligendi!
+                {{ menuList.introduce }}
               </div>
               <br />
-              <label class="info-degree">1인분 </label>
-              <div class="info-price">15,000원</div>
+              <label class="info-degree"> {{ menuList.amount }} </label>
+              <div class="info-price">{{ menuList.price }}원</div>
             </div>
             <div class="menu-thumbnail">
-              <img
-                src="https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyMTA1MDRfMTE3%2FMDAxNjIwMTExNjg2NjEz.7rGqmllyGViKk8u4BFJJ-zZZqpV7jcdI30lwsvtLWtgg.eViHbldT7_pfRyVwSs2EMX6P1VHO8e3mG_tGXGfVsyEg.JPEG.rrnal1%2FIMG_2583.jpg&type=sc960_832"
-              />
-            </div>
-          </div>
-          <div class="menu-list-item">
-            <div class="menu-list-info">
-              <div class="info-name"><b>돈까스</b></div>
-              <div class="info-content">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Dignissimos ipsa earum quos eos a! Incidunt
-                sapiente accusamus aperiam eum, eos cupiditate, animi quos autem quasi similique iste minima adipisci
-                eligendi!
-              </div>
-              <br />
-              <label class="info-degree">1인분 </label>
-              <div class="info-price">15,000원</div>
-            </div>
-            <div class="menu-thumbnail">
-              <img
-                src="https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyMTA1MDRfMTE3%2FMDAxNjIwMTExNjg2NjEz.7rGqmllyGViKk8u4BFJJ-zZZqpV7jcdI30lwsvtLWtgg.eViHbldT7_pfRyVwSs2EMX6P1VHO8e3mG_tGXGfVsyEg.JPEG.rrnal1%2FIMG_2583.jpg&type=sc960_832"
-              />
-            </div>
-          </div>
-        </div>
-        <div class="menu-list-container">
-          <div class="menu-list-item">
-            <div class="menu-list-info">
-              <div class="info-name"><b>돈까스</b></div>
-              <div class="info-content">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Dignissimos ipsa earum quos eos a! Incidunt
-                sapiente accusamus aperiam eum, eos cupiditate, animi quos autem quasi similique iste minima adipisci
-                eligendi!
-              </div>
-              <br />
-              <label class="info-degree">1인분 </label>
-              <div class="info-price">15,000원</div>
-            </div>
-            <div class="menu-thumbnail">
-              <img
-                src="https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyMTA1MDRfMTE3%2FMDAxNjIwMTExNjg2NjEz.7rGqmllyGViKk8u4BFJJ-zZZqpV7jcdI30lwsvtLWtgg.eViHbldT7_pfRyVwSs2EMX6P1VHO8e3mG_tGXGfVsyEg.JPEG.rrnal1%2FIMG_2583.jpg&type=sc960_832"
-              />
-            </div>
-          </div>
-          <div class="menu-list-item">
-            <div class="menu-list-info">
-              <div class="info-name"><b>돈까스</b></div>
-              <div class="info-content">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Dignissimos ipsa earum quos eos a! Incidunt
-                sapiente accusamus aperiam eum, eos cupiditate, animi quos autem quasi similique iste minima adipisci
-                eligendi!
-              </div>
-              <br />
-              <label class="info-degree">1인분 </label>
-              <div class="info-price">15,000원</div>
-            </div>
-            <div class="menu-thumbnail">
-              <img
-                src="https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyMTA1MDRfMTE3%2FMDAxNjIwMTExNjg2NjEz.7rGqmllyGViKk8u4BFJJ-zZZqpV7jcdI30lwsvtLWtgg.eViHbldT7_pfRyVwSs2EMX6P1VHO8e3mG_tGXGfVsyEg.JPEG.rrnal1%2FIMG_2583.jpg&type=sc960_832"
-              />
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="menu-group-container">
-      <div class="menu-group-title" @click="showAccordion">
-        <div class="group-title">돈가쓰류</div>
-        <awesome icon="chevron-up" class="chevron-up"></awesome>
-      </div>
-      <div class="transition-div">
-        <div class="menu-list-container">
-          <div class="menu-list-item">
-            <div class="menu-list-info">
-              <div class="info-name"><b>돈까스</b></div>
-              <div class="info-content">Lorem, ipsum dolor sasdfasd sa dfasd</div>
-              <br />
-              <br />
-              <label class="info-degree">1인분 </label>
-              <div class="info-price">15,000원</div>
-            </div>
-            <div class="menu-thumbnail">
-              <img
-                src="https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyMTA1MDRfMTE3%2FMDAxNjIwMTExNjg2NjEz.7rGqmllyGViKk8u4BFJJ-zZZqpV7jcdI30lwsvtLWtgg.eViHbldT7_pfRyVwSs2EMX6P1VHO8e3mG_tGXGfVsyEg.JPEG.rrnal1%2FIMG_2583.jpg&type=sc960_832"
-              />
-            </div>
-          </div>
-          <div class="menu-list-item">
-            <div class="menu-list-info">
-              <div class="info-name"><b>돈까스</b></div>
-              <div class="info-content">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Dignissimos ipsa earum quos eos a! Incidunt
-                sapiente accusamus aperiam eum, eos cupiditate, animi quos autem quasi similique iste minima adipisci
-                eligendi!
-              </div>
-              <br />
-              <label class="info-degree">1인분 </label>
-              <div class="info-price">15,000원</div>
-            </div>
-            <div class="menu-thumbnail">
-              <img
-                src="https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyMTA1MDRfMTE3%2FMDAxNjIwMTExNjg2NjEz.7rGqmllyGViKk8u4BFJJ-zZZqpV7jcdI30lwsvtLWtgg.eViHbldT7_pfRyVwSs2EMX6P1VHO8e3mG_tGXGfVsyEg.JPEG.rrnal1%2FIMG_2583.jpg&type=sc960_832"
-              />
-            </div>
-          </div>
-        </div>
-        <div class="menu-list-container">
-          <div class="menu-list-item">
-            <div class="menu-list-info">
-              <div class="info-name"><b>돈까스</b></div>
-              <div class="info-content">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Dignissimos ipsa earum quos eos a! Incidunt
-                sapiente accusamus aperiam eum, eos cupiditate, animi quos autem quasi similique iste minima adipisci
-                eligendi!
-              </div>
-              <br />
-              <label class="info-degree">1인분 </label>
-              <div class="info-price">15,000원</div>
-            </div>
-            <div class="menu-thumbnail">
-              <img
-                src="https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyMTA1MDRfMTE3%2FMDAxNjIwMTExNjg2NjEz.7rGqmllyGViKk8u4BFJJ-zZZqpV7jcdI30lwsvtLWtgg.eViHbldT7_pfRyVwSs2EMX6P1VHO8e3mG_tGXGfVsyEg.JPEG.rrnal1%2FIMG_2583.jpg&type=sc960_832"
-              />
-            </div>
-          </div>
-          <div class="menu-list-item">
-            <div class="menu-list-info">
-              <div class="info-name"><b>돈까스</b></div>
-              <div class="info-content">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Illo consectetur velit itaque corporis autem
-                vitae sequi omnis reiciendis obcaecati voluptatem laboriosam saepe est, perferendis aperiam officia
-                beatae quis ex non.
-              </div>
-              <br />
-              <label class="info-degree">1인분 </label>
-              <div class="info-price">15,000원</div>
-            </div>
-            <div class="menu-thumbnail">
-              <img
-                src="https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyMTA1MDRfMTE3%2FMDAxNjIwMTExNjg2NjEz.7rGqmllyGViKk8u4BFJJ-zZZqpV7jcdI30lwsvtLWtgg.eViHbldT7_pfRyVwSs2EMX6P1VHO8e3mG_tGXGfVsyEg.JPEG.rrnal1%2FIMG_2583.jpg&type=sc960_832"
-              />
+              <img :src="menuList.productImg" />
             </div>
           </div>
         </div>
@@ -169,12 +30,29 @@
 </template>
 
 <script>
+import { getStoreMenu } from '@/api/userStore';
 export default {
+  data() {
+    return {
+      storeMenuArr: [],
+    };
+  },
+  created() {
+    this.getMenuList();
+  },
   methods: {
+    async getMenuList() {
+      try {
+        const storeId = this.$route.params.storeId;
+        const { data } = await getStoreMenu(storeId);
+        this.storeMenuArr = data;
+      } catch (error) {
+        console.log(error);
+      }
+    },
     showAccordion(e) {
       console.log(e.currentTarget.querySelector('svg'));
       e.currentTarget.querySelector('svg').classList.toggle('upside-down');
-      // e.currentTarget.style.backgroundColor = 'red';
       e.currentTarget.nextElementSibling.classList.toggle('hidden');
     },
   },

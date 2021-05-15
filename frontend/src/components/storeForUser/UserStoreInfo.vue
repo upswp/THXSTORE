@@ -4,9 +4,9 @@
     <br />
     <div class="userstore-introduce card-shadow">
       <div class="introduce-title">가게 소개</div>
-      <div class="introduce-content">
+      <pre class="introduce-content">
         {{ storeInfo.sideInfo.introduce }}
-      </div>
+      </pre>
     </div>
     <br />
     <div class="userstore-operation card-shadow">
@@ -24,10 +24,10 @@
     <div class="userstore-kakaomap card-shadow">
       <div class="kakaomap-title">찾아오시는 길</div>
       <div class="kakaomap-content">
-        <KaKao-map :location="locationArr"></KaKao-map>
+        <KaKao-map v-if="loaded" :location="locationArr"></KaKao-map>
       </div>
-      <div id="foo" class="kakaomap-copy-button">주소 복사</div>
-      <div class="kakaomap-navigation-button" data-clipboard-target="asdfsadfsd">길찾기</div>
+      <input class="kakaomap-copy-button" :value="storeInfo.baseInfo.mainAddress" readonly />
+      <div class="kakaomap-navigation-button" @click="clipboard">주소 복사하기</div>
     </div>
     <br />
     <div class="userstore-license card-shadow">
@@ -48,32 +48,47 @@
     </div>
   </div>
 </template>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js"></script>
 <script>
 import KaKaoMap from '@/components/storeForUser/KakaoMapToShow2Marker';
 import { getStoreInfo } from '@/api/userStore';
-
+import { mapMutations, mapGetters } from 'vuex';
 export default {
   components: {
     KaKaoMap,
   },
   data() {
     return {
-      locationArr: [
-        { storeAddr: '대전 유성구 원내동79-15 번지', storeLat: 30, storeLon: 170 },
-        { userAddr: '대전 유성구 진잠로92번길 33', userLat: 34, userLon: 174 },
-      ],
       storeInfo: [],
+      locationArr: [{ storeAddr: '' }, { userAddr: '대전 유성구 진잠로92번길 33' }],
+      loaded: false,
     };
   },
+  computed: {
+    ...mapGetters(['getWatchedStore']),
+    // getWatchedStroe() {
+    //   return this.$store.state.watechedstore;
+    // },
+  },
   created() {
-    this.getUserStoreInfo();
+    this.storeInfo = this.getWatchedStore;
+    this.locationArr[0].storeAddr = this.storeInfo.baseInfo.mainAddress;
+    this.loaded = true;
   },
   methods: {
+    ...mapMutations(['setSpinnerState']),
+    clipboard(e) {
+      e.target.previousSibling.select();
+      document.execCommand('copy');
+      alert('스토어 주소 복사 완료');
+    },
     async getUserStoreInfo() {
-      console.log(this.$route.params.storeId);
-      const paramsId = this.$route.params.storeId;
-      const { data } = await getStoreInfo(paramsId);
-      this.storeInfo = data;
+      this.storeInfo = this.$store.state.watchedStore;
+      this.locationArr[0].storeAddr = this.storeInfo.baseInfo.mainAddress;
+      console.log('스토어주소', this.locationArr[0].storeAddr);
+
+      console.log(this.storeInfo);
+      this.setSpinnerState(false);
     },
   },
 };
@@ -102,7 +117,10 @@ export default {
       }
     }
     .introduce-content {
+      font-family: S-CoreDream-4Regular;
+      white-space: pre-wrap;
       line-break: normal;
+      font-size: 14px;
       @include xs-mobile {
         font-size: 12px;
       }
@@ -149,17 +167,24 @@ export default {
     }
     .kakaomap-copy-button {
       display: inline-block;
-      width: 50%;
+      width: 70%;
+      border: none;
       background-color: $gray400;
       text-align: center;
       border: $gray200 2px solid;
     }
     .kakaomap-navigation-button {
       display: inline-block;
-      width: 50%;
+      color: white;
+      width: 30%;
+      padding: 1px 2px;
       background-color: $blue400;
       text-align: center;
       border: $gray200 2px solid;
+      &:hover {
+        background-color: $blue600;
+        cursor: pointer;
+      }
     }
   }
   .userstore-license {

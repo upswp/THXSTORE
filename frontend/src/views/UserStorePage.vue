@@ -6,10 +6,10 @@
       <div ref="timedeal-list" @click="selectComponent('timedeal-list')">타임딜</div>
       <div ref="live-commerce" @click="selectComponent('live-commerce')">라이브커머스</div>
     </div>
-    <div style="margin: auto">
+    <div v-if="loaded" style="margin: auto">
       <div class="main-content">
         <header class="header-container">
-          <h2>땡스닭강정!!</h2>
+          <h2>{{ storeName }}</h2>
           <div class="time-deal-ani" style="text-align: end">Timedeal</div>
         </header>
         <br />
@@ -20,22 +20,46 @@
 </template>
 
 <script>
+import { mapMutations } from 'vuex';
+import { getStoreInfo } from '@/api/userStore';
 export default {
   data() {
     return {
       active: 'info',
+      storeName: '',
+      loaded: false,
     };
   },
+  // 늦게 나오는 거
+  async created() {
+    try {
+      const paramsId = this.$route.params.storeId;
+      const { data } = await getStoreInfo(paramsId);
+      this.setWatchedStore(data);
+      this.storeName = this.$store.state.watchedStore.baseInfo.name;
+      this.loaded = true;
+    } catch (error) {
+      console.log(error);
+    }
+  },
   methods: {
+    // 어디서든
+    ...mapMutations(['setWatchedStore']),
     selectComponent(item) {
       if (this.active === item) return;
-      console.log('refs', this.$refs);
       this.resetActive();
       this.active = item;
       // console.log('아이템', this.active);
       this.$refs[item].classList.add('active');
       console.log(this.$route);
-      // this.$router.push(item);
+      // params.
+      console.log('item', item);
+      this.$router.push({
+        name: item,
+        // params: {
+        //   storeId: this.$routes.params.storeId,
+        // },
+      });
     },
     resetActive() {
       this.$refs[this.active].classList.remove('active');
@@ -114,10 +138,10 @@ export default {
     }
   }
   .main-content {
-    width: calc(100% - 200px);
+    width: calc(100vw - 200px);
     padding: 20px;
     max-width: 1000px;
-    min-height: 90%;
+    min-height: 90vh;
     margin-left: 200px;
     @include mobile {
       width: 100%;

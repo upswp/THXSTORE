@@ -10,4 +10,10 @@ const getStoreInfo = storeId =>
     },
   });
 
-export { getStoreInfo };
+const getStoreMenu = storeId =>
+  publicAPI.get('user/product/', {
+    params: {
+      storeId: storeId,
+    },
+  });
+export { getStoreInfo, getStoreMenu };
