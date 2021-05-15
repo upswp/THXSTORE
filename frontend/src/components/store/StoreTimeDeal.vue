@@ -130,14 +130,6 @@ export default {
       }
     },
   },
-  mounted() {
-    if (this.reservation) {
-      const start = new Date();
-      start.setHours(this.startHour);
-      start.setMinutes(this.startMinute);
-      this.timer = this.countDownTimer(start, this);
-    }
-  },
   async created() {
     try {
       this.setSpinnerState(true);
@@ -159,7 +151,7 @@ export default {
           const start = new Date();
           start.setHours(this.startHour);
           start.setMinutes(this.startMinute);
-          countDownTimer(start, this);
+          this.timer = countDownTimer(start, this);
         });
       }
     } catch (error) {
@@ -185,9 +177,7 @@ export default {
     }
   },
   beforeDestroy() {
-    try {
-      clearInterval(this.timer);
-    } catch (error) {}
+    clearInterval(this.timer);
   },
   methods: {
     countDownTimer,
@@ -246,6 +236,8 @@ export default {
             };
           }),
         });
+        alert('성공적으로 타임딜이 등록 되었습니다.');
+        this.$router.go(0);
       } catch (error) {
         console.log(error);
         alert('타임딜 등록에 실패하였습니다.');

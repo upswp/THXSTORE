@@ -12,8 +12,6 @@ const countDownTimer = (end, that) => {
   const time = that.$refs.time;
   const showRemaining = () => {
     let now = new Date();
-    console.log('end', end);
-    console.log('now', now);
     let distDt = end - now;
     if (distDt < 0) {
       clearInterval(timer);
