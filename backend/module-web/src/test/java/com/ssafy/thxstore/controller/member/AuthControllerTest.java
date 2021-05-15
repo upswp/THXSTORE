@@ -3,8 +3,6 @@ package com.ssafy.thxstore.controller.member;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ssafy.thxstore.controller.common.BaseControllerTest;
 import com.ssafy.thxstore.controller.member.docs.AuthDocumentation;
-import com.ssafy.thxstore.member.domain.Member;
-import com.ssafy.thxstore.member.domain.MemberRole;
 import com.ssafy.thxstore.member.domain.Social;
 import com.ssafy.thxstore.member.dto.request.SignUpRequest;
 import com.ssafy.thxstore.member.dto.request.SocialMemberRequest;
@@ -94,7 +92,7 @@ public class AuthControllerTest extends BaseControllerTest {
     @DisplayName("소셜회원에 대한 정보값을 가져온다.")
     public void getSocialMember() throws Exception{
         //Given
-        this.generateMember("socialMemberEmail",200,1);
+        this.generateMember("socialMemberEmail@email.com","social");
         SocialMemberRequest socialMemberRequest = SocialMemberRequest.builder()
                 .social(Social.KAKAO)
                 .userId("kakao userId"+1)
@@ -111,7 +109,7 @@ public class AuthControllerTest extends BaseControllerTest {
     @DisplayName("존재하지 않는 소셜회원에 대한 정보값을 가져온다.")
     public void getNotExistSocialMember() throws Exception{
         //Given
-        this.generateMember("notExistSocialMemberMemberEmail",400,4);
+        this.generateMember("notExistSocialMemberMemberEmail@email.com","notSocial");
         SocialMemberRequest socialMemberRequest = SocialMemberRequest.builder()
                 .social(Social.KAKAO)
                 .userId("not exist userId"+1)
@@ -130,7 +128,7 @@ public class AuthControllerTest extends BaseControllerTest {
     public void checkSignUpMemberEmail() throws Exception{
         //Given
         String email = "test@gmail.com";
-        this.generateMember("testExistCheckEmail",200,3);
+        generateMember("testExistCheckEmail@email.com","testExistCheckEmail");
         MultiValueMap<String, String> requestParam = new LinkedMultiValueMap<>();
         requestParam.set("email",email);
         //When & Then
@@ -147,7 +145,7 @@ public class AuthControllerTest extends BaseControllerTest {
     public void failCheckSignUpMemberEmail() throws Exception{
         //Given
         String email = "testCheckEmail@gmail.com";
-        this.generateMember("testCheckEmail",400,2);
+        generateMember("testCheckEmail@email.com","testCheck");
         MultiValueMap<String, String> requestParam = new LinkedMultiValueMap<>();
         requestParam.set("email",email);
         //When & Then
@@ -157,22 +155,6 @@ public class AuthControllerTest extends BaseControllerTest {
                 .andExpect(result -> CheckEmailResponse.of(true))
                 .andDo(print())
                 .andDo(AuthDocumentation.getCheckEmail());
-    }
-
-    private void generateMember(String emailId,int index, int uid){
-        Member member = Member.builder()
-                .userId("kakao userId"+uid)
-                .social(Social.KAKAO)
-                .profileImage("default profile Image url")
-                .nickname("evan" + index)
-                .password("testpwd1234")
-                .email(emailId+"@gmail.com")
-                .role(MemberRole.ROLE_USER)
-                .lat(37.33)
-                .lon(126.59)
-                .build();
-
-        this.memberRepository.save(member);
     }
 }
 

@@ -45,10 +45,6 @@ public class Member extends BaseTimeEntity {
     @Column(name = "password", nullable = false)
     private String password;
 
-    @ColumnDescription("유저 위치정보")
-    @Column(name = "address")
-    private String address;
-
     @ColumnDescription("유저 위치정보 위도")
     @Column(name = "lat")
     private Double lat;
@@ -81,7 +77,8 @@ public class Member extends BaseTimeEntity {
     private List<Reservation> reservations = new ArrayList<>();
 
     @Builder
-    public Member(String userId, @Email String email, String password, Double lat, Double lon, String nickname, String profileImage, String phoneNumber, MemberRole role, Social social) {
+    public Member(Long id, String userId, @Email String email, String password, Double lat, Double lon, String nickname, String profileImage, String phoneNumber, MemberRole role, Social social) {
+        this.id = id;
         this.userId = userId;
         this.email = email;
         this.password = password;

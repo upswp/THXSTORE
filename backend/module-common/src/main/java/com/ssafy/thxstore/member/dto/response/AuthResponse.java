@@ -17,7 +17,6 @@ public class AuthResponse {
     private String nickname;
     private Social social;
     private String profileImage;
-    private String location;
     private String phoneNumber;
     private MemberRole role;
     private Double lat;
@@ -30,7 +29,6 @@ public class AuthResponse {
         this.nickname = member.getNickname();
         this.social = member.getSocial();
         this.profileImage = member.getProfileImage();
-        this.location = member.getAddress();
         this.phoneNumber = member.getPhoneNumber();
         this.role = member.getRole();
         this.lat = member.getLat();
