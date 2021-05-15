@@ -100,9 +100,9 @@ public ResponseEntity<String> addReservation(@RequestHeader String authorization
      */
 
     @DeleteMapping("/reservation")
-    public ResponseEntity deleteReservation(@RequestParam("memberId") Long memberId,@RequestParam("storeId") Long storeId){
-
-        reservationService.deleteReservation(memberId,storeId);
+    public ResponseEntity deleteReservation(@RequestHeader String authorization,@RequestParam("storeId") Long storeId){
+        String email = jwtToEmail(authorization);
+        reservationService.deleteReservation(email,storeId);
 
         return new ResponseEntity<>("주문 취소 되었습니다.", HttpStatus.OK);
 //        return ResponseEntity.created(li.getUri()).body(li.getOrderResource());
@@ -117,9 +117,10 @@ public ResponseEntity<String> addReservation(@RequestHeader String authorization
      */
 
     @PutMapping("/reservation/status") // v2 mem id로 받아서 검색 후 수정, 받아오는 형식 memformdto
-    public ResponseEntity<String> updateStatusToAccept(@RequestBody StatusRequest status) {
+    public ResponseEntity<String> updateStatus(@RequestHeader String authorization,@RequestBody StatusRequest status) {
+        String email = jwtToEmail(authorization);
 
-        reservationService.statusUpdate(status);
+        reservationService.statusUpdate(email,status);
 
         return new ResponseEntity<>("주문 상태를 변경했습니다.", HttpStatus.OK);
     }//맴버정보보기를 눌러서 확인

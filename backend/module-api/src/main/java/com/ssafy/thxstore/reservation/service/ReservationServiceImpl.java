@@ -75,7 +75,7 @@ public class ReservationServiceImpl implements ReservationService{
         List<ReservationDto> reservationDtoList = new LinkedList<>();
 
         Reservation reservation = Reservation.builder().
-//                email(email).
+                email(email).
                 nickname(reservationList.getNickname()).
                 reservationStatus(ReservationStatus.DEFAULT).
                 storeId(reservationList.getStoreId()).
@@ -123,17 +123,15 @@ public class ReservationServiceImpl implements ReservationService{
         List<Reservation> reservationlist;
 
 
-
         //dto 엔티티 매핑
         //memberid 검색 storeid 검색 각각 주문 size 구하자
+        //기본키로 찾아야하는데 일단 쿼리문 적은 email로
         if(type == "member") {
-            Optional<Member> member= memberRepository.findByEmail(email);
-            list = reservationGroupRepository.findReservationlistByMemberId(member.get().getId());
-            reservationlist = reservationRepository.findReservationByMemberId(member.get().getId());
+            list = reservationGroupRepository.findReservationlistByMemberId(email);
+            reservationlist = reservationRepository.findReservationByMemberId(email);
         }else{
             //store -member 간 onetoone 연관관계 주인 store 에게 있어서 쿼리 2 번
-            //join 써서 한번으로 줄이자
-
+            //join 써서 한번으로
             Optional<Store> store= storeRepository.findByEmailJoin(email);
             list = reservationGroupRepository.findReservationlistByStoreId(store.get().getId());
             reservationlist = reservationRepository.findReservationByStoreId(store.get().getId());
@@ -153,6 +151,7 @@ public class ReservationServiceImpl implements ReservationService{
 
         for(int i =0 ;i<reservationlist.size(); i++) {
             ReservationDto reservationDto = ReservationDto.builder().
+                    email(email).
                     storeId(reservationlist.get(i).getStoreId()).
                     reservationStatus(reservationlist.get(i).getReservationStatus()).
                     nickname(reservationlist.get(i).getNickname()).
@@ -170,13 +169,14 @@ public class ReservationServiceImpl implements ReservationService{
 
     @Override
     @Transactional
-    public void deleteReservation(Long memberId,Long storeId){
-        List<ReservationGroup> order = reservationGroupRepository.findAllByUserIdAndStoreId(memberId,storeId);
+    public void deleteReservation(String email,Long storeId){
+        List<ReservationGroup> order = reservationGroupRepository.findAllByEmailAndStoreId(email,storeId);
         reservationGroupRepository.deleteAll(order);
     }
 
     @Override
-    public void statusUpdate(StatusRequest status){
-        reservationRepository.findReservation(status.getMemberId(),status.getStoreId(),status.getReservationStatus().name());
+    public void statusUpdate(String email, StatusRequest status){
+
+        reservationRepository.findReservation(email,status.getStoreId(),status.getReservationStatus().name());
     }
 }

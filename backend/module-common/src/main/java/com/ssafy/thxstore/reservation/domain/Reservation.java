@@ -37,9 +37,9 @@ public class Reservation {
     @Column(name = "store_id")
     private Long storeId;
 
-//    @ColumnDescription("jwt 회원 비교용 email")
-//    @Column(name = "email")
-//    private String email;
+    @ColumnDescription("jwt 회원 비교용 email")
+    @Column(name = "email")
+    private String email;
 
     @ColumnDescription("예약자의 닉네임")
     @Column(name = "nickname")
@@ -61,7 +61,7 @@ public class Reservation {
     @Builder
     public Reservation(String email,String nickname,Long id,Member member,Long storeId,ReservationStatus reservationStatus, List<ReservationGroup> reservationGroup,String dateTime) {
         this.member = member;
-//        this.email = email;
+        this.email = email;
         this.nickname = nickname;
         this.id = id;
         this.dateTime =dateTime;
