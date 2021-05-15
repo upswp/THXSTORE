@@ -15,14 +15,16 @@ public interface ReservationGroupRepository extends JpaRepository<ReservationGro
 
         @Query("select new com.ssafy.thxstore.reservation.domain.ReservationGroup" +
         " (rg.reservation,rg.count,rg.price,rg.productName,rg.userId,rg.reservation.reservationStatus,rg.rate)" +
-        " from ReservationGroup rg join rg.reservation r " +
-        " where rg.userId = :Id")
-    List<ReservationGroup> findReservationlistByMemberId(Long Id);
+        " from ReservationGroup rg join rg.reservation r" +
+                " on rg.reservation.id = rg.reservation" +
+        " where rg.reservation.id = :id")
+    List<ReservationGroup> findReservationlistByMemberId(Long id);
 
     @Query("select new com.ssafy.thxstore.reservation.domain.ReservationGroup" +
             " (rg.reservation,rg.count,rg.price,rg.productName,rg.userId,rg.reservation.reservationStatus,rg.rate)" +
             " from ReservationGroup rg join rg.reservation r " +
-            " where rg.storeId = :Id")
+            " on rg.reservation.id = rg.reservation" +
+            " where rg.reservation.id = :Id")
     List<ReservationGroup> findReservationlistByStoreId(Long Id);
 
 //    @Query("select new com.ssafy.thxstore.reservation.domain.ReservationGroup" +
@@ -31,5 +33,10 @@ public interface ReservationGroupRepository extends JpaRepository<ReservationGro
 //            " where rg.userId = :memberId")
 //    Optional<Member> findByIdandStoreId(Long memberId, Long storeId);
 
-    List<ReservationGroup> findAllByUserIdAndStoreId(Long memberId,Long storeId);
+
+    @Query("select new com.ssafy.thxstore.reservation.domain.ReservationGroup" +
+            " (rg.reservation,rg.count,rg.price,rg.productName,rg.userId,rg.reservation.reservationStatus,rg.rate)" +
+            " from ReservationGroup rg join rg.reservation r " +
+            " where rg.reservation.email = :email and rg.storeId.storeId = :storeId")
+    List<ReservationGroup> findAllByEmailAndStoreId(String email, Long storeId);
 }
