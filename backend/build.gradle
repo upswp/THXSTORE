@@ -52,6 +52,8 @@ subprojects {
 
         // DB
         implementation group: 'mysql', name: 'mysql-connector-java', version: '8.0.22'
+        compile 'com.pusher:pusher-java-client:2.2.1'
+        implementation group: 'com.pusher', name: 'pusher-http-java', version: '1.0.0'
 
         // TEST
         testImplementation group: 'com.h2database', name: 'h2', version: '1.4.200'

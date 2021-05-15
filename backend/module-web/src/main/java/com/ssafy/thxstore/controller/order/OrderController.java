@@ -24,7 +24,6 @@ import java.util.List;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
-
 @RestController
 @RequiredArgsConstructor
 @CrossOrigin(origins = { "*" }, maxAge = 6000)
@@ -104,13 +103,14 @@ public ResponseEntity<String> addReservation(@Valid @RequestBody ReservationDto 
 
     /**
      * 사장님 입장에서 조회 ->본인의 가게에 들어온 주문 내역만
+     *
+     * 사장님이 조회 페이지 눌렀을 경우 푸셔 인스턴스 만들고
      */
 
     @GetMapping("/reservation/store/{storeId}")
     public ResponseEntity getStoreReservation(@PathVariable Long storeId){
 
         List<ReservationDto> li = reservationService.getReservation(storeId,"store");
-
         return new ResponseEntity<>(li, HttpStatus.OK);
 //        return ResponseEntity.created(li.getUri()).body(li.getOrderResource());
     }
