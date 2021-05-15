@@ -190,7 +190,7 @@ public class StoreController {
 
     /* user 관점에서의 Store 작성 */
     @GetMapping("/user/") // 처음 접속했을 때, 타임딜 하고 있는 항목들을 보는 곳 거리에 따라
-    public ResponseEntity getUserStoreList(@RequestHeader String authorization){
+    public ResponseEntity getUserStoreList(@RequestHeader String authorization){ // 페이지 수와 번째 수 찾기
         // todo 0.초기화?? 타임딜 진행되는 거거
 
         // 1. member 정보 가져오기 -> 위도 경도 꺼내야합니다.
@@ -239,6 +239,11 @@ public class StoreController {
     //자정 시간에 타임딜 초기화 1-> 0. 초 분 시간 일 월 요일. 매일 0시간에 초기화
     @Scheduled(cron = "0 0 0 * * *")
     public void timeDealInit(){
+        storeService.timeDealStatusInit();
         storeService.timeDealInit();
     }
+
+    /* openVidu test */
+
+
 }
