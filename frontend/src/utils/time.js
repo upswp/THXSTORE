@@ -12,10 +12,13 @@ const countDownTimer = (end, that) => {
   const time = that.$refs.time;
   const showRemaining = () => {
     let now = new Date();
+    console.log('end', end);
+    console.log('now', now);
     let distDt = end - now;
     if (distDt < 0) {
       clearInterval(timer);
       time.textContent = '해당 이벤트가 종료 되었습니다!';
+      that.timerDone = true;
       return;
     }
     let hours = Math.floor(distDt / _hour);

@@ -112,9 +112,10 @@ export default {
       startMinute: '00',
       menus: [],
       reservation: false,
+      timer: '',
+      timerDone: false,
     };
   },
-
   computed: {
     ...mapGetters(['getStoreId']),
     validForm() {
@@ -122,12 +123,19 @@ export default {
       return true;
     },
   },
+  watch: {
+    endTimer(newValue) {
+      if (newValue) {
+        this.$router.go(0);
+      }
+    },
+  },
   mounted() {
     if (this.reservation) {
       const start = new Date();
       start.setHours(this.startHour);
       start.setMinutes(this.startMinute);
-      this.countDownTimer(start, this);
+      this.timer = this.countDownTimer(start, this);
     }
   },
   async created() {
@@ -176,6 +184,11 @@ export default {
       }
     }
   },
+  beforeDestroy() {
+    try {
+      clearInterval(this.timer);
+    } catch (error) {}
+  },
   methods: {
     countDownTimer,
     timeValid() {
@@ -215,18 +228,23 @@ export default {
         return;
       }
       try {
+        const timeDealList = this.selectedMenus.filter(
+          index => this.menus[index].stock > 0 && this.menus[index].rate > 0,
+        );
+        if (timeDealList.length === 0) {
+          alert('유효한 할인율과 재고를 적어주세요');
+          return;
+        }
         await registerTimeDeal({
           storeId: this.getStoreId,
           startTime: this.startHour + ':' + this.startMinute,
-          timeDealList: this.selectedMenus
-            .filter(index => this.menus[index].stock > 0 && this.menus[index].rate > 0)
-            .map(index => {
-              return {
-                productId: this.menus[index].id,
-                stock: this.menus[index].stock,
-                rate: this.menus[index].rate,
-              };
-            }),
+          timeDealList: timeDealList.map(index => {
+            return {
+              productId: this.menus[index].id,
+              stock: this.menus[index].stock,
+              rate: this.menus[index].rate,
+            };
+          }),
         });
       } catch (error) {
         console.log(error);
@@ -449,8 +467,14 @@ export default {
 .time-deal-button {
   margin: 10px auto;
   width: 200px;
-  background-color: $gray200;
+  &:disabled {
+    background-color: $gray200;
+    color: $gray600;
+  }
+  background-color: $yellow200;
   padding: 10px;
+  border: none;
+  color: rgb(4, 92, 4);
   border-radius: 10px;
   cursor: pointer;
   transition: all 0.2s;
