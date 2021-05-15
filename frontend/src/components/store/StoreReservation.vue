@@ -30,17 +30,20 @@
               <div v-if="order.reservationStatus === 'DEFAULT'" class="default-option">
                 <div class="status-label">주문 접수</div>
                 <div class="standBy-wrapper">
-                  <div class="order-accept status-button">수락</div>
-                  <div class="order-fail status-button">거절</div>
+                  <div class="order-accept status-button" @click="changeState('ACCEPT', order)">수락</div>
+                  <div class="order-fail status-button" @click="rejectOrder(order)">거절</div>
                 </div>
               </div>
               <div v-else-if="order.reservationStatus === 'ACCEPT'">
                 <div class="status-label">접수 완료</div>
-                <span class="status-button next-status">조리 완료</span>
+                <span class="status-button stand-by-status" @click="changeState('STAND_BY', order)">조리 완료</span>
+              </div>
+              <div v-else-if="order.reservationStatus === 'REJECT'">
+                <div class="status-label">주문 취소</div>
               </div>
               <div v-else-if="order.reservationStatus === 'STAND_BY'">
                 <div class="status-label">조리 완료</div>
-                <span class="status-button next-status">수령 완료</span>
+                <span class="status-button finish-status" @click="changeState('FINISH', order)">수령 완료</span>
               </div>
               <div v-else>
                 <div class="status-label">수령 완료</div>
@@ -67,15 +70,6 @@ export default {
     ...mapGetters(['getStoreId']),
   },
   async created() {
-    // for (const order of this.orders) {
-    //   let total = 0;
-    //   order.orderList.forEach(p => {
-    //     p['discounted'] = this.discounting(p.discountRate, p.price);
-    //     p['computed'] = p.discounted * p.count;
-    //     total += p.computed;
-    //   });
-    //   order['total'] = total;
-    // }
     try {
       this.setSpinnerState(true);
       const { data } = await getTotalOrders(this.getStoreId);
@@ -85,7 +79,9 @@ export default {
       this.orders = data;
       this.setSpinnerState(false);
     } catch (error) {
+      this.setSpinnerState(false);
       console.log(error);
+      alert('주문 내역 불러오기를 실패했습니다.');
     }
   },
   methods: {
@@ -104,6 +100,34 @@ export default {
         total += p.computed;
       });
       order['total'] = total;
+    },
+    async changeState(state, order) {
+      try {
+        this.setSpinnerState(true);
+        await setReservationStatus({
+          reservationStatus: state,
+          storeId: order.storeId,
+          memberId: order.userId,
+        });
+        order.reservationStatus = state;
+        this.setSpinnerState(false);
+      } catch (error) {
+        console.log(error);
+        this.setSpinnerState(false);
+        alert('주문 상태 변경에 실패하였습니다');
+      }
+    },
+    async rejectOrder(order) {
+      try {
+        this.setSpinnerState(true);
+        await cancelOrder(order.userId, order.storeId);
+        this.setSpinnerState(false);
+        order.reservationStatus = 'REJECT';
+      } catch (error) {
+        console.log(error);
+        this.setSpinnerState(false);
+        alert('주문 취소에 실패하였습니다');
+      }
     },
   },
 };

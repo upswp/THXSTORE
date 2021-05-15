@@ -42,7 +42,6 @@ const getTotalOrders = storeId => publicAPI.get(`reservation/store/${storeId}`);
  * 판매자 입장에서 주문 상태 변경
  * @typedef {function} setReservationStatus
  * @param {OrderStatus} orderStatus
- * @param {OrderStatus} orderStatus
  * @returns {Promise<Boolean>} isChanged
  */
 const setReservationStatus = orderStatus => publicAPI.put('reservation/statusupdate', orderStatus);
@@ -54,7 +53,7 @@ const setReservationStatus = orderStatus => publicAPI.put('reservation/statusupd
  * @returns {Promise<Boolean>} isCanceled
  */
 const cancelOrder = (memberId, storeId) =>
-  publicAPI.put('reservation/delete', {
+  publicAPI.delete('reservation/delete', {
     params: {
       memberId,
       storeId,

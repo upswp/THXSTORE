@@ -116,9 +116,10 @@
   font-weight: bold;
   margin-bottom:5px;
 }
-.next-status{
+.stand-by-status{
   cursor: pointer;
   width:auto;
+  margin-right:0px;
   @include xs-mobile{
     display: block;
     width:100%;
@@ -128,5 +129,20 @@
   color:white;
   &:hover{
     background-color: rgba(20, 187, 20, 0.87);
+  }
+}
+.finish-status{
+  cursor: pointer;
+  width:auto;
+  margin-right:0px;
+  @include xs-mobile{
+    display: block;
+    width:100%;
+    padding:5px 2px;
+   }
+   background-color: rgba(82, 107, 134, 0.87);
+   color:white;
+   &:hover{
+     background-color: rgba(61, 145, 224, 0.986);
   }
 }

@@ -124,7 +124,7 @@ export default {
     },
   },
   watch: {
-    endTimer(newValue) {
+    timerDone(newValue) {
       if (newValue) {
         this.$router.go(0);
       }
