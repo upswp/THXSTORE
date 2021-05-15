@@ -1,5 +1,11 @@
 package com.ssafy.thxstore.reservation.service;
 
+import com.pusher.client.channel.ChannelEventListener;
+import com.pusher.client.connection.ConnectionEventListener;
+import com.pusher.client.connection.ConnectionState;
+import com.pusher.client.connection.ConnectionStateChange;
+import com.pusher.client.util.HttpAuthorizer;
+import com.pusher.rest.Pusher;
 import com.ssafy.thxstore.member.domain.Member;
 import com.ssafy.thxstore.member.repository.MemberRepository;
 import com.ssafy.thxstore.product.domain.Product;
@@ -19,6 +25,10 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import com.pusher.client.PusherOptions;
+import com.pusher.client.channel.Channel;
+import com.pusher.client.channel.SubscriptionEventListener;
+import com.pusher.client.channel.PusherEvent;
 
 import java.text.DateFormat;
 import java.util.*;
@@ -40,6 +50,20 @@ public class ReservationServiceImpl implements ReservationService{
     @Override
     @Transactional
     public void addReservation(ReservationDto reservationList){
+
+        /**
+         * 가게를 등록할 때 이벤트를 발생시키고
+         * 이벤트가 발생되었다고 프론트에 전달하자
+         * 이걸 해당 사장님한테만 전달해야함..
+         */
+
+
+        Pusher pusher = new Pusher("1203876", "c961ac666cf7baaf084c", "43c7f358035c2a712f23");
+        pusher.setCluster("ap3");
+
+        pusher.trigger("my-channel", "my-event", Collections.singletonMap("message", "~~님의 주문이 등록되었습니다."));
+
+
         DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.FULL);
         DateFormat timeFormat = DateFormat.getTimeInstance(DateFormat.DEFAULT);
         String time = timeFormat.format(new Date());
@@ -75,12 +99,56 @@ public class ReservationServiceImpl implements ReservationService{
     }
 
     /**
-     *
-     *
+     * 대서버 -> storeId
+     * 중서버 -> memberId(사장님)
      */
     @Override
     @Transactional
     public List<ReservationDto> getReservation(Long Id,String type){
+
+
+        //        if(type =="store") {  //사장님이 본인 가게에 들어온 주문 확인할때 알림 기능 온
+//
+////            HttpAuthorizer authorizer = new HttpAuthorizer("http://localhost:8080/api/order/reservation/store/"+Id);
+////            PusherOptions options = new PusherOptions().setCluster("ap3").setAuthorizer(authorizer);
+////            Pusher pusher = new Pusher(YOUR_APP_KEY, options);
+//
+//            PusherOptions options = new PusherOptions().setCluster("ap3");
+//            Pusher pusher = new Pusher("c961ac666cf7baaf084c", options);  //푸셔 인스턴스를 만들고
+//            pusher.connect(); //연결하고 disconnect 언제하지?
+//
+//
+//            pusher.connect(new ConnectionEventListener() {
+//                @Override
+//                public void onConnectionStateChange(ConnectionStateChange change) {
+//                    System.out.println("State changed to " + change.getCurrentState() +
+//                            " from " + change.getPreviousState());
+//                }
+//
+//                @Override
+//                public void onError(String message, String code, Exception e) {
+//                    System.out.println("There was a problem connecting!");
+//                }
+//            }, ConnectionState.ALL);
+//
+//
+//            //프론트엔드에서 예약주문했을때 서버에 이벤트 보내주고 사장님 채널에 메세지
+//            Channel channel = pusher.subscribe("store"+Id+"-channel", new ChannelEventListener() {
+//                @Override
+//                public void onEvent(PusherEvent event) {
+//                    System.out.println("Received event with data: " + event.toString());
+//                }
+//
+//                @Override
+//                public void onSubscriptionSucceeded(String channelName) {
+//                    System.out.println("Subscribed to channel: " + channelName);
+//                }
+//                // Other ChannelEventListener methods
+//            });
+//
+//
+//        }
+
         List<ReservationGroupDto> reservationGroupDtoList = new LinkedList<>();
         List<ReservationDto> reservationDtoList = new LinkedList<>();
         List<ReservationGroup> list;
