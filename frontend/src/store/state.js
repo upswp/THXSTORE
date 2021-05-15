@@ -18,4 +18,5 @@ export default {
   spinnerOn: false,
   storeId: null,
   rewriteBaseInfo: false,
+  watchedStore: null,
 };

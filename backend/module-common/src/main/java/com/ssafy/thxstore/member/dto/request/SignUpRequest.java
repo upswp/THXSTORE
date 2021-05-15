@@ -5,6 +5,7 @@ import lombok.*;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 @Data
 @Getter
@@ -29,5 +30,11 @@ public class SignUpRequest {
     private Social social;
 
     private String userId;
+
+    @NotNull
+    private Double lat;
+
+    @NotNull
+    private Double lon;
 
 }

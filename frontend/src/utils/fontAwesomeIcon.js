@@ -21,6 +21,8 @@ import {
   faSignOutAlt,
   faEraser,
   faPencilAlt,
+  faChevronDown,
+  faChevronUp,
 } from '@fortawesome/free-solid-svg-icons';
 library.add(
   faStore,
@@ -40,6 +42,8 @@ library.add(
   faSignOutAlt,
   faEraser,
   faPencilAlt,
+  faChevronDown,
+  faChevronUp,
 );
 
 import {

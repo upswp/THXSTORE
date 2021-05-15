@@ -110,8 +110,9 @@ public class Store {
     private Boolean timeDealCheck;
 
     @Builder
-    public Store(Member member, String name, StoreCategory storeCategory, String phoneNum, String mainAddress, String subAddress,String openTime,String closeTime,String closeDay,String introduce, String thumbImg, String logo, String license, String licenseImg, CheckStore checkStore, Boolean closeStore,Double lat,Double lon, Boolean timeDealCheck){
+    public Store(Long id,Member member, String name, StoreCategory storeCategory, String phoneNum, String mainAddress, String subAddress,String openTime,String closeTime,String closeDay,String introduce, String thumbImg, String logo, String license, String licenseImg, CheckStore checkStore, Boolean closeStore,Double lat,Double lon, Boolean timeDealCheck){
         this.member = member;
+        this.id = id;
         this.name = name;
         this.storeCategory = storeCategory;
         this.phoneNum = phoneNum;

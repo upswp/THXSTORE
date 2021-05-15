@@ -15,11 +15,13 @@ public class ReservationDto {
 //    @NotBlank
     private Long userId;
 
-//    @NotBlank
-    private String email;
+    private String nickname;
 
 //    @NotBlank
     private Long storeId;
+
+    //    @NotBlank
+    private String orderTime;
 
 //    @NotBlank
     private ReservationStatus reservationStatus;
@@ -28,11 +30,16 @@ public class ReservationDto {
     private List<ReservationGroupDto> reservationGroups;
 
     @Builder
-    public ReservationDto(String email,Long storeId, Long userId, List<ReservationGroupDto> reservationGroups, ReservationStatus reservationStatus) {
+    public ReservationDto(String nickname,String orderTime,Long storeId, Long userId, List<ReservationGroupDto> reservationGroups, ReservationStatus reservationStatus) {
         this.userId = userId;
+        this.nickname =nickname;
+        this.orderTime = orderTime;
         this.storeId = storeId;
         this.reservationGroups = reservationGroups;
         this.reservationStatus = reservationStatus;
-        this.email = email;
+    }
+
+    public void updateOrderTime(String orderTime) {
+        this.orderTime = orderTime;
     }
 }

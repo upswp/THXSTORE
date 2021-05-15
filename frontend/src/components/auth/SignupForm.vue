@@ -93,6 +93,8 @@ export default {
           nickname: this.userData.nickname,
           social: 'LOCAL',
           profileImage: null,
+          lat: 33.450701,
+          lon: 126.570667,
         };
         this.setSpinnerState(true);
         await registerUser(userData);

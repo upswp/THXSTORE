@@ -15,4 +15,7 @@ public class StatusRequest {
 
     @NotBlank
     private Long storeId;
+
+    @NotBlank
+    private Long memberId;
 }

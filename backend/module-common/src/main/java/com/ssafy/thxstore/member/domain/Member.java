@@ -14,7 +14,7 @@ import java.util.List;
 
 @Entity
 @AllArgsConstructor
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PUBLIC)
 @Getter
 @Setter
 @EqualsAndHashCode(of = "id", callSuper = false)
@@ -49,6 +49,14 @@ public class Member extends BaseTimeEntity {
     @Column(name = "address")
     private String address;
 
+    @ColumnDescription("유저 위치정보 위도")
+    @Column(name = "lat")
+    private Double lat;
+
+    @ColumnDescription("유저 위치정보 경도")
+    @Column(name = "lon")
+    private Double lon;
+
     @ColumnDescription("유저 닉네임")
     @Column(name = "nickname", nullable = false)
     private String nickname;
@@ -73,11 +81,12 @@ public class Member extends BaseTimeEntity {
     private List<Reservation> reservations = new ArrayList<>();
 
     @Builder
-    public Member(String userId, @Email String email, String password, String address, String nickname, String profileImage, String phoneNumber, MemberRole role, Social social) {
+    public Member(String userId, @Email String email, String password, Double lat, Double lon, String nickname, String profileImage, String phoneNumber, MemberRole role, Social social) {
         this.userId = userId;
         this.email = email;
         this.password = password;
-        this.address = address;
+        this.lat = lat;
+        this.lon = lon;
         this.nickname = nickname;
         this.profileImage = profileImage;
         this.phoneNumber = phoneNumber;

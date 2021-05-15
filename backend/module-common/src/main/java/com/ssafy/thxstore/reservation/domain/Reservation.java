@@ -11,10 +11,10 @@ import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Entity
 @Getter
-@Setter
 @NoArgsConstructor
 @EqualsAndHashCode(of = "id")
 public class Reservation {
@@ -28,9 +28,18 @@ public class Reservation {
     @JoinColumn(name = "member_id")
     private Member member;
 
+    @ColumnDescription("하나의 주문 당 연결되는 리뷰 한 개")
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "review_id")
+    private Review review;
+
     @ColumnDescription("스토어 아이디로 각각의 장바구니 구분")
     @Column(name = "store_id")
     private Long storeId;
+
+    @ColumnDescription("예약자의 닉네임")
+    @Column(name = "nickname")
+    private String nickname;
 
     @ColumnDescription("스토어 아이디로 각각의 장바구니 구분")
     @Column(name = "order_time")
@@ -46,11 +55,21 @@ public class Reservation {
     private ReservationStatus reservationStatus;
 
     @Builder
-    public Reservation(Member member,Long storeId,ReservationStatus reservationStatus, List<ReservationGroup> reservationGroup,String dateTime) {
+    public Reservation(String nickname,Long id,Member member,Long storeId,ReservationStatus reservationStatus, List<ReservationGroup> reservationGroup,String dateTime) {
         this.member = member;
+        this.nickname = nickname;
+        this.id = id;
         this.dateTime =dateTime;
         this.storeId = storeId;
         this.reservationStatus = reservationStatus;
         this.reservationGroup = reservationGroup;
+    }
+
+    public void setReview(Review review) {
+        this.review = review;
+    }
+
+    public void deleteReview() {
+        this.review = null;
     }
 }

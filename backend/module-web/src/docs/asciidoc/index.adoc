@@ -42,10 +42,13 @@ endif::[]
 | 새 리소스를 만들 때 사용
 
 | `PUT`
-| 기존 리소스를 수정할 때 사용
+| 기존 리소스의 모든 것을 업데이트
+
+| `PATCH`
+| 기존 리소스의 일부를 업데이트
 
 | `DELETE`
-| 기존 리소스를 삭제할 떄 사용
+| 기존 리소스를 삭제할 때 사용
 |===
 
 [[overview-http-status-codes]]
@@ -100,8 +103,16 @@ include::{root}/auth/find-social-member.adoc[]
 
 include::{root}/auth/check-member-email.adoc[]
 
+include::{root}/user/patch-member.adoc[]
+
 include::{root}/store/store-index.adoc[]
 
 include::{root}/store/create-store.adoc[]
+
+include::{root}/review/order-index.adoc[]
+
+include::{root}/review/create-review.adoc[]
+
+
 
 

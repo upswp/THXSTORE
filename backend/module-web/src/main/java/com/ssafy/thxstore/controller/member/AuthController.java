@@ -2,7 +2,6 @@ package com.ssafy.thxstore.controller.member;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ssafy.thxstore.controller.common.ErrorsResource;
 import com.ssafy.thxstore.controller.member.Resource.CheckEmailResource;
 import com.ssafy.thxstore.controller.member.Resource.MemberResource;
 import com.ssafy.thxstore.controller.member.Resource.SocialMemberResource;
@@ -19,7 +18,6 @@ import org.springframework.hateoas.MediaTypes;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -77,7 +75,4 @@ public class AuthController {
         return ResponseEntity.ok(checkEmailResource);
     }
 
-    private ResponseEntity badRequest(Errors errors) {
-        return ResponseEntity.badRequest().body(ErrorsResource.modelOf(errors));
-    }
 }

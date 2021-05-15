@@ -14,16 +14,16 @@ import java.util.Optional;
 public interface ReservationGroupRepository extends JpaRepository<ReservationGroup, Long> {
 
         @Query("select new com.ssafy.thxstore.reservation.domain.ReservationGroup" +
-        " (rg.reservation,rg.count,rg.price,rg.productName,rg.userId,rg.reservationStatus)" +
+        " (rg.reservation,rg.count,rg.price,rg.productName,rg.userId,rg.reservation.reservationStatus,rg.rate)" +
         " from ReservationGroup rg join rg.reservation r " +
-        " where rg.userId = :memberId")
-    List<ReservationGroup> findReservationlist(Long memberId);
+        " where rg.userId = :Id")
+    List<ReservationGroup> findReservationlistByMemberId(Long Id);
 
-
-    @Modifying
-    @Query(value = "delete from reservation_group where user_id = :memberId and store_id = :storeId",nativeQuery = true)
-    void deleteReservation(Long memberId, Long storeId);
-
+    @Query("select new com.ssafy.thxstore.reservation.domain.ReservationGroup" +
+            " (rg.reservation,rg.count,rg.price,rg.productName,rg.userId,rg.reservation.reservationStatus,rg.rate)" +
+            " from ReservationGroup rg join rg.reservation r " +
+            " where rg.storeId = :Id")
+    List<ReservationGroup> findReservationlistByStoreId(Long Id);
 
 //    @Query("select new com.ssafy.thxstore.reservation.domain.ReservationGroup" +
 //            " (rg.count,rg.price,rg.productName,rg.userId,rg.reservationStatus)" +
@@ -31,5 +31,5 @@ public interface ReservationGroupRepository extends JpaRepository<ReservationGro
 //            " where rg.userId = :memberId")
 //    Optional<Member> findByIdandStoreId(Long memberId, Long storeId);
 
-    List<ReservationGroup> findAllByUserIdAndStoreId(Long storeId,Long memberId);
+    List<ReservationGroup> findAllByUserIdAndStoreId(Long memberId,Long storeId);
 }

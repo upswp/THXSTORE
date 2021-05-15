@@ -14,6 +14,7 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 @Setter
+@Builder
 @EqualsAndHashCode(of = "id")
 public class Product {
 
@@ -56,20 +57,4 @@ public class Product {
     @Column(name = "introduce")
     @ColumnDescription("상품 소개")
     private String introduce;
-
-
-
-
-
-    @Builder
-    public Product(ProductGroup productGroup, String name, Integer price, String productImg, String amount, Integer rate, Integer stock, String introduce){
-        this.productGroup = productGroup;
-        this.name = name;
-        this.price = price;
-        this.productImg = productImg;
-        this.amount = amount;
-        this.rate = rate;
-        this.stock = stock;
-        this.introduce = introduce;
-    }
 }

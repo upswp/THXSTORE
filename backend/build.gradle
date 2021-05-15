@@ -29,6 +29,7 @@ subprojects {
 
     sourceCompatibility = 11
     dependencies {
+        implementation 'com.google.guava:guava:29.0-jre'
         compile('org.springframework.boot:spring-boot-starter')
         //TODO project 진행사항 이후 dependencies 설정 진행하기.
         implementation group: 'org.springframework', name: 'spring-aop'
@@ -40,10 +41,12 @@ subprojects {
         implementation group: 'org.springframework.boot', name: 'spring-boot-starter-jdbc'
         implementation group: 'org.springframework.boot', name: 'spring-boot-starter-data-redis'
         implementation group: 'org.modelmapper', name: 'modelmapper', version: '2.3.8'
+        // https://mvnrepository.com/artifact/io.openvidu/openvidu-java-client
+        implementation group: 'io.openvidu', name: 'openvidu-java-client', version: '2.17.0'
+
 
         // Security
         implementation group: 'org.springframework.boot', name: 'spring-boot-starter-security', version: '2.3.9.RELEASE'
-        implementation group: 'org.springframework.security', name: 'spring-security-oauth2-client', version: '5.4.5'
         implementation group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.1'
 
         implementation 'org.projectlombok:lombok'
@@ -51,6 +54,8 @@ subprojects {
 
         // DB
         implementation group: 'mysql', name: 'mysql-connector-java', version: '8.0.22'
+        compile 'com.pusher:pusher-java-client:2.2.1'
+        implementation group: 'com.pusher', name: 'pusher-http-java', version: '1.0.0'
 
         // TEST
         testImplementation group: 'com.h2database', name: 'h2', version: '1.4.200'
@@ -58,6 +63,8 @@ subprojects {
         testImplementation 'org.springframework.boot:spring-boot-starter-test'
         testImplementation 'org.springframework.security:spring-security-test'
         testCompile group: 'junit', name: 'junit', version: '4.12'
+        implementation group: 'io.rest-assured', name: 'rest-assured-common', version: '4.1.0'
+        testImplementation group: 'io.rest-assured', name: 'spring-mock-mvc', version: '4.1.0'
 
         implementation platform('com.amazonaws:aws-java-sdk-bom:1.11.934')
         implementation 'com.amazonaws:aws-java-sdk-s3'

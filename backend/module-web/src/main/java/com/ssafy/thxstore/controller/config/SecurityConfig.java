@@ -77,8 +77,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS) // 토큰 기반 인증이므로 세션 역시 사용하지 않습니다.
                 .and()
                 .authorizeRequests() // 요청에 대한 사용권한 체크
-                .antMatchers("/admin/**").hasRole("ADMIN")
-                .antMatchers("/user/**").hasRole("USER")
+                //TODO ROLE_USER, ROLE_MANAGER, ROLE_ADMIN에 대한 설정 진행하기.
+                //TODO 인증된 현재 사용자의 정보를 가져와서 수정할 수 있도록 하기.
+//                .antMatchers("/admin/**").hasRole("ADMIN")
+//                .antMatchers("/user/**").hasRole("USER")
                 .anyRequest().permitAll(); // 그외 나머지 요청은 누구나 접근 가능
 
         http.addFilterBefore(tokenAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);

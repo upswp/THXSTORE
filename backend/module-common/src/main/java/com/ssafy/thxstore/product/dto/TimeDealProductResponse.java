@@ -14,6 +14,7 @@ public class TimeDealProductResponse {
     Integer price;
     String productImg;
     String amount;
+    String introduce;
     Integer rate;
     Integer stock;
 }

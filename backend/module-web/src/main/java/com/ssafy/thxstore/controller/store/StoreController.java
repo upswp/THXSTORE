@@ -2,17 +2,19 @@ package com.ssafy.thxstore.controller.store;
 
 import com.ssafy.thxstore.controller.config.AppProperties;
 import com.ssafy.thxstore.image.service.ImageService;
+import com.ssafy.thxstore.member.domain.Member;
 import com.ssafy.thxstore.product.domain.Product;
+import com.ssafy.thxstore.product.domain.ProductGroup;
 import com.ssafy.thxstore.product.domain.TimeDeal;
-import com.ssafy.thxstore.product.dto.AllProductListResponse;
-import com.ssafy.thxstore.product.dto.TimeDealCreateDto;
-import com.ssafy.thxstore.product.dto.TimeDealProductResponse;
+import com.ssafy.thxstore.product.dto.*;
+import com.ssafy.thxstore.product.service.ProductService;
 import com.ssafy.thxstore.store.domain.CheckStore;
 import com.ssafy.thxstore.store.domain.Store;
 import com.ssafy.thxstore.store.domain.TempStore;
 import com.ssafy.thxstore.store.dto.*;
 import com.ssafy.thxstore.store.service.StoreService;
 import io.jsonwebtoken.Jwts;
+import javassist.tools.web.BadHttpRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.MediaTypes;
@@ -23,11 +25,17 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.*;
 
 
+import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.core.Response;
 import javax.xml.bind.DatatypeConverter;
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.net.URI;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
@@ -40,6 +48,7 @@ public class StoreController {
     private final StoreService storeService;
     private final ImageService imageService;
     private final AppProperties appProperties;
+    private final ProductService productService;
 
     @PostMapping // 스토어 생성
     public ResponseEntity createStore(@RequestHeader String authorization, @ModelAttribute CreateStoreFileDto createStoreFileDto){
@@ -63,7 +72,7 @@ public class StoreController {
         return ResponseEntity.created(null).body(detailStoreResponse);
     }
 
-    @GetMapping("/id") // 스토어 상세 조회
+    @GetMapping("/id") // 스토어 id 조회
     public ResponseEntity getStoreId(@RequestHeader String authorization){
         String email = jwtToEmail(authorization);
         Optional<Store> store = storeService.getStore(email);
@@ -148,8 +157,13 @@ public class StoreController {
 
     /* 판매자 스토어 페이지(타임 딜) */
     @GetMapping("/timedeal/{storeId}")  // 타임딜 조회
-    public ResponseEntity timeDealList(@RequestHeader String authorization,@PathVariable Long storeId){
-        List<TimeDealProductResponse> timeDeal = storeService.timeDealList(storeId);
+    public ResponseEntity timeDealList(@RequestHeader String authorization,@PathVariable Long storeId) throws BadHttpRequest {
+        // 여기서 타임딜 초기화
+        storeService.timeDealStatusInit(); // 새로 추가
+        TimeDealProductInfoResponse timeDeal = storeService.timeDealList(storeId);
+        if(timeDeal.getStatus().equals("NORMAL")){
+            return ResponseEntity.badRequest().body("400");
+        }
         return ResponseEntity.created(null).body(timeDeal);
     }
 
@@ -165,6 +179,44 @@ public class StoreController {
         List<AllProductListResponse> product = storeService.productAll(storeId);
         return ResponseEntity.created(null).body(product);
     }
+
+    // storeId로 스토어 정보 반환
+    @GetMapping("/info/")
+    public ResponseEntity storeInfo( @RequestParam("storeId") Long storeId){
+        Optional<Store> store = storeService.getStoreId(storeId);
+        DetailStoreResponse detailStoreResponse = storeService.detailStoreResopnse(store.get());
+        return ResponseEntity.created(null).body(detailStoreResponse);
+    }
+
+    /* user 관점에서의 Store 작성 */
+    @GetMapping("/user/") // 처음 접속했을 때, 타임딜 하고 있는 항목들을 보는 곳 거리에 따라
+    public ResponseEntity getUserStoreList(@RequestHeader String authorization){ // 페이지 수와 번째 수 찾기
+        // todo 0.초기화?? 타임딜 진행되는 거거
+
+        // 1. member 정보 가져오기 -> 위도 경도 꺼내야합니다.
+        String email = jwtToEmail(authorization);
+        Optional<Member> member = storeService.getMemberInfo(email);
+        if(!member.isPresent()){ // 멤버가 없을 경우
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        // 여기서 타임딜 초기화
+        storeService.timeDealStatusInit();
+
+        // todo 타임딜 체크는 언제할 까요.여기서 같이 체크요~ + 휴무일 시간체크는 언제 체크요~
+        List<StoreAndDistanceDto> timeDealStoreList = storeService.findLocation(member);
+
+        return ResponseEntity.created(null).body(timeDealStoreList);
+    }
+
+    // 그룹별 매뉴로 상품정보 반환
+    @GetMapping("/user/product/") 
+    public ResponseEntity getStoreGroupProductList(@RequestParam("storeId") Long storeId){ // 쿼리 문으로 requestparams
+        List<GroupProductListResponse> groupProductListResponseList = productService.getStoreGroupProductList(storeId);
+        return ResponseEntity.created(null).body(groupProductListResponseList);
+    }
+
+
 
     @PostMapping("/test/")
     public ResponseEntity createStoreTest(@RequestBody CreateStoreDto createStoreDto){
@@ -187,7 +239,11 @@ public class StoreController {
     //자정 시간에 타임딜 초기화 1-> 0. 초 분 시간 일 월 요일. 매일 0시간에 초기화
     @Scheduled(cron = "0 0 0 * * *")
     public void timeDealInit(){
+        storeService.timeDealStatusInit();
         storeService.timeDealInit();
     }
+
+    /* openVidu test */
+
 
 }
