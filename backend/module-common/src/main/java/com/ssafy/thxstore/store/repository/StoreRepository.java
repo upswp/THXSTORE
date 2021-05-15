@@ -31,7 +31,7 @@ public interface StoreRepository extends JpaRepository<Store,Long> {
     Optional<List<Store>> findByLocation(Double lat, Double lon);
 
     @Query("select s" +
-            " from Store s join Member m " +
+            " from Store s join s.member m " +
             " where s.member.email = :email")
     Optional<Store> findByEmailJoin(String email);
 }

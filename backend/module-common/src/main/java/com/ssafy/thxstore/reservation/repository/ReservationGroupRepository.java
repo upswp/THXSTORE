@@ -15,14 +15,16 @@ public interface ReservationGroupRepository extends JpaRepository<ReservationGro
 
         @Query("select new com.ssafy.thxstore.reservation.domain.ReservationGroup" +
         " (rg.reservation,rg.count,rg.price,rg.productName,rg.userId,rg.reservation.reservationStatus,rg.rate)" +
-        " from ReservationGroup rg join rg.reservation r " +
-        " where rg.reservation.email = :email")
-    List<ReservationGroup> findReservationlistByMemberId(String email);
+        " from ReservationGroup rg join rg.reservation r" +
+                " on rg.reservation.id = rg.reservation" +
+        " where rg.reservation.id = :id")
+    List<ReservationGroup> findReservationlistByMemberId(Long id);
 
     @Query("select new com.ssafy.thxstore.reservation.domain.ReservationGroup" +
             " (rg.reservation,rg.count,rg.price,rg.productName,rg.userId,rg.reservation.reservationStatus,rg.rate)" +
             " from ReservationGroup rg join rg.reservation r " +
-            " where rg.storeId = :Id")
+            " on rg.reservation.id = rg.reservation" +
+            " where rg.reservation.id = :Id")
     List<ReservationGroup> findReservationlistByStoreId(Long Id);
 
 //    @Query("select new com.ssafy.thxstore.reservation.domain.ReservationGroup" +
