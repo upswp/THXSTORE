@@ -18,6 +18,8 @@ import com.ssafy.thxstore.reservation.dto.ReservationGroupDto;
 import com.ssafy.thxstore.reservation.dto.StatusRequest;
 import com.ssafy.thxstore.reservation.repository.ReservationGroupRepository;
 import com.ssafy.thxstore.reservation.repository.ReservationRepository;
+import com.ssafy.thxstore.store.domain.Store;
+import com.ssafy.thxstore.store.repository.StoreRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import org.joda.time.DateTime;
@@ -41,6 +43,7 @@ public class ReservationServiceImpl implements ReservationService{
     private final ReservationGroupRepository reservationGroupRepository;
     private final MemberRepository memberRepository;
     private final ReservationRepository reservationRepository;
+    private final StoreRepository storeRepository;
 
 
     /**
@@ -49,7 +52,7 @@ public class ReservationServiceImpl implements ReservationService{
      */
     @Override
     @Transactional
-    public void addReservation(ReservationDto reservationList){
+    public void addReservation(String email,ReservationDto reservationList){
 
         /**
          * 가게를 등록할 때 이벤트를 발생시키고
@@ -66,11 +69,13 @@ public class ReservationServiceImpl implements ReservationService{
         DateFormat timeFormat = DateFormat.getTimeInstance(DateFormat.DEFAULT);
         String time = timeFormat.format(new Date());
 
-        Optional<Member> member = memberRepository.findById(reservationList.getUserId());
+//        Optional<Member> member = memberRepository.findById(reservationList.getUserId());
+        Optional<Member> member = memberRepository.findByEmail(email);
         List<ReservationGroupDto> reservationGroupDtoList = new LinkedList<>();
         List<ReservationDto> reservationDtoList = new LinkedList<>();
 
         Reservation reservation = Reservation.builder().
+//                email(email).
                 nickname(reservationList.getNickname()).
                 reservationStatus(ReservationStatus.DEFAULT).
                 storeId(reservationList.getStoreId()).
@@ -110,20 +115,28 @@ public class ReservationServiceImpl implements ReservationService{
      */
     @Override
     @Transactional
-    public List<ReservationDto> getReservation(Long Id,String type){
+    public List<ReservationDto> getReservation(String email,String type){
 
         List<ReservationGroupDto> reservationGroupDtoList = new LinkedList<>();
         List<ReservationDto> reservationDtoList = new LinkedList<>();
         List<ReservationGroup> list;
         List<Reservation> reservationlist;
+
+
+
         //dto 엔티티 매핑
         //memberid 검색 storeid 검색 각각 주문 size 구하자
         if(type == "member") {
-            list = reservationGroupRepository.findReservationlistByMemberId(Id);
-            reservationlist = reservationRepository.findReservationByMemberId(Id);
+            Optional<Member> member= memberRepository.findByEmail(email);
+            list = reservationGroupRepository.findReservationlistByMemberId(member.get().getId());
+            reservationlist = reservationRepository.findReservationByMemberId(member.get().getId());
         }else{
-            list = reservationGroupRepository.findReservationlistByStoreId(Id);
-            reservationlist = reservationRepository.findReservationByStoreId(Id);
+            //store -member 간 onetoone 연관관계 주인 store 에게 있어서 쿼리 2 번
+            //join 써서 한번으로 줄이자
+
+            Optional<Store> store= storeRepository.findByEmailJoin(email);
+            list = reservationGroupRepository.findReservationlistByStoreId(store.get().getId());
+            reservationlist = reservationRepository.findReservationByStoreId(store.get().getId());
         }
 
         //주문 - 주문 내용
