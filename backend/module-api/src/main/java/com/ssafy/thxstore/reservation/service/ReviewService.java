@@ -1,5 +1,7 @@
 package com.ssafy.thxstore.reservation.service;
 
+import com.ssafy.thxstore.member.domain.Member;
+import com.ssafy.thxstore.member.repository.MemberRepository;
 import com.ssafy.thxstore.reservation.domain.Answer;
 import com.ssafy.thxstore.reservation.domain.Reservation;
 import com.ssafy.thxstore.reservation.domain.ReservationGroup;
@@ -34,6 +36,7 @@ public class ReviewService {
     private final ReservationRepository reservationRepository;
     private final StoreRepository storeRepository;
     private final AnswerRepository answerRepository;
+    private final MemberRepository memberRepository;
 
     public Review createReview(ReviewDto reviewDto) {
         DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.FULL);
@@ -109,7 +112,9 @@ public class ReviewService {
     @Transactional
     public String createAnswer(String email, AnswerRequest answerRequest) {
 
-        Optional<Store> store = storeRepository.findByEmail(email);
+        // TODO: 2021-05-17 join 쿼리 단축시키기
+        Optional<Member> member = memberRepository.findByEmail(email);
+        Optional<Store> store = storeRepository.findByMemberId(member.get().getId());
 
         Answer answer = Answer.builder().
                 comment(answerRequest.getComment()).

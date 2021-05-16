@@ -35,5 +35,4 @@ public interface StoreRepository extends JpaRepository<Store,Long> {
             " where s.member.email = :email")
     Optional<Store> findByEmailJoin(String email);
 
-    Optional<Store> findByEmail(String email);
 }

@@ -41,8 +41,8 @@ public class Answer {
     private String dateTime;
 
     @ColumnDescription("양방향 맵핑 리뷰 삭제 시 답변도 삭제")
-    @OneToOne(mappedBy = "answer2", fetch = FetchType.LAZY,cascade = CascadeType.ALL)
-    private List<Review> reviews = new ArrayList<>();
+    @OneToOne(mappedBy = "answer2", fetch = FetchType.LAZY)
+    private Review review = new Review();
 
     @Builder
     public Answer(String comment, String dateTime,Long memberId,String storeName,Long storeId) {
