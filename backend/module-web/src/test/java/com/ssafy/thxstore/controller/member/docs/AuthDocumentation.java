@@ -159,4 +159,31 @@ public class AuthDocumentation {
                 )
         );
     }
+
+    public static ResultHandler sendEmail() {
+        return document("send-member-email",
+                getDocumentRequest(),
+                getDocumentResponse(),
+                links(
+                        linkWithRel("self").description("link to self"),
+                        linkWithRel("send-member-email").description("link to query members"),
+                        linkWithRel("profile").description("link to profile")
+                ),
+                requestHeaders(
+                        headerWithName(HttpHeaders.CONTENT_TYPE).description("content type header")
+                ),
+                requestFields(
+                        fieldWithPath("email").type(JsonFieldType.STRING).description("체크하고자 하는 유저 email")
+                ),
+                responseHeaders(
+                        headerWithName(HttpHeaders.CONTENT_TYPE).description("hal+json type")
+                ),
+                responseFields(
+                        fieldWithPath("check").type(JsonFieldType.BOOLEAN).description("발송여부 확인"),
+                        fieldWithPath("_links.self.href").description("link to self"),
+                        fieldWithPath("_links.send-member-email.href").description("link to query event list"),
+                        fieldWithPath("_links.profile.href").description("link to profile")
+                )
+        );
+    }
 }
