@@ -1,10 +1,15 @@
 package com.ssafy.thxstore.reservation.service;
 
+import com.ssafy.thxstore.member.domain.Member;
+import com.ssafy.thxstore.member.repository.MemberRepository;
+import com.ssafy.thxstore.reservation.domain.Answer;
 import com.ssafy.thxstore.reservation.domain.Reservation;
 import com.ssafy.thxstore.reservation.domain.ReservationGroup;
 import com.ssafy.thxstore.reservation.domain.Review;
+import com.ssafy.thxstore.reservation.dto.AnswerRequest;
 import com.ssafy.thxstore.reservation.dto.ReservationGroupDto;
 import com.ssafy.thxstore.reservation.dto.ReviewDto;
+import com.ssafy.thxstore.reservation.repository.AnswerRepository;
 import com.ssafy.thxstore.reservation.repository.ReservationRepository;
 import com.ssafy.thxstore.reservation.repository.ReviewRepository;
 import com.ssafy.thxstore.store.domain.Store;
@@ -30,6 +35,8 @@ public class ReviewService {
     private final ReviewRepository reviewRepository;
     private final ReservationRepository reservationRepository;
     private final StoreRepository storeRepository;
+    private final AnswerRepository answerRepository;
+    private final MemberRepository memberRepository;
 
     public Review createReview(ReviewDto reviewDto) {
         DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.FULL);
@@ -95,4 +102,31 @@ public class ReviewService {
         }
         return ReviewDtoList;
     }
+
+
+    /**
+     * 사장님 답변  답변다는 사장님의 토큰 + dto를 받는다.
+     * 1. 빌드로 리뷰(맴버 아이디 받아옴 dto)량 연결해서
+     * 2. 글생성
+     */
+    @Transactional
+    public String createAnswer(String email, AnswerRequest answerRequest) {
+
+        // TODO: 2021-05-17 join 쿼리 단축시키기
+        Optional<Member> member = memberRepository.findByEmail(email);
+        Optional<Store> store = storeRepository.findByMemberId(member.get().getId());
+
+        Answer answer = Answer.builder().
+                comment(answerRequest.getComment()).
+                dateTime(DateTime.now().toString()).
+                memberId(answerRequest.getMemberId()).
+                storeName(store.get().getName()).
+                storeId(store.get().getId()).
+                build();
+
+        answerRepository.save(answer);
+        return "답변 작성이 완료되었습니다.";
+    }
+
+
 }

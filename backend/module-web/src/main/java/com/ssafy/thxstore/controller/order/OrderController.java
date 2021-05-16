@@ -5,10 +5,7 @@ import com.ssafy.thxstore.controller.member.AuthController;
 import com.ssafy.thxstore.controller.member.Resource.MemberResource;
 import com.ssafy.thxstore.controller.order.Resource.ReviewResource;
 import com.ssafy.thxstore.reservation.domain.Review;
-import com.ssafy.thxstore.reservation.dto.ReservationDto;
-import com.ssafy.thxstore.reservation.dto.ReservationGroupDto;
-import com.ssafy.thxstore.reservation.dto.ReviewDto;
-import com.ssafy.thxstore.reservation.dto.StatusRequest;
+import com.ssafy.thxstore.reservation.dto.*;
 import com.ssafy.thxstore.reservation.service.ReservationService;
 import com.ssafy.thxstore.reservation.service.ReviewService;
 import io.jsonwebtoken.Jwts;
@@ -229,8 +226,22 @@ public ResponseEntity<String> addReservation(@RequestHeader String authorization
         return Jwts.parser().setSigningKey(DatatypeConverter.parseBase64Binary(appProperties.getAuth().getTokenSecret()))
                 .parseClaimsJws(authorization).getBody().getSubject();
     }
-}
 
-/**
- * 주문 승락 상태에서 주문 취소 들어오면 오류 반환 예외처리하자
- */
+    /**
+     * 사장님 답변  답변다는 사장님의 토큰 + dto를 받는다.
+     * 1. 빌드로 리뷰(맴버 아이디 받아옴 dto)량 연결해서
+     * 2. 글생성
+     */
+    
+    // TODO: 2021-05-17 리뷰 조회할 때 사장님 답변이 달려 있으면 -> 사장님 답변도 함께 리턴
+
+    @PostMapping("/reservation/answer")
+    public ResponseEntity<String> createAnswer(String authorization,@RequestBody AnswerRequest answerRequest){
+        String email = jwtToEmail(authorization);
+
+        String result = reviewService.createAnswer(email,answerRequest);
+
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+}
