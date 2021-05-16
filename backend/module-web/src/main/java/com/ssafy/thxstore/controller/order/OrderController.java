@@ -104,7 +104,7 @@ public ResponseEntity<String> addReservation(@RequestHeader String authorization
      * 회원의 주문 취소  authorization -> 회원의 email 토큰 -> 이걸로 member id 가져온다
      */
     @DeleteMapping("/reservation/member")
-    public ResponseEntity deleteReservationForMember(@RequestHeader String authorization,@RequestParam("memberId") Long storeId){
+    public ResponseEntity deleteReservationForMember(@RequestHeader String authorization,@RequestParam("storeId") Long storeId){
         String email = jwtToEmail(authorization);
         reservationService.deleteReservation(email,storeId,"member");
 
@@ -116,7 +116,7 @@ public ResponseEntity<String> addReservation(@RequestHeader String authorization
      * 사장님의 주문 취소
      */
     @DeleteMapping("/reservation/store")
-    public ResponseEntity deleteReservationForStore(@RequestHeader String authorization,@RequestParam("storeId") Long memberId){
+    public ResponseEntity deleteReservationForStore(@RequestHeader String authorization,@RequestParam("memberId") Long memberId){
         String email = jwtToEmail(authorization);
         reservationService.deleteReservation(email,memberId,"store");
 
