@@ -52,9 +52,9 @@ const setReservationStatus = orderStatus => privateAPI.put('reservation/status',
  * @returns {Promise<Boolean>} isCanceled
  */
 const cancelOrder = userId =>
-  publicAPI.delete('reservation/store', {
+  privateAPI.delete('reservation/store', {
     params: {
-      userId,
+      memberId: userId,
     },
   });
 
