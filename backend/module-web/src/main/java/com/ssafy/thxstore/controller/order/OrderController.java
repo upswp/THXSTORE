@@ -96,13 +96,29 @@ public ResponseEntity<String> addReservation(@RequestHeader String authorization
 
     /**
      *  사장님 or 사용자의 주문 취소 버튼 클릭 후 후 -> 테이블 자체에서 삭제
-     *  member_id와 store_id 로 reservation 테이블에서 삭제한다.
+     *  member_id와 store_id(사장님의 email 토큰) 로 reservation 테이블에서 삭제한다.
+     *  사장님 email 토큰은 로그인 한 사장님만 알 수 있음 ->
      */
 
-    @DeleteMapping("/reservation")
-    public ResponseEntity deleteReservation(@RequestHeader String authorization,@RequestParam("storeId") Long storeId){
+    /**
+     * 회원의 주문 취소  authorization -> 회원의 email 토큰 -> 이걸로 member id 가져온다
+     */
+    @DeleteMapping("/reservation/member")
+    public ResponseEntity deleteReservationForMember(@RequestHeader String authorization,@RequestParam("storeId") Long storeId){
         String email = jwtToEmail(authorization);
-        reservationService.deleteReservation(email,storeId);
+        reservationService.deleteReservation(email,storeId,"member");
+
+        return new ResponseEntity<>("주문 취소 되었습니다.", HttpStatus.OK);
+//        return ResponseEntity.created(li.getUri()).body(li.getOrderResource());
+    }
+
+    /**
+     * 사장님의 주문 취소
+     */
+    @DeleteMapping("/reservation/store")
+    public ResponseEntity deleteReservationForStore(@RequestHeader String authorization,@RequestParam("memberId") Long memberId){
+        String email = jwtToEmail(authorization);
+        reservationService.deleteReservation(email,memberId,"store");
 
         return new ResponseEntity<>("주문 취소 되었습니다.", HttpStatus.OK);
 //        return ResponseEntity.created(li.getUri()).body(li.getOrderResource());
@@ -114,6 +130,12 @@ public ResponseEntity<String> addReservation(@RequestHeader String authorization
      * 2. DEFAULT -> ACCEPT 주문 승락 버튼
      * 3. ACCEPT -> STAND_BY 상품(음식) 조리 완료 후 수령 대기 버튼
      * 4. STAND_BY -> FINISH 수령 완료 버튼
+     */
+
+
+    /**
+     * 사장님 -> 토큰 ,  유저 아디이 받고 ,  스토어 아이디 받아서   -스토어테이블에서   스토어 아이디
+     * 취소 변경
      */
 
     @PutMapping("/reservation/status") // v2 mem id로 받아서 검색 후 수정, 받아오는 형식 memformdto
