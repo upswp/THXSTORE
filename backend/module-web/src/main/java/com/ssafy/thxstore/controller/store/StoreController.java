@@ -194,7 +194,7 @@ public class StoreController {
 
     /* user 관점에서의 Store 작성 */
     @GetMapping("/user/") // 처음 접속했을 때, 타임딜 하고 있는 항목들을 보는 곳 거리에 따라
-    public ResponseEntity getUserStoreList(@RequestHeader String authorization){ // 페이지 수와 번째 수 찾기
+    public ResponseEntity getUserStoreList(@RequestHeader String authorization, @RequestParam("distance") Double distance){ // 페이지 수와 번째 수 찾기
         // todo 0.초기화?? 타임딜 진행되는 거거
 
         // 1. member 정보 가져오기 -> 위도 경도 꺼내야합니다.
@@ -208,7 +208,7 @@ public class StoreController {
         storeService.timeDealStatusInit();
 
         // todo 타임딜 체크는 언제할 까요.여기서 같이 체크요~ + 휴무일 시간체크는 언제 체크요~
-        List<StoreAndDistanceDto> timeDealStoreList = storeService.findLocation(member);
+        List<StoreAndDistanceDto> timeDealStoreList = storeService.findLocation(member, distance);
 
         return ResponseEntity.created(null).body(timeDealStoreList);
     }
