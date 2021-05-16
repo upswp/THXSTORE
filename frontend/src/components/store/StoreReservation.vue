@@ -127,7 +127,7 @@ export default {
         await setReservationStatus({
           reservationStatus: state,
           storeId: order.storeId,
-          memberId: order.userId,
+          userId: order.userId,
         });
         order.reservationStatus = state;
         this.setSpinnerState(false);
@@ -140,7 +140,7 @@ export default {
     async rejectOrder(order) {
       try {
         this.setSpinnerState(true);
-        await cancelOrder(order.userId, order.storeId);
+        await cancelOrder(order.userId);
         this.setSpinnerState(false);
         order.reservationStatus = 'REJECT';
       } catch (error) {
