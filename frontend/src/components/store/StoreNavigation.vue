@@ -24,7 +24,13 @@ export default {
   data() {
     return {
       tap: 'info',
+      cantMove: false,
     };
+  },
+  computed: {
+    path() {
+      return this.$router.history.current;
+    },
   },
   watch: {
     tap(newValue, oldValue) {
@@ -34,13 +40,21 @@ export default {
         this.$emit('changeTap', newValue);
       }
     },
+    $route(newValue) {
+      this.syncTab(newValue.path);
+    },
   },
   created() {
-    for (const name of ['info', 'product', 'deal', 'live', 'reservation']) {
-      if (this.$router.history.current.fullPath.includes(name)) {
-        this.tap = name;
+    this.syncTab(this.path.fullPath);
+  },
+  methods: {
+    syncTab(path) {
+      for (const name of ['info', 'product', 'deal', 'live', 'reservation']) {
+        if (path.includes(name)) {
+          this.tap = name;
+        }
       }
-    }
+    },
   },
 };
 </script>

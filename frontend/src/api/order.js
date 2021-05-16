@@ -1,6 +1,6 @@
 import { createInstance, createInstanceWithToken } from '@/api/index.js';
 const publicAPI = createInstance('api/order/');
-// const privateAPI = createInstanceWithToken('api/order/');
+const privateAPI = createInstanceWithToken('api/order/');
 
 /**
  * 품목 정보
@@ -25,15 +25,14 @@ const publicAPI = createInstance('api/order/');
 /**
  * 판매자 입장에서 주문 내역 전체 조회
  * @typedef {function} getTotalOrders
- * @param {number} storeId
  * @returns {Promise<Array<Order>>} totalOrders
  */
-const getTotalOrders = storeId => publicAPI.get(`reservation/store/${storeId}`);
+const getTotalOrders = () => privateAPI.get('reservation/store');
 
 /**
  * 주문 상태 변경 정보
  * @typedef {object} OrderStatus
- * @property {number} memberId - 주문자 id
+ * @property {number} userId - 주문자 id
  * @property {number} storeId - 가게 id
  * @property {string} reservationStatus - 주문 상태
  */
@@ -42,22 +41,20 @@ const getTotalOrders = storeId => publicAPI.get(`reservation/store/${storeId}`);
  * 판매자 입장에서 주문 상태 변경
  * @typedef {function} setReservationStatus
  * @param {OrderStatus} orderStatus
- * @param {OrderStatus} orderStatus
  * @returns {Promise<Boolean>} isChanged
  */
-const setReservationStatus = orderStatus => publicAPI.put('reservation/statusupdate', orderStatus);
+const setReservationStatus = orderStatus => privateAPI.put('reservation/status', orderStatus);
 /**
  * 판매자 입장에서 주문 취소
  * @typedef {function} cancelOrder
- * @param {number} memberId
+ * @param {number} userId
  * @param {number} storeId
  * @returns {Promise<Boolean>} isCanceled
  */
-const cancelOrder = (memberId, storeId) =>
-  publicAPI.put('reservation/delete', {
+const cancelOrder = userId =>
+  privateAPI.delete('reservation/store', {
     params: {
-      memberId,
-      storeId,
+      memberId: userId,
     },
   });
 
