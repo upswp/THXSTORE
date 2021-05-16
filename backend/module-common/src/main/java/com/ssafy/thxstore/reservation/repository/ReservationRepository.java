@@ -54,4 +54,6 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
 //            " where rg.storeId = :Id")
     @Query(value = "select * from reservation where store_id = :id",nativeQuery = true)
     List<Reservation> findReservationByStoreId(Long id);
+
+    Optional<Reservation> findByMember(Long memberId);
 }

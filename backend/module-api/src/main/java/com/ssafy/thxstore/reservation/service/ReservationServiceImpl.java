@@ -206,28 +206,40 @@ public class ReservationServiceImpl implements ReservationService{
     }
 
 
+    // email -> store 일경우 사장님 Id ->memberId           member일 경우 email -> 맴버 꺼 Id -> storeId
     @Override
     @Transactional
-    public void deleteReservation(String email,Long Id,String type){
-
+    public String deleteReservation(String email,Long Id,String type){
 
 
         if(type == "store"){
             Optional<Store> store= storeRepository.findByEmailJoin(email);
 
             List<ReservationGroup> order = reservationGroupRepository.findAllByMemberIdAndStoreId(Id,store.get().getId());
+            if(!order.get(0).getReservation().equals(ReservationStatus.DEFAULT)){
+                return "주문이 접수 상태로 넘어가 취소할 수 없습니다.";
+            }
             reservationGroupRepository.deleteAll(order);
+            return "취소했습니다.";
         }else{
             Optional<Member> member= memberRepository.findByEmail(email);
+
+
             System.out.println("member.get().getId() : "+member.get().getId() );
             List<ReservationGroup> order = reservationGroupRepository.findAllByMemberIdAndStoreId(member.get().getId(),Id);
+            if(!order.get(0).getReservation().equals(ReservationStatus.DEFAULT)){
+                return "주문이 접수 상태로 넘어가 취소할 수 없습니다.";
+            }
             reservationGroupRepository.deleteAll(order);
+            return "취소했습니다.";
         }
     }
 
     @Override
-    public void statusUpdate(String email, StatusRequest status){
+    public String statusUpdate(String email, StatusRequest status){
+//        Optional<Reservation> nowReservation= reservationRepository.findByMember(status.getMemberId());
 
         reservationRepository.findReservation(email,status.getStoreId(),status.getReservationStatus().name());
+        return "변경되었습니다";
     }
 }

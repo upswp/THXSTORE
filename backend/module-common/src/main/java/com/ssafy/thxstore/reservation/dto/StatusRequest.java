@@ -14,6 +14,9 @@ public class StatusRequest {
     private ReservationStatus reservationStatus;
 
     @NotBlank
+    private Long memberId;
+
+    @NotBlank
     private Long storeId;
 
 //    @NotBlank
