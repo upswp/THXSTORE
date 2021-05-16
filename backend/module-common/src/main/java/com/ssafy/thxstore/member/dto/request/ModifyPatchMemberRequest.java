@@ -22,4 +22,10 @@ public class ModifyPatchMemberRequest {
 
     private String password;
 
+    private String location;
+
+    private Double lat;
+
+    private Double lon;
+
 }
