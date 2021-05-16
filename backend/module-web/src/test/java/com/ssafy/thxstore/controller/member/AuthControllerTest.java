@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ssafy.thxstore.controller.common.BaseControllerTest;
 import com.ssafy.thxstore.controller.member.docs.AuthDocumentation;
 import com.ssafy.thxstore.member.domain.Social;
+import com.ssafy.thxstore.member.dto.request.SendEmailRequest;
 import com.ssafy.thxstore.member.dto.request.SignUpRequest;
 import com.ssafy.thxstore.member.dto.request.SocialMemberRequest;
 import com.ssafy.thxstore.member.dto.response.CheckEmailResponse;
@@ -157,6 +158,24 @@ public class AuthControllerTest extends BaseControllerTest {
                 .andExpect(result -> CheckEmailResponse.of(true))
                 .andDo(print())
                 .andDo(AuthDocumentation.getCheckEmail());
+    }
+
+    @Test
+    @DisplayName("해당 이메일로 인증메일 보내기")
+    public void sendEmail() throws Exception{
+        //Given
+        String email = "helloEmail@gmail.com";
+        generateMember(email,"testEmailCheck");
+        //Given
+        SendEmailRequest sendEmailRequest= SendEmailRequest.builder().email(email).build();
+
+        //When & Then
+        mockMvc.perform(post("/auth/email/")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(new ObjectMapper().writeValueAsString(sendEmailRequest)))
+                .andExpect(result -> CheckEmailResponse.of(true))
+                .andDo(print())
+                .andDo(AuthDocumentation.sendEmail());
     }
 }
 
