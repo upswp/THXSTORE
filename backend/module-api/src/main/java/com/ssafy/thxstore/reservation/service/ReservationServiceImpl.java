@@ -213,12 +213,12 @@ public class ReservationServiceImpl implements ReservationService{
         if(type == "store"){
             Optional<Store> store= storeRepository.findByEmailJoin(email);
 
-            List<ReservationGroup> order = reservationGroupRepository.findAllByMemIdAndStoreId(Id,store.get().getId());
+            List<ReservationGroup> order = reservationGroupRepository.findAllByMemberIdAndStoreId(Id,store.get().getId());
             reservationGroupRepository.deleteAll(order);
         }else{
             Optional<Member> member= memberRepository.findByEmail(email);
 
-            List<ReservationGroup> order = reservationGroupRepository.findAllByMemIdAndStoreId(member.get().getId(),Id);
+            List<ReservationGroup> order = reservationGroupRepository.findAllByMemberIdAndStoreId(member.get().getId(),Id);
             reservationGroupRepository.deleteAll(order);
         }
     }
