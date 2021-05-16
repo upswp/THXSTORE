@@ -1,6 +1,9 @@
 <template>
-  <div class="store-reservation-container">
+  <div v-if="loaded" class="store-reservation-container">
     <header class="reservation-header">타임딜 예약 내역</header>
+    <nav class="reservation-countdown">
+      <span class="time-deal-counter">{{ countdown }}</span>
+    </nav>
     <section class="reservation-body">
       <table class="reservation-table">
         <th>번호</th>
@@ -58,13 +61,20 @@
 
 <script>
 import { oneTrans, dateTrans } from '@/utils/filters';
+import { getTimeDeal } from '@/api/timeDeal';
 import { getTotalOrders, setReservationStatus, cancelOrder } from '@/api/order';
 import { mapMutations, mapGetters } from 'vuex';
+import { timeStrConvert } from '@/utils/filters';
+import { endTime, countDownTimer } from '@/utils/time';
 export default {
   data() {
     return {
       orders: [],
       pusher: '',
+      timer: '',
+      timerDone: false,
+      countdown: '',
+      loaded: false,
     };
   },
   computed: {
@@ -73,9 +83,22 @@ export default {
       return [...this.orders].reverse();
     },
   },
+  watch: {
+    timerDone(newValue) {
+      if (newValue) this.countdown = '해당 이벤트가 종료 되었습니다!';
+    },
+  },
+
+  beforeDestroy() {
+    clearInterval(this.timer);
+  },
   async created() {
     try {
       this.setSpinnerState(true);
+
+      // 타임딜 상태와 시작시간을 확인하여 타이머를 작동시킨다.
+      this.counterOn();
+
       // order 등록
       const { data } = await getTotalOrders(this.getStoreId);
       for (let i = 0; i < data.length; i++) {
@@ -95,6 +118,7 @@ export default {
         this.orders.push(data);
         audio.play();
       });
+
       this.setSpinnerState(false);
     } catch (error) {
       this.setSpinnerState(false);
@@ -150,6 +174,29 @@ export default {
         this.setSpinnerState(false);
         alert('주문 취소에 실패하였습니다');
       }
+    },
+    counterOn() {
+      getTimeDeal(this.getStoreId)
+        .then(response => {
+          const data = response.data;
+          // 1. 타임딜의 상태를 파악하여 오직 PROGRESS일 때만 타이머를 작동시킨다.
+          if (data.status === 'PROGRESS') {
+            const [startHour, startMinute] = data.startTime.split(':');
+            const start = new Date();
+            start.setHours(startHour);
+            start.setMinutes(startMinute);
+            this.timer = countDownTimer(endTime(start), this);
+          } else if (data.status === 'COMPLETE') {
+            this.countdown = '타임딜 종료';
+          } else if (data.status === 'RESERVATION') {
+            this.countdown = '타임딜 시작 대기 중';
+          }
+          this.loaded = true;
+        })
+        .catch(error => {
+          alert('타임딜을 먼저 등록해주세요');
+          this.$router.push({ name: 'storeTimeDeal' });
+        });
     },
   },
 };

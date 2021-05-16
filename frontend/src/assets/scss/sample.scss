@@ -146,3 +146,35 @@
      background-color: rgba(61, 145, 224, 0.986);
   }
 }
+@keyframes pumping {
+  0%{
+    transform: scale(1);
+  }
+  100%{
+    transform: scale(1.1);
+  }
+}
+.reservation-countdown{
+  text-align: right;
+  margin-bottom:10px;
+  padding-right:5px;
+}
+.time-deal-counter{
+  display: inline-block;
+  animation: pumping 0.5s infinite alternate;
+  color: red;
+  font-weight: bold;
+  
+  @include lg-pc{
+    font-size:20px;
+  }
+  @include pc{
+    font-size:18px;
+  }
+  @include mobile{
+    font-size:16px;
+  }
+  @include xs-mobile{
+    font-size:14px;
+  }
+}
