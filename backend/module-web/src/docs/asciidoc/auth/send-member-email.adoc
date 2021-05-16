@@ -1,0 +1,44 @@
+ifndef::sub-snippet[]
+:sub-snippet: ../../../../build/generated-snippets
+endif::[]
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 4
+:sectlinks:
+:site-url: /build/asciidoc/html5/state
+
+[[resources-send-member-email]]
+=== 비밀번호를 찾기위해 이메일 전송을 통해 인증을 진행한다.
+
+`POST` 요청을 사용해서 request로 요청받은 email 정보로 Boolean 형태로 반환한다.
+
+==== Curl
+include::{sub-snippet}/send-member-email/curl-request.adoc[]
+
+==== Links
+Links:
+include::{sub-snippet}/send-member-email/links.adoc[]
+
+==== Request
+CURL:
+include::{sub-snippet}/send-member-email/curl-request.adoc[]
+Http-request:
+include::{sub-snippet}/send-member-email/http-request.adoc[]
+Request-header:
+include::{sub-snippet}/send-member-email/request-headers.adoc[]
+Request-body:
+include::{sub-snippet}/send-member-email/request-body.adoc[]
+Request-filed:
+include::{sub-snippet}/send-member-email/request-fields.adoc[]
+
+==== Response
+Http-response:
+include::{sub-snippet}/send-member-email/http-response.adoc[]
+Response-header:
+include::{sub-snippet}/send-member-email/response-headers.adoc[]
+Response-body:
+include::{sub-snippet}/send-member-email/response-body.adoc[]
+Response-filed:
+include::{sub-snippet}/send-member-email/response-fields.adoc[]
