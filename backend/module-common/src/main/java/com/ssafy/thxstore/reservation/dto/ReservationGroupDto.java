@@ -26,6 +26,7 @@ public class ReservationGroupDto {
     private int rate;
 
 //    private String orderTime;
+    private Long productId;
 
     private String productName;
 

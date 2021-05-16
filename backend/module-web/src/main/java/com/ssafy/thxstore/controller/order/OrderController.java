@@ -52,22 +52,23 @@ private final AppProperties appProperties;
      * },
  * ]
  *
- * 네 email jwt 받고 -> 주문상태변경  -> email로 검색해서 가게 사장님인지. 이해했어요!  네 알
+ *
  */
 
-
+//주문등록 주문이 들어왔을 때 ---->  재고 확인 후   stock 다떨어졌으면 품절된 상품이 있습니다 return
 @PostMapping("/reservation")
 public ResponseEntity<String> addReservation(@RequestHeader String authorization, @RequestBody ReservationDto reservation){
 
     String email = jwtToEmail(authorization);
-    reservationService.addReservation(email,reservation);
+    String result = reservationService.addReservation(email,reservation);
 
-    return new ResponseEntity<>("생성완료", HttpStatus.OK);
+    return new ResponseEntity<>(result, HttpStatus.OK);
 }
 
     /**
      * 주문 조회
      * 1. reservation_group 테이블에서 member_id 로 찾아서 List<ReservationGroup> 형식으로 리턴
+     *
      */
 
     //토큰 id 포함한 객체로 받았으면 더 좋았을듯
@@ -232,8 +233,4 @@ public ResponseEntity<String> addReservation(@RequestHeader String authorization
 
 /**
  * 주문 승락 상태에서 주문 취소 들어오면 오류 반환 예외처리하자
- */
-
-/**
- * 리스트 리스폰스 형식 배열 이쁘게~
  */
