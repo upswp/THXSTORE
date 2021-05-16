@@ -34,9 +34,9 @@ public interface ReservationGroupRepository extends JpaRepository<ReservationGro
 //    Optional<Member> findByIdandStoreId(Long memberId, Long storeId);
 
 
-    @Query("select new com.ssafy.thxstore.reservation.domain.ReservationGroup" +
-            " (rg.reservation,rg.count,rg.price,rg.productName,rg.userId,rg.reservation.reservationStatus,rg.rate)" +
-            " from ReservationGroup rg join rg.reservation r " +
-            " where rg.reservation.id = :Id and rg.storeId.storeId = :storeId")
-    List<ReservationGroup> findAllByMemIdAndStoreId(Long Id, Long storeId);
+//    @Query("select new com.ssafy.thxstore.reservation.domain.ReservationGroup" +
+//            " (rg.reservation,rg.count,rg.price,rg.productName,rg.userId,rg.reservation.reservationStatus,rg.rate)" +
+//            " from ReservationGroup rg join rg.reservation r " +
+//            " where rg.reservation.id = :Id and rg.storeId = :storeId")
+    List<ReservationGroup> findAllByMemberIdAndStoreId(Long Id, Long storeId);
 }
