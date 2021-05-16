@@ -1,5 +1,5 @@
 <template>
-  <div class="time-deal-container">
+  <div v-if="loaded" class="time-deal-container">
     <header class="time-deal-title">타임딜 등록</header>
     <section class="tiem-deal-accordian-container">
       <ul class="time-deal-accordian">
@@ -91,7 +91,9 @@
         <button v-if="!reservation" class="time-deal-button" :disabled="!validForm" @click="goTimeDeal">
           타임딜 시작
         </button>
-        <div v-else><span ref="time" class="tiem-deal-counter"></span></div>
+        <div v-else>
+          <span class="tiem-deal-counter">{{ countdown }}</span>
+        </div>
       </div>
     </footer>
   </div>
@@ -102,7 +104,7 @@ import { getTimeDeal, registerTimeDeal } from '@/api/timeDeal';
 import { getTotalMenu } from '@/api/menu';
 import { timeStrConvert } from '@/utils/filters';
 import { mapGetters, mapMutations } from 'vuex';
-import { endTime, countDownTimer } from '@/utils/time';
+import { countDownTimer } from '@/utils/time';
 export default {
   data() {
     return {
@@ -114,6 +116,8 @@ export default {
       reservation: false,
       timer: '',
       timerDone: false,
+      countdown: '',
+      loaded: false,
     };
   },
   computed: {
@@ -124,9 +128,10 @@ export default {
     },
   },
   watch: {
-    endTimer(newValue) {
+    timerDone(newValue) {
       if (newValue) {
-        this.$router.go(0);
+        this.countdown = '예약 관리 페이지로 이동합니다.';
+        this.$router.push({ name: 'storeReservation' });
       }
     },
   },
@@ -136,6 +141,7 @@ export default {
       const { data } = await getTimeDeal(this.getStoreId);
       this.setSpinnerState(false);
       if (data.status === 'PROGRESS' || data.status === 'COMPLETE') {
+        alert('오늘은 더 이상 타임딜을 등록할 수 없습니다! 내일을 기대해주세요~');
         this.$router.push({ name: 'storeReservation' });
       } else {
         // 타임딜이 대기 중인 상태에서는 selectedMenus의 정보를 변경해야한다.
@@ -153,6 +159,7 @@ export default {
           start.setMinutes(this.startMinute);
           this.timer = countDownTimer(start, this);
         });
+        this.loaded = true;
       }
     } catch (error) {
       if (error.response.status === 400) {
@@ -166,6 +173,7 @@ export default {
             }),
           );
           this.setSpinnerState(false);
+          this.loaded = true;
         } catch (error) {
           alert('메뉴 조회에 실패하였습니다.');
           this.setSpinnerState(false);
@@ -239,7 +247,7 @@ export default {
         });
         this.setSpinnerState(false);
         alert('성공적으로 타임딜이 등록 되었습니다.');
-        this.$router.go(0);
+        this.$router.go();
       } catch (error) {
         console.log(error);
         this.setSpinnerState(false);

@@ -2,6 +2,7 @@ package com.ssafy.thxstore.product.domain;
 
 import com.ssafy.thxstore.common.ColumnDescription;
 import com.ssafy.thxstore.reservation.domain.Reservation;
+import com.ssafy.thxstore.reservation.domain.ReservationGroup;
 import com.ssafy.thxstore.store.domain.Store;
 import lombok.*;
 
@@ -57,4 +58,12 @@ public class Product {
     @Column(name = "introduce")
     @ColumnDescription("상품 소개")
     private String introduce;
+
+    @ColumnDescription("양방향 맵핑")
+    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
+    private List<ReservationGroup> reservationGroup = new ArrayList<>();
+
+    public void stockUpdate(int i) {
+        this.stock = Integer.valueOf(""+i);
+    }
 }

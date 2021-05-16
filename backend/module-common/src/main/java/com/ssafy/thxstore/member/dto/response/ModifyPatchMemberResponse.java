@@ -19,7 +19,14 @@ public class ModifyPatchMemberResponse {
 
     private String password;
 
+    private String address;
+
+    private Double lat;
+
+    private Double lon;
+
     public static ModifyPatchMemberResponse of(Member member) {
-        return new ModifyPatchMemberResponse(member.getId(),member.getProfileImage(),member.getNickname(),member.getPhoneNumber(),member.getPassword());
+        return new ModifyPatchMemberResponse(member.getId(),member.getProfileImage(),member.getNickname()
+                ,member.getPhoneNumber(),member.getPassword(),member.getAddress(),member.getLat(),member.getLon());
     }
 }

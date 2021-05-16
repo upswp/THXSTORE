@@ -5,10 +5,7 @@ import com.ssafy.thxstore.controller.member.AuthController;
 import com.ssafy.thxstore.controller.member.Resource.MemberResource;
 import com.ssafy.thxstore.controller.order.Resource.ReviewResource;
 import com.ssafy.thxstore.reservation.domain.Review;
-import com.ssafy.thxstore.reservation.dto.ReservationDto;
-import com.ssafy.thxstore.reservation.dto.ReservationGroupDto;
-import com.ssafy.thxstore.reservation.dto.ReviewDto;
-import com.ssafy.thxstore.reservation.dto.StatusRequest;
+import com.ssafy.thxstore.reservation.dto.*;
 import com.ssafy.thxstore.reservation.service.ReservationService;
 import com.ssafy.thxstore.reservation.service.ReviewService;
 import io.jsonwebtoken.Jwts;
@@ -52,22 +49,23 @@ private final AppProperties appProperties;
      * },
  * ]
  *
- * 네 email jwt 받고 -> 주문상태변경  -> email로 검색해서 가게 사장님인지. 이해했어요!  네 알
+ *
  */
 
-
+//주문등록 주문이 들어왔을 때 ---->  재고 확인 후   stock 다떨어졌으면 품절된 상품이 있습니다 return
 @PostMapping("/reservation")
 public ResponseEntity<String> addReservation(@RequestHeader String authorization, @RequestBody ReservationDto reservation){
 
     String email = jwtToEmail(authorization);
-    reservationService.addReservation(email,reservation);
+    String result = reservationService.addReservation(email,reservation);
 
-    return new ResponseEntity<>("생성완료", HttpStatus.OK);
+    return new ResponseEntity<>(result, HttpStatus.OK);
 }
 
     /**
      * 주문 조회
      * 1. reservation_group 테이블에서 member_id 로 찾아서 List<ReservationGroup> 형식으로 리턴
+     *
      */
 
     //토큰 id 포함한 객체로 받았으면 더 좋았을듯
@@ -104,11 +102,11 @@ public ResponseEntity<String> addReservation(@RequestHeader String authorization
      * 회원의 주문 취소  authorization -> 회원의 email 토큰 -> 이걸로 member id 가져온다
      */
     @DeleteMapping("/reservation/member")
-    public ResponseEntity deleteReservationForMember(@RequestHeader String authorization,@RequestParam("storeId") Long storeId){
+    public ResponseEntity<String> deleteReservationForMember(@RequestHeader String authorization,@RequestParam("storeId") Long storeId){
         String email = jwtToEmail(authorization);
-        reservationService.deleteReservation(email,storeId,"member");
+        String result = reservationService.deleteReservation(email,storeId,"member");
 
-        return new ResponseEntity<>("주문 취소 되었습니다.", HttpStatus.OK);
+        return new ResponseEntity<>(result, HttpStatus.OK);
 //        return ResponseEntity.created(li.getUri()).body(li.getOrderResource());
     }
 
@@ -135,16 +133,16 @@ public ResponseEntity<String> addReservation(@RequestHeader String authorization
 
     /**
      * 사장님 -> 토큰 ,  유저 아디이 받고 ,  스토어 아이디 받아서   -스토어테이블에서   스토어 아이디
-     * 취소 변경
+     * 사장님이 상태를 변경한다.
      */
 
     @PutMapping("/reservation/status") // v2 mem id로 받아서 검색 후 수정, 받아오는 형식 memformdto
     public ResponseEntity<String> updateStatus(@RequestHeader String authorization,@RequestBody StatusRequest status) {
         String email = jwtToEmail(authorization);
 
-        reservationService.statusUpdate(email,status);
+        String result = reservationService.statusUpdate(email,status);
 
-        return new ResponseEntity<>("주문 상태를 변경했습니다.", HttpStatus.OK);
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }//맴버정보보기를 눌러서 확인
 
     /**
@@ -228,12 +226,22 @@ public ResponseEntity<String> addReservation(@RequestHeader String authorization
         return Jwts.parser().setSigningKey(DatatypeConverter.parseBase64Binary(appProperties.getAuth().getTokenSecret()))
                 .parseClaimsJws(authorization).getBody().getSubject();
     }
+
+    /**
+     * 사장님 답변  답변다는 사장님의 토큰 + dto를 받는다.
+     * 1. 빌드로 리뷰(맴버 아이디 받아옴 dto)량 연결해서
+     * 2. 글생성
+     */
+    
+    // TODO: 2021-05-17 리뷰 조회할 때 사장님 답변이 달려 있으면 -> 사장님 답변도 함께 리턴
+
+    @PostMapping("/reservation/answer")
+    public ResponseEntity<String> createAnswer(String authorization,@RequestBody AnswerRequest answerRequest){
+        String email = jwtToEmail(authorization);
+
+        String result = reviewService.createAnswer(email,answerRequest);
+
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
 }
-
-/**
- * 주문 승락 상태에서 주문 취소 들어오면 오류 반환 예외처리하자
- */
-
-/**
- * 리스트 리스폰스 형식 배열 이쁘게~
- */

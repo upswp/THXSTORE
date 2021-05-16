@@ -16,7 +16,6 @@ export default {
   components: { StoreNavigation },
   data() {
     return {
-      tap: 'info',
       loaded: false,
     };
   },
@@ -36,21 +35,30 @@ export default {
     changeTap(selection) {
       switch (selection) {
         case 'info':
+          if (this.invalidMove('info')) return;
           this.$router.push({ name: 'storeInfo' });
           break;
         case 'product':
+          if (this.invalidMove('product')) return;
           this.$router.push({ name: 'storeProduct' });
           break;
         case 'deal':
+          if (this.invalidMove('deal')) return;
           this.$router.push({ name: 'storeTimeDeal' });
           break;
         case 'live':
+          if (this.invalidMove('live')) return;
           this.$router.push({ name: 'storeLive' });
           break;
         case 'reservation':
+          if (this.invalidMove('reservation')) return;
           this.$router.push({ name: 'storeReservation' });
           break;
       }
+    },
+    invalidMove(selection) {
+      if (this.$route.path.includes(selection)) return true;
+      return false;
     },
   },
 };

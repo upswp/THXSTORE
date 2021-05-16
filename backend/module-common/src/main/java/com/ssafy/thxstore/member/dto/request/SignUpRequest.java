@@ -37,4 +37,6 @@ public class SignUpRequest {
     @NotNull
     private Double lon;
 
+    @NotEmpty
+    private String address;
 }

@@ -5,12 +5,9 @@ import com.ssafy.thxstore.controller.common.ErrorsResource;
 import com.ssafy.thxstore.controller.config.AppProperties;
 import com.ssafy.thxstore.controller.member.Resource.MemberResource;
 import com.ssafy.thxstore.controller.member.Resource.ModifyPatchMemberResource;
-import com.ssafy.thxstore.controller.member.Resource.ModifyPutMemberResource;
 import com.ssafy.thxstore.member.domain.Member;
-import com.ssafy.thxstore.member.dto.response.ModifyPatchMemberResponse;
 import com.ssafy.thxstore.member.dto.request.ModifyPatchMemberRequest;
-import com.ssafy.thxstore.member.dto.request.ModifyPutMemberRequest;
-import com.ssafy.thxstore.member.dto.response.ModifyPutMemberResponse;
+import com.ssafy.thxstore.member.dto.response.ModifyPatchMemberResponse;
 import com.ssafy.thxstore.member.service.UserService;
 import io.jsonwebtoken.Jwts;
 import lombok.RequiredArgsConstructor;
@@ -49,16 +46,6 @@ public class UserController {
         }
 
         return ResponseEntity.ok(modifyPatchMemberResource);
-    }
-
-    @PutMapping
-    public ResponseEntity modifyUserLatAndLot(@RequestHeader String authorization, @RequestBody @Valid ModifyPutMemberRequest modifyPutMemberRequest) {
-        String email = jwtToEmail(authorization);
-        ModifyPutMemberResponse putMember= userService.putMember(email, modifyPutMemberRequest);
-        ModifyPutMemberResource modifyPutMemberResponse = new ModifyPutMemberResource(putMember);
-        modifyPutMemberResponse.add(linkTo(UserController.class).withRel("put-member"));
-        modifyPutMemberResponse.add(Link.of("/api/docs/index.html#resources-put-member").withRel("profile"));
-        return ResponseEntity.ok(modifyPutMemberResponse);
     }
 
     @DeleteMapping

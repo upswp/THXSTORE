@@ -53,9 +53,10 @@ public class AuthControllerTest extends BaseControllerTest {
         SignUpRequest signUpRequest = SignUpRequest.builder()
                 .email("test456@gmail.com")
                 .password("Pasword123!")
-                .nickname("helloTest456")
+                .nickname("sangwoo")
                 .lat(37.33)
                 .lon(126.59)
+                .address("서울 중구 광화문")
                 .build();
 
         mockMvc.perform(post("/auth/")
@@ -72,12 +73,13 @@ public class AuthControllerTest extends BaseControllerTest {
         SignUpRequest signUpRequest = SignUpRequest.builder()
                 .email("test123@gmail.com")
                 .password("Pasword123!")
-                .nickname("helloTest123")
+                .nickname("sangwoo")
                 .social(Social.KAKAO)
-                .userId("hello")
+                .userId("providerID123")
                 .profileImage("Default Profile link")
                 .lat(37.33)
                 .lon(126.59)
+                .address("서울 중구 광화문")
                 .build();
 
         mockMvc.perform(post("/auth/")

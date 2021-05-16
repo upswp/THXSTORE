@@ -76,6 +76,7 @@ public class BaseControllerTest {
                 .userId(userId)
                 .lat(37.33)
                 .lon(126.59)
+                .address("서울 중구 광화문")
                 .phoneNumber("010-123-1234")
                 .role(MemberRole.ROLE_USER)
                 .build();

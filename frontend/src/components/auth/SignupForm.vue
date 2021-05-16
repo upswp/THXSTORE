@@ -56,8 +56,8 @@ export default {
         password1: '',
         password2: '',
         nickname: '',
-        lat: '',
-        lon: '',
+        lat: 33.450701,
+        lon: 126.570667,
       },
     };
   },
@@ -93,8 +93,8 @@ export default {
           nickname: this.userData.nickname,
           social: 'LOCAL',
           profileImage: null,
-          lat: 33.450701,
-          lon: 126.570667,
+          lat: this.userData.lat,
+          lon: this.userData.lon,
         };
         this.setSpinnerState(true);
         await registerUser(userData);

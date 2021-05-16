@@ -98,7 +98,7 @@
             ></awesome>
           </transition>
         </div>
-        <div v-if="!introEdit" class="introduction-display">{{ introduction }}</div>
+        <pre v-if="!introEdit" class="introduction-display">{{ introduction }}</pre>
         <textarea v-else v-model="introduction" type="text" class="introduction-textarea" />
       </div>
     </div>
@@ -602,4 +602,7 @@ export default {
   }
 }
 @include fade-transition(fade, 0.2s);
+pre {
+  font-family: 'S-CoreDream-4Regular';
+}
 </style>

@@ -30,8 +30,6 @@ public class AuthDocumentation {
 
     public static RestDocumentationResultHandler signUpLOCAL() {
         return document("signUp-LOCAL",
-                getDocumentRequest(),
-                getDocumentResponse(),
                 links(
                         linkWithRel("self").description("link to self"),
                         linkWithRel("signUp-LOCAL").description("link to query members"),
@@ -41,16 +39,16 @@ public class AuthDocumentation {
                         headerWithName(HttpHeaders.CONTENT_TYPE).description("content type header")
                 ),
                 requestFields(
-                        fieldWithPath("nickname").type(JsonFieldType.STRING).description("회원가입할 닉네임"),
                         fieldWithPath("email").type(JsonFieldType.STRING).description("회원가입할 E-mail"),
                         fieldWithPath("password").type(JsonFieldType.STRING).description("회원가입할 패스워드"),
+                        fieldWithPath("nickname").type(JsonFieldType.STRING).description("회원가입할 닉네임"),
                         fieldWithPath("lat").type(JsonFieldType.NUMBER).description("위도"),
-                        fieldWithPath("lon").type(JsonFieldType.NUMBER).description("경도")
+                        fieldWithPath("lon").type(JsonFieldType.NUMBER).description("경도"),
+                        fieldWithPath("address").type(JsonFieldType.STRING).description("주소")
                 ).and(subsectionWithPath("profileImage").type(JsonFieldType.NULL).description("회원 프로필 이미지"),
                         subsectionWithPath("social").type(JsonFieldType.NULL).description("회원 소셜 종류 판단"),
                         subsectionWithPath("userId").type(JsonFieldType.NULL).description("소셜 유저 아이디")),
                 responseHeaders(
-                        headerWithName(HttpHeaders.LOCATION).description("Location header"),
                         headerWithName(HttpHeaders.CONTENT_TYPE).description("hal+json type")
                 ),
                 relaxedResponseFields(
@@ -60,6 +58,7 @@ public class AuthDocumentation {
                         fieldWithPath("nickname").type(JsonFieldType.STRING).description("유저 닉네임"),
                         fieldWithPath("lat").type(JsonFieldType.NUMBER).description("위도"),
                         fieldWithPath("lon").type(JsonFieldType.NUMBER).description("경도"),
+                        fieldWithPath("address").type(JsonFieldType.STRING).description("주소"),
                         fieldWithPath("_links.self.href").description("link to self"),
                         fieldWithPath("_links.signUp-LOCAL.href").description("link to query event list")
                 )
@@ -68,8 +67,6 @@ public class AuthDocumentation {
 
     public static ResultHandler signUpSOCIAL() {
         return document("signUp-SOCIAL",
-                getDocumentRequest(),
-                getDocumentResponse(),
                 links(
                         linkWithRel("self").description("link to self"),
                         linkWithRel("signUp-SOCIAL").description("link to query members"),
@@ -79,17 +76,17 @@ public class AuthDocumentation {
                         headerWithName(HttpHeaders.CONTENT_TYPE).description("content type header")
                 ),
                 requestFields(
-                        fieldWithPath("nickname").type(JsonFieldType.STRING).description("회원가입할 닉네임"),
                         fieldWithPath("email").type(JsonFieldType.STRING).description("회원가입할 E-mail"),
                         fieldWithPath("password").type(JsonFieldType.STRING).description("회원가입할 패스워드"),
+                        fieldWithPath("nickname").type(JsonFieldType.STRING).description("회원가입할 닉네임"),
                         fieldWithPath("profileImage").type(JsonFieldType.STRING).description("회원 프로필 이미지"),
                         fieldWithPath("social").type(JsonFieldType.STRING).description("회원 소셜 종류 판단"),
+                        fieldWithPath("userId").type(JsonFieldType.STRING).description("소셜 유저 아이디"),
                         fieldWithPath("lat").type(JsonFieldType.NUMBER).description("위도"),
                         fieldWithPath("lon").type(JsonFieldType.NUMBER).description("경도"),
-                        fieldWithPath("userId").type(JsonFieldType.STRING).description("소셜 유저 아이디")
+                        fieldWithPath("address").type(JsonFieldType.STRING).description("주소")
                 ),
                 responseHeaders(
-                        headerWithName(HttpHeaders.LOCATION).description("Location header"),
                         headerWithName(HttpHeaders.CONTENT_TYPE).description("hal+json type")
                 ),
                 relaxedResponseFields(
@@ -102,6 +99,7 @@ public class AuthDocumentation {
                         fieldWithPath("userId").type(JsonFieldType.STRING).description("소셜 유저 아이디"),
                         fieldWithPath("lat").type(JsonFieldType.NUMBER).description("위도"),
                         fieldWithPath("lon").type(JsonFieldType.NUMBER).description("경도"),
+                        fieldWithPath("address").type(JsonFieldType.STRING).description("주소"),
                         fieldWithPath("_links.self.href").description("link to self"),
                         fieldWithPath("_links.signUp-SOCIAL.href").description("link to query event list"),
                         fieldWithPath("_links.profile.href").description("link to profile")
@@ -111,8 +109,6 @@ public class AuthDocumentation {
 
     public static ResultHandler getSocialMember() {
         return document("find-social-member",
-                getDocumentRequest(),
-                getDocumentResponse(),
                 links(
                         linkWithRel("self").description("link to self"),
                         linkWithRel("find-social-member").description("link to query members"),
