@@ -1,9 +1,13 @@
 package com.ssafy.thxstore.controller.store;
 
+import com.ssafy.thxstore.store.dto.SessionDto;
+import com.ssafy.thxstore.store.dto.SessionRemoveDto;
 import io.openvidu.java.client.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.hateoas.MediaTypes;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
@@ -36,16 +40,32 @@ public class SessionController {
     // OpenVidu 서버와 공유되는 비밀 docker 열 때, MY_SECRET 이걸로 함.
     private String SECRET;
 
+   //private OpenViduRole role; // 구독인지 퍼블릭인지 구분을 위햊
+
 
     public SessionController(@Value("${openvidu.secret}") String secret, @Value("${openvidu.url}") String openviduUrl) {
         this.SECRET = secret;
         this.OPENVIDU_URL = openviduUrl;
         this.openVidu = new OpenVidu(OPENVIDU_URL, SECRET);
     }
-
+    // 사장님의 라이브 커머스
+    // 사용자의 라이브 커머스
+//openVidu 생성됌.
     @RequestMapping(value = "/session", method = RequestMethod.POST)
-    public String joinSession(@RequestParam(name = "data") String clientData,
-                              @RequestParam(name = "session-name") String sessionName, Model model, HttpSession httpSession) {
+    public ResponseEntity joinSession(@RequestBody SessionDto sessionDto) { // 주의할 점. storeId는 string으로
+        String clientData = sessionDto.getNickName();
+        String sessionName = sessionDto.getStoreId();
+        String httpSession = sessionDto.getEmail();
+        // model은 view 로 보내주는 객체
+        Model model = null;
+
+
+
+        //session-name은 참여 방 이름 이라 생각
+        // data는? 사용자 닉네임
+        // 사용자 닉네임, 채널 방, email
+        // dto -> nickName(clientData), storId(sessionName), email(httpSession)
+
 //clientData = name, sessionName 세션 네임
 //        try {
 //            checkUserLogged(httpSession);
@@ -56,13 +76,23 @@ public class SessionController {
 
         // Role associated to this user 이 사용자와 관련된 역할
         //OpenViduRole role = LoginController.users.get(httpSession.getAttribute("loggedUser")).role;
-        OpenViduRole role = null; // 후작업 필요 
+       // OpenViduRole role = null; // 후작업 필요
+
+        OpenViduRole role = null;
+        // role 값  여기서 사장이면PUBLISHER, 손님이면 SUBSCRIBER
+        if(sessionDto.getPublisherCheck() == 1) {
+            role = OpenViduRole.PUBLISHER; // 1이면 주인
+        }
+        else{
+            role = OpenViduRole.SUBSCRIBER;
+        }
 
         // Optional data to be passed to other users when this user connects to the
         // video-call. In this case, a JSON with the value we stored in the HttpSession
         // object on login
         //이 사용자가 화상 통화에 연결할 때 다른 사용자에게 전달할 선택적 데이터입니다. 이 경우 로그인시 HttpSession 객체에 저장 한 값이있는 JSON
-        String serverData = "{\"serverData\": \"" + httpSession.getAttribute("loggedUser") + "\"}";
+        // 안에 사용자가 들어가게 -> 유니크하게 갑시다.
+        String serverData = "{\"serverData\": \"" + httpSession + "\"}";
 
         // Build connectionProperties object with the serverData and the role
         //serverData 및 역할을 사용하여 connectionProperties 개체를 빌드합니다.
@@ -84,15 +114,17 @@ public class SessionController {
                 model.addAttribute("sessionName", sessionName);
                 model.addAttribute("token", token);
                 model.addAttribute("nickName", clientData);
-                model.addAttribute("userName", httpSession.getAttribute("loggedUser"));
+                model.addAttribute("userName", httpSession);
 
                 // Return session.html template
-                return "session";
+                //return "model";
+                return ResponseEntity.created(null).body(model);
 
             } catch (Exception e) {
                 // If error just return dashboard.html template
-                model.addAttribute("username", httpSession.getAttribute("loggedUser"));
-                return "dashboard";
+                model.addAttribute("username", httpSession);
+                return ResponseEntity.created(null).body(model);
+                //return "model";
             }
         } else {
             // New session
@@ -104,7 +136,7 @@ public class SessionController {
                 // Generate a new token with the recently created connectionProperties
                 String token = session.createConnection(connectionProperties).getToken();
 
-                // Store the session and the token in our collections
+                // Sstore the session and the token in our collection
                 this.mapSessions.put(sessionName, session);
                 this.mapSessionNamesTokens.put(sessionName, new ConcurrentHashMap<>());
                 this.mapSessionNamesTokens.get(sessionName).put(token, role);
@@ -113,28 +145,30 @@ public class SessionController {
                 model.addAttribute("sessionName", sessionName);
                 model.addAttribute("token", token);
                 model.addAttribute("nickName", clientData);
-                model.addAttribute("userName", httpSession.getAttribute("loggedUser"));
+                model.addAttribute("userName", httpSession);
 
                 // Return session.html template
-                return "session";
+                return ResponseEntity.created(null).body(model);
+                //return "session";
 
             } catch (Exception e) {
                 // If error just return dashboard.html template
-                model.addAttribute("username", httpSession.getAttribute("loggedUser"));
-                return "dashboard";
+                model.addAttribute("username", httpSession);
+                return ResponseEntity.created(null).body(model);
+                //return "dashboard";
             }
         }
     }
 
     @RequestMapping(value = "/leave-session", method = RequestMethod.POST)
-    public String removeUser(@RequestParam(name = "session-name") String sessionName,
-                             @RequestParam(name = "token") String token, Model model, HttpSession httpSession) throws Exception {
-
-        try {
-            checkUserLogged(httpSession);
-        } catch (Exception e) {
-            return "index";
-        }
+    public ResponseEntity removeUser(@RequestBody SessionRemoveDto sessionRemoveDto) {
+        String sessionName = sessionRemoveDto.getStoreId();
+        String token = sessionRemoveDto.getToken();
+//        try {
+//            checkUserLogged(httpSession);
+//        } catch (Exception e) {
+//            return "index";
+//        }
         System.out.println("Removing user | sessioName=" + sessionName + ", token=" + token);
 
         // If the session exists ("TUTORIAL" in this case)
@@ -147,18 +181,21 @@ public class SessionController {
                     // Last user left: session must be removed
                     this.mapSessions.remove(sessionName);
                 }
-                return "redirect:/dashboard";
+                return ResponseEntity.created(null).body(HttpStatus.OK);
+                //return "redirect:/dashboard";
 
             } else {
                 // The TOKEN wasn't valid
                 System.out.println("Problems in the app server: the TOKEN wasn't valid");
-                return "redirect:/dashboard";
+                return ResponseEntity.created(null).body(HttpStatus.OK);
+               // return "redirect:/dashboard";
             }
 
         } else {
             // The SESSION does not exist
             System.out.println("Problems in the app server: the SESSION does not exist");
-            return "redirect:/dashboard";
+            return ResponseEntity.created(null).body(HttpStatus.OK);
+            //return "redirect:/dashboard";
         }
     }
 
