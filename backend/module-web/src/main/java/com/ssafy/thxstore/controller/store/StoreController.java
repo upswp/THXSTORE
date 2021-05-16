@@ -14,6 +14,9 @@ import com.ssafy.thxstore.store.domain.TempStore;
 import com.ssafy.thxstore.store.dto.*;
 import com.ssafy.thxstore.store.service.StoreService;
 import io.jsonwebtoken.Jwts;
+import io.openvidu.java.client.OpenVidu;
+import io.openvidu.java.client.OpenViduRole;
+import io.openvidu.java.client.Session;
 import javassist.tools.web.BadHttpRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.hateoas.Link;
@@ -34,8 +37,9 @@ import java.net.URI;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
-
+import java.util.concurrent.ConcurrentHashMap;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
@@ -157,7 +161,7 @@ public class StoreController {
 
     /* 판매자 스토어 페이지(타임 딜) */
     @GetMapping("/timedeal/{storeId}")  // 타임딜 조회
-    public ResponseEntity timeDealList(@RequestHeader String authorization,@PathVariable Long storeId) throws BadHttpRequest {
+    public ResponseEntity timeDealList(@RequestHeader String mm,@PathVariable Long storeId) throws BadHttpRequest {
         // 여기서 타임딜 초기화
         storeService.timeDealStatusInit(); // 새로 추가
         TimeDealProductInfoResponse timeDeal = storeService.timeDealList(storeId);
@@ -243,7 +247,7 @@ public class StoreController {
         storeService.timeDealInit();
     }
 
-    /* openVidu test */
+
 
 
 }
