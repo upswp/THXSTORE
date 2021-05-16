@@ -88,10 +88,12 @@ export default {
         cluster: process.env.VUE_APP_PUSHER_APP_CLUSTER,
       });
       let channel = this.pusher.subscribe(`${this.getStoreId}-channel`);
+      let audio = new Audio(require('@/assets/audio/AddOrder.mp3'));
       channel.bind('my-event', data => {
         this.computeAfterLoad(data, this.orders.length + 1);
         data['reservationStatus'] = 'DEFAULT';
         this.orders.push(data);
+        audio.play();
       });
       this.setSpinnerState(false);
     } catch (error) {
