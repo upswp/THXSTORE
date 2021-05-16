@@ -1,7 +1,12 @@
 package com.ssafy.thxstore.reservation.dto;
 
-import javax.validation.constraints.NotBlank;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotBlank;
+@Getter
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class AnswerRequest {
 
     @NotBlank

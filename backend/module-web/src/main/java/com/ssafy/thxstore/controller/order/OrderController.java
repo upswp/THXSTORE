@@ -232,14 +232,16 @@ public ResponseEntity<String> addReservation(@RequestHeader String authorization
      * 1. 빌드로 리뷰(맴버 아이디 받아옴 dto)량 연결해서
      * 2. 글생성
      */
-//    @PostMapping("/reservation/answer")
-//    public ResponseEntity createAnswer(String authorization,@RequestBody AnswerRequest answerRequest){
-//
-//        String email = jwtToEmail(authorization);
-//
-//        String result = reviewService.createAnswer(email,answerRequest);
-//
-//        return ResponseEntity.created(createUri).body(reviewResource);
-//    }
+    
+    // TODO: 2021-05-17 리뷰 조회할 때 사장님 답변이 달려 있으면 -> 사장님 답변도 함께 리턴
+
+    @PostMapping("/reservation/answer")
+    public ResponseEntity<String> createAnswer(String authorization,@RequestBody AnswerRequest answerRequest){
+        String email = jwtToEmail(authorization);
+
+        String result = reviewService.createAnswer(email,answerRequest);
+
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
 
 }

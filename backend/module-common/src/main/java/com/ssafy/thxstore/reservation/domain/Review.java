@@ -46,7 +46,7 @@ public class Review {
     @ColumnDescription("엔서 매핑")
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "answer_id")
-    private Answer answer;
+    private Answer answer2;
 
     @Builder
     public Review(String comment, int star, String dateTime,Long memberId,String storeName,Long storeId) {

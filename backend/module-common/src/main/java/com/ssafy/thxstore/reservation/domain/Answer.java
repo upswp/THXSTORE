@@ -1,6 +1,7 @@
 package com.ssafy.thxstore.reservation.domain;
 
 import com.ssafy.thxstore.common.ColumnDescription;
+import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,7 +19,7 @@ public class Answer {
     @Id
     @ColumnDescription("id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "review_id")
+    @Column(name = "answer_id")
     private Long id; // pk
 
     @ColumnDescription("comment")
@@ -40,7 +41,15 @@ public class Answer {
     private String dateTime;
 
     @ColumnDescription("양방향 맵핑 리뷰 삭제 시 답변도 삭제")
-    @OneToOne(mappedBy = "answer", fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "answer2", fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     private List<Review> reviews = new ArrayList<>();
 
+    @Builder
+    public Answer(String comment, String dateTime,Long memberId,String storeName,Long storeId) {
+        this.comment = comment;
+        this.dateTime = dateTime;
+        this.memberId = memberId;
+        this.storeName =storeName;
+        this.storeId = storeId;
+    }
 }
