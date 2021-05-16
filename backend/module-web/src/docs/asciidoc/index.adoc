@@ -105,8 +105,6 @@ include::{root}/auth/check-member-email.adoc[]
 
 //include::{root}/user/patch-member.adoc[]
 
-//include::{root}/user/put-member.adoc[]
-
 include::{root}/store/store-index.adoc[]
 
 include::{root}/store/create-store.adoc[]

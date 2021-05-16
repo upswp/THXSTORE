@@ -56,6 +56,7 @@ public class AuthControllerTest extends BaseControllerTest {
                 .nickname("helloTest456")
                 .lat(37.33)
                 .lon(126.59)
+                .address("서울 중구 광화문")
                 .build();
 
         mockMvc.perform(post("/auth/")
@@ -78,6 +79,7 @@ public class AuthControllerTest extends BaseControllerTest {
                 .profileImage("Default Profile link")
                 .lat(37.33)
                 .lon(126.59)
+                .address("서울 중구 광화문")
                 .build();
 
         mockMvc.perform(post("/auth/")
