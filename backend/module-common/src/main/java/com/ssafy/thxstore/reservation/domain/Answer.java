@@ -1,9 +1,9 @@
 package com.ssafy.thxstore.reservation.domain;
 
 import com.ssafy.thxstore.common.ColumnDescription;
-import com.ssafy.thxstore.member.domain.Member;
-import com.ssafy.thxstore.product.domain.Product;
-import lombok.*;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -13,14 +13,13 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 @EqualsAndHashCode(of = "id")
-public class Review {
+public class Answer {
 
     @Id
     @ColumnDescription("id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "review_id")
     private Long id; // pk
-
 
     @ColumnDescription("comment")
     @Column(name = "comment",length = 100)
@@ -29,9 +28,6 @@ public class Review {
     @ColumnDescription("memberId")
     @Column(name = "member_id")
     private Long memberId;
-
-    @Column(name = "star")
-    private int star;
 
     @Column(name = "store_name")
     private String storeName;
@@ -43,18 +39,8 @@ public class Review {
     @Column(name = "write_time")
     private String dateTime;
 
-    @ColumnDescription("엔서 매핑")
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "answer_id")
-    private Answer answer;
+    @ColumnDescription("양방향 맵핑 리뷰 삭제 시 답변도 삭제")
+    @OneToOne(mappedBy = "answer", fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+    private List<Review> reviews = new ArrayList<>();
 
-    @Builder
-    public Review(String comment, int star, String dateTime,Long memberId,String storeName,Long storeId) {
-        this.comment = comment;
-        this.star =star;
-        this.dateTime = dateTime;
-        this.memberId = memberId;
-        this.storeName =storeName;
-        this.storeId = storeId;
-    }
 }

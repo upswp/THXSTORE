@@ -1,8 +1,10 @@
 package com.ssafy.thxstore.reservation.service;
 
+import com.ssafy.thxstore.reservation.domain.Answer;
 import com.ssafy.thxstore.reservation.domain.Reservation;
 import com.ssafy.thxstore.reservation.domain.ReservationGroup;
 import com.ssafy.thxstore.reservation.domain.Review;
+import com.ssafy.thxstore.reservation.dto.AnswerRequest;
 import com.ssafy.thxstore.reservation.dto.ReservationGroupDto;
 import com.ssafy.thxstore.reservation.dto.ReviewDto;
 import com.ssafy.thxstore.reservation.repository.ReservationRepository;
@@ -95,4 +97,25 @@ public class ReviewService {
         }
         return ReviewDtoList;
     }
+
+//    @Transactional
+//    public String createAnswer(String email, AnswerRequest answerRequest) {
+//
+//
+//        Optional<Reservation> reservation = reservationRepository.findById(reviewDto.getReservationId());
+//        Optional<Store> store = storeRepository.findById(reviewDto.getStoreId());
+//
+//        Answer answer = Answer.builder().
+//                dateTime(dateFormat.format(DateTime.now().toDate()) + " " + time).
+//                comment(reviewDto.getComment()).
+//                star(reviewDto.getStar()).
+//                memberId(reviewDto.getMemberId()).
+//                storeName(store.get().getName()).
+//                storeId(reservation.get().getStoreId()).
+//                build();
+//
+//
+//    }
+
+
 }
