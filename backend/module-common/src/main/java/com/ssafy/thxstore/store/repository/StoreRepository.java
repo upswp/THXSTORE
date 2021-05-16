@@ -27,7 +27,11 @@ public interface StoreRepository extends JpaRepository<Store,Long> {
     @Query(value = "SELECT *, "+
             "(6371*acos(cos(radians(?1))*cos(radians(lat))*cos(radians(lon) "+
             "-radians(?2))+sin(radians(?1))*sin(radians(lat)))) AS distance "+
-            " FROM store HAVING distance <= 5 ORDER BY distance LIMIT 0,300 ", nativeQuery = true)
-    Optional<List<Store>> findByLocation(Double lat, Double lon);
+            " FROM store HAVING distance <= ?3 ORDER BY distance LIMIT 0,300 ", nativeQuery = true)
+    Optional<List<Store>> findByLocation(Double lat, Double lon, Double distance);
 
+    @Query("select s" +
+            " from Store s join s.member m " +
+            " where s.member.email = :email")
+    Optional<Store> findByEmailJoin(String email);
 }

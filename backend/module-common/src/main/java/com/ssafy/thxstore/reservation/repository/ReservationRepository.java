@@ -37,8 +37,8 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
 //
     @Modifying
     @Transactional
-    @Query(value = "update reservation set status = :newStatus where member_id = :memberId and store_id = :storeId",nativeQuery = true)
-    void findReservation(Long memberId, Long storeId , String newStatus);
+    @Query(value = "update reservation set status = :newStatus where email = :email and store_id = :storeId",nativeQuery = true)
+    void findReservation(String email, Long storeId , String newStatus);
 
     @Query(value = "select * from reservation where review_id = :reviewId",nativeQuery = true)
     Reservation findByreviewId(Long reviewId);
@@ -46,12 +46,14 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
 //    @Query("select all" +
 //            " from Reservation r " +
 //            " where rg.userId = :Id")
-    @Query(value = "select * from reservation where member_id = :id",nativeQuery = true)
-    List<Reservation> findReservationByMemberId(Long id);
+    @Query(value = "select * from reservation where email = :email",nativeQuery = true)
+    List<Reservation> findReservationByMemberId(String email);
 
 //    @Query("select all" +
 //            " from Reservation r " +
 //            " where rg.storeId = :Id")
     @Query(value = "select * from reservation where store_id = :id",nativeQuery = true)
     List<Reservation> findReservationByStoreId(Long id);
+
+    Optional<Reservation> findByMember(Long memberId);
 }

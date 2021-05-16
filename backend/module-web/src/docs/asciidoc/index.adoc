@@ -103,7 +103,7 @@ include::{root}/auth/find-social-member.adoc[]
 
 include::{root}/auth/check-member-email.adoc[]
 
-include::{root}/user/patch-member.adoc[]
+//include::{root}/user/patch-member.adoc[]
 
 include::{root}/store/store-index.adoc[]
 

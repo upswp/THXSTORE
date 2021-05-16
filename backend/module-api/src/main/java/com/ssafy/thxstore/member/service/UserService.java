@@ -1,11 +1,12 @@
 package com.ssafy.thxstore.member.service;
 
+import com.ssafy.thxstore.common.exceptions.ErrorCode;
 import com.ssafy.thxstore.image.service.ImageService;
 import com.ssafy.thxstore.member.domain.Member;
 import com.ssafy.thxstore.member.dto.request.ModifyPatchMemberRequest;
+import com.ssafy.thxstore.member.dto.response.ModifyPatchMemberResponse;
 import com.ssafy.thxstore.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
-import org.modelmapper.ModelMapper;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
@@ -15,26 +16,28 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class UserService {
     private final ImageService imageService;
-    private final ModelMapper modelMapper;
     private final MemberRepository memberRepository;
 
-    public Member patchMember(String email, ModifyPatchMemberRequest modifyPatchMemberRequest) throws IOException {
+    public ModifyPatchMemberResponse patchMember(String email, ModifyPatchMemberRequest modifyPatchMemberRequest) throws IOException {
         Member existingMember = memberRepository.findByEmail(email).orElseThrow(()-> new UsernameNotFoundException(email));
         if (modifyPatchMemberRequest.getNickname() != null) {
-//            this.modelMapper.map(modifyPatchMemberRequest.getNickname(), existingMember.getNickname());
             existingMember.setNickname(modifyPatchMemberRequest.getNickname());
         } else if (modifyPatchMemberRequest.getPhoneNumber() != null) {
-//            this.modelMapper.map(modifyPatchMemberRequest.getPhoneNumber(), existingMember.getPhoneNumber());
             existingMember.setPhoneNumber(modifyPatchMemberRequest.getPhoneNumber());
         } else if (modifyPatchMemberRequest.getPassword() != null) {
-//            this.modelMapper.map(modifyPatchMemberRequest.getPassword(), existingMember.getPassword());
             existingMember.setPassword(modifyPatchMemberRequest.getPassword());
-        } else if (modifyPatchMemberRequest.getProfileImage() != null) {
+        } else if (modifyPatchMemberRequest.getProfileImage() != null){
             String imgProfile = imageService.createImage(modifyPatchMemberRequest.getProfileImage());
-//            this.modelMapper.map(imgProfile, existingMember.getProfileImage());
             existingMember.setProfileImage(imgProfile);
+        }else if(modifyPatchMemberRequest.getAddress()!=null&& modifyPatchMemberRequest.getLat()!=null && modifyPatchMemberRequest.getLon()!=null){
+            existingMember.setAddress(modifyPatchMemberRequest.getAddress());
+            existingMember.setLat(modifyPatchMemberRequest.getLat());
+            existingMember.setLon(modifyPatchMemberRequest.getLon());
+        } else{
+            throw new IOException(String.valueOf(ErrorCode.INVALID_INPUT_VALUE));
         }
-        return this.memberRepository.save(existingMember);
+        Member member = this.memberRepository.save(existingMember);
+        return ModifyPatchMemberResponse.of(member);
     }
 
     public Member deleteMember(String email) {

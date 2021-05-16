@@ -14,6 +14,9 @@ import com.ssafy.thxstore.store.domain.TempStore;
 import com.ssafy.thxstore.store.dto.*;
 import com.ssafy.thxstore.store.service.StoreService;
 import io.jsonwebtoken.Jwts;
+import io.openvidu.java.client.OpenVidu;
+import io.openvidu.java.client.OpenViduRole;
+import io.openvidu.java.client.Session;
 import javassist.tools.web.BadHttpRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.hateoas.Link;
@@ -34,8 +37,9 @@ import java.net.URI;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
-
+import java.util.concurrent.ConcurrentHashMap;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
@@ -157,7 +161,7 @@ public class StoreController {
 
     /* 판매자 스토어 페이지(타임 딜) */
     @GetMapping("/timedeal/{storeId}")  // 타임딜 조회
-    public ResponseEntity timeDealList(@RequestHeader String authorization,@PathVariable Long storeId) throws BadHttpRequest {
+    public ResponseEntity timeDealList(@RequestHeader String mm,@PathVariable Long storeId) throws BadHttpRequest {
         // 여기서 타임딜 초기화
         storeService.timeDealStatusInit(); // 새로 추가
         TimeDealProductInfoResponse timeDeal = storeService.timeDealList(storeId);
@@ -190,7 +194,7 @@ public class StoreController {
 
     /* user 관점에서의 Store 작성 */
     @GetMapping("/user/") // 처음 접속했을 때, 타임딜 하고 있는 항목들을 보는 곳 거리에 따라
-    public ResponseEntity getUserStoreList(@RequestHeader String authorization){ // 페이지 수와 번째 수 찾기
+    public ResponseEntity getUserStoreList(@RequestHeader String authorization, @RequestParam("distance") Double distance){ // 페이지 수와 번째 수 찾기
         // todo 0.초기화?? 타임딜 진행되는 거거
 
         // 1. member 정보 가져오기 -> 위도 경도 꺼내야합니다.
@@ -204,7 +208,7 @@ public class StoreController {
         storeService.timeDealStatusInit();
 
         // todo 타임딜 체크는 언제할 까요.여기서 같이 체크요~ + 휴무일 시간체크는 언제 체크요~
-        List<StoreAndDistanceDto> timeDealStoreList = storeService.findLocation(member);
+        List<StoreAndDistanceDto> timeDealStoreList = storeService.findLocation(member, distance);
 
         return ResponseEntity.created(null).body(timeDealStoreList);
     }
@@ -243,7 +247,7 @@ public class StoreController {
         storeService.timeDealInit();
     }
 
-    /* openVidu test */
+
 
 
 }

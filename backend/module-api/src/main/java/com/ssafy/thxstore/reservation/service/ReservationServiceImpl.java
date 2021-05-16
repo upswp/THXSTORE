@@ -18,6 +18,8 @@ import com.ssafy.thxstore.reservation.dto.ReservationGroupDto;
 import com.ssafy.thxstore.reservation.dto.StatusRequest;
 import com.ssafy.thxstore.reservation.repository.ReservationGroupRepository;
 import com.ssafy.thxstore.reservation.repository.ReservationRepository;
+import com.ssafy.thxstore.store.domain.Store;
+import com.ssafy.thxstore.store.repository.StoreRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import org.joda.time.DateTime;
@@ -41,6 +43,7 @@ public class ReservationServiceImpl implements ReservationService{
     private final ReservationGroupRepository reservationGroupRepository;
     private final MemberRepository memberRepository;
     private final ReservationRepository reservationRepository;
+    private final StoreRepository storeRepository;
 
 
     /**
@@ -49,7 +52,7 @@ public class ReservationServiceImpl implements ReservationService{
      */
     @Override
     @Transactional
-    public void addReservation(ReservationDto reservationList){
+    public void addReservation(String email,ReservationDto reservationList){
 
         /**
          * 가게를 등록할 때 이벤트를 발생시키고
@@ -66,11 +69,13 @@ public class ReservationServiceImpl implements ReservationService{
         DateFormat timeFormat = DateFormat.getTimeInstance(DateFormat.DEFAULT);
         String time = timeFormat.format(new Date());
 
-        Optional<Member> member = memberRepository.findById(reservationList.getUserId());
+//        Optional<Member> member = memberRepository.findById(reservationList.getUserId());
+        Optional<Member> member = memberRepository.findByEmail(email);
         List<ReservationGroupDto> reservationGroupDtoList = new LinkedList<>();
         List<ReservationDto> reservationDtoList = new LinkedList<>();
 
         Reservation reservation = Reservation.builder().
+                email(email).
                 nickname(reservationList.getNickname()).
                 reservationStatus(ReservationStatus.DEFAULT).
                 storeId(reservationList.getStoreId()).
@@ -110,60 +115,131 @@ public class ReservationServiceImpl implements ReservationService{
      */
     @Override
     @Transactional
-    public List<ReservationDto> getReservation(Long Id,String type){
+    public List<ReservationDto> getReservation(String email,String type){
 
-        List<ReservationGroupDto> reservationGroupDtoList = new LinkedList<>();
         List<ReservationDto> reservationDtoList = new LinkedList<>();
         List<ReservationGroup> list;
         List<Reservation> reservationlist;
+
+
         //dto 엔티티 매핑
         //memberid 검색 storeid 검색 각각 주문 size 구하자
+        //기본키로 찾아야하는데 일단 쿼리문 적은 email로
         if(type == "member") {
-            list = reservationGroupRepository.findReservationlistByMemberId(Id);
-            reservationlist = reservationRepository.findReservationByMemberId(Id);
+            reservationlist = reservationRepository.findReservationByMemberId(email); //reservation list 찾아와서 2개 각각의 프로덕트만 넣어줘야해 51 52
+            System.out.println("reservationlist.size(): "+reservationlist.size());
+
+            for(int i = 0 ;i<reservationlist.size();i++){//2개
+                List<ReservationGroupDto> reservationGroupDtoList = new LinkedList<>();
+                list = reservationGroupRepository.findReservationlistByMemberId(reservationlist.get(i).getId());
+                System.out.println("reservationlist.get(i).getId(): " + reservationlist.get(i).getId());
+
+                for(int j =0 ;j<list.size(); j++){  // 57 -2 ,58 -2
+                    ReservationGroupDto reservationGroupDto = ReservationGroupDto.builder().
+                            count(list.get(j).getCount()).
+                            price(list.get(j).getPrice()).
+                            rate(list.get(j).getRate()).
+                            productName(list.get(j).getProductName()).
+                            build();
+
+                    reservationGroupDtoList.add(reservationGroupDto);
+
+                }
+
+//2개 57, 58에 각각 상품그룹 넣어줘
+                    ReservationDto reservationDto = ReservationDto.builder().
+                            email(reservationlist.get(i).getEmail()).
+                            storeId(reservationlist.get(i).getStoreId()).
+                            reservationStatus(reservationlist.get(i).getReservationStatus()).
+                            nickname(reservationlist.get(i).getNickname()).
+                            orderTime(reservationlist.get(i).getDateTime()).
+                            userId(reservationlist.get(i).getMember().getId()).
+                            reservationGroups(reservationGroupDtoList).
+                            build();
+
+                    reservationDtoList.add(reservationDto);
+
+            }//for
+
+            return reservationDtoList;
         }else{
-            list = reservationGroupRepository.findReservationlistByStoreId(Id);
-            reservationlist = reservationRepository.findReservationByStoreId(Id);
-        }
+            //store -member 간 onetoone 연관관계 주인 store 에게 있어서 쿼리 2 번
+            //join 써서 한번으로
+            Optional<Store> store= storeRepository.findByEmailJoin(email);
+            // TODO: 2021-05-15 해당 맴버로 생성된 스토어가 없습니다 예외처리 리턴
+            reservationlist = reservationRepository.findReservationByStoreId(store.get().getId());
 
-        //주문 - 주문 내용
-        for(int i =0 ;i<list.size(); i++){
-            ReservationGroupDto reservationGroupDto = ReservationGroupDto.builder().
-                    count(list.get(i).getCount()).
-                    price(list.get(i).getPrice()).
-                    rate(list.get(i).getRate()).
-                    productName(list.get(i).getProductName()).
-                    build();
+            for(int i = 0 ;i<reservationlist.size();i++){//2개
+                List<ReservationGroupDto> reservationGroupDtoList = new LinkedList<>();
+                list = reservationGroupRepository.findReservationlistByMemberId(reservationlist.get(i).getId());
+                System.out.println("reservationlist.get(i).getId(): " + reservationlist.get(i).getId());
 
-            reservationGroupDtoList.add(reservationGroupDto);
-        }
+                for(int j =0 ;j<list.size(); j++){  // 57 -2 ,58 -2
+                    ReservationGroupDto reservationGroupDto = ReservationGroupDto.builder().
+                            count(list.get(j).getCount()).
+                            price(list.get(j).getPrice()).
+                            rate(list.get(j).getRate()).
+                            productName(list.get(j).getProductName()).
+                            build();
 
-        for(int i =0 ;i<reservationlist.size(); i++) {
-            ReservationDto reservationDto = ReservationDto.builder().
-                    storeId(reservationlist.get(i).getStoreId()).
-                    reservationStatus(reservationlist.get(i).getReservationStatus()).
-                    nickname(reservationlist.get(i).getNickname()).
-                    orderTime(reservationlist.get(i).getDateTime()).
-                    userId(reservationlist.get(i).getMember().getId()).
-                    reservationGroups(reservationGroupDtoList).
-                    build();
+                    reservationGroupDtoList.add(reservationGroupDto);
 
-            reservationDtoList.add(reservationDto);
-        }
+                }
+
+//2개 57, 58에 각각 상품그룹 넣어줘
+                ReservationDto reservationDto = ReservationDto.builder().
+                        email(reservationlist.get(i).getEmail()).
+                        storeId(reservationlist.get(i).getStoreId()).
+                        reservationStatus(reservationlist.get(i).getReservationStatus()).
+                        nickname(reservationlist.get(i).getNickname()).
+                        orderTime(reservationlist.get(i).getDateTime()).
+                        userId(reservationlist.get(i).getMember().getId()).
+                        reservationGroups(reservationGroupDtoList).
+                        build();
+
+                reservationDtoList.add(reservationDto);
+
+            }//for
+        }//else
 
         return reservationDtoList;
     }
 
 
+    // email -> store 일경우 사장님 Id ->memberId           member일 경우 email -> 맴버 꺼 Id -> storeId
     @Override
     @Transactional
-    public void deleteReservation(Long memberId,Long storeId){
-        List<ReservationGroup> order = reservationGroupRepository.findAllByUserIdAndStoreId(memberId,storeId);
-        reservationGroupRepository.deleteAll(order);
+    public String deleteReservation(String email,Long Id,String type){
+
+
+        if(type == "store"){
+            Optional<Store> store= storeRepository.findByEmailJoin(email);
+
+            List<ReservationGroup> order = reservationGroupRepository.findAllByMemberIdAndStoreId(Id,store.get().getId());
+            if(!order.get(0).getReservation().equals(ReservationStatus.DEFAULT)){
+                return "주문이 접수 상태로 넘어가 취소할 수 없습니다.";
+            }
+            reservationGroupRepository.deleteAll(order);
+            return "취소했습니다.";
+        }else{
+            Optional<Member> member= memberRepository.findByEmail(email);
+
+
+            System.out.println("member.get().getId() : "+member.get().getId() );
+            List<ReservationGroup> order = reservationGroupRepository.findAllByMemberIdAndStoreId(member.get().getId(),Id);
+            if(!order.get(0).getReservation().equals(ReservationStatus.DEFAULT)){
+                return "주문이 접수 상태로 넘어가 취소할 수 없습니다.";
+            }
+            reservationGroupRepository.deleteAll(order);
+            return "취소했습니다.";
+        }
     }
 
     @Override
-    public void statusUpdate(StatusRequest status){
-        reservationRepository.findReservation(status.getMemberId(),status.getStoreId(),status.getReservationStatus().name());
+    public String statusUpdate(String email, StatusRequest status){
+//        Optional<Reservation> nowReservation= reservationRepository.findByMember(status.getMemberId());
+
+        reservationRepository.findReservation(email,status.getStoreId(),status.getReservationStatus().name());
+        return "변경되었습니다";
     }
 }

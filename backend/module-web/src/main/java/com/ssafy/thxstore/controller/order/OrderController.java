@@ -1,5 +1,6 @@
 package com.ssafy.thxstore.controller.order;
 
+import com.ssafy.thxstore.controller.config.AppProperties;
 import com.ssafy.thxstore.controller.member.AuthController;
 import com.ssafy.thxstore.controller.member.Resource.MemberResource;
 import com.ssafy.thxstore.controller.order.Resource.ReviewResource;
@@ -10,6 +11,7 @@ import com.ssafy.thxstore.reservation.dto.ReviewDto;
 import com.ssafy.thxstore.reservation.dto.StatusRequest;
 import com.ssafy.thxstore.reservation.service.ReservationService;
 import com.ssafy.thxstore.reservation.service.ReviewService;
+import io.jsonwebtoken.Jwts;
 import lombok.RequiredArgsConstructor;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.MediaTypes;
@@ -19,6 +21,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.xml.bind.DatatypeConverter;
 import java.net.URI;
 import java.util.List;
 
@@ -31,7 +34,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 public class OrderController {
 private final ReservationService reservationService;
 private final ReviewService reviewService;
-
+private final AppProperties appProperties;
 /**
  * 주문 생성
  * 스토어의 매뉴 창에서 메뉴 선택 후 바로 주문 한다.  STAND_BY
@@ -48,11 +51,16 @@ private final ReviewService reviewService;
      *
      * },
  * ]
+ *
+ * 네 email jwt 받고 -> 주문상태변경  -> email로 검색해서 가게 사장님인지. 이해했어요!  네 알
  */
-@PostMapping("/reservation")
-public ResponseEntity<String> addReservation(@Valid @RequestBody ReservationDto reservation){
 
-    reservationService.addReservation(reservation);
+
+@PostMapping("/reservation")
+public ResponseEntity<String> addReservation(@RequestHeader String authorization, @RequestBody ReservationDto reservation){
+
+    String email = jwtToEmail(authorization);
+    reservationService.addReservation(email,reservation);
 
     return new ResponseEntity<>("생성완료", HttpStatus.OK);
 }
@@ -62,10 +70,12 @@ public ResponseEntity<String> addReservation(@Valid @RequestBody ReservationDto 
      * 1. reservation_group 테이블에서 member_id 로 찾아서 List<ReservationGroup> 형식으로 리턴
      */
 
-    @GetMapping("/reservation/{memberId}")
-    public ResponseEntity getReservation(@PathVariable Long memberId){
+    //토큰 id 포함한 객체로 받았으면 더 좋았을듯
+    @GetMapping("/reservation/member")
+    public ResponseEntity getReservation(@RequestHeader String authorization){
 
-        List<ReservationDto> li = reservationService.getReservation(memberId,"member");
+        String email = jwtToEmail(authorization);
+        List<ReservationDto> li = reservationService.getReservation(email,"member");
 
         return new ResponseEntity<>(li, HttpStatus.OK);
 //        return ResponseEntity.created(li.getUri()).body(li.getOrderResource());
@@ -86,13 +96,29 @@ public ResponseEntity<String> addReservation(@Valid @RequestBody ReservationDto 
 
     /**
      *  사장님 or 사용자의 주문 취소 버튼 클릭 후 후 -> 테이블 자체에서 삭제
-     *  member_id와 store_id 로 reservation 테이블에서 삭제한다.
+     *  member_id와 store_id(사장님의 email 토큰) 로 reservation 테이블에서 삭제한다.
+     *  사장님 email 토큰은 로그인 한 사장님만 알 수 있음 ->
      */
 
-    @DeleteMapping("/reservation/delete")
-    public ResponseEntity deleteReservation(@RequestParam("memberId") Long memberId,@RequestParam("storeId") Long storeId){
+    /**
+     * 회원의 주문 취소  authorization -> 회원의 email 토큰 -> 이걸로 member id 가져온다
+     */
+    @DeleteMapping("/reservation/member")
+    public ResponseEntity<String> deleteReservationForMember(@RequestHeader String authorization,@RequestParam("storeId") Long storeId){
+        String email = jwtToEmail(authorization);
+        String result = reservationService.deleteReservation(email,storeId,"member");
 
-        reservationService.deleteReservation(memberId,storeId);
+        return new ResponseEntity<>(result, HttpStatus.OK);
+//        return ResponseEntity.created(li.getUri()).body(li.getOrderResource());
+    }
+
+    /**
+     * 사장님의 주문 취소
+     */
+    @DeleteMapping("/reservation/store")
+    public ResponseEntity deleteReservationForStore(@RequestHeader String authorization,@RequestParam("memberId") Long memberId){
+        String email = jwtToEmail(authorization);
+        reservationService.deleteReservation(email,memberId,"store");
 
         return new ResponseEntity<>("주문 취소 되었습니다.", HttpStatus.OK);
 //        return ResponseEntity.created(li.getUri()).body(li.getOrderResource());
@@ -106,12 +132,19 @@ public ResponseEntity<String> addReservation(@Valid @RequestBody ReservationDto 
      * 4. STAND_BY -> FINISH 수령 완료 버튼
      */
 
-    @PutMapping("/reservation/statusupdate") // v2 mem id로 받아서 검색 후 수정, 받아오는 형식 memformdto
-    public ResponseEntity<String> updateStatusToAccept(@RequestBody StatusRequest status) {
 
-        reservationService.statusUpdate(status);
+    /**
+     * 사장님 -> 토큰 ,  유저 아디이 받고 ,  스토어 아이디 받아서   -스토어테이블에서   스토어 아이디
+     * 사장님이 상태를 변경한다.
+     */
 
-        return new ResponseEntity<>("주문 상태를 변경했습니다.", HttpStatus.OK);
+    @PutMapping("/reservation/status") // v2 mem id로 받아서 검색 후 수정, 받아오는 형식 memformdto
+    public ResponseEntity<String> updateStatus(@RequestHeader String authorization,@RequestBody StatusRequest status) {
+        String email = jwtToEmail(authorization);
+
+        String result = reservationService.statusUpdate(email,status);
+
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }//맴버정보보기를 눌러서 확인
 
     /**
@@ -120,10 +153,10 @@ public ResponseEntity<String> addReservation(@Valid @RequestBody ReservationDto 
      * 사장님이 조회 페이지 눌렀을 경우 푸셔 인스턴스 만들고
      */
 
-    @GetMapping("/reservation/store/{storeId}")
-    public ResponseEntity getStoreReservation(@PathVariable Long storeId){
-
-        List<ReservationDto> li = reservationService.getReservation(storeId,"store");
+    @GetMapping("/reservation/store")
+    public ResponseEntity getStoreReservation(@RequestHeader String authorization){
+        String email = jwtToEmail(authorization);
+        List<ReservationDto> li = reservationService.getReservation(email,"store");
         return new ResponseEntity<>(li, HttpStatus.OK);
 //        return ResponseEntity.created(li.getUri()).body(li.getOrderResource());
     }
@@ -156,7 +189,7 @@ public ResponseEntity<String> addReservation(@Valid @RequestBody ReservationDto 
         return new ResponseEntity<>("삭제완료", HttpStatus.OK);
     }
 
-    @PutMapping("/reservation/review/update/{reviewId}")
+    @PutMapping("/reservation/review/{reviewId}")
     public ResponseEntity<String> updateReview(@PathVariable Long reviewId,@RequestBody ReviewDto reviewDto){
 
         reviewService.updateReview(reviewId, reviewDto);
@@ -190,8 +223,12 @@ public ResponseEntity<String> addReservation(@Valid @RequestBody ReservationDto 
         return new ResponseEntity<>(ReviewList, HttpStatus.OK);
 //        return ResponseEntity.created(li.getUri()).body(li.getOrderResource());
     }
-}
 
+    public String jwtToEmail(String authorization){
+        return Jwts.parser().setSigningKey(DatatypeConverter.parseBase64Binary(appProperties.getAuth().getTokenSecret()))
+                .parseClaimsJws(authorization).getBody().getSubject();
+    }
+}
 
 /**
  * 주문 승락 상태에서 주문 취소 들어오면 오류 반환 예외처리하자

@@ -17,11 +17,11 @@ public class AuthResponse {
     private String nickname;
     private Social social;
     private String profileImage;
-    private String location;
     private String phoneNumber;
     private MemberRole role;
     private Double lat;
     private Double lon;
+    private String address;
 
     public AuthResponse(String accessToken, Member member) {
         this.id = member.getId();
@@ -30,11 +30,11 @@ public class AuthResponse {
         this.nickname = member.getNickname();
         this.social = member.getSocial();
         this.profileImage = member.getProfileImage();
-        this.location = member.getAddress();
         this.phoneNumber = member.getPhoneNumber();
         this.role = member.getRole();
         this.lat = member.getLat();
         this.lon = member.getLon();
+        this.address = member.getAddress();
     }
 
 }
