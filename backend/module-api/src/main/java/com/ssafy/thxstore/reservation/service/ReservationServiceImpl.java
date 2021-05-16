@@ -210,6 +210,8 @@ public class ReservationServiceImpl implements ReservationService{
     @Transactional
     public void deleteReservation(String email,Long Id,String type){
 
+
+
         if(type == "store"){
             Optional<Store> store= storeRepository.findByEmailJoin(email);
 
@@ -217,7 +219,7 @@ public class ReservationServiceImpl implements ReservationService{
             reservationGroupRepository.deleteAll(order);
         }else{
             Optional<Member> member= memberRepository.findByEmail(email);
-
+            System.out.println("member.get().getId() : "+member.get().getId() );
             List<ReservationGroup> order = reservationGroupRepository.findAllByMemberIdAndStoreId(member.get().getId(),Id);
             reservationGroupRepository.deleteAll(order);
         }
