@@ -23,6 +23,7 @@ import {
   faPencilAlt,
   faChevronDown,
   faChevronUp,
+  faCartArrowDown,
 } from '@fortawesome/free-solid-svg-icons';
 library.add(
   faStore,
@@ -44,6 +45,7 @@ library.add(
   faPencilAlt,
   faChevronDown,
   faChevronUp,
+  faCartArrowDown,
 );
 
 import {

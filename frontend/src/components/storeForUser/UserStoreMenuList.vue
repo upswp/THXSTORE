@@ -37,8 +37,9 @@ export default {
       storeMenuArr: [],
     };
   },
-  created() {
-    this.getMenuList();
+  async created() {
+    await this.getMenuList();
+    window.scrollTo({ top: 137, left: 0, behavior: 'smooth' });
   },
   methods: {
     async getMenuList() {

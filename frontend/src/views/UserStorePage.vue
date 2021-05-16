@@ -6,10 +6,15 @@
       <div ref="timedeal-list" @click="selectComponent('timedeal-list')">타임딜</div>
       <div ref="live-commerce" @click="selectComponent('live-commerce')">라이브커머스</div>
     </div>
+    <div id="window" style="position: fixed; background: red" @click="pageY">{{ window }}zzzzzzzzzzz</div>
     <div v-if="loaded" style="margin: auto">
       <div class="main-content">
         <header class="header-container">
-          <h2>{{ storeName }}</h2>
+          <div class="store-thumbnail"><img :src="storeThumbImg" alt="" /></div>
+          <div class="logo-and-title">
+            <label for=""><img class="store-logo" :src="storeLogo" /></label>
+            <div class="store-title">{{ storeName }}</div>
+          </div>
           <div class="time-deal-ani" style="text-align: end">Timedeal</div>
         </header>
         <br />
@@ -27,24 +32,40 @@ export default {
     return {
       active: 'info',
       storeName: '',
+      storeThumbImg: require('@/assets/image/thumbnail_example.jpg'),
+      storeLogo: require('@/assets/image/logo.jpg'),
       loaded: false,
+      window: '',
     };
   },
+
   // 늦게 나오는 거
   async created() {
     try {
       const paramsId = this.$route.params.storeId;
       const { data } = await getStoreInfo(paramsId);
-      this.setWatchedStore(data);
-      this.storeName = this.$store.state.watchedStore.baseInfo.name;
+      await this.setWatchedStore(data);
+      this.insertStoreHeaderInfo();
       this.loaded = true;
     } catch (error) {
       console.log(error);
     }
   },
   methods: {
+    pageY() {
+      this.window = window.pageYOffset;
+    },
     // 어디서든
     ...mapMutations(['setWatchedStore']),
+    insertStoreHeaderInfo() {
+      this.storeName = this.$store.state.watchedStore.baseInfo.name;
+      if (this.$store.state.watchedStore.sideInfo.thumbImg) {
+        this.storeThumbImg = this.$store.state.watchedStore.sideInfo.thumbImg;
+      }
+      if (this.$store.state.watchedStore.sideInfo.logo) {
+        this.storelogo = this.$store.state.watchedStore.sideInfo.logo;
+      }
+    },
     selectComponent(item) {
       if (this.active === item) return;
       this.resetActive();
@@ -69,20 +90,24 @@ export default {
 </script>
 
 <style scoped lang="scss">
-// @import '@/assets/scss/sample2';
-// @font-face {
-//   font-family: neon;
-//   src: url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/707108/neon.ttf);
-// }
 .userstore-container {
   @include flexbox;
   flex-wrap: wrap;
   width: 100%;
   // align-items: flex-start;
-  h2 {
+  .store-title {
+    width: calc(90% - clamp(80px, 12vw, 150px));
+    font-size: 30px;
+    @include pc {
+      font-size: 26px;
+    }
+    @include mobile {
+      font-size: 22px;
+    }
     @include xs-mobile {
       font-size: 20px;
     }
+    font-weight: 800;
   }
   .nav-aside {
     align-self: flex-start;
@@ -139,7 +164,7 @@ export default {
   }
   .main-content {
     width: calc(100vw - 200px);
-    padding: 20px;
+    padding: 5px 20px 20px;
     max-width: 1000px;
     min-height: 90vh;
     margin-left: 200px;
@@ -154,6 +179,30 @@ export default {
   }
   //   border: 2px blue solid;
   .header-container {
+    .store-thumbnail {
+      img {
+        height: 10vw;
+        object-fit: cover;
+        object-position: center 50%;
+        width: 100%;
+      }
+    }
+    .logo-and-title {
+      padding-top: 2%;
+      border-top: 5px $blue400 solid;
+      @include flexbox;
+      @include align-items(center);
+      margin-bottom: 10px;
+    }
+    .store-logo {
+      $length: clamp(80px, 12vw, 150px);
+      width: $length;
+      height: $length;
+      object-fit: cover;
+      object-position: center 50%;
+      margin-right: 10px;
+      cursor: pointer;
+    }
     .time-deal-ani {
       font-family: neon;
       color: #fb4264;
