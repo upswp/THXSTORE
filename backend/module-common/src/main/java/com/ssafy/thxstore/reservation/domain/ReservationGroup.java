@@ -25,6 +25,11 @@ public class ReservationGroup {
     @JoinColumn(name = "reservation_id")
     private Reservation reservation;
 
+    @ColumnDescription("상품의 재고, 할인율 등의 정보를 위한 매핑,각각의 상품 1-1 매핑")
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_id")
+    private Product product;
+
     @Column(name = "user_id")
     private Long userId;
 

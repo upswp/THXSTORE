@@ -7,7 +7,7 @@ import com.ssafy.thxstore.reservation.dto.StatusRequest;
 import java.util.List;
 
 public interface ReservationService {
-    void addReservation(String email,ReservationDto reservationList);
+    String addReservation(String email,ReservationDto reservationList);
     List<ReservationDto> getReservation(String email,String type);
     String deleteReservation(String email,Long Id,String type);
     String statusUpdate(String email, StatusRequest status);

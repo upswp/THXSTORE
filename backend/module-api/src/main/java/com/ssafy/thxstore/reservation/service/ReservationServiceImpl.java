@@ -44,6 +44,7 @@ public class ReservationServiceImpl implements ReservationService{
     private final MemberRepository memberRepository;
     private final ReservationRepository reservationRepository;
     private final StoreRepository storeRepository;
+    private final ProductRepository productRepository;
 
 
     /**
@@ -52,7 +53,7 @@ public class ReservationServiceImpl implements ReservationService{
      */
     @Override
     @Transactional
-    public void addReservation(String email,ReservationDto reservationList){
+    public String addReservation(String email,ReservationDto reservationList){
 
         /**
          * 가게를 등록할 때 이벤트를 발생시키고
@@ -62,6 +63,7 @@ public class ReservationServiceImpl implements ReservationService{
          * 1. 회원이 스토어 등록한다 -> 사장님됨 storeId를 가지고 다녀야 됨
          * 2. 로그인 후 예약페이지 들어갔을 때 if (사장님이면) -> 우축 하단(미정) 채널 구독 상태로 channel-{storeId} 가지고 다니기 (디폴트 안보이게 -> 이벤트 오면 보이게)
          *
+         * + 주문등록 주문이 들어왔을 때 ---->  재고 확인 후   stock 다떨어졌으면 품절된 상품이 있습니다 return
          * 로그인할 때 채널 구분      */
 
 
@@ -86,6 +88,12 @@ public class ReservationServiceImpl implements ReservationService{
         List<ReservationGroup> reservationAntityList = new ArrayList<>();
 
         for(int i =0 ;i<reservationList.getReservationGroups().size();i++){
+            Optional<Product> product = productRepository.findById(reservationList.getReservationGroups().get(i).getProductId());
+
+            if(product.get().getStock() - reservationList.getReservationGroups().get(i).getCount() < 0){
+
+                return "선택하신 메뉴 중에 품절된 상품이 있습니다";
+            }
 
             ReservationGroup reservationGroup = ReservationGroup.builder().
                     rate(reservationList.getReservationGroups().get(i).getRate()).
@@ -97,6 +105,9 @@ public class ReservationServiceImpl implements ReservationService{
                     productName(reservationList.getReservationGroups().get(i).getProductName()).
                     build();
 
+            //저장하기전 -> 구매 수량 만큼 재고 마이너스
+            // 인트로 바꿔서 연산 하고 stockUpdate 메소드에서 INTEGER로 바꿔서 저장
+            product.get().stockUpdate(Integer.parseInt(""+product.get().getStock()) - reservationList.getReservationGroups().get(i).getCount());
             reservationAntityList.add(reservationGroup);
         }
         reservationGroupRepository.saveAll(reservationAntityList);
@@ -107,6 +118,7 @@ public class ReservationServiceImpl implements ReservationService{
 
 //            pusher.trigger(reservationList.getStoreId()+"-channel", "my-event", Collections.singletonMap("message","회원번호: "+reservationList.getUserId()+ "님의 주문이 등록되었습니다."));
         pusher.trigger(reservationList.getStoreId()+"-channel", "my-event", reservationList);
+        return "주문이 완료되었습니다.";
     }
 
     /**
