@@ -108,7 +108,7 @@ public ResponseEntity<String> addReservation(@RequestHeader String authorization
         String email = jwtToEmail(authorization);
         String result = reservationService.deleteReservation(email,storeId,"member");
 
-        return new ResponseEntity<>("주문 취소 되었습니다.", HttpStatus.OK);
+        return new ResponseEntity<>(result, HttpStatus.OK);
 //        return ResponseEntity.created(li.getUri()).body(li.getOrderResource());
     }
 
