@@ -346,11 +346,11 @@ public class StoreService {
     }
 
     // 위도경도
-    public List<StoreAndDistanceDto> findLocation(Optional<Member> member) {
+    public List<StoreAndDistanceDto> findLocation(Optional<Member> member, Double distance) {
         // todo 여기 member 들어오면 변경
         //StoreAndDistanceDto
         // 해당 member와 위도 경도로 찾기 일단 거리 가까운 친구들 찾음.
-        Optional<List<Store>> storeList = storeRepository.findByLocation(member.get().getLat(), member.get().getLon());
+        Optional<List<Store>> storeList = storeRepository.findByLocation(member.get().getLat(), member.get().getLon(), distance);
         List<StoreAndDistanceDto> storeAndDistanceDto = new ArrayList<>();
         // 타임딜이 진행한지 확인
         for(int i = 0; i < storeList.get().size(); i++){
@@ -386,6 +386,18 @@ public class StoreService {
             storeAndDistanceDto.add(storeInfo);
         }
         // 페이징
+
+        // 정렬
+        // distance 에 따른 정렬을 위한 collections 클래스
+        Collections.sort(storeAndDistanceDto, new Comparator<StoreAndDistanceDto>() {
+            @Override
+            public int compare(StoreAndDistanceDto o1, StoreAndDistanceDto o2) {
+                return o1.getDistance().compareTo(o2.getDistance());
+            }
+        });
+
+
+        //storeAndDistanceDto.sor
         return storeAndDistanceDto;
     }
 
@@ -448,4 +460,7 @@ public class StoreService {
 //            }
         }
     }
+
+
+
 }
