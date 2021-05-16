@@ -5,10 +5,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ssafy.thxstore.controller.member.Resource.CheckEmailResource;
 import com.ssafy.thxstore.controller.member.Resource.MemberResource;
 import com.ssafy.thxstore.controller.member.Resource.SocialMemberResource;
+import com.ssafy.thxstore.email.EmailService;
 import com.ssafy.thxstore.member.domain.Member;
-import com.ssafy.thxstore.member.dto.request.CheckEmailRequest;
-import com.ssafy.thxstore.member.dto.request.SignUpRequest;
-import com.ssafy.thxstore.member.dto.request.SocialMemberRequest;
+import com.ssafy.thxstore.member.dto.request.*;
 import com.ssafy.thxstore.member.dto.response.CheckEmailResponse;
 import com.ssafy.thxstore.member.dto.response.SocialMemberResponse;
 import com.ssafy.thxstore.member.service.AuthService;
@@ -34,6 +33,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 public class AuthController {
 
     private final AuthService authService;
+    private final EmailService emailService;
 
     @PostMapping
     @PreAuthorize("isAnonymous()")
@@ -72,6 +72,39 @@ public class AuthController {
         CheckEmailResource checkEmailResource= new CheckEmailResource(checkEmailResponse);
         checkEmailResource.add(linkTo(AuthController.class).withRel("check-member-email"));
         checkEmailResource.add(Link.of("/api/docs/index.html#resources-check-member-email").withRel("profile"));
+        return ResponseEntity.ok(checkEmailResource);
+    }
+
+    @PostMapping("/email/")
+    public ResponseEntity emailAuth(@RequestBody SendEmailRequest sendEmailRequest) throws Exception {
+        CheckEmailResponse checkEmailResponse = emailService.sendSimpleMessage(sendEmailRequest.getEmail());
+        CheckEmailResource checkEmailResource= new CheckEmailResource(checkEmailResponse);
+        checkEmailResource.add(linkTo(AuthController.class).withRel("send-member-email"));
+        checkEmailResource.add(Link.of("/api/docs/index.html#resources-send-member-email").withRel("profile"));
+        return ResponseEntity.ok(checkEmailResource);
+    }
+
+    @PostMapping("/email/resend/")
+    public ResponseEntity reSendEmailAuth(@RequestBody SendEmailRequest sendEmailRequest) throws Exception {
+        CheckEmailResponse checkEmailResponse = emailService.sendSimpleMessage(sendEmailRequest.getEmail());
+        CheckEmailResource checkEmailResource= new CheckEmailResource(checkEmailResponse);
+        checkEmailResource.add(linkTo(AuthController.class).withRel("send-member-email"));
+        checkEmailResource.add(Link.of("/api/docs/index.html#resources-send-member-email").withRel("profile"));
+        return ResponseEntity.ok(checkEmailResource);
+    }
+
+    @PostMapping("/verifyCode/")
+    public ResponseEntity verifyCode(@RequestBody CheckEmailCodeRequest checkEmailCodeRequest) {
+        CheckEmailResponse checkEmailResponse;
+        if(EmailService.ePw.equals(checkEmailCodeRequest.getCode())) {
+            checkEmailResponse = CheckEmailResponse.of(true);
+        }
+        else{
+            checkEmailResponse = CheckEmailResponse.of(false);
+        }
+        CheckEmailResource checkEmailResource= new CheckEmailResource(checkEmailResponse);
+        checkEmailResource.add(linkTo(AuthController.class).withRel("check-send-member-email"));
+        checkEmailResource.add(Link.of("/api/docs/index.html#resources-check-send-member-email").withRel("profile"));
         return ResponseEntity.ok(checkEmailResource);
     }
 
