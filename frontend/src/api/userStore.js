@@ -16,4 +16,7 @@ const getStoreMenu = storeId =>
       storeId: storeId,
     },
   });
-export { getStoreInfo, getStoreMenu };
+
+const getStoreTimedeal = storeId => privateAPI.get(`timedeal/${storeId}`);
+
+export { getStoreInfo, getStoreMenu, getStoreTimedeal };
