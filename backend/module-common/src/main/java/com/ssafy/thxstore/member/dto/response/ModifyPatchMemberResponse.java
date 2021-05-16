@@ -19,7 +19,7 @@ public class ModifyPatchMemberResponse {
 
     private String password;
 
-    private String location;
+    private String address;
 
     private Double lat;
 
@@ -27,6 +27,6 @@ public class ModifyPatchMemberResponse {
 
     public static ModifyPatchMemberResponse of(Member member) {
         return new ModifyPatchMemberResponse(member.getId(),member.getProfileImage(),member.getNickname()
-                ,member.getPhoneNumber(),member.getPassword(),member.getLocation(),member.getLat(),member.getLon());
+                ,member.getPhoneNumber(),member.getPassword(),member.getAddress(),member.getLat(),member.getLon());
     }
 }

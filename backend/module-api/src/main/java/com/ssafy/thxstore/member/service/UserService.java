@@ -29,8 +29,8 @@ public class UserService {
         } else if (modifyPatchMemberRequest.getProfileImage() != null){
             String imgProfile = imageService.createImage(modifyPatchMemberRequest.getProfileImage());
             existingMember.setProfileImage(imgProfile);
-        }else if(modifyPatchMemberRequest.getLocation()!=null&& modifyPatchMemberRequest.getLat()!=null && modifyPatchMemberRequest.getLon()!=null){
-            existingMember.setLocation(modifyPatchMemberRequest.getLocation());
+        }else if(modifyPatchMemberRequest.getAddress()!=null&& modifyPatchMemberRequest.getLat()!=null && modifyPatchMemberRequest.getLon()!=null){
+            existingMember.setAddress(modifyPatchMemberRequest.getAddress());
             existingMember.setLat(modifyPatchMemberRequest.getLat());
             existingMember.setLon(modifyPatchMemberRequest.getLon());
         } else{
