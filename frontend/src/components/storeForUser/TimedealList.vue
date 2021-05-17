@@ -253,6 +253,7 @@ export default {
 </script>
 
 <style scoped lang="scss">
+<<<<<<< HEAD
 .content-except {
   @include flexbox;
   @include justify-content(center);
@@ -415,6 +416,256 @@ export default {
   }
   @include xs-mobile {
     font-size: 9px;
+=======
+// @import '@/assets/scss/sample2';
+.timedeal-container {
+  border: 2px solid $gray400;
+  header {
+    text-align: center;
+  }
+  .timedeal-item {
+    border: 2px solid $blue400;
+    border-radius: 15px;
+    @include shadow1;
+    @include flexbox;
+    flex-wrap: wrap;
+    width: 95%;
+    margin: auto;
+    @include xs-mobile {
+      width: 100%;
+    }
+
+    .item-thumbnail {
+      @include flexbox;
+      align-items: center;
+      width: 60%;
+      padding: 1%;
+      text-align: center;
+      border-right: 2px solid $gray400;
+      @include xs-mobile {
+        width: 100%;
+      }
+      img {
+        object-fit: cover;
+        object-position: center 50%;
+        border-radius: 5%;
+        @include lg-pc {
+          height: 278px;
+          width: 100%;
+        }
+        @include pc {
+          height: 210px;
+          width: 100%;
+        }
+        @include mobile {
+          height: 210px;
+          width: 100%;
+        }
+        @include xs-mobile {
+          width: 100%;
+        }
+      }
+    }
+    .item-info {
+      @include flexbox;
+      width: 40%;
+      padding: 1%;
+      flex-direction: column;
+      // justify-content: space-between;
+      // flex-wrap: wrap;
+      @include xs-mobile {
+        width: 100%;
+      }
+      .info-header {
+        @include flexbox;
+        width: 100%;
+
+        .timedeal-title {
+          width: 30%;
+          margin-right: 5%;
+          border-radius: 10px;
+          border: $gray200 solid 1px;
+
+          .timedeal-logo {
+            width: 60%;
+            background-color: $red600;
+            text-align: center;
+            color: whitesmoke;
+            border-radius: 10px;
+            padding: 2%;
+          }
+        }
+      }
+      .reserved-stock {
+        width: 100%;
+        font-size: 0.9em;
+        text-align: end;
+        @include xs-mobile {
+          font-size: 0.6em;
+        }
+      }
+      .info-name {
+        font-weight: bold;
+        @include lg-pc {
+          font-size: 1.3em;
+          padding-top: 10px;
+          padding-bottom: 10px;
+        }
+        @include xs-mobile {
+          font-size: 0.9em;
+        }
+      }
+      .info-introduce {
+        @include flexbox;
+        height: 150px;
+        word-break: keep-all;
+        align-items: center;
+        @include pc {
+          font-size: 0.9em;
+          height: 120px;
+        }
+        @include mobile {
+          font-size: 0.9em;
+          height: 120px;
+        }
+        @include xs-mobile {
+          word-break: normal;
+          padding-top: 10px;
+          padding-bottom: 10px;
+          height: 70px;
+          line-height: 15px;
+          display: -webkit-box;
+          -webkit-line-clamp: 4;
+          -webkit-box-orient: vertical;
+          overflow: hidden;
+          font-size: 0.7em;
+        }
+      }
+      .info-footer {
+        @include flexbox;
+        flex-wrap: wrap;
+        // padding-top: 50px;
+        justify-content: space-between;
+        .info-timedeal-price {
+          margin-bottom: 10px;
+          display: inline-block;
+          width: 100%;
+          .info-origin-price {
+            color: red;
+            font-size: 0.8em;
+            @include xs-mobile {
+              font-size: 0.7em;
+            }
+            &::before {
+              content: '타임딜가z ';
+              color: white;
+              font-size: 15px;
+              @include mobile {
+                content: '타임딜가  ';
+                font-size: 0.7em;
+              }
+              @include xs-mobile {
+                font-size: 1em;
+              }
+            }
+          }
+          .info-sale-price {
+            &::before {
+              content: '타임딜가 ';
+              color: $red600;
+              font-weight: bold;
+              font-size: 15px;
+              @include mobile {
+                font-size: 0.7em;
+              }
+              @include xs-mobile {
+                font-size: 0.7em;
+              }
+            }
+            @include mobile {
+              font-size: 0.9em;
+            }
+            // @include xs-mobile {
+            //     font-size: 0.7em;
+            // }
+          }
+        }
+        .order-number-container {
+          input[type='number']::-webkit-outer-spin-button,
+          input[type='number']::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+          }
+          @include flexbox;
+          align-items: center;
+          width: 60%;
+          height: 25px;
+          .quantity-minus-button {
+            height: 100%;
+            border-radius: 0px;
+            line-height: 100%;
+            border: none;
+          }
+          .quantity-value {
+            display: inline-block;
+            width: 30%;
+            height: 100%;
+            border: 1px $gray200 solid;
+            padding: 5px;
+            @include pc {
+              font-size: 0.8em;
+            }
+            @include mobile {
+              font-size: 0.6em;
+            }
+          }
+          .quantity-plus-button {
+            height: 100%;
+            border: none;
+            border-radius: 0px;
+            line-height: 100%;
+          }
+          .cart-arrow-down {
+            font-size: 1.3em;
+            margin-left: 5px;
+            color: $gray400;
+            @include mobile {
+              font-size: 1em;
+            }
+            &:hover {
+              cursor: pointer;
+              color: $red600;
+            }
+          }
+        }
+        .item-sum {
+          width: 38%;
+          text-align: end;
+          margin-right: 2%;
+          line-height: 25px;
+          border-bottom: 2px $gray400 solid;
+          @include pc {
+            display: table-cell;
+            vertical-align: middle;
+            font-size: 0.9em;
+          }
+          @include mobile {
+            display: table-cell;
+            vertical-align: middle;
+            font-size: 0.8em;
+          }
+          @include xs-mobile {
+            display: table-cell;
+            vertical-align: middle;
+            font-size: 0.9em;
+          }
+        }
+      }
+    }
+    .item-sum {
+      width: 30%;
+    }
+>>>>>>> 795cf7d ([S04P31B202-354] chore: scss파일 정리)
   }
 }
 </style>
