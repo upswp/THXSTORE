@@ -7,9 +7,11 @@ export default {
     commit('setToken', data.accessToken);
     saveTokenToLocalStorage(data.accessToken);
     const userData = {
-      id: data.id,
+      address: data.address,
       email: data.email,
-      location: data.location,
+      id: data.id,
+      lat: data.lat,
+      lon: data.lon,
       nickname: data.nickname,
       phoneNumber: data.phoneNumber,
       profileImage: data.profileImage,

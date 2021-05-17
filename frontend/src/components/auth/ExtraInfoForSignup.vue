@@ -69,6 +69,8 @@ export default {
           nickname: this.userData.nickname,
           social: this.userData.social,
           profileImage: this.userData.profileImage,
+          lat: this.userData.lat,
+          lon: this.userData.lon,
         };
         this.setSpinnerState(true);
         // 현재 위치 들어갈 자리
