@@ -3,10 +3,9 @@
     <div class="profile-wrapper">
       <img :src="getUserInfo.profileImage" />
     </div>
-    <div class="greeting-ment">{{ getUserInfo.nickname }}님, 환영합니다!</div>
     <div class="current-location">
       <awesome icon="map-marker-alt"></awesome>
-      위치 값 채워넣기 꼭 채워넣기 <span class="location-change">변경</span>
+      {{ getUserInfo.address }} <span class="location-change">변경</span>
     </div>
     <hr />
     <div class="search-label">
