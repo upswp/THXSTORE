@@ -78,7 +78,7 @@ export default {
     @include ellipsis;
     @include user-select(none);
     color: $gray600;
-    background: $gray100;
+    background: white;
     display: block;
     border: none;
     padding: 5px 0;

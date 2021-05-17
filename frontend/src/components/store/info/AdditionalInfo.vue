@@ -74,6 +74,13 @@
               <option value="KR_FOOD">한식</option>
               <option value="CN_FOOD">중식</option>
               <option value="JP_FOOD">일식</option>
+              <option value="CHICKEN">치킨</option>
+              <option value="PIZZA">피자</option>
+              <option value="SCHOOL_FOOD">분식</option>
+              <option value="PIG_HOCK">족발</option>
+              <option value="FASTFOOD">패스트푸드</option>
+              <option value="STEAM_SOUP">찜/탕</option>
+              <option value="CAFE">카페</option>
             </select>
           </div>
         </div>

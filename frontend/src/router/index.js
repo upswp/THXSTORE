@@ -8,8 +8,9 @@ Vue.use(VueRouter);
 const routes = [
   {
     path: '/',
-    redirect: '/store',
+    redirect: '/auth/login',
   },
+
   ...routesForMain,
   ...routesForAuth,
 ];

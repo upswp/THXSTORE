@@ -30,4 +30,31 @@ function dateTrans(dateStr) {
   const date = new Date(dateStr);
   return `${date.getFullYear()}/${date.getMonth()}/${date.getDate()} ${date.getHours()}:${date.getMinutes()}`;
 }
-export { formatNumber, timeStrConvert, meridiemConvert, oneTrans, dateTrans };
+
+const categoryStrConvert = {
+  DEFAULT: '미지정',
+  KR_FOOD: '한식',
+  CN_FOOD: '중식',
+  JP_FOOD: '일식',
+  CHICKEN: '치킨',
+  PIZZA: '피자',
+  SCHOOL_FOOD: '분식',
+  PIG_HOCK: '족발',
+  FASTFOOD: '패스트푸드',
+  STEAM_SOUP: '찜/탕',
+  CAFE: '카페',
+};
+const categoryClassConvert = {
+  DEFAULT: 'category-default',
+  KR_FOOD: 'category-kr',
+  CN_FOOD: 'category-cn',
+  JP_FOOD: 'category-jp',
+  CHICKEN: 'category-chicken',
+  PIZZA: 'category-pizza',
+  SCHOOL_FOOD: 'category-shcool-food',
+  PIG_HOCK: 'category-pig-hock',
+  FASTFOOD: 'category-fastfood',
+  STEAM_SOUP: 'category-steam-soup',
+  CAFE: 'category-cafe',
+};
+export { formatNumber, timeStrConvert, meridiemConvert, oneTrans, dateTrans, categoryStrConvert, categoryClassConvert };
