@@ -3,6 +3,7 @@ package com.ssafy.thxstore.reservation.domain;
 import com.ssafy.thxstore.common.ColumnDescription;
 import com.ssafy.thxstore.member.domain.Member;
 import com.ssafy.thxstore.product.domain.Product;
+import com.ssafy.thxstore.store.domain.Store;
 import lombok.*;
 import org.joda.time.DateTime;
 
@@ -32,6 +33,11 @@ public class Reservation {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "review_id")
     private Review review;
+
+//    @ColumnDescription("하나의 주문 당 연결되는 스토어 한 개")
+//    @OneToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "store_id")
+//    private Store store;
 
     @ColumnDescription("스토어 아이디로 각각의 장바구니 구분")
     @Column(name = "store_id")

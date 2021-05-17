@@ -25,6 +25,10 @@ public class ReservationDto {
 
     private String email;
 
+    private String storeName;
+
+    private String storeImg;
+
 //    @NotBlank
     private ReservationStatus reservationStatus;
 
@@ -32,9 +36,11 @@ public class ReservationDto {
     private List<ReservationGroupDto> reservationGroups;
 
     @Builder
-    public ReservationDto(String email,String nickname,String orderTime,Long storeId, Long userId, List<ReservationGroupDto> reservationGroups, ReservationStatus reservationStatus) {
+    public ReservationDto(String storeImg,String storeName,String email,String nickname,String orderTime,Long storeId, Long userId, List<ReservationGroupDto> reservationGroups, ReservationStatus reservationStatus) {
         this.userId = userId;
         this.email = email;
+        this.storeImg = storeImg;
+        this.storeName =storeName;
         this.nickname =nickname;
         this.orderTime = orderTime;
         this.storeId = storeId;

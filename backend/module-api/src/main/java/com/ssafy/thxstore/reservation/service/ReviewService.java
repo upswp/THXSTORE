@@ -4,11 +4,10 @@ import com.ssafy.thxstore.member.domain.Member;
 import com.ssafy.thxstore.member.repository.MemberRepository;
 import com.ssafy.thxstore.reservation.domain.Answer;
 import com.ssafy.thxstore.reservation.domain.Reservation;
-import com.ssafy.thxstore.reservation.domain.ReservationGroup;
 import com.ssafy.thxstore.reservation.domain.Review;
-import com.ssafy.thxstore.reservation.dto.AnswerRequest;
-import com.ssafy.thxstore.reservation.dto.ReservationGroupDto;
+import com.ssafy.thxstore.reservation.dto.request.AnswerRequest;
 import com.ssafy.thxstore.reservation.dto.ReviewDto;
+import com.ssafy.thxstore.reservation.dto.response.CheckReviewResponse;
 import com.ssafy.thxstore.reservation.repository.AnswerRepository;
 import com.ssafy.thxstore.reservation.repository.ReservationRepository;
 import com.ssafy.thxstore.reservation.repository.ReviewRepository;
@@ -62,14 +61,15 @@ public class ReviewService {
     }
 
     @Transactional
-    public void deleteReview(Long reviewId) {
+    public CheckReviewResponse deleteReview(Long reviewId) {
         Optional<Review> review = reviewRepository.findById(reviewId);
 
         //연관관계 해제
         Reservation reservation = reservationRepository.findByreviewId(reviewId);
         reservation.deleteReview();
 
-        reviewRepository.delete(review.get());
+            reviewRepository.delete(review.get());
+            return CheckReviewResponse.of(true);
     }
 
     public void updateReview(Long reviewId, ReviewDto reviewDto) {
