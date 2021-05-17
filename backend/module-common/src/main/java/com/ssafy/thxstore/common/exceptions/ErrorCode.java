@@ -20,6 +20,9 @@ public enum ErrorCode {
     UNAUTHORIZED_MEMBER(400,"AU_006","존재하지않는 유저입니다."),
     NOT_FOUND_IMAGE(400,"AU_007","이미지 관련 오류가 발생했습니다.");
 
+
+    //-----------------------
+
     private final String code;
     private final String message;
     private final int status;

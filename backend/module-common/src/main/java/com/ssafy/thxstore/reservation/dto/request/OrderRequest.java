@@ -1,4 +1,4 @@
-package com.ssafy.thxstore.reservation.dto;
+package com.ssafy.thxstore.reservation.dto.request;
 
 import com.ssafy.thxstore.reservation.domain.ReservationStatus;
 import lombok.AccessLevel;

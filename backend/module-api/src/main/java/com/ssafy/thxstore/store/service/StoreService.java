@@ -442,12 +442,22 @@ public class StoreService {
             }
             // 2시간 전이란 것을 비교해야함 date1과 date2
             // 현재 시간과 date2시간이 2시간 넘게 차이남다면(+로)
-           // if(date1.getTime() - date2.getTime() > 7200000){ // 2시간
-            if(date1.getTime() - date2.getTime() > 600000){
+           // if(date1.getTime() - date2.getTime() > 7200000){ // 2시간, 10분 600000, 4시간 14400000, 하루 86400000
+            if(date1.getTime() - date2.getTime() > 14400000){
                 Product product = productRepository.findById(timeDealList.get(i).getProduct().getId()).get();
                 product.setStock(null);
                 product.setRate(null);
                 timeDealRepository.deleteById(timeDealList.get(i).getId());
+            }
+            else if(date1.getTime() - date2.getTime() < 0){ // 만약 date2의 시간이 22시를 넘어간다면
+                // if(date1.getTime()+86400000 - date2.getTime() > 7200000){
+                boolean timeDealChecks = timeDealList.get(i).getStore().getTimeDealCheck();
+                if(date1.getTime()+86400000 - date2.getTime() > 14400000 && timeDealChecks == false){ // 타임딜이 0이라면 지워도 됌
+                    Product product = productRepository.findById(timeDealList.get(i).getProduct().getId()).get();
+                    product.setStock(null);
+                    product.setRate(null);
+                    timeDealRepository.deleteById(timeDealList.get(i).getId());
+                }
             }
 //            else if(date1.getTime() - date2.getTime() < 0){ // 만약 date2의 시간이 22시를 넘어간다면
 //               // if(date1.getTime()+86400000 - date2.getTime() > 7200000){

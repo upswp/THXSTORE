@@ -1,8 +1,7 @@
 package com.ssafy.thxstore.reservation.service;
 
 import com.ssafy.thxstore.reservation.dto.ReservationDto;
-import com.ssafy.thxstore.reservation.dto.ReservationGroupDto;
-import com.ssafy.thxstore.reservation.dto.StatusRequest;
+import com.ssafy.thxstore.reservation.dto.request.StatusRequest;
 
 import java.util.List;
 

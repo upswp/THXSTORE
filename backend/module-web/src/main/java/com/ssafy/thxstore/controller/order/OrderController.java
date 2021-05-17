@@ -2,10 +2,14 @@ package com.ssafy.thxstore.controller.order;
 
 import com.ssafy.thxstore.controller.config.AppProperties;
 import com.ssafy.thxstore.controller.member.AuthController;
-import com.ssafy.thxstore.controller.member.Resource.MemberResource;
+import com.ssafy.thxstore.controller.member.Resource.CheckEmailResource;
+import com.ssafy.thxstore.controller.order.Resource.CheckReviewResource;
 import com.ssafy.thxstore.controller.order.Resource.ReviewResource;
 import com.ssafy.thxstore.reservation.domain.Review;
 import com.ssafy.thxstore.reservation.dto.*;
+import com.ssafy.thxstore.reservation.dto.request.AnswerRequest;
+import com.ssafy.thxstore.reservation.dto.request.StatusRequest;
+import com.ssafy.thxstore.reservation.dto.response.CheckReviewResponse;
 import com.ssafy.thxstore.reservation.service.ReservationService;
 import com.ssafy.thxstore.reservation.service.ReviewService;
 import io.jsonwebtoken.Jwts;
@@ -17,7 +21,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import javax.xml.bind.DatatypeConverter;
 import java.net.URI;
 import java.util.List;
@@ -177,14 +180,17 @@ public ResponseEntity<String> addReservation(@RequestHeader String authorization
         reviewResource.add(Link.of("/api/docs/index.html#resources-create-review").withRel("profile"));
 
         return ResponseEntity.created(createUri).body(reviewResource);
-    }
+    }// 반환하는건 이걸로
 
     @DeleteMapping("/reservation/review/{reviewId}")
-    public ResponseEntity<String> deleteReview(@PathVariable Long reviewId){
+    public ResponseEntity deleteReview(@PathVariable Long reviewId){
 
-        reviewService.deleteReview(reviewId);
+        CheckReviewResponse checkReviewResponse = reviewService.deleteReview(reviewId);
+        CheckReviewResource checkReviewResource= new CheckReviewResource(checkReviewResponse);
+        checkReviewResource.add(linkTo(OrderController.class).withRel("delete-review"));
+        checkReviewResource.add(Link.of("/api/docs/index.html#delete-review").withRel("profile"));
 
-        return new ResponseEntity<>("삭제완료", HttpStatus.OK);
+        return ResponseEntity.ok(checkReviewResource);
     }
 
     @PutMapping("/reservation/review/{reviewId}")
