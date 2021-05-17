@@ -103,7 +103,7 @@ include::{root}/auth/find-social-member.adoc[]
 
 include::{root}/auth/check-member-email.adoc[]
 
-include::{root}/auth/send-member-email.adoc[]
+//include::{root}/auth/send-member-email.adoc[]
 
 //include::{root}/user/patch-member.adoc[]
 
@@ -115,6 +115,7 @@ include::{root}/review/order-index.adoc[]
 
 include::{root}/review/create-review.adoc[]
 
+include::{root}/review/delete-review.adoc[]
 
 
 

@@ -50,4 +50,30 @@ public class OrderDocumentation {
                 )
         );
     }
+
+    public static ResultHandler deleteReview() {
+        return document("delete-review",
+                getDocumentRequest(),
+                getDocumentResponse(),
+                links(
+                        linkWithRel("self").description("link to self"),
+                        linkWithRel("delete-review").description("link to review"),
+                        linkWithRel("profile").description("link to profile")
+                ),
+                requestHeaders(
+                        headerWithName(HttpHeaders.CONTENT_TYPE).description("content type header")
+                ),
+                requestFields(
+                        fieldWithPath("reviewId").type(JsonFieldType.NUMBER).description("삭제하고자하는 리뷰 아이디")
+                ),
+                responseHeaders(
+                        headerWithName(HttpHeaders.CONTENT_TYPE).description("hal+json type")
+                ),
+                responseFields(
+                        fieldWithPath("check").type(JsonFieldType.BOOLEAN).description("삭제여부 확인"),
+                        fieldWithPath("_links.self.href").description("link to self"),
+                        fieldWithPath("_links.profile.href").description("link to profile")
+                )
+        );
+    }
 }

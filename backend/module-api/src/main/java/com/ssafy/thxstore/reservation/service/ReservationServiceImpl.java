@@ -1,10 +1,5 @@
 package com.ssafy.thxstore.reservation.service;
 
-import com.pusher.client.channel.ChannelEventListener;
-import com.pusher.client.connection.ConnectionEventListener;
-import com.pusher.client.connection.ConnectionState;
-import com.pusher.client.connection.ConnectionStateChange;
-import com.pusher.client.util.HttpAuthorizer;
 import com.pusher.rest.Pusher;
 import com.ssafy.thxstore.member.domain.Member;
 import com.ssafy.thxstore.member.repository.MemberRepository;
@@ -15,7 +10,7 @@ import com.ssafy.thxstore.reservation.domain.ReservationGroup;
 import com.ssafy.thxstore.reservation.domain.ReservationStatus;
 import com.ssafy.thxstore.reservation.dto.ReservationDto;
 import com.ssafy.thxstore.reservation.dto.ReservationGroupDto;
-import com.ssafy.thxstore.reservation.dto.StatusRequest;
+import com.ssafy.thxstore.reservation.dto.request.StatusRequest;
 import com.ssafy.thxstore.reservation.repository.ReservationGroupRepository;
 import com.ssafy.thxstore.reservation.repository.ReservationRepository;
 import com.ssafy.thxstore.store.domain.Store;
@@ -23,14 +18,9 @@ import com.ssafy.thxstore.store.repository.StoreRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import org.joda.time.DateTime;
-import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import com.pusher.client.PusherOptions;
-import com.pusher.client.channel.Channel;
-import com.pusher.client.channel.SubscriptionEventListener;
-import com.pusher.client.channel.PusherEvent;
 
 import java.text.DateFormat;
 import java.util.*;
@@ -139,7 +129,6 @@ public class ReservationServiceImpl implements ReservationService{
         //기본키로 찾아야하는데 일단 쿼리문 적은 email로
         if(type == "member") {
             reservationlist = reservationRepository.findReservationByMemberId(email); //reservation list 찾아와서 2개 각각의 프로덕트만 넣어줘야해 51 52
-            System.out.println("reservationlist.size(): "+reservationlist.size());
 
             for(int i = 0 ;i<reservationlist.size();i++){//2개
                 List<ReservationGroupDto> reservationGroupDtoList = new LinkedList<>();
@@ -158,8 +147,11 @@ public class ReservationServiceImpl implements ReservationService{
 
                 }
 
+                Optional<Store> store = storeRepository.findById(reservationlist.get(i).getStoreId());
 //2개 57, 58에 각각 상품그룹 넣어줘
                     ReservationDto reservationDto = ReservationDto.builder().
+                            storeImg(store.get().getLicenseImg()).
+                            storeName(store.get().getName()).
                             email(reservationlist.get(i).getEmail()).
                             storeId(reservationlist.get(i).getStoreId()).
                             reservationStatus(reservationlist.get(i).getReservationStatus()).

@@ -49,8 +49,9 @@ public class Review {
     private Answer answer2;
 
     @Builder
-    public Review(String comment, int star, String dateTime,Long memberId,String storeName,Long storeId) {
+    public Review(Long id,String comment, int star, String dateTime,Long memberId,String storeName,Long storeId) {
         this.comment = comment;
+        this.id = id;
         this.star =star;
         this.dateTime = dateTime;
         this.memberId = memberId;

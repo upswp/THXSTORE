@@ -1,12 +1,6 @@
 package com.ssafy.thxstore.reservation.repository;
 
-import com.ssafy.thxstore.member.domain.Member;
 import com.ssafy.thxstore.reservation.domain.Reservation;
-import com.ssafy.thxstore.reservation.domain.ReservationGroup;
-import com.ssafy.thxstore.reservation.domain.ReservationStatus;
-import com.ssafy.thxstore.reservation.domain.Review;
-import com.ssafy.thxstore.reservation.dto.ReservationDto;
-import com.ssafy.thxstore.reservation.dto.StatusRequest;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
