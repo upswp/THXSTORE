@@ -449,6 +449,16 @@ public class StoreService {
                 product.setRate(null);
                 timeDealRepository.deleteById(timeDealList.get(i).getId());
             }
+            else if(date1.getTime() - date2.getTime() < 0){ // 만약 date2의 시간이 22시를 넘어간다면
+                // if(date1.getTime()+86400000 - date2.getTime() > 7200000){
+                boolean timeDealChecks = timeDealList.get(i).getStore().getTimeDealCheck();
+                if(date1.getTime()+86400000 - date2.getTime() > 14400000 && timeDealChecks == false){ // 타임딜이 0이라면 지워도 됌
+                    Product product = productRepository.findById(timeDealList.get(i).getProduct().getId()).get();
+                    product.setStock(null);
+                    product.setRate(null);
+                    timeDealRepository.deleteById(timeDealList.get(i).getId());
+                }
+            }
 //            else if(date1.getTime() - date2.getTime() < 0){ // 만약 date2의 시간이 22시를 넘어간다면
 //               // if(date1.getTime()+86400000 - date2.getTime() > 7200000){
 //                if(date1.getTime()+86400000 - date2.getTime() > 600000){
