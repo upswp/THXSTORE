@@ -13,9 +13,9 @@
       <div class="operation-title">영업 정보</div>
       <div class="operation-content">
         <div class="content-label">운영시간</div>
-        <div class="content-info">{{ storeInfo.sideInfo.openTime }}</div>
+        <div class="content-info">{{ storeInfo.sideInfo.openTime }} ~ {{ storeInfo.sideInfo.closeTime }}</div>
         <div class="content-label">휴무일</div>
-        <div class="content-info">{{ storeInfo.sideInfo.closeDay }}</div>
+        <div id="font-red" class="content-info">{{ storeInfo.sideInfo.closeDay }}</div>
         <div class="content-label">전화번호</div>
         <div class="content-info">{{ storeInfo.baseInfo.phoneNum }}</div>
       </div>
@@ -72,10 +72,22 @@ export default {
   },
   created() {
     this.storeInfo = this.getWatchedStore;
+    this.changeCloseDayToKor();
     this.locationArr[0].storeAddr = this.storeInfo.baseInfo.mainAddress;
     this.loaded = true;
   },
   methods: {
+    changeCloseDayToKor() {
+      this.storeInfo.sideInfo.closeDay = this.storeInfo.sideInfo.closeDay
+        .replace('MON', '월요일')
+        .replace('TUE', '화요일')
+        .replace('WED', '수요일')
+        .replace('THU', '목요일')
+        .replace('FRI', '금요일')
+        .replace('SAT', '토요일')
+        .replace('SUN', '일요일')
+        .replace('|', ', ');
+    },
     ...mapMutations(['setSpinnerState']),
     clipboard(e) {
       e.target.previousSibling.select();
@@ -117,8 +129,9 @@ export default {
       }
     }
     .introduce-content {
+      text-indent: 0em;
       font-family: S-CoreDream-4Regular;
-      white-space: pre-wrap;
+      white-space: pre-line;
       line-break: normal;
       font-size: 14px;
       @include xs-mobile {
@@ -140,6 +153,7 @@ export default {
       flex-wrap: wrap;
       width: 100%;
       .content-label {
+        margin-bottom: 3px;
         flex-basis: 30%;
         @include xs-mobile {
           font-size: 12px;
@@ -147,6 +161,10 @@ export default {
       }
       .content-info {
         width: 70%;
+        margin-bottom: 3px;
+      }
+      #font-red {
+        color: $red600;
       }
     }
   }
@@ -200,6 +218,7 @@ export default {
       @include flexbox;
       flex-wrap: wrap;
       .license-label {
+        margin-bottom: 3px;
         flex-basis: 30%;
         @include xs-mobile {
           font-size: 12px;
@@ -207,6 +226,7 @@ export default {
       }
       .license-info {
         flex-basis: 70%;
+        margin-bottom: 3px;
         @include xs-mobile {
           font-size: 12px;
         }

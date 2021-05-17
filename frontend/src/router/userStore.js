@@ -17,12 +17,12 @@ const routesForUserStore = [
       },
       {
         path: 'timedeal-list/:storeId',
-        name: 'timedea-lList',
+        name: 'timedeal-list',
         component: () => import('@/components/storeForUser/TimedealList.vue'),
       },
       {
         path: 'live-commerce/:storeId',
-        name: 'live-Commerce',
+        name: 'live-commerce',
         component: () => import('@/components/storeForUser/UserStoreLiveCommerce.vue'),
       },
     ],

@@ -25,6 +25,7 @@ import {
   faChevronUp,
   faSearch,
   faHourglassHalf,
+  faCartArrowDown,
 } from '@fortawesome/free-solid-svg-icons';
 library.add(
   faStore,
@@ -48,6 +49,7 @@ library.add(
   faChevronUp,
   faSearch,
   faHourglassHalf,
+  faCartArrowDown,
 );
 
 import {

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ssafy.thxstore.controller.common.BaseControllerTest;
 import com.ssafy.thxstore.controller.member.docs.AuthDocumentation;
 import com.ssafy.thxstore.member.domain.Social;
+import com.ssafy.thxstore.member.dto.request.SendEmailRequest;
 import com.ssafy.thxstore.member.dto.request.SignUpRequest;
 import com.ssafy.thxstore.member.dto.request.SocialMemberRequest;
 import com.ssafy.thxstore.member.dto.response.CheckEmailResponse;
@@ -53,7 +54,7 @@ public class AuthControllerTest extends BaseControllerTest {
         SignUpRequest signUpRequest = SignUpRequest.builder()
                 .email("test456@gmail.com")
                 .password("Pasword123!")
-                .nickname("helloTest456")
+                .nickname("sangwoo")
                 .lat(37.33)
                 .lon(126.59)
                 .address("서울 중구 광화문")
@@ -73,9 +74,9 @@ public class AuthControllerTest extends BaseControllerTest {
         SignUpRequest signUpRequest = SignUpRequest.builder()
                 .email("test123@gmail.com")
                 .password("Pasword123!")
-                .nickname("helloTest123")
+                .nickname("sangwoo")
                 .social(Social.KAKAO)
-                .userId("hello")
+                .userId("providerID123")
                 .profileImage("Default Profile link")
                 .lat(37.33)
                 .lon(126.59)
@@ -157,6 +158,24 @@ public class AuthControllerTest extends BaseControllerTest {
                 .andExpect(result -> CheckEmailResponse.of(true))
                 .andDo(print())
                 .andDo(AuthDocumentation.getCheckEmail());
+    }
+
+    @Test
+    @DisplayName("해당 이메일로 인증메일 보내기")
+    public void sendEmail() throws Exception{
+        //Given
+        String email = "helloEmail@gmail.com";
+        generateMember(email,"testEmailCheck");
+        //Given
+        SendEmailRequest sendEmailRequest= SendEmailRequest.builder().email(email).build();
+
+        //When & Then
+        mockMvc.perform(post("/auth/email/")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(new ObjectMapper().writeValueAsString(sendEmailRequest)))
+                .andExpect(result -> CheckEmailResponse.of(true))
+                .andDo(print())
+                .andDo(AuthDocumentation.sendEmail());
     }
 }
 
