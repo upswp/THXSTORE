@@ -160,16 +160,17 @@ export default {
         alert('위치 변경 실패!');
       }
     },
-    changeImage(e) {
+    async changeImage(e) {
       const file = e.target.files[0];
-      this.userData.profileImage = URL.createObjectURL(file);
-      // try {
-      //   const frm = new FormData();
-      //   frm.append('profileImage', file);
-      //   await updateProfile(frm);
-      // } catch (error) {
-      //   alert('프로필 이미지 변경 실패!');
-      // }
+      try {
+        const frm = new FormData();
+        frm.append('id', this.userData.id);
+        frm.append('profileImage', file);
+        await updateProfile(frm);
+        this.userData.profileImage = URL.createObjectURL(file);
+      } catch (error) {
+        alert('프로필 이미지 변경 실패!');
+      }
     },
   },
 };
