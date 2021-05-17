@@ -363,8 +363,8 @@ public class StoreService {
             // 이것은 스토어 정보
             StoreAndDistanceDto storeInfo = modelMapper.map(storeList.get().get(i), new TypeToken<StoreAndDistanceDto>(){}.getType());
 
-            storeInfo.setDistance( 6371*acos(cos(toRadians(36.42583333272267))*cos(toRadians(storeList.get().get(i).getLat()))*cos(toRadians(storeList.get().get(i).getLon())
-                    -toRadians(127.38674024126392))+sin(toRadians(36.42583333272267))*sin(toRadians(storeList.get().get(i).getLat()))));
+            storeInfo.setDistance( 6371*acos(cos(toRadians(member.get().getLat()))*cos(toRadians(storeList.get().get(i).getLat()))*cos(toRadians(storeList.get().get(i).getLon())
+                    -toRadians( member.get().getLon()))+sin(toRadians(member.get().getLat()))*sin(toRadians(storeList.get().get(i).getLat()))));
 
             storeInfo.setTimeDealStart(timeDealList.get().get(0).getStartTime());
             // 해당 상품들을 모아서 넣기
