@@ -17,9 +17,15 @@ const routesForAuth = [
         meta: { transitionName: 'slide' },
       },
       {
-        path: 'extra-info',
-        name: 'extraInfo',
-        component: () => import('@/components/auth/ExtraInfoForm.vue'),
+        path: 'extra-info-signup',
+        name: 'extraInfoSignup',
+        component: () => import('@/components/auth/ExtraInfoForSignup.vue'),
+        meta: { transitionName: 'slide' },
+      },
+      {
+        path: 'extra-info-login',
+        name: 'extraInfoLogin',
+        component: () => import('@/components/auth/ExtraInfoForLogin.vue'),
         meta: { transitionName: 'slide' },
       },
       {

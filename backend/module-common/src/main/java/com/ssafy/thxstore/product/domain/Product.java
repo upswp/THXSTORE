@@ -1,16 +1,21 @@
 package com.ssafy.thxstore.product.domain;
 
 import com.ssafy.thxstore.common.ColumnDescription;
+import com.ssafy.thxstore.reservation.domain.Reservation;
+import com.ssafy.thxstore.reservation.domain.ReservationGroup;
 import com.ssafy.thxstore.store.domain.Store;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
+@Builder
 @EqualsAndHashCode(of = "id")
 public class Product {
 
@@ -24,9 +29,6 @@ public class Product {
     @JoinColumn(name = "product_group_id")
     @ColumnDescription("FK")
     private ProductGroup productGroup;
-
-//    @OneToOne
-//    private TimeDeal timeDealList;
 
     @Column(name = "name")
     @ColumnDescription("상품명")
@@ -53,18 +55,15 @@ public class Product {
     @ColumnDescription("재고")
     private Integer stock;
 
+    @Column(name = "introduce")
+    @ColumnDescription("상품 소개")
+    private String introduce;
 
+    @ColumnDescription("양방향 맵핑")
+    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
+    private List<ReservationGroup> reservationGroup = new ArrayList<>();
 
-
-
-    @Builder
-    public Product(ProductGroup productGroup, String name, Integer price, String productImg, String amount, Integer rate, Integer stock){
-        this.productGroup = productGroup;
-        this.name = name;
-        this.price = price;
-        this.productImg = productImg;
-        this.amount = amount;
-        this.rate = rate;
-        this.stock = stock;
+    public void stockUpdate(int i) {
+        this.stock = Integer.valueOf(""+i);
     }
 }

@@ -18,6 +18,12 @@ import {
   faIdCard,
   faMapMarkerAlt,
   faPhoneAlt,
+  faSignOutAlt,
+  faEraser,
+  faPencilAlt,
+  faChevronDown,
+  faChevronUp,
+  faCartArrowDown,
 } from '@fortawesome/free-solid-svg-icons';
 library.add(
   faStore,
@@ -34,6 +40,12 @@ library.add(
   faIdCard,
   faMapMarkerAlt,
   faPhoneAlt,
+  faSignOutAlt,
+  faEraser,
+  faPencilAlt,
+  faChevronDown,
+  faChevronUp,
+  faCartArrowDown,
 );
 
 import {

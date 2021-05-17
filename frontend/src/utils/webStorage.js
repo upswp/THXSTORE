@@ -1,19 +1,15 @@
 const USER_INFO = 'ThxStorage-V1-U';
 const TOKEN = 'ThxStorage-V1-T';
-
+const STORE_ID = 'ThxStoreage-V1-S';
 // 인코딩, 디코딩 함수
 const makeIncodeValue = (key, value) => {
-  // _.*- 을 제외한 특수문자는 사용하지 않을 것이기 때문에 encodeURI는 사용하지 않는다.
-  // const data = encodeURIComponent(JSON.stringify(value));
-
-  const data = JSON.stringify(value);
+  const data = encodeURIComponent(JSON.stringify(value));
   localStorage.setItem(key, btoa(data));
 };
 
 const returnDecodeValue = value => {
   const decode = atob(value);
-  // const data = JSON.parse(decodeURIComponent(decode));
-  const data = JSON.parse(decode);
+  const data = JSON.parse(decodeURIComponent(decode));
   return data;
 };
 
@@ -41,6 +37,22 @@ const getTokenFromLocalStorage = () => {
   return null;
 };
 
+// 로컬스토리지 관련 함수(user)
+const saveStoreIdToLocalStorage = storeId => {
+  makeIncodeValue(STORE_ID, storeId);
+};
+
+const getStoreIdFromLocalStorage = () => {
+  if (localStorage.getItem(STORE_ID)) {
+    return returnDecodeValue(localStorage.getItem(STORE_ID));
+  }
+  return null;
+};
+
+const clearLocalStorageItem = item => {
+  localStorage.setItem(item, '');
+};
+
 const saveSessionStorage = (key, value) => {
   sessionStorage.setItem(key, JSON.stringify(value));
 };
@@ -54,11 +66,16 @@ const deleteSessionStorage = key => {
 };
 
 export {
+  USER_INFO,
+  TOKEN,
   saveUserToLocalStorage,
   getUserFromLocalStorage,
   saveTokenToLocalStorage,
   getTokenFromLocalStorage,
+  saveStoreIdToLocalStorage,
+  getStoreIdFromLocalStorage,
   saveSessionStorage,
   getSessionStorage,
   deleteSessionStorage,
+  clearLocalStorageItem,
 };

@@ -1,17 +1,14 @@
 package com.ssafy.thxstore.store.domain;
 
 import com.ssafy.thxstore.common.ColumnDescription;
-import com.ssafy.thxstore.member.domain.Favorite;
 import com.ssafy.thxstore.member.domain.Member;
-import com.ssafy.thxstore.product.domain.Product;
 import com.ssafy.thxstore.product.domain.ProductGroup;
 import com.ssafy.thxstore.product.domain.TimeDeal;
-import com.ssafy.thxstore.reservation.domain.Reservation;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 // todo setter -> build로 변경 필요 (다른 dto, domain 포함)
@@ -65,7 +62,7 @@ public class Store {
 
     @ColumnDescription("스토어 휴무일")
     @Column(name = "close_day")
-    private String closedDay;
+    private String closeDay;
 
     @Lob
     @ColumnDescription("스토어 소개")
@@ -96,9 +93,26 @@ public class Store {
     @Column(name = "check_store")
     private CheckStore checkStore;
 
+    @ColumnDescription("스토어 휴무 상태 closestore == 1 닫혀있다.") // enum 수정
+    @Column(name = "close_store")
+    private Boolean closeStore;
+
+    @ColumnDescription("위도 37.xx") // enum 수정
+    @Column(name = "lat")
+    private Double lat;
+
+    @ColumnDescription("경도 127.xx") // enum 수정
+    @Column(name = "lon")
+    private Double lon;
+
+    @ColumnDescription("타임딜 사용 여부 1 = 사용. 0 노사용.") // enum 수정
+    @Column(name = "time_deal_check")
+    private Boolean timeDealCheck;
+
     @Builder
-    public Store(Member member, String name, StoreCategory storeCategory, String phoneNum, String mainAddress, String subAddress,String openTime,String closeTime,String closedDay,String introduce, String thumbImg, String logo, String license, String licenseImg, CheckStore checkStore){
+    public Store(Long id,Member member, String name, StoreCategory storeCategory, String phoneNum, String mainAddress, String subAddress,String openTime,String closeTime,String closeDay,String introduce, String thumbImg, String logo, String license, String licenseImg, CheckStore checkStore, Boolean closeStore,Double lat,Double lon, Boolean timeDealCheck){
         this.member = member;
+        this.id = id;
         this.name = name;
         this.storeCategory = storeCategory;
         this.phoneNum = phoneNum;
@@ -106,13 +120,17 @@ public class Store {
         this.subAddress = subAddress;
         this.openTime = openTime;
         this.closeTime = closeTime;
-        this.closedDay = closedDay;
+        this.closeDay = closeDay;
         this.introduce = introduce;
         this.thumbImg = thumbImg;
         this.logo = logo;
         this.license = license;
         this.licenseImg = licenseImg;
         this.checkStore = checkStore;
+        this.closeStore = closeStore;
+        this.lat = lat;
+        this.lon = lon;
+        this.timeDealCheck = timeDealCheck;
     }
 
     // todo 정리 필요
@@ -135,20 +153,4 @@ public class Store {
     @ColumnDescription("temp_store")
     @OneToOne
     private TempStore tempStore;
-
-//    @ColumnDescription("member")
-//    @OneToOne
-//    private Member member;
-
-//    @ColumnDescription("product_group")
-//    @OneToMany
-//    private List<Product> productList = new ArrayList<>();
-//
-//    @ColumnDescription("time_deal")
-//    @OneToMany
-//    private List<Reservation> reservationList = new ArrayList<>();
-//
-//    @ColumnDescription("temp_store")
-//    @OneToOne
-//    private List<Favorite> storeList = new LinkedList<>();
 }

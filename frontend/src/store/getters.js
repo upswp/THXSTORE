@@ -3,12 +3,21 @@ export default {
     return state.userInfo;
   },
   getTempUserInfo(state) {
-    return state.tmpUserInfo;
+    return state.tempUserInfo;
   },
   getToken(state) {
     return state.token;
   },
   isMainDrawerOpend(state) {
     return state.mainDrawerOpen;
+  },
+  getSpinnerState(state) {
+    return state.spinnerOn;
+  },
+  getStoreId(state) {
+    return state.storeId;
+  },
+  getWatchedStore(state) {
+    return state.watchedStore;
   },
 };

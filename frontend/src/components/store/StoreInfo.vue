@@ -1,95 +1,95 @@
 <template>
-  <div class="store-info-container">
-    <img class="store-thumbnail-image" src="@/assets/image/thumbnail_example.jpg" />
-    <section class="store-content-wrapper">
-      <header class="store-header">
-        <img class="store-logo" src="@/assets/image/logo.jpg" />
-        <div class="store-title">더스토어 계산점</div>
-      </header>
-      <article class="essential-info-container">
-        <div class="essential-title">
-          ※ 기본 정보
-          <awesome icon="pen-square" class="correct-icon"></awesome>
-        </div>
-        <div class="essential-items">
-          <div class="essential-item">
-            <awesome icon="id-card" class="icon"></awesome>
-            사업자등록번호 111-11-111111
-          </div>
-          <div class="essential-item">
-            <awesome icon="phone-alt" class="icon"></awesome>
-            042-1234-5678
-          </div>
-          <div class="essential-item">
-            <awesome icon="map-marker-alt" class="icon"></awesome>
-            대전 유성구 문화원로 140
-          </div>
-          <kakao-map :location="location"></kakao-map>
-        </div>
-      </article>
-    </section>
-    <section class="additional-info-container">
-      <div class="additional-title">※ 추가 정보</div>
-      <div class="additional-items">
-        <div class="additional-item">
-          <div class="additional-item">
-            <div class="additional-item-label">카테고리</div>
-            <div>
-              <select class="store-category">
-                <option value="chineses">중식</option>
-                <option value="japanese">일식</option>
-              </select>
-            </div>
-          </div>
-          <div class="additional-item-label">영업시간</div>
-          <div class="time">
-            <div class="toggleWrapper">
-              <input id="dn" type="checkbox" class="toggle-switch" />
-              <label for="dn" class="toggle"><div class="toggle__handler"></div></label>
-            </div>
-            <select class="time-select">
-              <option v-for="(i, index) in 12" :key="index" :value="i - 1">{{ i - 1 === 0 ? '00' : i - 1 }}</option>
-            </select>
-            <span>:</span>
-            <select class="time-select">
-              <option v-for="(i, index) in 6" :key="index" :value="10 * (i - 1)">
-                {{ i - 1 === 0 ? '00' : 10 * (i - 1) }}
-              </option>
-            </select>
-          </div>
-        </div>
-        <div class="additional-item">
-          <div class="additional-item-label">공휴일</div>
-          <div>
-            <input type="text" placeholder="영업시간" />
-          </div>
-        </div>
-
-        <div class="additional-item">
-          <div class="additional-item-label">가게 소개</div>
-          <div>
-            <textarea type="text" placeholder="가게 소개" />
-          </div>
-        </div>
-      </div>
-    </section>
+  <div v-if="loaded" class="store-info-container">
+    <label for="thumbnail-image-upload">
+      <img class="store-thumbnail-image" :src="thumbImg" />
+      <input id="thumbnail-image-upload" type="file" class="thumbnail-image-upload" @change="submitThumbnailImage" />
+    </label>
+    <basic-info v-bind="baseInfo" :logo="sideInfo.logo"></basic-info>
+    <additional-info :info="sideInfo" :store-id="storeId"></additional-info>
   </div>
 </template>
 
 <script>
-import KakaoMap from '@/components/common/KakaoMap';
+import BasicInfo from '@/components/store/info/BasicInfo';
+import AdditionalInfo from '@/components/store/info/AdditionalInfo';
+
+import { getStoreInfo, updateStoreSideInfo } from '@/api/store';
+import { mapMutations } from 'vuex';
 export default {
   components: {
-    KakaoMap,
+    BasicInfo,
+    AdditionalInfo,
   },
   data() {
     return {
-      location: '대전 유성구 문화원로 140',
+      loaded: false,
+      baseInfo: '',
+      sideInfo: '',
+      thumbImg: require('@/assets/image/thumbnail_example.jpg'),
+      thumbnailFile: '',
+      storeId: '',
     };
+  },
+  async created() {
+    try {
+      this.setSpinnerState(true);
+      const { data } = await getStoreInfo();
+      const { baseInfo, sideInfo } = data;
+      this.baseInfo = baseInfo;
+      this.sideInfo = sideInfo;
+      this.storeId = baseInfo.storeId;
+      if (sideInfo.thumbImg) this.thumbImg = sideInfo.thumbImg;
+      console.log('가게정보', data);
+      this.loaded = true;
+    } catch (error) {
+      console.log(error);
+      alert('가게 정보 불러오기를 실패했습니다');
+    } finally {
+      this.setSpinnerState(false);
+    }
+  },
+  methods: {
+    ...mapMutations(['setSpinnerState']),
+    async submitThumbnailImage(e) {
+      const file = e.target.files[0];
+      this.thumbnailFile = file;
+      try {
+        const frm = new FormData();
+        frm.append('thumbImg', this.thumbnailFile);
+        frm.append('storeId', this.storeId);
+        this.setSpinnerState(true);
+        await updateStoreSideInfo(frm);
+        this.thumbImg = URL.createObjectURL(file);
+      } catch (error) {
+        console.log(error);
+        alert('썸네일 업로드에 실패하였습니다');
+      } finally {
+        this.setSpinnerState(false);
+      }
+    },
   },
 };
 </script>
 
 <style lang="scss" scoped>
-@import '@/assets/scss/sample';
+.store-info-container {
+  width: 80%;
+  border: 1px solid $gray200;
+  @include mobile {
+    width: 100%;
+  }
+  @include xs-mobile {
+    width: 100%;
+  }
+}
+.store-thumbnail-image {
+  width: 100%;
+  height: 10vw;
+  object-fit: cover;
+  object-position: center 50%;
+  cursor: pointer;
+}
+.thumbnail-image-upload {
+  display: none;
+}
 </style>

@@ -1,4 +1,4 @@
-import { getUserFromLocalStorage, getTokenFromLocalStorage } from '@/utils/webStorage';
+import { getUserFromLocalStorage, getTokenFromLocalStorage, getStoreIdFromLocalStorage } from '@/utils/webStorage';
 
 export default {
   tempUserInfo: {},
@@ -12,6 +12,11 @@ export default {
     },
     getUserFromLocalStorage(),
   ),
+  // userInfo: getUserFromLocalStorage() || {},
   token: getTokenFromLocalStorage() || '',
   mainDrawerOpen: false,
+  spinnerOn: false,
+  storeId: getStoreIdFromLocalStorage() || '',
+  rewriteBaseInfo: false,
+  watchedStore: null,
 };

@@ -7,11 +7,14 @@
       <label ref="product" class="nav-item" for="product-radio">상품관리</label>
       <input id="product-radio" v-model="tap" type="radio" value="product" style="display: none" />
 
-      <label ref="timeDeal" class="nav-item" for="time-deal-radio">타임딜 관리</label>
-      <input id="time-deal-radio" v-model="tap" type="radio" value="timeDeal" style="display: none" />
+      <label ref="deal" class="nav-item" for="time-deal-radio">타임딜 관리</label>
+      <input id="time-deal-radio" v-model="tap" type="radio" value="deal" style="display: none" />
 
       <label ref="live" class="nav-item" for="live-radio">라이브 커머스</label>
       <input id="live-radio" v-model="tap" type="radio" value="live" style="display: none" />
+
+      <label ref="reservation" class="nav-item" for="reservation-radio">예약 관리</label>
+      <input id="reservation-radio" v-model="tap" type="radio" value="reservation" style="display: none" />
     </div>
   </div>
 </template>
@@ -21,7 +24,13 @@ export default {
   data() {
     return {
       tap: 'info',
+      cantMove: false,
     };
+  },
+  computed: {
+    path() {
+      return this.$router.history.current;
+    },
   },
   watch: {
     tap(newValue, oldValue) {
@@ -31,16 +40,27 @@ export default {
         this.$emit('changeTap', newValue);
       }
     },
+    $route(newValue) {
+      this.syncTab(newValue.path);
+    },
+  },
+  created() {
+    this.syncTab(this.path.fullPath);
+  },
+  methods: {
+    syncTab(path) {
+      for (const name of ['info', 'product', 'deal', 'live', 'reservation']) {
+        if (path.includes(name)) {
+          this.tap = name;
+        }
+      }
+    },
   },
 };
 </script>
 
 <style lang="scss" scoped>
 // @import '@/assets/scss/sample';
-.store-nav-container {
-  border-bottom: 1px solid $gray300;
-  margin-bottom: 10px;
-}
 .store-nav-items {
   @include lg-pc() {
   }

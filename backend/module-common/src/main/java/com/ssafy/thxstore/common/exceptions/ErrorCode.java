@@ -17,7 +17,8 @@ public enum ErrorCode {
     DUPLICATED_NICKNAME(400, "AU_003", "이미 존재하는 닉네임입니다."),
     UNAUTHORIZED_REDIRECT_URI(400, "AU_004", "인증되지 않은 REDIRECT_URI입니다."),
     BAD_LOGIN(400, "AU_005", "잘못된 아이디 또는 패스워드입니다."),
-    UNAUTHORIZED_MEMBER(400,"AU_006","존재하지않는 유저입니다.");
+    UNAUTHORIZED_MEMBER(400,"AU_006","존재하지않는 유저입니다."),
+    NOT_FOUND_IMAGE(400,"AU_007","이미지 관련 오류가 발생했습니다.");
 
     private final String code;
     private final String message;

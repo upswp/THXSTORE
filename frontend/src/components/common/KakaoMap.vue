@@ -86,11 +86,9 @@ export default {
   width: 100%;
   height: 500px;
   @include mobile() {
-    width: 90%;
     height: 300px;
   }
   @include xs-mobile() {
-    width: 100%;
     height: 200px;
   }
 }

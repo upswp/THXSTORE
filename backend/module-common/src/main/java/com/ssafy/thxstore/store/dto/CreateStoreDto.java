@@ -25,6 +25,10 @@ public class CreateStoreDto {
 
     private String phoneNum;
 
+    private Double lat;
+
+    private Double lon;
+
     private String license;
 
     private String licenseImg;

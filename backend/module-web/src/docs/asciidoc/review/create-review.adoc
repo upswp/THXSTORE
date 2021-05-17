@@ -1,0 +1,41 @@
+ifndef::sub-snippet[]
+:sub-snippet: ../../../../build/generated-snippets
+endif::[]
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 4
+:sectlinks:
+:site-url: /build/asciidoc/html5/state
+
+[[resources-create-review]]
+=== 리뷰 생성
+
+`POST` 요청을 사용해서 새 리뷰를 만들 수 있다.
+
+==== Links
+Links:
+include::{sub-snippet}/create-review/links.adoc[]
+
+==== Request
+CURL:
+include::{sub-snippet}/create-review/curl-request.adoc[]
+Http-request:
+include::{sub-snippet}/create-review/http-request.adoc[]
+Request-headers:
+include::{sub-snippet}/create-review/request-headers.adoc[]
+Request-body:
+include::{sub-snippet}/create-review/request-body.adoc[]
+Request-field:
+include::{sub-snippet}/create-review/request-fields.adoc[]
+
+==== Response
+Http-response:
+include::{sub-snippet}/create-review/http-response.adoc[]
+Response-headers:
+include::{sub-snippet}/create-review/response-headers.adoc[]
+Response-body:
+include::{sub-snippet}/create-review/response-body.adoc[]
+Response-field
+include::{sub-snippet}/create-review/response-fields.adoc[]

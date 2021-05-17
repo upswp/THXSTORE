@@ -25,7 +25,7 @@
         <img src="@/assets/logo/kakao.svg" />
         <b> 카카오톡으로 회원가입하기</b>
       </button>
-      <button id="loginBtn" class="external-item" type="button" @click="googleSignup">
+      <button id="loginBtn" class="external-item" type="button">
         <img src="@/assets/logo/google.svg" />
         <b style="margin-right: 32px"> 구글로 회원가입하기</b>
       </button>
@@ -46,6 +46,7 @@
 <script>
 import ValidationMixin from '@/mixins/auth/validation';
 import { registerUser } from '@/api/auth';
+import { mapMutations } from 'vuex';
 export default {
   mixins: [ValidationMixin],
   data() {
@@ -55,18 +56,33 @@ export default {
         password1: '',
         password2: '',
         nickname: '',
+        lat: 33.450701,
+        lon: 126.570667,
       },
     };
   },
+  created() {
+    this.getLatLong();
+  },
+  mounted() {
+    this.googleLoad();
+  },
   methods: {
+    ...mapMutations(['setSpinnerState']),
+    async googleLoad() {
+      try {
+        await this.$loadScript(`https://apis.google.com/js/api:client.js`);
+        this.$_Google.init();
+      } catch (error) {
+        console.log(error);
+        alert('구글 클라이언트 API 키를 다시 한번 확인해주세요');
+      }
+    },
     kakaoSignup() {
       this.$_Kakao.signup();
     },
     facebookSignup() {
       this.$_Facebook.signup();
-    },
-    googleSignup() {
-      this.$_Google.signup();
     },
     async submitForm() {
       try {
@@ -75,18 +91,36 @@ export default {
           email: this.userData.email,
           password: this.userData.password1,
           nickname: this.userData.nickname,
-          social: null,
+          social: 'LOCAL',
           profileImage: null,
+          lat: this.userData.lat,
+          lon: this.userData.lon,
         };
+        this.setSpinnerState(true);
         await registerUser(userData);
         await this.$store.dispatch('LOGIN', {
           email: this.userData.email,
           password: this.userData.password1,
         });
-        this.$router.push({ name: 'main' });
+        this.setSpinnerState(false);
+        this.$router.push({ name: 'user' });
       } catch (error) {
         console.log(error);
+        this.setSpinnerState(false);
         alert('회원가입에 문제가 생겼습니다. 다시 시도해주세요.');
+      }
+    },
+    getLatLong() {
+      if ('geolocation' in navigator) {
+        navigator.geolocation.getCurrentPosition(position => {
+          let geocoder = new kakao.maps.services.Geocoder();
+          let coord = new kakao.maps.LatLng(position.coords.latitude, position.coords.longitude);
+          this.userData.lat = position.coords.latitude;
+          this.userData.lon = position.coords.longitude;
+        });
+      } else {
+        /* 위치정보 사용 불가능 */
+        console.log('위치 정보 사용 불가능');
       }
     },
   },

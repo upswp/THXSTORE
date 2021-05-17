@@ -1,0 +1,41 @@
+ifndef::sub-snippet[]
+:sub-snippet: ../../../../build/generated-snippets
+endif::[]
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 4
+:sectlinks:
+:site-url: /build/asciidoc/html5/state
+
+[[resources-signUp-SOCIAL]]
+=== 소셜 유저 생성
+
+`POST` 요청을 사용해서 새 소셜 유저를 만들 수 있다.
+
+==== Links
+Links:
+include::{sub-snippet}/signUp-SOCIAL/links.adoc[]
+
+==== Request
+CURL:
+include::{sub-snippet}/signUp-SOCIAL/curl-request.adoc[]
+Http-request:
+include::{sub-snippet}/signUp-SOCIAL/http-request.adoc[]
+Request-headers:
+include::{sub-snippet}/signUp-SOCIAL/request-headers.adoc[]
+Request-body:
+include::{sub-snippet}/signUp-SOCIAL/request-body.adoc[]
+Request-field:
+include::{sub-snippet}/signUp-SOCIAL/request-fields.adoc[]
+
+==== Response
+Http-response:
+include::{sub-snippet}/signUp-SOCIAL/http-response.adoc[]
+Response-headers:
+include::{sub-snippet}/signUp-SOCIAL/response-headers.adoc[]
+Response-body:
+include::{sub-snippet}/signUp-SOCIAL/response-body.adoc[]
+Response-field
+include::{sub-snippet}/signUp-SOCIAL/response-fields.adoc[]

@@ -43,7 +43,7 @@ const registerUser = registerData => publicAPI.post('', registerData);
  * @param {LoginData} loginData
  * @returns {Promise<User>} userData
  */
-const loginUser = loginData => publicAPI.post('login', loginData);
+const loginUser = loginData => publicAPI.post('login/', loginData);
 
 /**
  * 이메일 중복채크
@@ -52,7 +52,7 @@ const loginUser = loginData => publicAPI.post('login', loginData);
  * @returns {Promise<Boolean>} 중복 여부
  */
 const emailCheck = email =>
-  publicAPI.get('user/', {
+  publicAPI.get('checkEmail/', {
     params: {
       email,
     },
@@ -65,11 +65,9 @@ const emailCheck = email =>
  * @returns {Promise<Boolean>} 중복 여부
  */
 const socialCheck = (userId, social) =>
-  publicAPI.get('user/', {
-    params: {
-      userId,
-      social,
-    },
+  publicAPI.post('social/', {
+    userId,
+    social,
   });
 
 const authWithEmailForPwd = userData => publicAPI.post('', userData);

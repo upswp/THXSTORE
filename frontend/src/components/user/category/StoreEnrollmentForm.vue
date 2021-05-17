@@ -1,56 +1,60 @@
 <template>
   <div class="store-enrollment-container">
     <waiting-modal v-if="showWaitingModal" @close="backToMain"> </waiting-modal>
-    <return-Modal v-if="showReturnModal" @close="showReturnModal = false"></return-Modal>
+    <return-Modal v-if="showReturnModal" @close="rewriteStoreEnrollment"></return-Modal>
 
     <header><h2>스토어 정보입력</h2></header>
     <div>
       <form @submit.prevent="submitForm">
         <ul>
           <li>
-            <label for="">스토어 이름</label>
+            <label for="storeName">스토어 이름</label>
             <div class="input-content">
-              <input v-model="storeName" type="text" />
+              <input id="storeName" v-model="storeInfo.name" type="text" />
             </div>
           </li>
           <li>
-            <set-road-name v-if="loaded" @newAddress="setLocationByRoadName">스토어 주소 등록</set-road-name>
-            <label for="">스토어 주소</label>
+            <set-road-name v-if="addressAPILoad" @newAddress="setLocationByRoadName">스토어 주소 등록</set-road-name>
+            <label for="nomalAddress">스토어 주소</label>
             <div class="input-content">
-              <input id="nomalAddress" v-model="nomalAddress" type="text" placeholder="주소" />
-              <button id="addressButton" @click="loaded = true">주소 찾기</button>
-              <input id="detailAddress" v-model="detailAddress" type="text" placeholder="상세주소" />
+              <input id="nomalAddress" v-model="storeInfo.mainAddress" type="text" placeholder="주소" />
+              <button id="addressButton" type="reset" @click="addressAPILoad = true">주소 찾기</button>
+              <input id="detailAddress" v-model="storeInfo.subAddress" type="text" placeholder="상세주소" />
             </div>
           </li>
           <li>
-            <label for="">전화번호</label>
+            <label for="phoneNum">전화번호</label>
             <div class="input-content">
               <input
-                v-model="phoneNum"
-                type="text"
+                id="phoneNum"
+                v-model="storeInfo.phoneNum"
+                type="tel"
                 placeholder="하이픈기호(-) 없이 입력해주세요."
-                @keyup="getPhoneNumber(phoneNum)"
+                @keyup="getPhoneNumber(storeInfo.phoneNum)"
               />
             </div>
           </li>
           <li>
-            <label for="">사업자등록번호</label>
+            <label for="comResNum">사업자등록번호</label>
             <div class="input-content">
               <input
-                v-model="comResNum"
+                id="comResNum"
+                v-model="storeInfo.license"
                 type="tel"
-                name="phone"
                 pattern="[0-9]{3}-[0-9]{2}-[0-9]{5}"
                 placeholder="사업자등록번호를 입력해주세요"
-                @keyup="getComResNum(comResNum)"
+                @keyup="getComResNum(storeInfo.license)"
               />
             </div>
           </li>
           <li>
-            <label for="">사업자등록사본</label>
+            <label>사업자등록사본</label>
             <div class="input-content">
               <div class="file-flex">
-                <input id="fileName" v-model="fileValue" type="text" class="file_input_textbox" readonly />
+                <label for="file_1" class="file_input_label">
+                  {{ fileValue }}
+                  <!-- <input id="fileName" v-model="fileValue" type="text" class="file_input_textbox" readonly /> -->
+                </label>
                 <div class="file_input_div">
                   <label for="file_1">
                     <awesome id="faCloud" ref="cloud" icon="cloud-upload-alt" class="before-upload"></awesome>
@@ -59,7 +63,12 @@
                 </div>
               </div>
             </div>
-            <div class="submit-button">
+            <div v-if="modifyButtonLoad" class="submit-button">
+              <button type="submit">
+                <b>수정 완료</b>
+              </button>
+            </div>
+            <div v-else class="submit-button">
               <button type="submit">
                 <b>신청 완료</b>
               </button>
@@ -73,10 +82,19 @@
 
 <script>
 import SetRoadName from '@/components/common/SetRoadName.vue';
-import WaitingModal from '@/components/common/WaitingModal.vue';
-import ReturnModal from '@/components/common/ReturnModal.vue';
-import { registerStore } from '@/api/seller';
+import WaitingModal from '@/components/user/modal/WaitingModal.vue';
+import ReturnModal from '@/components/user/modal/ReturnModal.vue';
+import {
+  registerStore,
+  getCheckOfStore,
+  deletePreStoreEnrollment,
+  modifyStoreBaseInfo,
+  deletePreStoreModification,
+} from '@/api/seller';
+import { validationPhoneNumber, validationComResNum } from '@/utils/validation';
+import { mapMutations } from 'vuex';
 import { handleException } from '@/utils/handler.js';
+import { findAddressAPI } from '@/api/map.js';
 
 export default {
   components: {
@@ -86,151 +104,162 @@ export default {
   },
   data() {
     return {
+      // 모달
       showWaitingModal: false,
       showReturnModal: false,
-      storeName: '',
-      zip: '',
-      nomalAddress: '',
-      detailAddress: '',
-      phoneNum: '',
-      comResNum: '',
+      // 신청 정보
+      storeInfo: {
+        name: '',
+        mainAddress: '',
+        subAddress: '',
+        phoneNum: '',
+        license: '',
+        licenseImg: '',
+      },
+      // 그 외
       fileValue: '',
-      loaded: false,
-      isEnrollmentDone: 1,
+      addressAPILoad: false,
+      modifyButtonLoad: false,
+      checkStore: '',
+      role: '',
     };
   },
-  created() {
-    // if (this.isEnrollmentDone !== 0 || this.isEnrollmentDone !== 1) {
-    //   return;
-    // }
-    // axios통신으로 등록상태를 받아온다. (등록중 = 0, 등록반려 = 1)
-    if (!this.isEnrollmentDone) {
-      this.showWaitingModal = true;
-    } else {
-      this.showReturnModal = true;
-    }
+  computed: {
+    validForm() {
+      return (
+        this.storeInfo.name !== '' &&
+        this.storeInfo.mainAddress !== '' &&
+        this.storeInfo.phoneNum !== '' &&
+        this.storeInfo.license !== '' &&
+        this.storeInfo.licenseImg !== ''
+      );
+    },
+  },
+  activated() {
+    this.decideRole();
   },
   methods: {
-    getComResNum(val) {
-      let res = this.validationComResNum(val);
-      console.log('서버넘어가는값', res);
-      this.comResNum = res;
-    },
-
-    getPhoneNumber(val) {
-      let res = this.validationPhoneNumber(val);
-      console.log('서버넘어가는값', res);
-      this.phoneNum = res;
-    },
-    validationComResNum(comResNum) {
-      if (!comResNum) return comResNum;
-      comResNum = comResNum.replace(/[^0-9]/g, '');
-      console.log(comResNum);
-      let res = '';
-      if (comResNum.length < 4) {
-        res = comResNum;
-        console.log('res:', res);
-      } else {
-        if (comResNum.length == 4) {
-          res = comResNum.substr(0, 3) + '-' + comResNum.substr(3, 4);
-        } else if (comResNum.length == 5) {
-          res = comResNum.substr(0, 3) + '-' + comResNum.substr(3);
-        } else if (comResNum.length == 6) {
-          res = comResNum.substr(0, 3) + '-' + comResNum.substr(3, 2) + '-' + comResNum.substr(5);
-        } else if (comResNum.length >= 7) {
-          res = comResNum.substr(0, 3) + '-' + comResNum.substr(3, 2) + '-' + comResNum.substr(5, 5);
-        }
-      }
-
-      return res;
-    },
-
-    validationPhoneNumber(phoneNumber) {
-      if (!phoneNumber) return phoneNumber;
-      phoneNumber = phoneNumber.replace(/[^0-9]/g, '');
-
-      let res = '';
-      if (phoneNumber.length < 3) {
-        res = phoneNumber;
-      } else {
-        if (phoneNumber.substr(0, 2) == '02') {
-          if (phoneNumber.length <= 5) {
-            //02-123-5678
-            res = phoneNumber.substr(0, 2) + '-' + phoneNumber.substr(2, 3);
-          } else if (phoneNumber.length > 5 && phoneNumber.length <= 9) {
-            //02-123-5678
-            res = phoneNumber.substr(0, 2) + '-' + phoneNumber.substr(2, 3) + '-' + phoneNumber.substr(5);
-          } else if (phoneNumber.length > 9) {
-            //02-1234-5678
-            res = phoneNumber.substr(0, 2) + '-' + phoneNumber.substr(2, 4) + '-' + phoneNumber.substr(6);
-          }
+    ...mapMutations(['setSpinnerState', 'setUserInfo']),
+    async decideRole() {
+      try {
+        this.setSpinnerState(true);
+        const { data } = await getCheckOfStore('');
+        const role = data.baseInfo.role;
+        data.baseInfo.licenseImg = '';
+        this.setSpinnerState(false);
+        if (role == 'ROLE_MANAGER') {
+          this.setUserInfo({ role: 'ROLE_MANAGER' });
+          this.storeInfo = data.baseInfo;
+          this.modifyButtonLoad = true;
+          this.decideModificationModal();
         } else {
-          if (phoneNumber.length < 8) {
-            res = phoneNumber;
-          } else if (phoneNumber.length == 8) {
-            res = phoneNumber.substr(0, 4) + '-' + phoneNumber.substr(4);
-          } else if (phoneNumber.length == 9) {
-            res = phoneNumber.substr(0, 3) + '-' + phoneNumber.substr(3, 3) + '-' + phoneNumber.substr(6);
-          } else if (phoneNumber.length == 10) {
-            res = phoneNumber.substr(0, 3) + '-' + phoneNumber.substr(3, 3) + '-' + phoneNumber.substr(6);
-          } else if (phoneNumber.length > 10) {
-            //010-1234-5678
-            res = phoneNumber.substr(0, 3) + '-' + phoneNumber.substr(3, 4) + '-' + phoneNumber.substr(7, 4);
-          }
+          this.decideApplicationModal();
         }
+      } catch (error) {
+        this.checkStore = '일반고객';
+        this.setSpinnerState(false);
       }
-
-      return res;
     },
+
+    async decideApplicationModal() {
+      try {
+        const { data } = await getCheckOfStore('');
+        this.checkStore = data.baseInfo.checkStore;
+        if (this.checkStore == 'APPLICATION_WAITING') {
+          this.showWaitingModal = true;
+        } else if (this.checkStore === 'APPLICATION_FAILED') {
+          this.showReturnModal = true;
+        }
+        this.setSpinnerState(false);
+      } catch (error) {
+        this.setSpinnerState(false);
+      }
+    },
+    async decideModificationModal() {
+      try {
+        this.setSpinnerState(true);
+        const { data } = await getCheckOfStore('');
+        this.checkStore = data.baseInfo.checkStore;
+        if (this.checkStore == 'EDIT_WAITING') {
+          this.showWaitingModal = true;
+        } else if (this.checkStore === 'EDIT_FAILED') {
+          this.showReturnModal = true;
+        }
+        this.setSpinnerState(false);
+      } catch (error) {
+        this.checkStore = '일반고객';
+        this.setSpinnerState(false);
+      }
+    },
+    getComResNum(comResNum) {
+      if (!comResNum) return comResNum;
+      let res = validationComResNum(comResNum);
+      this.storeInfo.license = res;
+    },
+    getPhoneNumber(phoneNumber) {
+      if (!phoneNumber) return phoneNumber;
+      let res = validationPhoneNumber(phoneNumber);
+      this.storeInfo.phoneNum = res;
+    },
+
     backToMain() {
       this.showWaitingModal = false;
       // this.$router.push({ path: 'user' });
       this.$emit('changeTab', 'UserProfile');
     },
+    rewriteStoreEnrollment() {
+      this.showReturnModal = false;
+      this.checkStore = '';
+      const role = this.storeInfo.role;
+      if (role == 'ROLE_MANAGER') {
+        deletePreStoreModification();
+      } else {
+        deletePreStoreEnrollment();
+      }
+    },
     async submitForm() {
       try {
-        if (
-          this.storeName == '' ||
-          this.nomalAddress == '' ||
-          this.phoneNum == '' ||
-          this.comResNum == '' ||
-          this.profileImage == ''
-        ) {
+        if (!this.validForm) {
           alert('항목을 모두 채워주세요');
         } else {
-          const formdata = new FormData();
-          formdata.append('storeName', this.storeName);
-          formdata.append('nomalAddress', this.nomalAddress);
-          formdata.append('detailAddress', this.detailAddress);
-          formdata.append('phoneNum', this.phoneNum);
-          formdata.append('comResNum', this.comResNum);
-          formdata.append('comResNum', this.profileImage);
-          // const storeData = {
-          //   storeName: this.storeName,
-          //   nomalAddress: this.nomalAddress,
-          //   detailAddress: this.detailAddress,
-          //   phoneNum: this.phoneNum,
-          //   comResNum: this.comResNum,
-          // };
-          await registerStore(formdata);
+          this.setSpinnerState(true);
+          const { data } = await findAddressAPI(this.storeInfo.mainAddress);
+          this.storeInfo.lon = data.documents[0].x;
+          this.storeInfo.lat = data.documents[0].y;
+          const formData = new FormData();
+          for (const key in this.storeInfo) {
+            formData.append(key, this.storeInfo[key]);
+          }
+          if (this.modifyButtonLoad == true) {
+            formData.delete('checkStore');
+            formData.delete('role');
+            await modifyStoreBaseInfo(formData);
+          } else {
+            await registerStore(formData);
+            this.setSpinnerState(false);
+          }
+          this.setSpinnerState(false);
           this.$emit('changeTab', 'UserProfile');
         }
       } catch (error) {
         alert('스토어 등록에 문제가 생겼습니다. 다시 시도해주세요.');
+        this.setSpinnerState(false);
       }
     },
     insertedFile(event) {
       const file = event.target.files[0];
-      this.profileImage = URL.createObjectURL(file);
-      const fileValue = event.target.value;
+      // this.licenseImg = URL.createObjectURL(file);
+      this.storeInfo.licenseImg = file;
+      const fileValue = file.name;
       this.fileValue = fileValue;
+
       if (file) {
         this.$refs.cloud.classList.add('after-upload');
       }
     },
     setLocationByRoadName(data) {
-      this.loaded = false;
-      this.nomalAddress = data;
+      this.addressAPILoad = false;
+      this.storeInfo.mainAddress = data;
     },
   },
 };
@@ -270,7 +299,6 @@ export default {
     border: 2.5px solid #dfe1e6;
     padding: 10px 15px;
     border-radius: 3px;
-    z-index: 0;
   }
   #nomalAddress {
     width: 60%;
@@ -284,15 +312,27 @@ export default {
     background-color: none;
     // border: 2.5px solid #dfe1e6;
   }
-
-  .file_input_textbox {
+  .file_input_label {
     display: inline-block;
     width: 90%;
+    margin-bottom: 0px;
+    margin-left: 0%;
+    padding: 5px 15px;
+    border: 2.5px solid #dfe1e6;
+    &:hover {
+      cursor: pointer;
+    }
+  }
+
+  .file_input_textbox {
+    position: inherit;
+    display: inline-block;
+    width: 100%;
     margin-bottom: 0px;
     margin-right: 1%;
     padding: 1px 1px;
     background-color: none;
-    border: 2.5px solid #dfe1e6;
+    border: 2.5px solid white;
   }
   .file_input_div {
     position: relative;
@@ -301,7 +341,7 @@ export default {
     overflow: hidden;
   }
   .file_input_img_btn {
-    padding: 0 0 0 5px;
+    padding-left: 5px;
   }
   .file_input_hidden {
     font-size: 20px;
@@ -362,28 +402,41 @@ export default {
       padding: 0%;
       width: 20%;
     }
+    #storeName {
+      margin: 0px 0px 5px 0px;
+    }
     header {
-      font-size: 0.7rem;
+      font-size: 0.8rem;
+    }
+    input {
+      font-size: 13px;
+      padding: 5px 8px;
     }
     label {
       width: 40%;
       float: left;
-      font-size: 12px;
+      font-size: 15px;
       padding-bottom: 0%;
+      margin-bottom: 0.5%;
       margin-left: 0px;
     }
     .input-content {
       width: 98%;
-      padding: 1%;
+      padding: 0px 1% 1% 1%;
+
       display: inline-block;
     }
     #nomalAddress {
       width: 70%;
+      margin-bottom: 2px;
     }
     #addressButton {
       padding-right: 0%;
       padding-left: 0%;
+      padding-bottom: 1.5%;
       margin-left: 1%;
+      margin-bottom: 5px;
+      font-size: 13px;
     }
     button {
       margin-right: 4%;
@@ -405,16 +458,19 @@ export default {
     }
     input {
       padding: 5px 8px;
+      font-size: 11px;
     }
     #addressButton {
-      margin: 2%;
+      margin: 1%;
       padding: 5px 3px 5px 3px;
+      font-size: 12px;
     }
     .input-content {
       width: 98%;
       padding: 1%;
       display: inline-block;
     }
+    // .file_input_label {}
     #nomalAddress {
       margin: 0px;
     }

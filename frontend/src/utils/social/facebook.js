@@ -51,7 +51,7 @@ const Facebook = {
                   email: res.email,
                   nickname: res.name,
                   profileImage: res.picture.data.url,
-                  social: 'facebook',
+                  social: 'FACEBOOK',
                 };
                 resolve(req_body);
               });

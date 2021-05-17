@@ -12,6 +12,6 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 public class SocialMemberResource extends EntityModel<SocialMemberResponse> {
     public SocialMemberResource(SocialMemberResponse socialMemberResponse, Link... links) {
         super(socialMemberResponse, links);
-        add(linkTo(AuthController.class).slash(socialMemberResponse.getId()).withSelfRel());
+        add(linkTo(AuthController.class).slash(socialMemberResponse.getCheck()).withSelfRel());
     }
 }

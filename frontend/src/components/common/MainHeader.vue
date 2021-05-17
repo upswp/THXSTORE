@@ -1,7 +1,7 @@
 <template>
   <header class="fixed-header">
     <div class="fixed-header-logo">
-      <div></div>
+      <div class="block-for-logo"></div>
       <div class="logo-title" @click="moveToPage('main')">
         <ul class="logo-wrap">
           <li><awesome icon="store" class="store"></awesome></li>
@@ -31,6 +31,22 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.block-for-logo {
+  @include lg-pc {
+    display: none;
+  }
+  @include pc {
+    display: none;
+  }
+}
+.logo-title {
+  @include lg-pc {
+    padding-left: 10px;
+  }
+  @include pc {
+    padding-left: 10px;
+  }
+}
 .fixed-header {
   z-index: 10;
   position: fixed;
@@ -41,7 +57,6 @@ export default {
   @include justify-content(flex-end);
   @include align-items(center);
   box-shadow: 0 0 3px rgba(0, 0, 0, 0.2);
-  @include transition(font-size 0.5s);
   font-size: 1.8rem;
   @include mobile() {
     font-size: 1.4rem;
@@ -68,7 +83,6 @@ export default {
       font-family: 'Pacifico', cursive;
       color: $blue800;
       font-size: 2rem;
-      @include transition(font-size 0.5s);
       @include mobile() {
         font-size: 1.4rem;
       }

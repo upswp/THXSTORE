@@ -22,15 +22,13 @@ export default {
 <style lang="scss" scoped>
 .main-container {
   z-index: 10;
-  background-color: $gray100;
 }
 .main-contents {
-  background-color: $gray100;
-  position: absolute;
-  padding: 50px 10px;
+  padding-top: 50px;
   min-height: 100vh;
   width: 100%;
   @include flexbox;
+  @include justify-content(center);
   @include mobile() {
     padding-top: 40px;
   }

@@ -1,67 +1,162 @@
 <template>
   <div style="max-width: 1080px; margin: 1px auto">
-    <div class="manager-list-container">
+    <div v-if="isListBe" class="manager-list-container">
       <div class="manager-info-container">
         <div class="side-bar">
           <ul class="name-list">
-            <li class="name-item" @click="clickNameList">
-              <awesome icon="store" class="store"></awesome> {{ storeName }}
+            <li
+              v-for="(storeName, index) in storeNormalInfo"
+              :key="index"
+              class="name-item"
+              @click="clickNameList(index)"
+            >
+              <awesome icon="store" class="store"></awesome> {{ storeName.name }}
             </li>
-            <li class="name-item"><awesome icon="store" class="store"></awesome>{{ storeName }}</li>
-            <li class="name-item">GS25편의점 원내점</li>
-            <li class="name-item">{{ storeName }}</li>
           </ul>
         </div>
         <div class="manager-info-bottom">
-          <div class="info-column">스토어 명:</div>
-          <div class="info-data">{{ storeName }}</div>
-          <div class="info-column">전화번호:</div>
-          <div class="info-data">{{ phoneNum }}</div>
-          <div class="info-column">스토어 주소:</div>
+          <div class="info-label">스토어 명:</div>
+          <div class="info-data">{{ storeNormalInfo[order].name }}</div>
+          <div class="info-label">전화번호:</div>
+          <div class="info-data">{{ storeNormalInfo[order].phoneNum }}</div>
+          <div class="info-label">스토어 주소:</div>
           <div class="info-data">
-            {{ nomalAddress }} <br />
-            {{ detailAddress }}
+            {{ storeNormalInfo[order].mainAddress }} <br />
+            {{ storeNormalInfo[order].subAddress }}
           </div>
-          <div class="info-column">사업자 번호:</div>
-          <div class="info-data">{{ comResNum }}</div>
+          <div class="info-label">사업자 번호:</div>
+          <div class="info-data">{{ storeNormalInfo[order].license }}</div>
         </div>
       </div>
-      <!-- <div class="manager-copy-container" :style="{ 'background-image': require(copy.thumbnail) }"></div> -->
       <div class="manager-copy-container">
-        <img src="@/assets/image/사업자 등록증 포부인터.jpg" alt="" />
-        <!-- src v-bind쓸 때  -->
-        <!-- {{ thumbnail }} -->
+        <img :src="storeNormalInfo[order].licenseImg" alt="이미지 누락" />
       </div>
       <div class="button-group">
-        <div class="pass-button">반려</div>
-        <div class="fail-button">승인</div>
+        <div class="fail-button" @click="retireEnrollment">반려</div>
+        <div class="pass-button" @click="approveEnrollment">승인</div>
       </div>
     </div>
+    <div v-else class="list-none">판매자 등록 신청이 없습니다.</div>
   </div>
 </template>
 
 <script>
+import 'url-search-params-polyfill';
+import {
+  getStoreEnrollmentList,
+  approveStoreEnrollment,
+  retireStoreEnrollment,
+  getStoreModifyList,
+  approveStoreModification,
+  retireStoreModification,
+} from '@/api/seller';
+import { mapMutations } from 'vuex';
 export default {
+  props: {
+    showStoreEnrollmentAndModificationList: {
+      type: String,
+      default: '',
+    },
+  },
   data() {
     return {
-      storeName: '든든한끼',
-      nomalAddress: '대전 유성구 원내동79-15',
-      detailAddress: '1층',
-      phoneNum: '010-9265-5275',
-      comResNum: '045-24-45678',
-      thumbnail: `@/assets/image/basic_profile.jpg`,
+      storeNormalInfo: [],
+
+      isListBe: false,
+      storeId: [],
+      order: 0,
     };
   },
+  watch: {
+    showStoreEnrollmentAndModificationList(newValue, oldValue) {
+      if (newValue === oldValue) return;
+      if (newValue === 'applyStoreEnrollment') {
+        this.getStoreListforEnroll();
+      } else {
+        this.getStoreListforModify();
+      }
+    },
+  },
+  created() {
+    this.getStoreListforEnroll();
+  },
   methods: {
-    clickNameList() {
-      console.log('된다.');
+    ...mapMutations(['setSpinnerState']),
+    async getStoreListforEnroll() {
+      try {
+        this.resetData();
+        this.setSpinnerState(true);
+        const { data } = await getStoreEnrollmentList();
+        this.setSpinnerState(false);
+        this.storeNormalInfo = data;
+        if (this.storeNormalInfo.length != 0) {
+          this.isListBe = true;
+        }
+      } catch (error) {
+        this.setSpinnerState(false);
+      }
+    },
+    async getStoreListforModify() {
+      try {
+        this.setSpinnerState(true);
+        const { data } = await getStoreModifyList();
+        this.setSpinnerState(false);
+        this.storeNormalInfo = data;
+        if (this.storeNormalInfo.length != 0) {
+          this.isListBe = true;
+        }
+      } catch (error) {
+        this.setSpinnerState(false);
+      }
+    },
+    clickNameList(index) {
+      this.order = index;
+    },
+    async approveEnrollment() {
+      try {
+        const order = this.order;
+        if (this.showStoreEnrollmentAndModificationList == 'modifyStoreEnrollment') {
+          const tempStoreId = this.storeNormalInfo[order].tempStoreId;
+          await approveStoreModification({ tempStoreId: tempStoreId });
+        } else {
+          const storeId = this.storeNormalInfo[order].id;
+          await approveStoreEnrollment({ storeId: storeId });
+        }
+        this.storeNormalInfo.splice(this.order, 1);
+        this.storeNormalInfo = [...this.storeNormalInfo];
+        if (this.storeNormalInfo.length == 0) {
+          this.isListBe = false;
+        }
+        this.order = 0;
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    async retireEnrollment() {
+      const order = this.order;
+      if (this.showStoreEnrollmentAndModificationList == 'modifyStoreEnrollment') {
+        const tempStoreId = this.storeNormalInfo[order].tempStoreId;
+        await retireStoreModification({ tempStoreId: tempStoreId });
+      } else {
+        const storeId = this.storeNormalInfo[order].id;
+        await retireStoreEnrollment({ storeId: storeId });
+      }
+      this.storeNormalInfo.splice(this.order, 1);
+      this.storeNormalInfo = [...this.storeNormalInfo];
+      if (this.storeNormalInfo.length == 0) {
+        this.isListBe = false;
+      }
+      this.order = 0;
+    },
+    resetData() {
+      this.storeNormalInfo = [];
+      this.isListBe = false;
     },
   },
 };
 </script>
 
 <style lang="scss" scoped>
-@import '@/assets/scss/sample2';
 .manager-list-container {
   width: 95%;
   padding: 3% 3% 2% 3%;
@@ -92,13 +187,13 @@ export default {
   .side-bar {
     overflow-y: auto;
     overflow-x: hidden;
-    min-height: 70%;
+    min-height: 60%;
     width: 100%;
     margin: 2%;
     background: black;
     border: 2px black solid;
     color: $blue600;
-    font-size: 2em;
+    font-size: 1.5em;
     // height: 300px;
     @include mobile {
       width: 100%;
@@ -132,11 +227,12 @@ export default {
   .manager-info-container {
     @include flexbox;
     align-items: flex-start;
-    border: black 2px solid;
+    border: grey 2px solid;
     width: 40%;
-    // align-items: center;
+    align-items: center;
     flex-grow: 1;
     flex-wrap: wrap;
+    overflow: auto;
     @include mobile {
       font-size: 0.6em;
       width: 100%;
@@ -159,7 +255,7 @@ export default {
         order: 2;
         margin: 7px;
       }
-      .info-column {
+      .info-label {
         flex-basis: 30%;
         text-align: left;
         padding-left: 2%;
@@ -186,20 +282,22 @@ export default {
     }
   }
   .manager-copy-container {
-    border: black 2px solid;
+    border: grey 2px solid;
+    border-left: none;
     width: 50%;
-    // height: 500px;
     padding: 5px;
     overflow: hidden;
     @include mobile {
       order: 2;
       width: 100%;
       border-top: none;
+      border-left: grey 2px solid;
     }
     @include xs-mobile {
       order: 2;
       width: 100%;
       border-top: none;
+      border-left: grey 2px solid;
     }
     // background: url('../../assets/image/사업자 등록증.jpg') no-repeat;
     // object-fit: cover; // 이미지 태그에 넣는 것 width 100% height 100%
@@ -223,7 +321,7 @@ export default {
     @include xs-mobile {
       padding-top: 15px;
     }
-    .pass-button {
+    .fail-button {
       display: inline-block;
       width: 30%;
       color: $white;
@@ -237,7 +335,7 @@ export default {
         transition: 0.4s;
       }
     }
-    .fail-button {
+    .pass-button {
       display: inline-block;
       width: 30%;
       color: $white;
@@ -252,6 +350,14 @@ export default {
         transition: 0.4s;
       }
     }
+  }
+}
+.list-none {
+  min-height: 200px;
+  padding: 3%;
+  text-align: center;
+  @include mobile {
+    font-size: 1em;
   }
 }
 </style>

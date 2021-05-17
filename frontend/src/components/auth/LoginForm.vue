@@ -19,7 +19,7 @@
           <img src="@/assets/logo/kakao.svg" />
           <b> 카카오톡으로 로그인하기</b>
         </button>
-        <button id="loginBtn" class="external-item" type="button" @click="googleLogin">
+        <button id="loginBtn" class="external-item" type="button">
           <img src="@/assets/logo/google.svg" />
           <b style="margin-right: 32px"> 구글로 로그인하기</b>
         </button>
@@ -39,6 +39,7 @@
 </template>
 
 <script>
+import { mapMutations } from 'vuex';
 export default {
   data() {
     return {
@@ -47,8 +48,20 @@ export default {
       isSocialForm: true,
     };
   },
-
+  mounted() {
+    this.googleLoad();
+  },
   methods: {
+    ...mapMutations(['setSpinnerState']),
+    async googleLoad() {
+      try {
+        await this.$loadScript(`https://apis.google.com/js/api:client.js`);
+        this.$_Google.init();
+      } catch (error) {
+        console.log(error);
+        alert('구글 클라이언트 API 키를 다시 한번 확인해주세요');
+      }
+    },
     moveToPage(name) {
       this.$router.push({ name });
     },
@@ -58,18 +71,18 @@ export default {
     facebookLogin() {
       this.$_Facebook.login();
     },
-    googleLogin() {
-      this.$_Google.login();
-    },
     async submitForm() {
       try {
+        this.setSpinnerState(true);
         await this.$store.dispatch('LOGIN', {
           email: this.userData.id,
           password: this.userData.password,
         });
-        this.$router.push({ name: 'main' });
+        this.setSpinnerState(false);
+        this.$router.push({ name: 'user' });
       } catch (error) {
         console.log(error);
+        this.setSpinnerState(false);
         if (confirm('아직 가입되지 않은 회원입니다. \n회원가입 화면으로 이동하시겠습니까?')) {
           this.$router.push({ name: 'signup' });
         }

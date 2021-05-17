@@ -1,25 +1,39 @@
 <template>
   <nav class="user-nav-container">
     <div class="nav-buttons">
-      <button ref="currentStore" @click="selectComponent('currentStore')">예약 목록</button>
+      <button ref="UserProfile" class="active" @click="selectComponent('UserProfile')">프로필</button>
       <span>|</span>
-      <button ref="recentReviews" @click="selectComponent('recentReviews')">최근 리뷰</button>
+      <button ref="PasswordReset" @click="selectComponent('PasswordReset')">비밀번호 변경</button>
       <span>|</span>
-      <button ref="userProfile" @click="selectComponent('userProfile')">프로필</button>
+      <button ref="CurrentStore" @click="selectComponent('CurrentStore')">예약 목록</button>
       <span>|</span>
-      <button ref="passwordReset" class="active" @click="selectComponent('passwordReset')">비밀번호 변경</button>
+      <button ref="RecentReviews" @click="selectComponent('RecentReviews')">최근 리뷰</button>
       <span>|</span>
-      <button ref="storeEnrollmentForm" @click="selectComponent('storeEnrollmentForm')">판매자 신청</button>
+      <button ref="StoreEnrollmentForm" @click="selectComponent('StoreEnrollmentForm')">판매자 신청/수정</button>
     </div>
   </nav>
 </template>
 
 <script>
 export default {
+  props: {
+    to: {
+      type: String,
+      default: '',
+      require: true,
+    },
+  },
   data() {
     return {
-      active: 'passwordReset',
+      active: 'UserProfile',
     };
+  },
+  watch: {
+    to(newValue) {
+      this.resetActive();
+      this.active = newValue;
+      this.$refs[newValue].classList.add('active');
+    },
   },
   methods: {
     selectComponent(item) {
@@ -27,8 +41,7 @@ export default {
       this.resetActive();
       this.active = item;
       this.$refs[item].classList.add('active');
-      const capitalize = ([firstLetter, ...rest]) => `${firstLetter.toUpperCase()}${rest.join('')}`;
-      this.$emit('clickButton', capitalize(item));
+      this.$emit('clickButton', item);
     },
     resetActive() {
       this.$refs[this.active].classList.remove('active');

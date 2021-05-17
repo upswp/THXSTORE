@@ -16,7 +16,7 @@ const routesForStore = [
         component: () => import('@/components/store/StoreProduct.vue'),
       },
       {
-        path: 'time-deal',
+        path: 'deal',
         name: 'storeTimeDeal',
         component: () => import('@/components/store/StoreTimeDeal.vue'),
       },
@@ -24,6 +24,11 @@ const routesForStore = [
         path: 'live',
         name: 'storeLive',
         component: () => import('@/components/store/StoreLive.vue'),
+      },
+      {
+        path: 'reservation',
+        name: 'storeReservation',
+        component: () => import('@/components/store/StoreReservation.vue'),
       },
     ],
   },
