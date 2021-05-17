@@ -5,7 +5,7 @@
       <div class="profile-background"></div>
       <div class="user-contents-wrapper">
         <div class="user-profile-image">
-          <img :src="profileImage" />
+          <img :src="userData.profileImage" />
         </div>
         <div class="profile-change-button">
           <label for="image-upload-button">
@@ -18,11 +18,11 @@
             <div class="col">
               <div class="email">
                 <div class="item-header">이메일</div>
-                <div class="item-label">a@a.com</div>
+                <div class="item-label">{{ userData.email }}</div>
               </div>
               <div class="social">
                 <div class="item-header">소셜 가입</div>
-                <div class="item-label">일반 회원</div>
+                <div class="item-label">{{ userData.social === 'LOCAL' ? '일반 회원' : '소셜 회원' }}</div>
               </div>
             </div>
             <div class="col">
@@ -33,10 +33,10 @@
                 </div>
                 <transition name="fade" mode="out-in">
                   <div v-if="!change.nickname" key="non-editable" class="item-display">
-                    <div class="item-label">{{ nickname }}</div>
+                    <div class="item-label">{{ userData.nickname }}</div>
                   </div>
                   <div v-else key="editable" class="item-input">
-                    <input v-model="nickname" type="text" maxlength="10" @keydown.enter="setNickname" />
+                    <input v-model="userData.nickname" type="text" maxlength="10" @keydown.enter="setNickname" />
                     <awesome :icon="['far', 'check-circle']" @click="setNickname"></awesome>
                   </div>
                 </transition>
@@ -48,10 +48,10 @@
                 </div>
                 <transition name="fade" mode="out-in">
                   <div v-if="!change.phone" key="non-editable" class="item-display">
-                    <div class="item-label">{{ phone }}</div>
+                    <div class="item-label">{{ userData.phoneNumber }}</div>
                   </div>
                   <div v-else key="editable" class="item-input">
-                    <input v-model="phone" type="tel" @keydown.enter="setPhoneNumber" />
+                    <input v-model="userData.phoneNumber" type="tel" @keydown.enter="setPhoneNumber" />
                     <awesome :icon="['far', 'check-circle']" @click="setPhoneNumber"></awesome>
                   </div>
                 </transition>
@@ -59,22 +59,22 @@
             </div>
           </div>
           <hr />
-          <div class="location">
+          <div class="address">
             <div class="item-header">
               위치 설정
               <awesome icon="pen-square" @click="loaded = true"></awesome>
             </div>
-            <div class="item-display location">
-              <div class="item-label">{{ location }}</div>
+            <div class="item-display address">
+              <div class="item-label">{{ userData.address }}</div>
             </div>
             <div class="kakao-map">
-              <kakao-map :location="newLocation"></kakao-map>
+              <kakao-map :location="newLocation" @lat-update="latUpdate" @lon-update="lonUpdate"></kakao-map>
             </div>
           </div>
         </div>
       </div>
     </div>
-    <set-road-name v-if="loaded" @newAddress="setLocationByRoadName"></set-road-name>
+    <set-road-name v-if="loaded" @newAddress="setAddress"></set-road-name>
   </div>
 </template>
 
@@ -84,6 +84,7 @@ import SetRoadName from '@/components/common/SetRoadName';
 import { mapGetters } from 'vuex';
 
 import { updateProfile } from '@/api/profile';
+import { saveUserToLocalStorage } from '@/utils/webStorage';
 export default {
   components: {
     KakaoMap,
@@ -91,72 +92,85 @@ export default {
   },
   data() {
     return {
-      nickname: 'daep93',
-      phone: '010-8388-7260',
-      location: '대전 유성구 동서대로 98-39',
-      newLocation: '대전 유성구 동서대로 98-39',
-      profileImage: '',
+      userData: {},
       change: {
         nickname: false,
         phone: false,
-        location: false,
+        address: false,
       },
       loaded: false,
+      newLocation: '대전 유성구 동서대로 98-39',
     };
   },
   computed: {
     ...mapGetters(['getUserInfo']),
   },
   created() {
-    this.profileImage = this.getUserInfo.profileImage;
+    this.userData = Object.assign({}, this.getUserInfo);
+    this.newLocation = this.userData.address;
   },
   methods: {
-    setNickname() {
+    latUpdate(e) {
+      this.userData.lat = e;
+    },
+    lonUpdate(e) {
+      this.userData.lon = e;
+    },
+    async setNickname() {
       this.change.nickname = false;
 
-      // try {
-      //   await updateProfile({
-      //     nickname: this.nickname,
-      //   })
-      //   this.change.nickname = false;
-      // } catch (error) {
-      //   alert('닉네임 변경 실패!')
-      // }
+      try {
+        await updateProfile({
+          id: this.userData.id,
+          nickname: this.userData.nickname,
+        });
+        saveUserToLocalStorage(this.userData);
+        this.change.nickname = false;
+      } catch (error) {
+        alert('닉네임 변경 실패!');
+      }
     },
-    setPhoneNumber() {
+    async setPhoneNumber() {
       this.change.phone = false;
-      // try {
-      //  await updateProfile({
-      //    phone: this.phone,
-      //  })
-      //  this.change.phone = false;
-      // } catch (error) {
-      //   alert('핸드폰 번호 변경 실패!');
-      // }
+      try {
+        await updateProfile({
+          id: this.userData.id,
+          phoneNumber: this.userData.phoneNumber,
+        });
+        saveUserToLocalStorage(this.userData);
+        this.change.phone = false;
+      } catch (error) {
+        alert('핸드폰 번호 변경 실패!');
+      }
     },
-    setLocationByRoadName(addr) {
+    async setAddress(addr) {
       this.loaded = false;
-      if (addr === '') return;
-      this.location = addr;
+      if (!addr) return;
+      this.userData.address = addr;
       this.newLocation = addr;
-      // try {
-      //   await updateProfile({
-      //     location:addr,
-      //   })
-      // } catch (error) {
-      //   alert('위치 변경 실패!')
-      // }
+      try {
+        await updateProfile({
+          id: this.userData.id,
+          address: addr,
+          lat: this.userData.lat,
+          lon: this.userData.lon,
+        });
+        saveUserToLocalStorage(this.userData);
+      } catch (error) {
+        alert('위치 변경 실패!');
+      }
     },
-    changeImage(e) {
+    async changeImage(e) {
       const file = e.target.files[0];
-      this.profileImage = URL.createObjectURL(file);
-      // try {
-      //   const frm = new FormData();
-      //   frm.append('profileImage', file);
-      //   await updateProfile(frm);
-      // } catch (error) {
-      //   alert('프로필 이미지 변경 실패!');
-      // }
+      try {
+        const frm = new FormData();
+        frm.append('id', this.userData.id);
+        frm.append('profileImage', file);
+        await updateProfile(frm);
+        this.userData.profileImage = URL.createObjectURL(file);
+      } catch (error) {
+        alert('프로필 이미지 변경 실패!');
+      }
     },
   },
 };
@@ -305,7 +319,7 @@ export default {
   @include flexbox;
   @include justify-content(center);
   @include align-items(center);
-  &.location {
+  &.address {
     margin-bottom: 20px;
   }
 }
@@ -320,7 +334,7 @@ export default {
     margin-right: 5px;
   }
 }
-.location {
+.address {
   input {
     border: none;
     border-bottom: 1px solid $gray400;

@@ -7,12 +7,14 @@ export default {
     commit('setToken', data.accessToken);
     saveTokenToLocalStorage(data.accessToken);
     const userData = {
-      id: data.id,
+      address: data.address ? data.address : '대전광역시 유성구 덕명동 124',
       email: data.email,
-      location: data.location,
+      id: data.id,
+      lat: data.lat ? data.lat : 36.354946759143,
+      lon: data.lon ? data.lon : 127.29980994578,
       nickname: data.nickname,
-      phoneNumber: data.phoneNumber,
-      profileImage: data.profileImage,
+      phoneNumber: data.phoneNumber ? data.phoneNumber : '-',
+      profileImage: data.profileImage ? data.profileImage : require('@/assets/image/basic_profile.jpg'),
       role: data.role,
       social: data.social,
     };

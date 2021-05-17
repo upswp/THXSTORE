@@ -1,17 +1,14 @@
 import { getUserFromLocalStorage, getTokenFromLocalStorage, getStoreIdFromLocalStorage } from '@/utils/webStorage';
+const userInfo = Object.assign({}, getUserFromLocalStorage());
+if (!userInfo.profileImage) userInfo.profileImage = require('@/assets/image/basic_profile.jpg');
+if (!userInfo.address) userInfo.address = '대전광역시 유성구 덕명동 124';
+if (!userInfo.lat) userInfo.lat = 36.354946759143;
+if (!userInfo.lon) userInfo.lon = 127.29980994578;
+if (!userInfo.phoneNumber) userInfo.phoneNumber = '-';
 
 export default {
   tempUserInfo: {},
-  userInfo: Object.assign(
-    {
-      userId: '',
-      email: '',
-      nickname: '',
-      social: '',
-      profileImage: require('@/assets/image/basic_profile.jpg'),
-    },
-    getUserFromLocalStorage(),
-  ),
+  userInfo,
   // userInfo: getUserFromLocalStorage() || {},
   token: getTokenFromLocalStorage() || '',
   mainDrawerOpen: false,

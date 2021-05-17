@@ -35,6 +35,7 @@
 import ValidationMixin from '@/mixins/auth/validation';
 import { registerUser } from '@/api/auth';
 import { mapGetters, mapMutations } from 'vuex';
+import { findLocationAPI } from '@/api/map';
 export default {
   mixins: [ValidationMixin],
   data() {
@@ -51,8 +52,9 @@ export default {
         email: '',
         password1: '',
         password2: '',
-        lat: '',
-        lon: '',
+        lat: 33.450701,
+        lon: 126.570667,
+        address: '',
       },
       this.getTempUserInfo,
     );
@@ -69,6 +71,9 @@ export default {
           nickname: this.userData.nickname,
           social: this.userData.social,
           profileImage: this.userData.profileImage,
+          lat: this.userData.lat,
+          lon: this.userData.lon,
+          address: this.userData.address,
         };
         this.setSpinnerState(true);
         // 현재 위치 들어갈 자리
@@ -94,6 +99,9 @@ export default {
           let coord = new kakao.maps.LatLng(position.coords.latitude, position.coords.longitude);
           this.userData.lat = position.coords.latitude;
           this.userData.lon = position.coords.longitude;
+          findLocationAPI(this.userData.lat, this.userData.lon).then(response => {
+            this.userData.address = response.data.documents[0].address.address_name;
+          });
         });
       } else {
         /* 위치정보 사용 불가능 */
