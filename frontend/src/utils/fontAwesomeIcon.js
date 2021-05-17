@@ -23,6 +23,8 @@ import {
   faPencilAlt,
   faChevronDown,
   faChevronUp,
+  faSearch,
+  faHourglassHalf,
 } from '@fortawesome/free-solid-svg-icons';
 library.add(
   faStore,
@@ -44,6 +46,8 @@ library.add(
   faPencilAlt,
   faChevronDown,
   faChevronUp,
+  faSearch,
+  faHourglassHalf,
 );
 
 import {

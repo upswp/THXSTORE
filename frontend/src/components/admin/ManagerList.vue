@@ -41,7 +41,6 @@
 </template>
 
 <script>
-import 'url-search-params-polyfill';
 import {
   getStoreEnrollmentList,
   approveStoreEnrollment,

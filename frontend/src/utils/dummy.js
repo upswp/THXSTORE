@@ -2,7 +2,7 @@ const dummy = [
   {
     id: 1,
     name: '무영 회센터',
-    storeCatogry: 'DEFAULT',
+    storeCategory: 'KR_FOOD',
     phoneNumber: '0101-22-302',
     mainAddress: '대전 유성구 계산동 30-2',
     subAddress: '경성빌딩 1층',
@@ -23,7 +23,7 @@ const dummy = [
         productImg: 'https://cdn.onul-hoi.com/c7ad0a_200320113820.jpg',
         amount: '1~2인분 ',
         rate: 30,
-        stock: 20,
+        stock: 0,
         introduce: '제철 숭어와 우럭, 광어, 놀래미로 구성되서 나갑니다.',
       },
       {
@@ -37,12 +37,23 @@ const dummy = [
         stock: 10,
         introduce: '제철 숭어와 우럭, 광어, 놀래미로 구성되서 나갑니다.',
       },
+      {
+        id: 3,
+        name: '숭어회(중)',
+        price: 26000,
+        productImg:
+          'https://pds.joins.com/news/component/htmlphoto_mmdata/202005/08/8f515359-c4c0-4648-9753-ee3e42a5b3e9.jpg',
+        amount: '1~2인분 ',
+        rate: 30,
+        stock: 20,
+        introduce: '제철 숭어를 맘껏 즐기신다면 추천.',
+      },
     ],
   },
   {
     id: 2,
     name: 'RORO 11',
-    storeCatogry: 'DEFAULT',
+    storeCategory: 'CAFE',
     phoneNumber: '0101-22-302',
     mainAddress: '대전 유성구 덕명동 2 신선로',
     subAddress: '103',
