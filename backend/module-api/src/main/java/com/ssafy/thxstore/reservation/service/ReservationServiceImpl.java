@@ -123,7 +123,6 @@ public class ReservationServiceImpl implements ReservationService{
         List<ReservationGroup> list;
         List<Reservation> reservationlist;
 
-
         //dto 엔티티 매핑
         //memberid 검색 storeid 검색 각각 주문 size 구하자
         //기본키로 찾아야하는데 일단 쿼리문 적은 email로
@@ -150,6 +149,7 @@ public class ReservationServiceImpl implements ReservationService{
                 Optional<Store> store = storeRepository.findById(reservationlist.get(i).getStoreId());
 //2개 57, 58에 각각 상품그룹 넣어줘d
                     ReservationDto reservationDto = ReservationDto.builder().
+                            reservationId(reservationlist.get(i).getId()).
                             storeImg(store.get().getLicenseImg()).
                             storeName(store.get().getName()).
                             email(reservationlist.get(i).getEmail()).
@@ -162,7 +162,7 @@ public class ReservationServiceImpl implements ReservationService{
                             build();
 
                     reservationDtoList.add(reservationDto);
-
+                    reservationDtoList.sort(Comparator.reverseOrder());
             }//for
 
             return reservationDtoList;
