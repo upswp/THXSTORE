@@ -54,7 +54,7 @@ public class ReviewService {
         }
 
         Review review = Review.builder().
-                dateTime(dateFormat.format(DateTime.now().toDate()) + " " + time).
+                dateTime(DateTime.now().toString()).
                 comment(reviewDto.getComment()).
                 star(reviewDto.getStar()).
                 memberId(reviewDto.getMemberId()).
