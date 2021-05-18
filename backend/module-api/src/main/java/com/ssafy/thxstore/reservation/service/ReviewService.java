@@ -91,24 +91,42 @@ public class ReviewService {
         List<ReviewDto> ReviewDtoList = new LinkedList<>();
 
         if(type == "member") {
+
+            //reservation id 찾아오려면 쿼리 하나 날려야됨 일단 null 보내고 필요하면 넣자
+
             ReviewList = reviewRepository.findReviewByMemberId(Id);
+            for(int i =0 ;i<ReviewList.size(); i++){
+                //Review 랑 스토어 매핑하면 쿼리 줄일 수 있겠다
+                Optional<Store> store= storeRepository.findById(ReviewList.get(i).getStoreId());
+
+                ReviewDto reviewDto = ReviewDto.builder().
+                        logo(store.get().getLogo()).
+                        storeId(ReviewList.get(i).getStoreId()).
+                        memberId(ReviewList.get(i).getMemberId()).
+                        storeName(ReviewList.get(i).getStoreName()).
+                        star(ReviewList.get(i).getStar()).
+                        dateTime(ReviewList.get(i).getDateTime()).
+                        comment(ReviewList.get(i).getComment()).
+                        build();
+
+                ReviewDtoList.add(reviewDto);
+            }
         }else{
             ReviewList = reviewRepository.findReviewByStoreId(Id);
+            for(int i =0 ;i<ReviewList.size(); i++){
+                ReviewDto reviewDto = ReviewDto.builder().
+                        storeId(ReviewList.get(i).getStoreId()).
+                        memberId(ReviewList.get(i).getMemberId()).
+                        storeName(ReviewList.get(i).getStoreName()).
+                        star(ReviewList.get(i).getStar()).
+                        dateTime(ReviewList.get(i).getDateTime()).
+                        comment(ReviewList.get(i).getComment()).
+                        build();
+
+                ReviewDtoList.add(reviewDto);
+            }
         }
 
-        //reservation id 찾아오려면 쿼리 하나 날려야됨 일단 null 보내고 필요하면 넣자
-        for(int i =0 ;i<ReviewList.size(); i++){
-            ReviewDto reviewDto = ReviewDto.builder().
-                    storeId(ReviewList.get(i).getStoreId()).
-                    memberId(ReviewList.get(i).getMemberId()).
-                    storeName(ReviewList.get(i).getStoreName()).
-                    star(ReviewList.get(i).getStar()).
-                    dateTime(ReviewList.get(i).getDateTime()).
-                    comment(ReviewList.get(i).getComment()).
-                    build();
-
-            ReviewDtoList.add(reviewDto);
-        }
         return ReviewDtoList;
     }
 
