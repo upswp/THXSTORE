@@ -48,7 +48,7 @@ public class ReviewService {
         Optional<Store> store = storeRepository.findById(reviewDto.getStoreId());
 
 
-        Optional<Review> newreview =reviewRepository.findByMemberIdAndStoreId(reviewDto.getMemberId(),reviewDto.getStoreId());
+        Optional<Review> newreview =reviewRepository.findByReservationId(reviewDto.getReservationId());
         if(newreview.isPresent()){
             throw new AuthException(ErrorCode.CHECK_REVIEW);
         }
