@@ -63,11 +63,13 @@ public class ReservationServiceImpl implements ReservationService{
 
 //        Optional<Member> member = memberRepository.findById(reservationList.getUserId());
         Optional<Member> member = memberRepository.findByEmail(email);
+        Optional<Store> store =storeRepository.findById(reservationList.getStoreId());
+
         List<ReservationGroupDto> reservationGroupDtoList = new LinkedList<>();
         List<ReservationDto> reservationDtoList = new LinkedList<>();
 
         Reservation reservation = Reservation.builder().
-                email(email).
+                email(store.get().getMember().getEmail()).  //스토어 사장님의 이메일이 들어가야해
                 nickname(reservationList.getNickname()).
                 reservationStatus(ReservationStatus.DEFAULT).
                 storeId(reservationList.getStoreId()).
