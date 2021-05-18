@@ -1,7 +1,9 @@
 package com.ssafy.thxstore.controller.order;
 
+import com.ssafy.thxstore.controller.config.AppProperties;
+import com.ssafy.thxstore.controller.member.AuthController;
+import com.ssafy.thxstore.controller.member.Resource.CheckEmailResource;
 import com.ssafy.thxstore.controller.order.Resource.CheckReviewResource;
-import com.ssafy.thxstore.configs.AppProperties;
 import com.ssafy.thxstore.controller.order.Resource.ReviewResource;
 import com.ssafy.thxstore.reservation.domain.Review;
 import com.ssafy.thxstore.reservation.dto.*;

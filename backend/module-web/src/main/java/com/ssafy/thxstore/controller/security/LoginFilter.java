@@ -32,8 +32,20 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
             throw new AuthException(ErrorCode.BAD_LOGIN);
         }
 
-        String username = loginRequest.getEmail();
-        String password = loginRequest.getPassword();
+        String username;
+        String password;
+
+        username = loginRequest.getEmail();
+        password = loginRequest.getPassword();
+
+        //TODO: 익명유저일 경우 사용
+        if (username == null) {
+            username = "";
+        }
+
+        if (password == null) {
+            password = "";
+        }
 
         username = username.trim();
 

@@ -1,16 +1,20 @@
 package com.ssafy.thxstore.controller.product;
 
-import com.ssafy.thxstore.configs.AppProperties;
+import com.ssafy.thxstore.controller.config.AppProperties;
 import com.ssafy.thxstore.image.service.ImageService;
+import com.ssafy.thxstore.product.domain.Product;
 import com.ssafy.thxstore.product.domain.ProductGroup;
 import com.ssafy.thxstore.product.dto.*;
 import com.ssafy.thxstore.product.service.ProductService;
+import com.ssafy.thxstore.store.domain.Store;
+import com.ssafy.thxstore.store.dto.CreateStoreFileDto;
 import com.ssafy.thxstore.store.service.StoreService;
 import io.jsonwebtoken.Jwts;
 import lombok.RequiredArgsConstructor;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.*;
 
 import javax.xml.bind.DatatypeConverter;
