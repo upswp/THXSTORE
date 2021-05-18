@@ -1,9 +1,12 @@
 package com.ssafy.thxstore.controller.config;
 
+import com.ssafy.thxstore.configs.AppProperties;
 import com.ssafy.thxstore.controller.member.CustomMemberDetailsService;
 import com.ssafy.thxstore.controller.security.LoginFilter;
 import com.ssafy.thxstore.controller.security.LoginSuccessHandler;
 import com.ssafy.thxstore.controller.security.TokenAuthenticationFilter;
+import com.ssafy.thxstore.util.CookieUtil;
+import com.ssafy.thxstore.util.RedisUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -32,6 +35,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final CustomMemberDetailsService customMemberDetailsService;
 
     private final JwtTokenProvider jwtTokenProvider;
+
+    private final CookieUtil cookieUtil;
+
+    private final RedisUtil redisUtil;
+
+    private final AppProperties appProperties;
 
     @Bean
     /**
@@ -105,7 +114,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         LoginFilter loginFilter = new LoginFilter();
         loginFilter.setFilterProcessesUrl("/auth/login/");
         loginFilter.setAuthenticationManager(authenticationManagerBean());
-        loginFilter.setAuthenticationSuccessHandler(new LoginSuccessHandler(jwtTokenProvider));
+        loginFilter.setAuthenticationSuccessHandler(new LoginSuccessHandler(jwtTokenProvider, cookieUtil, redisUtil, appProperties));
         return loginFilter;
     }
 }
