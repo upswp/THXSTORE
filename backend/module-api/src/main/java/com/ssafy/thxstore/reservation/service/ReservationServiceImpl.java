@@ -129,7 +129,8 @@ public class ReservationServiceImpl implements ReservationService{
         //memberid 검색 storeid 검색 각각 주문 size 구하자
         //기본키로 찾아야하는데 일단 쿼리문 적은 email로
         if(type == "member") {
-            reservationlist = reservationRepository.findReservationByMemberId(email); //reservation list 찾아와서 2개 각각의 프로덕트만 넣어줘야해 51 52
+            Optional<Member> member = memberRepository.findByEmail(email);
+            reservationlist = reservationRepository.findReservationByMemberId(member.get().getId()); //reservation list 찾아와서 2개 각각의 프로덕트만 넣어줘야해 51 52
 
             for(int i = 0 ;i<reservationlist.size();i++){//2개
                 List<ReservationGroupDto> reservationGroupDtoList = new LinkedList<>();

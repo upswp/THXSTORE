@@ -40,8 +40,8 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
 //    @Query("select all" +
 //            " from Reservation r " +
 //            " where rg.userId = :Id")
-    @Query(value = "select * from reservation where email = :email",nativeQuery = true)
-    List<Reservation> findReservationByMemberId(String email);
+    @Query(value = "select * from reservation where member_id = :memberId",nativeQuery = true)
+    List<Reservation> findReservationByMemberId(Long memberId);
 
 //    @Query("select all" +
 //            " from Reservation r " +
