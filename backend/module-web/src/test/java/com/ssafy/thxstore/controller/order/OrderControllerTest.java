@@ -78,6 +78,7 @@ public class OrderControllerTest extends BaseControllerTest {
         reservationRepository.save(reservation1);
 
         ReviewDto reviewDto = ReviewDto.builder().
+                logo("logo img path").
                 reservationId(1L).
                 dateTime(DateTime.now().toString()).
                 comment("commenttest").
