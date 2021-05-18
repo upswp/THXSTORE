@@ -1,6 +1,5 @@
 package com.ssafy.thxstore.controller.config;
 
-import com.ssafy.thxstore.configs.AppProperties;
 import com.ssafy.thxstore.controller.security.UserPrincipal;
 import io.jsonwebtoken.*;
 import lombok.RequiredArgsConstructor;
@@ -18,9 +17,6 @@ public class JwtTokenProvider {
 
     private final AppProperties appProperties;
 
-    final static public String ACCESS_TOKEN_NAME = "accessToken";
-    final static public String REFRESH_TOKEN_NAME = "refreshToken";
-
     public String createToken(Authentication authentication) {
         UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
         Date now = new Date();
@@ -28,29 +24,19 @@ public class JwtTokenProvider {
 
         return Jwts.builder()
                 .setSubject(userPrincipal.getUsername())
-                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setIssuedAt(new Date())
                 .setExpiration(expiryDate)
                 .signWith(SignatureAlgorithm.HS512, appProperties.getAuth().getTokenSecret())
                 .compact();
     }
 
-    public Claims getUserEmailFromToken(String token) {
-        return Jwts.parser()
+    public String getUserEmailFromToken(String token) {
+        Claims claims = Jwts.parser()
                 .setSigningKey(appProperties.getAuth().getTokenSecret())
                 .parseClaimsJws(token)
                 .getBody();
-    }
 
-    public String getUsername(String token) {
-        return getUserEmailFromToken(token).get("username", String.class);
-    }
-
-    public String generateToken(Authentication authentication) {
-        return createToken(authentication);
-    }
-
-    public String generateRefreshToken(Authentication authentication) {
-        return createToken(authentication);
+        return claims.getSubject();
     }
 
     public boolean validateToken(String authToken) {
