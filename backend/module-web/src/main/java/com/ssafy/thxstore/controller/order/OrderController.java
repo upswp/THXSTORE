@@ -165,6 +165,7 @@ public ResponseEntity<String> addReservation(@RequestHeader String authorization
     /**
      * 리뷰 생성 삭제 수정
      * 같은 맴버가 하나의 스토어에 또 리뷰 작성하려고 하면 "이미 작성한 해당 스토어에 작성한 리뷰가 있습니다."
+     * 리뷰 작성이 가능할 때 메시지도 같이
      */
     @PostMapping("/reservation/review")
     public ResponseEntity createReview(@RequestBody ReviewDto reviewDto) throws Exception {
