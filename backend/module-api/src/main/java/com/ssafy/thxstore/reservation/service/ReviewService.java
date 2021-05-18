@@ -1,5 +1,7 @@
 package com.ssafy.thxstore.reservation.service;
 
+import com.ssafy.thxstore.common.exceptions.AuthException;
+import com.ssafy.thxstore.common.exceptions.ErrorCode;
 import com.ssafy.thxstore.member.domain.Member;
 import com.ssafy.thxstore.member.repository.MemberRepository;
 import com.ssafy.thxstore.reservation.domain.Answer;
@@ -37,13 +39,20 @@ public class ReviewService {
     private final AnswerRepository answerRepository;
     private final MemberRepository memberRepository;
 
-    public Review createReview(ReviewDto reviewDto) {
+    public Review createReview(ReviewDto reviewDto) throws Exception{
         DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.FULL);
         DateFormat timeFormat = DateFormat.getTimeInstance(DateFormat.DEFAULT);
         String time = timeFormat.format(new Date());
 
         Optional<Reservation> reservation = reservationRepository.findById(reviewDto.getReservationId());
         Optional<Store> store = storeRepository.findById(reviewDto.getStoreId());
+
+
+        Optional<Review> newreview =reviewRepository.findByMemberIdAndStoreId(reviewDto.getMemberId(),reviewDto.getStoreId());
+        if(newreview.isPresent()){
+            throw new AuthException(ErrorCode.CHECK_REVIEW);
+        }
+
         Review review = Review.builder().
                 dateTime(dateFormat.format(DateTime.now().toDate()) + " " + time).
                 comment(reviewDto.getComment()).
