@@ -1,121 +1,149 @@
 // @import '@/assets/scss/sample';
-.feed-aside {
-  background-color: $gray100;
-  border-radius: 5px;
-  border: 1px solid $gray400;
-  padding: 10px;
-  margin: 10px;
-  text-align: center;
-  height: fit-content;
-  @include lg-pc {
-    font-size: 14px;
-    width: 200px;
-  }
-  @include pc {
-    font-size: 13px;
-    width: 200px;
-  }
-  @include mobile {
-    font-size: 12px;
-    width: 100%;
-    margin:0;
-    border-radius: 0;
-    border: none;
-  }
-  @include xs-mobile {
-    font-size: 11px;
-    width: 100%;
-    margin:0;
-    border-radius: 0;
-    border: none;
-  }
+.userstore-container {
+  @include flexbox;
+  flex-wrap: wrap;
+  width: 100%;
 }
-.profile-wrapper {
+.main-content-wrapper{
   @include flexbox;
   @include justify-content(center);
-  margin-bottom: 5px;
-  img {
+  width: 100%;
+}
+.main-content {
+  width: 100%;
+  padding: 5px 20px 20px;
+  max-width: 1000px;
+  min-height: 90vh;
+  margin-left: 200px;
+  @include mobile {
+    width: 100%;
+    margin: 0px;
+  }
+  @include xs-mobile {
+    margin: 0px;
+    width: 100%;
+  }
+}
+.store-title {
+  width: calc(90% - clamp(80px, 12vw, 150px));
+  font-size: 30px;
+  @include pc {
+    font-size: 26px;
+  }
+  @include mobile {
+    font-size: 22px;
+  }
+  @include xs-mobile {
+    font-size: 20px;
+  }
+  font-weight: 800;
+}
+.nav-aside {
+  align-self: flex-start;
+  position: fixed;
+  text-align: center;
+  font-size: 1rem;
+  padding: 10px 0;
+  margin: 0;
+  width: 200px;
+  min-height: 100%;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.3);
+  div {
+    padding: 10px 0;
+    &:hover {
+      background: $blue400;
+      color: white;
+    }
+    &.active {
+      background: $blue400;
+      color: white;
+    }
+    @include mobile {
+      padding: 4px;
+      flex-basis: 25%;
+    }
+    @include xs-mobile {
+      padding: 2px;
+      flex-basis: 25%;
+      font-size: 11px;
+    }
+  }
+  &:hover {
+    cursor: pointer;
+  }
+  @include mobile {
+    // display: none;
+    @include flexbox;
+    @include justify-content(space-evenly);
     padding: 5px;
-    // background-color: $red100;
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
-    width: 100px;
-    height: 100px;
-    border-radius: 50%;
+    width: 100%;
+    position: static;
+    min-height: 5px;
+    flex-grow: 0;
   }
-  @include mobile{
-    display: none;}
-    @include xs-mobile{
-    display: none;
-  }
-}
-hr{
-  @include mobile{
-    display: none;}
-    @include xs-mobile{
-    display: none;
+  @include xs-mobile {
+    @include flexbox;
+    @include justify-content(space-evenly);
+    padding: 3px;
+    width: 100%;
+    position: static;
+    min-height: 5px;
+    flex-grow: 0;
   }
 }
-.greeting-ment{
-  @include mobile{
-    display: none;}
-    @include xs-mobile{
-    display: none;
-  }
-  margin-bottom:3px;
-}
-.radio-input {
-  display: none;
-  &:checked + .radio::before {
-    content: '\2713';
-    font-weight: bold;
-    background-color: $blue600;
-    color: white;
-    border: none;
+.store-thumbnail {
+  img {
+    height: 10vw;
+    object-fit: cover;
+    object-position: center 50%;
+    width: 100%;
   }
 }
-.radio {
-  cursor: pointer;
+.logo-and-title {
+  padding-top: 2%;
+  border-top: 5px $blue400 solid;
   @include flexbox;
   @include align-items(center);
-  margin-bottom: 5px;
-  margin-right:5px;
-  &::before {
-    display: inline-block;
-    margin-right: 3px;
-    width: 20px;
-    height: 20px;
-    border: 1px solid $gray600;
-    content: '';
-    cursor: pointer;
-    border-radius: 3px;
-    @include flexbox;
-    @include justify-content(center);
-    @include align-items(center);
-  }
+  margin-bottom: 10px;
 }
-.feed-control-wrapper {
-  padding: 10px 10px 0 10px;
-  @include mobile{
-    @include flexbox;
-  }
-  @include xs-mobile{
-    @include flexbox;
-  }
-}
-.search-label {
-  text-align: left;
-  padding: 10px 10px 0;
-}
-.location-change{
-  margin-top: 5px;
-  display: inline-block;
-  padding:1px 4px;
-  border: 1px solid $gray400;
-  border-radius: 10px;
-  vertical-align: baseline;
+.store-logo {
+  $length: clamp(80px, 12vw, 150px);
+  width: $length;
+  height: $length;
+  object-fit: cover;
+  object-position: center 50%;
+  margin-right: 10px;
   cursor: pointer;
-  &:hover{
-    background-color: $gray600;
-    color:white;
+}
+.time-deal-ani {
+  font-family: neon;
+  color: #fb4264;
+  font-size: 25px;
+  line-height: 3vw;
+  text-shadow: 0 0 2vw #f40a35;
+  animation: neon 1s ease infinite;
+  -moz-animation: neon 1s ease infinite;
+  -webkit-animation: neon 1s ease infinite;
+  @include mobile {
+    font-size: 18px;
+  }
+  @include xs-mobile {
+    font-size: 13px;
+  }
+}
+
+.header-thumbnail {
+  padding: 1%;
+  border: 2px $gray200 solid;
+}
+@keyframes neon {
+  0%,
+  70% {
+    //   text-shadow: 0 0 1vw #FA1C16, 0 0 3vw #FA1C16, 0 0 10vw #FA1C16, 0 0 10vw #FA1C16, 0 0 .4vw #FED128, ;
+    color: #f40a35;
+  }
+  50% {
+    text-shadow: 0 0 0.5vw #800e0b, 0 0 1.5vw #800e0b, 0 0 5vw #800e0b, 0 0 5vw #800e0b;
+    //   color: #806914;
   }
 }

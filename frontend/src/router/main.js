@@ -14,7 +14,7 @@ const authGuard = (to, from, next) => {
 const routesForMain = [
   {
     path: '/main',
-    redirect: '/main/user',
+    redirect: '/user',
     name: 'main',
     component: () => import('@/views/MainPage.vue'),
     beforeEnter: authGuard,

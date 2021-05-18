@@ -2,7 +2,6 @@ const routesForUserStore = [
   {
     path: '/user-store',
     name: 'userstore',
-    redirect: 'user-store/user-store-menu-list',
     component: () => import('@/views/UserStorePage.vue'),
     children: [
       {

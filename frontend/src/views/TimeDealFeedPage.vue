@@ -1,7 +1,7 @@
 <template>
   <div class="feed-container">
     <div v-if="loaded" class="feed-component-wrapper">
-      <time-deal-aside></time-deal-aside>
+      <time-deal-aside @newDistance="loadFeed"></time-deal-aside>
       <time-deal-body v-if="feedList.length > 0" :feed-list="feedList"></time-deal-body>
       <div v-else class="no-time-deal">현재 등록된 타임딜이 없습니다.</div>
     </div>
@@ -55,6 +55,26 @@ export default {
   },
   methods: {
     ...mapMutations(['setSpinnerState']),
+    async loadFeed(dist) {
+      try {
+        this.setSpinnerState(true);
+        const { data } = await getTimeDealFeed(dist);
+        if (data.length > 0) {
+          this.feedList = data.map(x => {
+            x.timeDealList.forEach(item => {
+              const specific = (item.price * (100 - item.rate)) / 100;
+              item['discounted'] = Math.floor(specific / 100) * 100;
+            });
+            return x;
+          });
+        }
+        this.loaded = true;
+        this.setSpinnerState(false);
+      } catch (error) {
+        alert('타임딜 목록을 불러오는데 실패하였습니다.');
+        this.setSpinnerState(false);
+      }
+    },
   },
 };
 </script>
