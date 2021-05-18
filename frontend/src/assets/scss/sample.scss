@@ -1,149 +1,147 @@
 // @import '@/assets/scss/sample';
-.userstore-container {
+.userstore-info-container {
+  margin-bottom: 20px;
+  width: 100%;
+}
+.card-shadow {
+  @include shadow1;
+  border-radius: 5px;
+}
+.userstore-introduce {
+  flex-basis: 50%;
+  padding:10px;
+  border: 1px solid $gray200;
   @include flexbox;
   flex-wrap: wrap;
+  
+}
+.operation-title {
   width: 100%;
-}
-.main-content-wrapper{
-  @include flexbox;
-  @include justify-content(center);
-  width: 100%;
-}
-.main-content {
-  width: 100%;
-  padding: 5px 20px 20px;
-  max-width: 1000px;
-  min-height: 90vh;
-  margin-left: 200px;
-  @include mobile {
-    width: 100%;
-    margin: 0px;
-  }
-  @include xs-mobile {
-    margin: 0px;
-    width: 100%;
-  }
-}
-.store-title {
-  width: calc(90% - clamp(80px, 12vw, 150px));
-  font-size: 30px;
-  @include pc {
-    font-size: 26px;
-  }
-  @include mobile {
-    font-size: 22px;
-  }
-  @include xs-mobile {
-    font-size: 20px;
-  }
-  font-weight: 800;
-}
-.nav-aside {
-  align-self: flex-start;
-  position: fixed;
-  text-align: center;
-  font-size: 1rem;
-  padding: 10px 0;
-  margin: 0;
-  width: 200px;
-  min-height: 100%;
-  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.3);
-  div {
-    padding: 10px 0;
-    &:hover {
-      background: $blue400;
-      color: white;
-    }
-    &.active {
-      background: $blue400;
-      color: white;
-    }
-    @include mobile {
-      padding: 4px;
-      flex-basis: 25%;
-    }
-    @include xs-mobile {
-      padding: 2px;
-      flex-basis: 25%;
-      font-size: 11px;
-    }
-  }
-  &:hover {
-    cursor: pointer;
-  }
-  @include mobile {
-    // display: none;
-    @include flexbox;
-    @include justify-content(space-evenly);
-    padding: 5px;
-    width: 100%;
-    position: static;
-    min-height: 5px;
-    flex-grow: 0;
-  }
-  @include xs-mobile {
-    @include flexbox;
-    @include justify-content(space-evenly);
-    padding: 3px;
-    width: 100%;
-    position: static;
-    min-height: 5px;
-    flex-grow: 0;
-  }
-}
-.store-thumbnail {
-  img {
-    height: 10vw;
-    object-fit: cover;
-    object-position: center 50%;
-    width: 100%;
-  }
-}
-.logo-and-title {
-  padding-top: 2%;
-  border-top: 5px $blue400 solid;
-  @include flexbox;
-  @include align-items(center);
   margin-bottom: 10px;
-}
-.store-logo {
-  $length: clamp(80px, 12vw, 150px);
-  width: $length;
-  height: $length;
-  object-fit: cover;
-  object-position: center 50%;
-  margin-right: 10px;
-  cursor: pointer;
-}
-.time-deal-ani {
-  font-family: neon;
-  color: #fb4264;
-  font-size: 25px;
-  line-height: 3vw;
-  text-shadow: 0 0 2vw #f40a35;
-  animation: neon 1s ease infinite;
-  -moz-animation: neon 1s ease infinite;
-  -webkit-animation: neon 1s ease infinite;
-  @include mobile {
-    font-size: 18px;
-  }
+  font-weight: $bold;
   @include xs-mobile {
     font-size: 13px;
   }
 }
+.userstore-info-middle{
+  @include flexbox;
+  @include lg-pc{
+    font-size:16px;
+  }
+  @include pc{
+    font-size:15px;
+  }
+  @include mobile{
+    font-size:14px;
+  }
+  @include xs-mobile{
+    font-size:13px;
+  }
 
-.header-thumbnail {
-  padding: 1%;
-  border: 2px $gray200 solid;
 }
-@keyframes neon {
-  0%,
-  70% {
-    //   text-shadow: 0 0 1vw #FA1C16, 0 0 3vw #FA1C16, 0 0 10vw #FA1C16, 0 0 10vw #FA1C16, 0 0 .4vw #FED128, ;
-    color: #f40a35;
+.userstore-operation{
+  flex-basis: 50%;
+  border: 1px solid $gray200;
+  padding:10px;
+  border-left:0px;
+}
+.operation-content {
+  width: 100%;
+}
+.content-label {
+  margin-bottom: 3px;
+}
+.content-info{
+  display: inline-block;
+  &.font-red {
+    color: $red600;
+    font-weight:600;
   }
-  50% {
-    text-shadow: 0 0 0.5vw #800e0b, 0 0 1.5vw #800e0b, 0 0 5vw #800e0b, 0 0 5vw #800e0b;
-    //   color: #806914;
+}
+.kakaomap-title {
+  width: 100%;
+  margin-bottom: 10px;
+  font-weight: $bold;
+  @include xs-mobile {
+    font-size: 13px;
   }
+}
+.kakaomap-content {
+  border: $gray200 2px solid;
+  @include xs-mobile {
+    font-size: 12px;
+  }
+}
+.kakaomap-copy-button {
+  display: inline-block;
+  width: 70%;
+  border: none;
+  background-color: $gray400;
+  text-align: center;
+  border: $gray200 2px solid;
+}
+.kakaomap-navigation-button {
+  display: inline-block;
+  color: white;
+  width: 30%;
+  padding: 1px 2px;
+  background-color: $blue400;
+  text-align: center;
+  border: $gray200 2px solid;
+  &:hover {
+    background-color: $blue600;
+    cursor: pointer;
+  }
+}
+.license-title {
+  width: 100%;
+  margin-bottom: 10px;
+  font-weight: $bold;
+  @include xs-mobile {
+    font-size: 13px;
+  }
+}
+.license-content {
+  @include flexbox;
+  flex-wrap: wrap;
+ 
+}
+.introduce-title {
+  margin-bottom: 10px;
+  width: 100%;
+  font-weight: $bold;
+  @include xs-mobile {
+    font-size: 13px;
+  }
+}
+.introduce-content {
+  text-indent: 0em;
+  font-family: S-CoreDream-4Regular;
+  white-space: pre-line;
+  line-break: normal;
+  font-size: 14px;
+  @include xs-mobile {
+    font-size: 12px;
+  }
+}
+.license-label {
+  margin-bottom: 3px;
+  flex-basis: 30%;
+  @include xs-mobile {
+    font-size: 12px;
+  }
+}
+.license-info {
+  flex-basis: 70%;
+  margin-bottom: 3px;
+  @include xs-mobile {
+    font-size: 12px;
+  }
+}
+.label-icon{
+  display: inline-block;
+  width:16px;
+}
+svg{
+  color:$gray600;
 }

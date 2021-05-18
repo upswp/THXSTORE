@@ -23,7 +23,4 @@ export default {
   setRewriteBaseInfo(state, status) {
     state.rewriteBaseInfo = status;
   },
-  setWatchedStore(state, store) {
-    state.watchedStore = store;
-  },
 };
