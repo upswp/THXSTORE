@@ -168,7 +168,7 @@ public ResponseEntity<String> addReservation(@RequestHeader String authorization
      * 리뷰 작성이 가능할 때 메시지도 같이
      */
     @PostMapping("/reservation/review")
-    public ResponseEntity createReview(@ModelAttribute ReviewDto reviewDto) throws Exception {
+    public ResponseEntity createReview(@RequestBody ReviewDto reviewDto) throws Exception {
         Review newReview = reviewService.createReview(reviewDto);
 
         WebMvcLinkBuilder selfLinkBuilder = linkTo(OrderController.class).slash("reservation/review").slash(newReview.getId());
