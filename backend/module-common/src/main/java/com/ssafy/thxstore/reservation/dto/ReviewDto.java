@@ -14,6 +14,8 @@ public class ReviewDto {
     @NotBlank
     private String comment;
 
+    private String logo;
+
     @NotBlank
     private Long storeId;
 
@@ -33,8 +35,9 @@ public class ReviewDto {
     private String dateTime;
 
     @Builder
-    public ReviewDto(String comment, int star, String dateTime,Long storeId,Long memberId,Long reservationId,String storeName) {
+    public ReviewDto(String logo,String comment, int star, String dateTime,Long storeId,Long memberId,Long reservationId,String storeName) {
         this.comment = comment;
+        this.logo = logo;
         this.star =star;
         this.dateTime = dateTime;
         this.storeId = storeId;
