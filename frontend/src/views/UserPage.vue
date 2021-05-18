@@ -16,12 +16,14 @@ import UserNavigation from '@/components/user/UserNavigation';
 import UserProfile from '@/components/user/category/UserProfile';
 import StoreEnrollmentForm from '@/components/user/category/StoreEnrollmentForm';
 import PasswordReset from '@/components/user/category/PasswordReset';
+import OrderList from '@/components/user/category/OrderList';
 export default {
   components: {
     UserNavigation,
     UserProfile,
     StoreEnrollmentForm,
     PasswordReset,
+    OrderList,
   },
   data() {
     return {
@@ -40,6 +42,7 @@ export default {
     clickButton(e) {
       this.nav = e;
       this.to = e;
+      console.log(e);
     },
   },
 };

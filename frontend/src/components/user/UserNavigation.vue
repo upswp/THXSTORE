@@ -5,7 +5,7 @@
       <span>|</span>
       <button ref="PasswordReset" @click="selectComponent('PasswordReset')">비밀번호 변경</button>
       <span>|</span>
-      <button ref="CurrentStore" @click="selectComponent('CurrentStore')">예약 목록</button>
+      <button ref="OrderList" @click="selectComponent('OrderList')">예약 목록</button>
       <span>|</span>
       <button ref="RecentReviews" @click="selectComponent('RecentReviews')">최근 리뷰</button>
       <span>|</span>
