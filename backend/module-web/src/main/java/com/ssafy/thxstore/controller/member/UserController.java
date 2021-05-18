@@ -2,7 +2,7 @@ package com.ssafy.thxstore.controller.member;
 
 import com.ssafy.thxstore.common.exceptions.ErrorCode;
 import com.ssafy.thxstore.controller.common.ErrorsResource;
-import com.ssafy.thxstore.controller.config.AppProperties;
+import com.ssafy.thxstore.configs.AppProperties;
 import com.ssafy.thxstore.controller.member.Resource.MemberResource;
 import com.ssafy.thxstore.controller.member.Resource.ModifyPatchMemberResource;
 import com.ssafy.thxstore.member.domain.Member;

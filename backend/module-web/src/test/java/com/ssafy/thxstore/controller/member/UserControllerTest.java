@@ -1,7 +1,7 @@
 //package com.ssafy.thxstore.controller.member;
 //
 //import com.ssafy.thxstore.controller.common.AcceptanceTest;
-//import com.ssafy.thxstore.controller.config.AppProperties;
+//import com.ssafy.thxstore.configs.AppProperties;
 //import com.ssafy.thxstore.controller.member.docs.UserDocumentation;
 //import com.ssafy.thxstore.member.dto.request.LoginRequest;
 //import com.ssafy.thxstore.member.dto.request.ModifyPatchMemberRequest;

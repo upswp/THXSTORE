@@ -1,22 +1,14 @@
 package com.ssafy.thxstore.controller.store;
 
-import com.ssafy.thxstore.controller.config.AppProperties;
+import com.ssafy.thxstore.configs.AppProperties;
 import com.ssafy.thxstore.image.service.ImageService;
 import com.ssafy.thxstore.member.domain.Member;
-import com.ssafy.thxstore.product.domain.Product;
-import com.ssafy.thxstore.product.domain.ProductGroup;
-import com.ssafy.thxstore.product.domain.TimeDeal;
 import com.ssafy.thxstore.product.dto.*;
 import com.ssafy.thxstore.product.service.ProductService;
-import com.ssafy.thxstore.store.domain.CheckStore;
 import com.ssafy.thxstore.store.domain.Store;
-import com.ssafy.thxstore.store.domain.TempStore;
 import com.ssafy.thxstore.store.dto.*;
 import com.ssafy.thxstore.store.service.StoreService;
 import io.jsonwebtoken.Jwts;
-import io.openvidu.java.client.OpenVidu;
-import io.openvidu.java.client.OpenViduRole;
-import io.openvidu.java.client.Session;
 import javassist.tools.web.BadHttpRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.hateoas.Link;
@@ -28,18 +20,11 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.*;
 
 
-import javax.servlet.http.HttpServletResponse;
-import javax.ws.rs.core.Response;
 import javax.xml.bind.DatatypeConverter;
 import java.io.IOException;
-import java.lang.reflect.Type;
 import java.net.URI;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-import java.util.concurrent.ConcurrentHashMap;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 

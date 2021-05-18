@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 public class AuthResponse {
     private String accessToken;
     private String tokenType = "Bearer";
+    private String refreshToken;
     private Long id;
     private String email;
     private String nickname;
@@ -23,9 +24,10 @@ public class AuthResponse {
     private Double lon;
     private String address;
 
-    public AuthResponse(String accessToken, Member member) {
+    public AuthResponse(String accessToken, String refreshToken, Member member) {
         this.id = member.getId();
         this.accessToken = accessToken;
+        this.refreshToken = refreshToken;
         this.email = member.getEmail();
         this.nickname = member.getNickname();
         this.social = member.getSocial();
@@ -36,5 +38,4 @@ public class AuthResponse {
         this.lon = member.getLon();
         this.address = member.getAddress();
     }
-
 }
