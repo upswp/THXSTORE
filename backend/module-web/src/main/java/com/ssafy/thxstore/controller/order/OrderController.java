@@ -163,14 +163,11 @@ public ResponseEntity<String> addReservation(@RequestHeader String authorization
     }
 
     /**
-     * 타임딜 관련해서 채크 여러개 했을 때 구매가 불가능한 품목만 리턴
-     */
-
-    /**
      * 리뷰 생성 삭제 수정
+     * 같은 맴버가 하나의 스토어에 또 리뷰 작성하려고 하면 "이미 작성한 해당 스토어에 작성한 리뷰가 있습니다."
      */
     @PostMapping("/reservation/review")
-    public ResponseEntity createReview(@RequestBody ReviewDto reviewDto){
+    public ResponseEntity createReview(@RequestBody ReviewDto reviewDto) throws Exception {
         Review newReview = reviewService.createReview(reviewDto);
 
         WebMvcLinkBuilder selfLinkBuilder = linkTo(OrderController.class).slash("reservation/review").slash(newReview.getId());
