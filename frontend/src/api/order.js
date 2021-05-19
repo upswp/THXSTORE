@@ -78,4 +78,16 @@ const cancelOrder = userId =>
  */
 
 const makeDeal = orderData => privateAPI.post('reservation', orderData);
-export { getTotalOrders, setReservationStatus, cancelOrder, makeDeal };
+/**
+ * 사용자 입장에서 주문 취소
+ * @typedef {function} cancelOrderForUser
+ * @param {number} storeId
+ * @returns {Promise<Boolean>} isCanceled
+ */
+const cancelOrderForUser = storeId =>
+  privateAPI.delete('reservation/member', {
+    params: {
+      storeId: storeId,
+    },
+  });
+export { getTotalOrders, setReservationStatus, cancelOrder, makeDeal, cancelOrderForUser };
