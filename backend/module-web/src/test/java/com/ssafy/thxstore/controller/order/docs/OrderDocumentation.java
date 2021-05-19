@@ -28,13 +28,17 @@ public class OrderDocumentation {
                         headerWithName(HttpHeaders.CONTENT_TYPE).description("content type header")
                 ),
                 requestFields(
+                        fieldWithPath("memberName").type(JsonFieldType.STRING).description("주문자 이름"),
+                        fieldWithPath("reservationGroupDtoList").type(JsonFieldType.ARRAY).description("리뷰한 주문의 상품"),
+                        fieldWithPath("reviewId").type(JsonFieldType.NUMBER).description("리뷰 아이디"),
                         fieldWithPath("comment").type(JsonFieldType.STRING).description("리뷰 내용"),
                         fieldWithPath("storeId").type(JsonFieldType.NUMBER).description("리뷰가 작성될 가게 아이디"),
                         fieldWithPath("storeName").type(JsonFieldType.STRING).description("리뷰가 작성될 가게 이름"),
                         fieldWithPath("memberId").type(JsonFieldType.NUMBER).description("리뷰를 작성할 아이디"),
                         fieldWithPath("reservationId").type(JsonFieldType.NUMBER).description("리뷰가 달릴 주문 번호"),
                         fieldWithPath("star").type(JsonFieldType.NUMBER).description("별점"),
-                        fieldWithPath("dateTime").type(JsonFieldType.STRING).description("리뷰 작성 시간")
+                        fieldWithPath("dateTime").type(JsonFieldType.STRING).description("리뷰 작성 시간"),
+                        fieldWithPath("logo").type(JsonFieldType.STRING).description("로고 이미지 주소")
                 ),
                 responseHeaders(
                         headerWithName(HttpHeaders.LOCATION).description("Location header"),

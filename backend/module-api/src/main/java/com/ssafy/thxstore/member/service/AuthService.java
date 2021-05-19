@@ -42,7 +42,7 @@ public class AuthService {
                     .role(MemberRole.ROLE_USER)
                     .social(Social.LOCAL)
                     .userId(null)
-                    .profileImage(null)
+                    .profileImage("https://thxstore.s3.ap-northeast-2.amazonaws.com/basic_profile.jpg")
                     .lat(signUpRequest.getLat())
                     .lon(signUpRequest.getLon())
                     .address(signUpRequest.getAddress())

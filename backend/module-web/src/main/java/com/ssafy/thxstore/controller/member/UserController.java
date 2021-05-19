@@ -33,7 +33,7 @@ public class UserController {
     private final AppProperties appProperties;
 
     @PatchMapping
-    public ResponseEntity modifyUser(@RequestHeader String authorization, @RequestBody @Valid ModifyPatchMemberRequest modifyPatchMemberRequest) {
+    public ResponseEntity modifyUser(@RequestHeader String authorization, @ModelAttribute @Valid ModifyPatchMemberRequest modifyPatchMemberRequest) {
         String email = jwtToEmail(authorization);
         ModifyPatchMemberResource modifyPatchMemberResource;
         try {

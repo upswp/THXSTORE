@@ -1,5 +1,7 @@
 package com.ssafy.thxstore.controller.order;
 
+import com.ssafy.thxstore.common.exceptions.AuthException;
+import com.ssafy.thxstore.common.exceptions.ErrorCode;
 import com.ssafy.thxstore.controller.config.AppProperties;
 import com.ssafy.thxstore.controller.member.AuthController;
 import com.ssafy.thxstore.controller.member.Resource.CheckEmailResource;
@@ -23,6 +25,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.xml.bind.DatatypeConverter;
 import java.net.URI;
+import java.text.ParseException;
 import java.util.List;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
@@ -57,12 +60,13 @@ private final AppProperties appProperties;
 
 //주문등록 주문이 들어왔을 때 ---->  재고 확인 후   stock 다떨어졌으면 품절된 상품이 있습니다 return
 @PostMapping("/reservation")
-public ResponseEntity<String> addReservation(@RequestHeader String authorization, @RequestBody ReservationDto reservation){
+public ResponseEntity<List<String>> addReservation(@RequestHeader String authorization, @RequestBody ReservationDto reservation){
 
     String email = jwtToEmail(authorization);
-    String result = reservationService.addReservation(email,reservation);
+    List<String> result = reservationService.addReservation(email,reservation);
 
-    return new ResponseEntity<>(result, HttpStatus.OK);
+    if(result.size()==0){return new ResponseEntity<>(result, HttpStatus.OK);}
+    else{  return new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);    }
 }
 
     /**
@@ -73,7 +77,7 @@ public ResponseEntity<String> addReservation(@RequestHeader String authorization
 
     //토큰 id 포함한 객체로 받았으면 더 좋았을듯
     @GetMapping("/reservation/member")
-    public ResponseEntity getReservation(@RequestHeader String authorization){
+    public ResponseEntity getReservation(@RequestHeader String authorization) throws ParseException {
 
         String email = jwtToEmail(authorization);
         List<ReservationDto> li = reservationService.getReservation(email,"member");
@@ -155,7 +159,7 @@ public ResponseEntity<String> addReservation(@RequestHeader String authorization
      */
 
     @GetMapping("/reservation/store")
-    public ResponseEntity getStoreReservation(@RequestHeader String authorization){
+    public ResponseEntity getStoreReservation(@RequestHeader String authorization) throws ParseException {
         String email = jwtToEmail(authorization);
         List<ReservationDto> li = reservationService.getReservation(email,"store");
         return new ResponseEntity<>(li, HttpStatus.OK);
@@ -163,14 +167,12 @@ public ResponseEntity<String> addReservation(@RequestHeader String authorization
     }
 
     /**
-     * 타임딜 관련해서 채크 여러개 했을 때 구매가 불가능한 품목만 리턴
-     */
-
-    /**
      * 리뷰 생성 삭제 수정
+     * 같은 맴버가 하나의 스토어에 또 리뷰 작성하려고 하면 "이미 작성한 해당 스토어에 작성한 리뷰가 있습니다."
+     * 리뷰 작성이 가능할 때 메시지도 같이
      */
     @PostMapping("/reservation/review")
-    public ResponseEntity createReview(@RequestBody ReviewDto reviewDto){
+    public ResponseEntity createReview(@RequestBody ReviewDto reviewDto) throws Exception {
         Review newReview = reviewService.createReview(reviewDto);
 
         WebMvcLinkBuilder selfLinkBuilder = linkTo(OrderController.class).slash("reservation/review").slash(newReview.getId());

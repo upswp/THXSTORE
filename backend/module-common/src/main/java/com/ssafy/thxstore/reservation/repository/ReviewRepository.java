@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
 
 public interface ReviewRepository extends JpaRepository<Review, Long> {
 
@@ -20,4 +21,10 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
 
     @Query(value = "select * from review where store_id = :id",nativeQuery = true)
     List<Review> findReviewByStoreId(Long id);
+
+//    @Query(value = "select * from review where member_id = :memberId and store_id= :storeId",nativeQuery = true)
+//    Optional<Review> findByMemberIdAndStoreId(Long memberId,Long storeId);
+
+    @Query(value = "select * from review r join reservation rs on r.review_id = rs.review_id where reservation_id = :reservationId",nativeQuery = true)
+    Optional<Review> findByReservationId(Long reservationId);
 }

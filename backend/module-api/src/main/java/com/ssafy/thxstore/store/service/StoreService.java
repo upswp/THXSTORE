@@ -111,6 +111,9 @@ public class StoreService {
             }
             store.setLogo(imgProfile);
         }
+        if(storeChangedDto.getLogo() ==null){
+            store.setLogo("https://thxstore.s3.ap-northeast-2.amazonaws.com/%EC%8A%A4%ED%86%A0%EC%96%B4+%EB%94%94%ED%8F%B4%ED%8A%B8+%EB%A1%9C%EA%B3%A0.png");
+        }
         return store;
     }
 
@@ -363,8 +366,8 @@ public class StoreService {
             // 이것은 스토어 정보
             StoreAndDistanceDto storeInfo = modelMapper.map(storeList.get().get(i), new TypeToken<StoreAndDistanceDto>(){}.getType());
 
-            storeInfo.setDistance( 6371*acos(cos(toRadians(36.42583333272267))*cos(toRadians(storeList.get().get(i).getLat()))*cos(toRadians(storeList.get().get(i).getLon())
-                    -toRadians(127.38674024126392))+sin(toRadians(36.42583333272267))*sin(toRadians(storeList.get().get(i).getLat()))));
+            storeInfo.setDistance( 6371*acos(cos(toRadians(member.get().getLat()))*cos(toRadians(storeList.get().get(i).getLat()))*cos(toRadians(storeList.get().get(i).getLon())
+                    -toRadians( member.get().getLon()))+sin(toRadians(member.get().getLat()))*sin(toRadians(storeList.get().get(i).getLat()))));
 
             storeInfo.setTimeDealStart(timeDealList.get().get(0).getStartTime());
             // 해당 상품들을 모아서 넣기

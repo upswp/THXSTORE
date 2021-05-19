@@ -1,13 +1,17 @@
 package com.ssafy.thxstore.reservation.service;
 
+import com.ssafy.thxstore.common.exceptions.AuthException;
+import com.ssafy.thxstore.common.exceptions.ErrorCode;
 import com.ssafy.thxstore.member.domain.Member;
 import com.ssafy.thxstore.member.repository.MemberRepository;
 import com.ssafy.thxstore.reservation.domain.Answer;
 import com.ssafy.thxstore.reservation.domain.Reservation;
 import com.ssafy.thxstore.reservation.domain.Review;
+import com.ssafy.thxstore.reservation.dto.ReservationGroupDto;
 import com.ssafy.thxstore.reservation.dto.request.AnswerRequest;
 import com.ssafy.thxstore.reservation.dto.ReviewDto;
 import com.ssafy.thxstore.reservation.dto.response.CheckReviewResponse;
+import com.ssafy.thxstore.reservation.dto.response.ReviewproductResponse;
 import com.ssafy.thxstore.reservation.repository.AnswerRepository;
 import com.ssafy.thxstore.reservation.repository.ReservationRepository;
 import com.ssafy.thxstore.reservation.repository.ReviewRepository;
@@ -37,15 +41,23 @@ public class ReviewService {
     private final AnswerRepository answerRepository;
     private final MemberRepository memberRepository;
 
-    public Review createReview(ReviewDto reviewDto) {
+    public Review createReview(ReviewDto reviewDto) throws Exception{
         DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.FULL);
         DateFormat timeFormat = DateFormat.getTimeInstance(DateFormat.DEFAULT);
         String time = timeFormat.format(new Date());
 
         Optional<Reservation> reservation = reservationRepository.findById(reviewDto.getReservationId());
         Optional<Store> store = storeRepository.findById(reviewDto.getStoreId());
+
+
+        Optional<Review> newreview =reviewRepository.findByReservationId(reviewDto.getReservationId());
+        if(newreview.isPresent()){
+            throw new AuthException(ErrorCode.CHECK_REVIEW);
+        }
+
         Review review = Review.builder().
-                dateTime(dateFormat.format(DateTime.now().toDate()) + " " + time).
+                memberName(reviewDto.getMemberName()).
+                dateTime(DateTime.now().toString()).
                 comment(reviewDto.getComment()).
                 star(reviewDto.getStar()).
                 memberId(reviewDto.getMemberId()).
@@ -80,26 +92,56 @@ public class ReviewService {
     public List<ReviewDto> getReview(Long Id,String type) {
         List<Review> ReviewList;
         List<ReviewDto> ReviewDtoList = new LinkedList<>();
+//        List<ReviewproductResponse> ReservationGroupDtoList = new LinkedList<>();
 
         if(type == "member") {
+
+            //reservation id 찾아오려면 쿼리 하나 날려야됨 일단 null 보내고 필요하면 넣자
+
             ReviewList = reviewRepository.findReviewByMemberId(Id);
+            for(int i =0 ;i<ReviewList.size(); i++){ //1개
+                List<ReviewproductResponse> ReservationGroupDtoList = new LinkedList<>();
+                //Review 랑 스토어 매핑하면 쿼리 줄일 수 있겠다
+                Optional<Store> store= storeRepository.findById(ReviewList.get(i).getStoreId());
+
+                for(int j =0;ReviewList.get(i).getReservation().getReservationGroup().size()>j;j++) {
+                    ReviewproductResponse reservationGroupDto = ReviewproductResponse.builder().
+                            productName(ReviewList.get(i).getReservation().getReservationGroup().get(j).getProductName()).
+                            build();
+                    ReservationGroupDtoList.add(reservationGroupDto);
+                }
+                ReviewDto reviewDto = ReviewDto.builder().
+                        memberName(ReviewList.get(i).getMemberName()).
+                        reservationGroupDtoList(ReservationGroupDtoList).
+                        reviewId(ReviewList.get(i).getId()).
+                        logo(store.get().getLogo()).
+                        reservationId(ReviewList.get(i).getReservation().getId()).
+                        storeId(ReviewList.get(i).getStoreId()).
+                        memberId(ReviewList.get(i).getMemberId()).
+                        storeName(ReviewList.get(i).getStoreName()).
+                        star(ReviewList.get(i).getStar()).
+                        dateTime(ReviewList.get(i).getDateTime()).
+                        comment(ReviewList.get(i).getComment()).
+                        build();
+
+                ReviewDtoList.add(reviewDto);
+            }
         }else{
             ReviewList = reviewRepository.findReviewByStoreId(Id);
+            for(int i =0 ;i<ReviewList.size(); i++){
+                ReviewDto reviewDto = ReviewDto.builder().
+                        storeId(ReviewList.get(i).getStoreId()).
+                        memberId(ReviewList.get(i).getMemberId()).
+                        storeName(ReviewList.get(i).getStoreName()).
+                        star(ReviewList.get(i).getStar()).
+                        dateTime(ReviewList.get(i).getDateTime()).
+                        comment(ReviewList.get(i).getComment()).
+                        build();
+
+                ReviewDtoList.add(reviewDto);
+            }
         }
 
-        //reservation id 찾아오려면 쿼리 하나 날려야됨 일단 null 보내고 필요하면 넣자
-        for(int i =0 ;i<ReviewList.size(); i++){
-            ReviewDto reviewDto = ReviewDto.builder().
-                    storeId(ReviewList.get(i).getStoreId()).
-                    memberId(ReviewList.get(i).getMemberId()).
-                    storeName(ReviewList.get(i).getStoreName()).
-                    star(ReviewList.get(i).getStar()).
-                    dateTime(ReviewList.get(i).getDateTime()).
-                    comment(ReviewList.get(i).getComment()).
-                    build();
-
-            ReviewDtoList.add(reviewDto);
-        }
         return ReviewDtoList;
     }
 
