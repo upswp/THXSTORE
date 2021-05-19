@@ -2,7 +2,7 @@
   <transition name="slide-vertical">
     <div v-show="isMainDrawerOpend" class="drawer-container">
       <nav class="navigation-icon-wrapper">
-        <div ref="time-icon" class="drawer-item active" @click="moveToPage('time')">
+        <div ref="time-icon" class="drawer-item active" @click="moveToPage('feed')">
           <span class="drawer-icon-wrapper">
             <awesome icon="meteor"></awesome>
           </span>

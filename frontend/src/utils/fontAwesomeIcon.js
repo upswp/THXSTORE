@@ -26,6 +26,10 @@ import {
   faSearch,
   faHourglassHalf,
   faCartArrowDown,
+  faCalendarAlt,
+  faCheck,
+  faShoppingCart,
+  faCaretDown,
 } from '@fortawesome/free-solid-svg-icons';
 library.add(
   faStore,
@@ -50,6 +54,10 @@ library.add(
   faSearch,
   faHourglassHalf,
   faCartArrowDown,
+  faCalendarAlt,
+  faCheck,
+  faShoppingCart,
+  faCaretDown,
 );
 
 import {

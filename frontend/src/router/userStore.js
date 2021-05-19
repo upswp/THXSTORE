@@ -1,13 +1,12 @@
 const routesForUserStore = [
   {
-    path: '/user-store',
+    path: '/deal-for-u',
     name: 'userstore',
-    redirect: 'user-store/user-store-menu-list',
     component: () => import('@/views/UserStorePage.vue'),
     children: [
       {
-        path: 'menu-list/:storeId',
-        name: 'menu-list',
+        path: 'menu/:storeId',
+        name: 'menu',
         component: () => import('@/components/storeForUser/UserStoreMenuList.vue'),
       },
       {
@@ -16,13 +15,13 @@ const routesForUserStore = [
         component: () => import('@/components/storeForUser/UserStoreInfo.vue'),
       },
       {
-        path: 'timedeal-list/:storeId',
-        name: 'timedeal-list',
+        path: 'timedeal/:storeId',
+        name: 'timedeal',
         component: () => import('@/components/storeForUser/TimedealList.vue'),
       },
       {
-        path: 'live-commerce/:storeId',
-        name: 'live-commerce',
+        path: 'live/:storeId',
+        name: 'live',
         component: () => import('@/components/storeForUser/UserStoreLiveCommerce.vue'),
       },
     ],

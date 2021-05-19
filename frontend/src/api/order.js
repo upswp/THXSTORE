@@ -58,4 +58,24 @@ const cancelOrder = userId =>
     },
   });
 
-export { getTotalOrders, setReservationStatus, cancelOrder };
+/**
+ * 선택 품목
+ * @typedef {object} Pick
+ * @property {number} productId - 상품 id
+ * @property {string} productName - 상품 이름
+ * @property {number} price - 가격
+ * @property {number} count - 수량
+ * @property {number} rate - 할인율
+ */
+
+/**
+ * 사용자 주문 정보
+ * @typedef {object} OrderData
+ * @property {number} userId - 주문자 id
+ * @property {number} storeId - 가게 id
+ * @property {string} nickname - 주문자 닉네임
+ * @property {Array<Pick>} reservationGroups - 주문된 품목 전체 정보
+ */
+
+const makeDeal = orderData => privateAPI.post('reservation', orderData);
+export { getTotalOrders, setReservationStatus, cancelOrder, makeDeal };
