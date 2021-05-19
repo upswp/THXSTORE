@@ -59,11 +59,15 @@ export default {
       cols: { default: 4, 1200: 3, 1000: 2, 900: 1, 768: 3, 500: 2, 360: 1 },
     };
   },
-  mounted() {
-    window.scrollTo({ top: 137, left: 0, behavior: 'smooth' });
+
+  beforeDestroy() {
+    clearInterval(this.timer);
   },
-  created() {
-    this.getTimedealList();
+  async created() {
+    await this.getTimedealList();
+    window.scrollTo({ top: 137, left: 0, behavior: 'smooth' });
+    this.counterOn();
+    this.makeReservationGroup();
   },
   methods: {
     ...mapMutations(['setSpinnerState']),
