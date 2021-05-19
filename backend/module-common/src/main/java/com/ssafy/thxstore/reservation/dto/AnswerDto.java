@@ -1,21 +1,19 @@
 package com.ssafy.thxstore.reservation.dto;
 
 import com.ssafy.thxstore.reservation.dto.response.ReviewproductResponse;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.validation.constraints.NotBlank;
 import java.util.List;
 
 @Getter
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@AllArgsConstructor
+@NoArgsConstructor
 public class AnswerDto {
 
     private String comment;
 
-    private Long reveiwId;
+    private Long reviewId;
 
     private String dateTime;
 
@@ -23,9 +21,9 @@ public class AnswerDto {
 
 
     @Builder
-    public AnswerDto(String comment, Long reveiwId, String dateTime, Long storeId) {
+    public AnswerDto(Long reviewId,String comment, Long reveiwId, String dateTime, Long storeId) {
         this.comment = comment;
-        this.reveiwId = reveiwId;
+        this.reviewId = reveiwId;
         this.dateTime =dateTime;
         this.storeId =storeId;
 

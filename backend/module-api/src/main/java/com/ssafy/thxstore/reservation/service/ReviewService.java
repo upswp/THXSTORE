@@ -17,6 +17,7 @@ import com.ssafy.thxstore.store.domain.Store;
 import com.ssafy.thxstore.store.repository.StoreRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import org.checkerframework.checker.units.qual.A;
 import org.joda.time.DateTime;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
@@ -109,13 +110,17 @@ public class ReviewService {
                     ReservationGroupDtoList.add(reservationGroupDto);
                 }
 
-                AnswerDto answerDto;
+                AnswerDto answerDto = new AnswerDto();
+                Optional<Answer> answer = answerRepository.findByReviewId(ReviewList.get(i).getId());  //리뷰아이디를 통해 하나 찾아와~~
 
-                answerDto = AnswerDto.builder().comment(ReviewList.get(i).getAnswer().getComment()).
-                        dateTime(ReviewList.get(i).getAnswer().getDateTime()).
-                        storeId(ReviewList.get(i).getAnswer().getStoreId()).
-                        reveiwId(ReviewList.get(i).getAnswer().getReview().getId()).
-                        build();
+                if(answer.isPresent()) {
+                    answerDto = AnswerDto.builder().
+                            comment(answer.get().getComment()).
+                            dateTime(answer.get().getDateTime()).
+                            storeId(answer.get().getStoreId()).
+                            reveiwId(answer.get().getReviewId()).
+                            build();
+                }
 
                 ReviewDto reviewDto = ReviewDto.builder().
                         answerDto(answerDto).
@@ -138,7 +143,21 @@ public class ReviewService {
             ReviewList = reviewRepository.findReviewByStoreId(Id);
             for(int i =0 ;i<ReviewList.size(); i++){
 
+
+                //리뷰 아이디를 통해 엔서에서 조회하자
+                    AnswerDto answerDto = new AnswerDto();
+                    Optional<Answer> answer = answerRepository.findByReviewId(ReviewList.get(i).getId());
+
+                    if(answer.isPresent()) {
+                        answerDto = AnswerDto.builder().
+                                comment(answer.get().getComment()).
+                                dateTime(answer.get().getDateTime()).
+                                storeId(answer.get().getStoreId()).
+                                reveiwId(answer.get().getReviewId()).
+                                build();
+                    }
                 ReviewDto reviewDto = ReviewDto.builder().
+                        answerDto(answerDto).
                         profileImg(ReviewList.get(i).getReservation().getMember().getProfileImage()).
                         storeId(ReviewList.get(i).getStoreId()).
                         memberId(ReviewList.get(i).getMemberId()).
@@ -168,19 +187,19 @@ public class ReviewService {
 //        Optional<Member> member = memberRepository.findById(answerRequest.getMemberId());
 //        Optional<Store> store = storeRepository.findByMemberId(member.get().getId());
 
-        Optional<Review> review = reviewRepository.findById(answerDto.getReveiwId());
+        Optional<Review> review = reviewRepository.findById(answerDto.getReviewId());
 
         //리뷰도 찾아서 연결해주자
 
         Answer answer = Answer.builder().
+                reviewId(review.get().getId()).
                 comment(answerDto.getComment()).
                 dateTime(DateTime.now().toString()).
                 storeId(review.get().getStoreId()).
                 build();
 
-        review.get().getNewAnswer(answer);
-
         answerRepository.save(answer);
+        review.get().getNewAnswer(answer);
         return "답변 작성이 완료되었습니다.";
     }
 

@@ -5,6 +5,7 @@ import com.ssafy.thxstore.controller.common.BaseControllerTest;
 import com.ssafy.thxstore.controller.order.docs.OrderDocumentation;
 import com.ssafy.thxstore.reservation.domain.Reservation;
 import com.ssafy.thxstore.reservation.domain.Review;
+import com.ssafy.thxstore.reservation.dto.AnswerDto;
 import com.ssafy.thxstore.reservation.dto.ReservationGroupDto;
 import com.ssafy.thxstore.reservation.dto.ReviewDto;
 import com.ssafy.thxstore.reservation.dto.response.CheckReviewResponse;
@@ -82,7 +83,12 @@ public class OrderControllerTest extends BaseControllerTest {
 
         List<ReviewproductResponse> reserlist = new LinkedList<>();
 
+//        AnswerDto answerDto = AnswerDto.builder().reveiwId(1L).dateTime("time").comment("comment").storeId(1L).
+//                build();
+
         ReviewDto reviewDto = ReviewDto.builder().
+                profileImg("asdf").
+                answerDto(null).
                 reviewId(1L).
                 reservationGroupDtoList(reserlist).
                 logo("logo img path").
