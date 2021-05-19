@@ -118,12 +118,11 @@ export default {
     },
     async setNickname() {
       this.change.nickname = false;
-
+      const frm = new FormData();
+      frm.append('id', this.userData.id);
+      frm.append('nickname', this.userData.nickname);
       try {
-        await updateProfile({
-          id: this.userData.id,
-          nickname: this.userData.nickname,
-        });
+        await updateProfile(frm);
         saveUserToLocalStorage(this.userData);
         this.change.nickname = false;
       } catch (error) {
@@ -132,11 +131,11 @@ export default {
     },
     async setPhoneNumber() {
       this.change.phone = false;
+      const frm = new FormData();
+      frm.append('id', this.userData.id);
+      frm.append('phoneNumber', this.userData.phoneNumber);
       try {
-        await updateProfile({
-          id: this.userData.id,
-          phoneNumber: this.userData.phoneNumber,
-        });
+        await updateProfile(frm);
         saveUserToLocalStorage(this.userData);
         this.change.phone = false;
       } catch (error) {
@@ -146,15 +145,15 @@ export default {
     async setAddress(addr) {
       this.loaded = false;
       if (!addr) return;
+      const frm = new FormData();
+      frm.append('id', this.userData.id);
+      frm.append('address', addr);
+      frm.append('lat', this.userData.lat);
+      frm.append('lon', this.userData.lon);
       this.userData.address = addr;
       this.newLocation = addr;
       try {
-        await updateProfile({
-          id: this.userData.id,
-          address: addr,
-          lat: this.userData.lat,
-          lon: this.userData.lon,
-        });
+        await updateProfile(frm);
         saveUserToLocalStorage(this.userData);
       } catch (error) {
         alert('위치 변경 실패!');

@@ -60,7 +60,6 @@ export default {
         // 정상적으로 검색이 완료됐으면
         if (status === kakao.maps.services.Status.OK) {
           let coords = new kakao.maps.LatLng(result[0].y, result[0].x);
-          console.log(coords);
           this.lat = coords.Ma;
           this.lon = coords.La;
           this.marker.setMap(null);
