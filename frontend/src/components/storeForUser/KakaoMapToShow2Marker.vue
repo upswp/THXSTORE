@@ -66,21 +66,21 @@ export default {
         if (status === kakao.maps.services.Status.OK) {
           let coords = new kakao.maps.LatLng(result[0].y, result[0].x);
           // 로고 유무에 따라 마커이미지 판별
-          if (this.logo) {
-            this.imageSrc = this.logo;
-          } else {
-            this.imageSrc = 'https://cdn.pixabay.com/photo/2016/03/31/17/53/communication-1293975_960_720.png';
-          }
-          var imageSrc = this.imageSrc,
-            imageSize = new kakao.maps.Size(42, 49), // 마커이미지의 크기입니다
-            imageOption = { offset: new kakao.maps.Point(15, 15) }; // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
-          // 마커이미지 생성
-          var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption),
-            markerPosition = coords;
+          // if (this.logo) {
+          //   this.imageSrc = this.logo;
+          // } else {
+          //   this.imageSrc = 'https://cdn.pixabay.com/photo/2016/03/31/17/53/communication-1293975_960_720.png';
+          // }
+          // let imageSrc = this.imageSrc;
+          // let imageSize = new kakao.maps.Size(42, 49); // 마커이미지의 크기입니다
+          // let imageOption = { offset: new kakao.maps.Point(15, 15) }; // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
+          // // 마커이미지 생성
+          // let markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption);
+          let markerPosition = coords;
           this.storeAddr.marker = new kakao.maps.Marker({
             map: this.map,
             position: markerPosition,
-            image: markerImage,
+            // image: markerImage,
           });
           // 마커이미지를 맵에 보여준다.
           this.storeAddr.marker.setMap(this.map);
@@ -102,9 +102,7 @@ export default {
       this.geocoder.addressSearch(addr, (result, status) => {
         // 정상적으로 검색이 완료됐으면
         if (status === kakao.maps.services.Status.OK) {
-          console.log('user:', addr);
           let coords = new kakao.maps.LatLng(result[0].y, result[0].x);
-          console.log('유저쿨드', coords);
           //   this.marker.setMap(null);
           // 결과값으로 받은 위치를 마커로 표시합니다
           // this.userAddr.marker = new kakao.maps.Marker({

@@ -1,6 +1,6 @@
 const routesForUserStore = [
   {
-    path: '/user-store',
+    path: '/deal-for-u',
     name: 'userstore',
     component: () => import('@/views/UserStorePage.vue'),
     children: [
