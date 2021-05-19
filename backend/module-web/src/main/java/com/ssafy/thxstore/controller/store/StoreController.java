@@ -58,6 +58,7 @@ public class StoreController {
     public ResponseEntity createStore(@RequestHeader String authorization, @ModelAttribute CreateStoreFileDto createStoreFileDto){
         String email = jwtToEmail(authorization);
         String imgProfile = null;
+        if(createStoreFileDto.getLicenseImg() == null){}
         try {
             imgProfile = imageService.createImage(createStoreFileDto.getLicenseImg());
         }catch (IOException e) {

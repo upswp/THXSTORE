@@ -153,7 +153,7 @@ public class ReservationServiceImpl implements ReservationService{
 //2개 57, 58에 각각 상품그룹 넣어줘d
                     ReservationDto reservationDto = ReservationDto.builder().
                             reservationId(reservationlist.get(i).getId()).
-                            storeImg(store.get().getLicenseImg()).
+                            storeImg(store.get().getLogo()).
                             storeName(store.get().getName()).
                             email(reservationlist.get(i).getEmail()).
                             storeId(reservationlist.get(i).getStoreId()).
@@ -179,7 +179,6 @@ public class ReservationServiceImpl implements ReservationService{
             for(int i = 0 ;i<reservationlist.size();i++){//2개
                 List<ReservationGroupDto> reservationGroupDtoList = new LinkedList<>();
                 list = reservationGroupRepository.findReservationlistByMemberId(reservationlist.get(i).getId());
-                System.out.println("reservationlist.get(i).getId(): " + reservationlist.get(i).getId());
 
                 for(int j =0 ;j<list.size(); j++){  // 57 -2 ,58 -2
                     ReservationGroupDto reservationGroupDto = ReservationGroupDto.builder().

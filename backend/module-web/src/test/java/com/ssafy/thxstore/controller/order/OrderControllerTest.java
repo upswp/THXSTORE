@@ -5,8 +5,10 @@ import com.ssafy.thxstore.controller.common.BaseControllerTest;
 import com.ssafy.thxstore.controller.order.docs.OrderDocumentation;
 import com.ssafy.thxstore.reservation.domain.Reservation;
 import com.ssafy.thxstore.reservation.domain.Review;
+import com.ssafy.thxstore.reservation.dto.ReservationGroupDto;
 import com.ssafy.thxstore.reservation.dto.ReviewDto;
 import com.ssafy.thxstore.reservation.dto.response.CheckReviewResponse;
+import com.ssafy.thxstore.reservation.dto.response.ReviewproductResponse;
 import com.ssafy.thxstore.reservation.repository.ReservationRepository;
 import com.ssafy.thxstore.reservation.repository.ReviewRepository;
 import com.ssafy.thxstore.reservation.service.ReviewService;
@@ -27,6 +29,7 @@ import org.springframework.web.context.WebApplicationContext;
 
 import java.text.DateFormat;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
@@ -77,7 +80,11 @@ public class OrderControllerTest extends BaseControllerTest {
         Reservation reservation1 = Reservation.builder().storeId(1L).id(1L).build();
         reservationRepository.save(reservation1);
 
+        List<ReviewproductResponse> reserlist = new LinkedList<>();
+
         ReviewDto reviewDto = ReviewDto.builder().
+                reviewId(1L).
+                reservationGroupDtoList(reserlist).
                 logo("logo img path").
                 reservationId(1L).
                 dateTime(DateTime.now().toString()).
@@ -86,6 +93,7 @@ public class OrderControllerTest extends BaseControllerTest {
                 memberId(1L).
                 storeName("storenametest").
                 storeId(1L).
+                memberName("memberName").
                 build();
 
         mockMvc.perform(post("/order/reservation/review")
