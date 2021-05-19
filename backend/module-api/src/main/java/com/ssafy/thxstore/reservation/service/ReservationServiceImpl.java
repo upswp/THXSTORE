@@ -18,11 +18,14 @@ import com.ssafy.thxstore.store.repository.StoreRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import org.joda.time.DateTime;
+import org.joda.time.DateTimeFieldType;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Service
@@ -119,23 +122,27 @@ public class ReservationServiceImpl implements ReservationService{
      */
     @Override
     @Transactional
-    public List<ReservationDto> getReservation(String email,String type){
+    public List<ReservationDto> getReservation(String email,String type) throws ParseException {
 
         List<ReservationDto> reservationDtoList = new LinkedList<>();
         List<ReservationGroup> list;
         List<Reservation> reservationlist;
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
+
+
 
         //dto 엔티티 매핑
         //memberid 검색 storeid 검색 각각 주문 size 구하자
         //기본키로 찾아야하는데 일단 쿼리문 적은 email로
         if(type == "member") {
+
             Optional<Member> member = memberRepository.findByEmail(email);
             reservationlist = reservationRepository.findReservationByMemberId(member.get().getId()); //reservation list 찾아와서 2개 각각의 프로덕트만 넣어줘야해 51 52
 
             for(int i = 0 ;i<reservationlist.size();i++){//2개
                 List<ReservationGroupDto> reservationGroupDtoList = new LinkedList<>();
                 list = reservationGroupRepository.findReservationlistByMemberId(reservationlist.get(i).getId());
-                System.out.println("reservationlist.get(i).getId(): " + reservationlist.get(i).getId());
+
 
                 for(int j =0 ;j<list.size(); j++){  // 57 -2 ,58 -2
                     ReservationGroupDto reservationGroupDto = ReservationGroupDto.builder().
@@ -170,13 +177,16 @@ public class ReservationServiceImpl implements ReservationService{
 
             return reservationDtoList;
         }else{
+
             //store -member 간 onetoone 연관관계 주인 store 에게 있어서 쿼리 2 번
             //join 써서 한번으로
             Optional<Store> store= storeRepository.findByEmailJoin(email);
             // TODO: 2021-05-15 해당 맴버로 생성된 스토어가 없습니다 예외처리 리턴
             reservationlist = reservationRepository.findReservationByStoreId(store.get().getId());
 
-            for(int i = 0 ;i<reservationlist.size();i++){//2개
+            for(int i = 0 ;i<reservationlist.size();i++){//4개
+
+                if(DateTime.now().toDate().getDate() != dateFormat.parse(reservationlist.get(i).getDateTime()).getDate()) {continue;}
                 List<ReservationGroupDto> reservationGroupDtoList = new LinkedList<>();
                 list = reservationGroupRepository.findReservationlistByMemberId(reservationlist.get(i).getId());
 
