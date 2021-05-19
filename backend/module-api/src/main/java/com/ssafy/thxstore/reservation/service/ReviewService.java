@@ -201,6 +201,10 @@ public class ReviewService {
         Optional<Review> review = reviewRepository.findById(answerDto.getReviewId());
 
         //리뷰도 찾아서 연결해주자
+        Optional<Answer> newAnswer =answerRepository.findByReviewId(answerDto.getReviewId());
+        if(newAnswer.isPresent()){
+            throw new AuthException(ErrorCode.CHECK_ANSWER);
+        }
 
         Answer answer = Answer.builder().
                 reviewId(review.get().getId()).
