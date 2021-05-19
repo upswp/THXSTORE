@@ -17,7 +17,7 @@
               </div>
               <br />
               <label class="info-degree"> {{ menuList.amount }} </label>
-              <div class="info-price">{{ menuList.price }}원</div>
+              <div class="info-price">{{ oneTrans(menuList.price) }}원</div>
             </div>
             <div class="menu-thumbnail">
               <img :src="menuList.productImg" />
@@ -31,6 +31,8 @@
 
 <script>
 import { getStoreMenu } from '@/api/userStore';
+import { mapMutations } from 'vuex';
+import { oneTrans } from '@/utils/filters';
 export default {
   data() {
     return {
@@ -42,17 +44,23 @@ export default {
     window.scrollTo({ top: 137, left: 0, behavior: 'smooth' });
   },
   methods: {
+    oneTrans,
+    ...mapMutations(['setSpinnerState']),
     async getMenuList() {
       try {
+        this.setSpinnerState(true);
         const storeId = this.$route.params.storeId;
         const { data } = await getStoreMenu(storeId);
         this.storeMenuArr = data;
+        this.setSpinnerState(false);
+        return data;
       } catch (error) {
+        this.setSpinnerState(false);
         console.log(error);
+        alert('타임딜 항목을 불러오는데 실패했습니다.');
       }
     },
     showAccordion(e) {
-      console.log(e.currentTarget.querySelector('svg'));
       e.currentTarget.querySelector('svg').classList.toggle('upside-down');
       e.currentTarget.nextElementSibling.classList.toggle('hidden');
     },
@@ -126,7 +134,7 @@ export default {
     }
     .transition-div {
       animation: fade-in 1s;
-      animation-fill-mode: forwards;
+      animation-fill-mode: alt;
     }
     .upside-down {
       transform: rotate(180deg);
@@ -195,7 +203,8 @@ export default {
         width: 30%;
         text-align: center;
         img {
-          object-fit: contain;
+          object-fit: cover;
+          object-position: center 50%;
           border-radius: 5%;
           @include lg-pc {
             width: 130px;

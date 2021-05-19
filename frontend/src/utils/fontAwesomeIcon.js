@@ -27,6 +27,9 @@ import {
   faHourglassHalf,
   faCartArrowDown,
   faCalendarAlt,
+  faCheck,
+  faShoppingCart,
+  faCaretDown,
 } from '@fortawesome/free-solid-svg-icons';
 library.add(
   faStore,
@@ -52,6 +55,9 @@ library.add(
   faHourglassHalf,
   faCartArrowDown,
   faCalendarAlt,
+  faCheck,
+  faShoppingCart,
+  faCaretDown,
 );
 
 import {

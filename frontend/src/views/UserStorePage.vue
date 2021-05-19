@@ -38,7 +38,11 @@ export default {
       storeId: this.$route.params.storeId,
     };
   },
-
+  computed: {
+    path() {
+      return this.$router.history.current;
+    },
+  },
   // 늦게 나오는 거
   async created() {
     try {
@@ -53,7 +57,21 @@ export default {
       alert('가게 정보를 불러오는데 실패하였습니다.');
     }
   },
+  mounted() {
+    this.syncTab(this.path.fullPath);
+  },
   methods: {
+    syncTab(path) {
+      for (const name of ['info', 'menu', 'timedeal', 'live']) {
+        if (path.includes(name)) {
+          console.log(name);
+          this.resetActive();
+          this.active = name;
+          this.$refs[name].classList.add('active');
+          return;
+        }
+      }
+    },
     pageY() {
       this.window = window.pageYOffset;
     },
@@ -102,7 +120,7 @@ export default {
 .main-content {
   width: 100%;
   padding: 5px 10px 5px;
-  max-width: 1000px;
+  max-width: 1200px;
   min-height: 90vh;
 }
 .store-title {
@@ -124,14 +142,14 @@ export default {
 .nav-aside {
   z-index: 10;
   position: fixed;
-  left: 0;
+  left: 3px;
   // text-align: center;
   font-size: 1rem;
   padding: 10px 0;
   margin: 0;
   width: 200px;
-  min-height: 100%;
-  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.3);
+  min-height: 100vh;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
   cursor: pointer;
 
   @include mobile {
@@ -203,12 +221,11 @@ export default {
   $length: clamp(20px, 8vw, 130px);
   width: $length;
   height: $length;
-  border-radius: 50%;
-  border: 3px solid $gray200;
   box-shadow: 0 0 3px rgba(255, 255, 255, 0.6);
   object-fit: cover;
   object-position: center 50%;
   margin-right: 10px;
+  border-radius: 10px;
 }
 .time-deal-ani {
   font-family: neon;

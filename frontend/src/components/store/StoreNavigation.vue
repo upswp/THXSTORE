@@ -52,6 +52,7 @@ export default {
       for (const name of ['info', 'product', 'deal', 'live', 'reservation']) {
         if (path.includes(name)) {
           this.tap = name;
+          return;
         }
       }
     },
