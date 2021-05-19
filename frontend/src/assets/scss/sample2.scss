@@ -1,141 +1,141 @@
-.order-list-container {
-    width: 80%;
-    max-width: 1080px;
-    .order-list-title {
-        font-size: 24px;
-        text-align: center;
-        font-weight: 600;
-        margin-bottom: 20px;
-        @include mobile() {
-          font-size: 18px;
-        }
-        @include xs-mobile() {
-          font-size: 16px;
-        }
+.recent-review-container {
+  width: 80%;
+  max-width: 1080px;
+  .recent-review-title {
+    font-size: 24px;
+    text-align: center;
+    font-weight: 600;
+    margin-bottom: 20px;
+    @include mobile() {
+      font-size: 18px;
     }
-    .order-list-items {
-        @include flexbox;
-        background-color: white;
-        border: 1px $gray200 solid;
-        padding: 1%;
-        justify-content: space-between;
-        flex-wrap: wrap;
-        // flex-direction: column;
-        .order-list-header {
-            padding: 2%;
-          @include flexbox;
-          @include align-items(center);
-          flex-wrap: wrap;
-          margin-bottom: 10px;
-          border: $gray600 2px solid;
-          border-radius: 10px;
-          .item-store {
-            @include lg-pc {
-                font-size: 1.4em;
-            }
+    @include xs-mobile() {
+      font-size: 16px;
+    }
+  }
+  .recent-review-items {
+    @include flexbox;
+    background-color: white;
+    border: 1px $gray200 solid;
+    padding: 1%;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    // flex-direction: column;
+    .recent-review-item{
+      width: 49%;
+      @include shadow1;
+      padding: 1%;
+      border-radius: 0px 0px 40px 0px;
+      border: 4px black solid;
+      margin-bottom: 15px;
+      @include mobile {
+        width: 100%;
+      }
+      @include xs-mobile {
+        width: 100%;
+      }
+    }
+    .review-header-container {
+      padding: 1%;
+      @include flexbox;
+      @include align-items(center);
+      justify-content: space-between;
+      flex-grow: 1;
+      flex-wrap: wrap;
+      margin-bottom: 10px;
+      // border: $gray600 2px solid;
+      border-radius: 10px;
+      .review-logo {
+        $length: clamp(20px, 30%, 120px);
+        border-radius: 10%;
+        width: $length;
+        height: $length;
+        object-fit: cover;
+        object-position: center 50%;
+        margin-right: 10px;
+        cursor: pointer;
+        @include mobile {
+          $length: clamp(20px, 20%, 120px);
+          width: $length;
+          height: $length;
         }
-        .item-date {
-            width: 100%;
-            text-align: end;
+      }
+      .review-info {
+        position: relative;
+        width: 65%;
+        @include mobile {
+          width: 65%;
         }
-        .item-status {
-            color: $red600;
-            width: 100%;
-            text-align: end;
+        @include xs-mobile {
+          width: 65%;
+        }
+        .store-label {
+          width: 60%;
+          color: white;
+          padding: 0.7%;
+          margin-bottom: 5px;
+          label {
+            border-radius: 30px;
+            padding: 1px 5%;
+            background-color: $gray400;
             @include mobile {
-                font-size: 0.8em;
+              font-size: 12px;
             }
-        }
-          .item-logo {
-              $length: clamp(20px, 30%, 120px);
-              border-radius: 10%;
-              width: $length;
-              height: $length;
-              object-fit: cover;
-              object-position: center 50%;
-              margin-right: 10px;
-              cursor: pointer;
-              @include mobile {
-                $length: clamp(20px, 25%, 120px);
-                width: $length;
-                height: $length;
+            @include pc {
+              font-size: 12px;
             }
-          }
-        }
-
-        .order-list-item {
-            @include shadow1;
-            padding: 1%;
-            margin-bottom: 15px;;
-            width: 49%;
-            position: relative;
             @include xs-mobile {
-                width: 100%;
+              font-size: 0.7em;
             }
-            .order-menu-container {
-                margin: 0 4%;
+           }}
+           .store-name {
+             @include lg-pc {
+               font-size: 1.4em;
+             }
+             @include mobile {
+               font-size: 1.2em;
+             }
+           }
+           .review-date {
+             display: inline-block;
+             width: 100%;
+             text-align: start;
+             @include lg-pc {
+               font-size: 0.8em;
+             }
+             @include pc {
+               font-size: 0.7em;
+             }
+             @include mobile {
+               font-size: 0.8em;
+              }
+              @include xs-mobile {
+                font-size: 0.7em;
+             }
             }
-            .order-list-body {
-                @include flexbox;
-                padding: 2%;
-                .item-name {
-                    text-align: start;
-                    width: 70%;
-                    font-size: 0.9em;
-                    @include mobile {
-                        font-size: 0.7em;
-                    }
-
-                }
-                .item-price {
-                    width: 30%;
-                    // padding: 2%;
-                    font-size: 0.9em;
-                    text-align: end;
-                    @include mobile {
-                        font-size: 0.7em;
-                    }
-                }
-            }
-            .order-list-accum-price {
-                border-top: $gray400 1px solid;
-                margin: 0 4% 35px 4%;
-                padding: 2%;
-                // border: 2px solid $blue400;
-                @include flexbox;
-                margin-top: 10px;
-                .accum-price-label {
-                    width: 70%;
-                    @include mobile {
-                        font-size: 0.8em;
-                    }
-                }
-                .accum-price {
-                    width: 30%;
-                    text-align: end;
-                    @include mobile {
-                        font-size: 0.8em;
-                    }
-                }
-
-            }
-            
-            .order-list-footer {
-                width: 100%;
-                text-align: center;
-                padding: 15px 10px;
-                // position: absolute;
-                bottom: 0px;
-                @include mobile {
-                    font-size: 0.8em;
-                    padding: 10px 7px;
-                }
-                &:hover {
-                    cursor: pointer;
-                }
-            }
-        }
-        
-
+          
+      }
+      
+      
+      
     }
+
+    .review-comment {
+      width:100%;
+      padding: 2%;
+      pre {
+        font-family: S-CoreDream-4Regular;
+        overflow: hidden;
+        white-space: pre-line;
+        line-break: strict;
+      }
+    }
+    .review-info {
+      
+     
+      .order-menu-container {
+        margin: 0 4%;
+      }
+  
+    }  }
 }

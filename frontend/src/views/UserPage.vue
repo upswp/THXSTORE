@@ -17,6 +17,7 @@ import UserProfile from '@/components/user/category/UserProfile';
 import StoreEnrollmentForm from '@/components/user/category/StoreEnrollmentForm';
 import PasswordReset from '@/components/user/category/PasswordReset';
 import OrderList from '@/components/user/category/OrderList';
+import RecentReviews from '@/components/user/category/RecentReviews';
 export default {
   components: {
     UserNavigation,
@@ -24,6 +25,7 @@ export default {
     StoreEnrollmentForm,
     PasswordReset,
     OrderList,
+    RecentReviews,
   },
   data() {
     return {
