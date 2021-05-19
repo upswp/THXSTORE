@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.xml.bind.DatatypeConverter;
 import java.net.URI;
+import java.text.ParseException;
 import java.util.List;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
@@ -73,7 +74,7 @@ public ResponseEntity<String> addReservation(@RequestHeader String authorization
 
     //토큰 id 포함한 객체로 받았으면 더 좋았을듯
     @GetMapping("/reservation/member")
-    public ResponseEntity getReservation(@RequestHeader String authorization){
+    public ResponseEntity getReservation(@RequestHeader String authorization) throws ParseException {
 
         String email = jwtToEmail(authorization);
         List<ReservationDto> li = reservationService.getReservation(email,"member");
@@ -155,7 +156,7 @@ public ResponseEntity<String> addReservation(@RequestHeader String authorization
      */
 
     @GetMapping("/reservation/store")
-    public ResponseEntity getStoreReservation(@RequestHeader String authorization){
+    public ResponseEntity getStoreReservation(@RequestHeader String authorization) throws ParseException {
         String email = jwtToEmail(authorization);
         List<ReservationDto> li = reservationService.getReservation(email,"store");
         return new ResponseEntity<>(li, HttpStatus.OK);
