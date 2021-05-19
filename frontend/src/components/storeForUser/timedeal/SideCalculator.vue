@@ -28,6 +28,7 @@
       <span class="total-pay-for">{{ oneTrans(totalPayFor) }}원</span>
     </div>
     <div class="order-button" @click="getDeal">예약 하기</div>
+    <order-modal v-if="confirm" :error="error" :message="confirmBody" @confirmStatus="confirmStatus"></order-modal>
   </aside>
 </template>
 
@@ -35,7 +36,11 @@
 import { oneTrans } from '@/utils/filters';
 import { makeDeal } from '@/api/order';
 import { mapMutations, mapGetters } from 'vuex';
+import OrderModal from '@/components/storeForUser/timedeal/OrderModal';
 export default {
+  components: {
+    OrderModal,
+  },
   props: {
     menus: {
       type: Array,
@@ -45,6 +50,9 @@ export default {
   data() {
     return {
       isSelected: false,
+      confirm: false,
+      error: false,
+      confirmBody: '',
     };
   },
   computed: {
@@ -64,6 +72,12 @@ export default {
     },
   },
   methods: {
+    confirmStatus() {
+      this.error = false;
+      this.confirm = false;
+      this.confirmBody = '';
+      this.$router.go(0);
+    },
     ...mapMutations(['setSpinnerState']),
     oneTrans,
     addMenu(menu) {
@@ -105,8 +119,13 @@ export default {
           }),
         });
         this.setSpinnerState(false);
+        this.confirmBody = orderList;
+        this.confirm = true;
       } catch (error) {
         console.log(error);
+        this.error = true;
+        this.confirmBody = error.response.data;
+        this.confirm = true;
         this.setSpinnerState(false);
         alert('주문하는데 실패했습니다.');
       }
@@ -128,7 +147,6 @@ export default {
 
 <style lang="scss" scoped>
 .calculator-container {
-  z-index: 2;
   height: fit-content;
   border: 1px solid $gray400;
   padding: 10px;
@@ -144,6 +162,7 @@ export default {
     width: calc(100% - 20px);
     left: 0;
     margin: auto;
+    z-index: 2;
   }
   @include xs-mobile {
     font-size: 12px;
@@ -155,6 +174,7 @@ export default {
     left: 0;
     right: 0;
     margin: auto;
+    z-index: 2;
   }
 }
 .menu-select-button {

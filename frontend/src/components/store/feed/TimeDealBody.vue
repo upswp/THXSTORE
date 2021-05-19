@@ -129,7 +129,14 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '@/assets/scss/sample';
+.slide-down-item {
+  transition: all 1s;
+}
+.slide-down-enter,
+.slide-down-leave-to {
+  opacity: 0;
+  @include transform(translate(0, 2rem));
+}
 svg {
   color: $gray600;
 }

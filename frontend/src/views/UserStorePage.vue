@@ -143,7 +143,7 @@ export default {
   position: relative;
 }
 .nav-aside {
-  z-index: 10;
+  z-index: 9;
   position: fixed;
   left: 3px;
   // text-align: center;

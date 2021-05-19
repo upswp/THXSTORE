@@ -90,7 +90,10 @@ export default {
           });
         });
         this.selected = Array.from({ length: data.timeDeal.length }, () => false);
-        this.loaded = true;
+        if (this.timeDealList.length === 0) {
+          this.loaded = false;
+          this.message = '해당 가게는 타임딜을 진행하고 있지 않습니다';
+        } else this.loaded = true;
         this.setSpinnerState(false);
       } catch (error) {
         this.setSpinnerState(false);
