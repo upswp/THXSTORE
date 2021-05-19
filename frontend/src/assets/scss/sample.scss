@@ -2,20 +2,31 @@
 
 .calculator-container{
   height:fit-content;
-  @include lg-pc{
     border : 1px solid $gray400;
     padding : 10px;
-  }
   @include pc{
-    border : 1px solid $gray400;
-    padding : 10px;
-
+    font-size: 16px
   }
   @include mobile{
-
+    font-size :14px;
+    position:fixed;
+    right:0;
+    bottom:0px;
+    background-color: white;
+    width:calc(100% - 20px);
+    left:0;
+    margin:auto;
   }
   @include xs-mobile{
-
+    font-size : 12px;
+    position:fixed;
+    bottom:0px;
+    background-color: white;
+    width:100%;
+    width:calc(100% - 20px);
+    left:0;
+    right:0;
+    margin:auto;
   }
 }
 .menu-select-button{
@@ -67,6 +78,12 @@
   height:300px;
   overflow: auto;
   margin-bottom:20px;
+  @include mobile{
+    height:200px;
+  }
+  @include xs-mobile{
+    height:200px;
+  }
 }
 .selected-box{
   width:calc(100% - 5px);

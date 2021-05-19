@@ -102,6 +102,12 @@ export default {
     width: calc(100% - 280px);
     padding-right: 10px;
   }
+  @include mobile {
+    margin-bottom: 360px;
+  }
+  @include xs-mobile {
+    margin-bottom: 360px;
+  }
 }
 .card-wrapper {
   cursor: pointer;
@@ -166,7 +172,12 @@ export default {
   }
 }
 .calculator-container {
-  width: 280px;
+  @include lg-pc {
+    width: 280px;
+  }
+  @include pc {
+    width: 280px;
+  }
 }
 
 .slide-enter-active {
