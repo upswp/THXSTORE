@@ -38,7 +38,7 @@
     <div class="userstore-kakaomap card-shadow">
       <div class="kakaomap-title">찾아오시는 길</div>
       <div class="kakaomap-content">
-        <KaKao-map v-if="loaded" :location="locationArr"></KaKao-map>
+        <KaKao-map v-if="loaded" :location="locationArr" :logo="sideInfo.logo"></KaKao-map>
       </div>
       <input class="kakaomap-copy-button" :value="baseInfo.mainAddress" readonly />
       <div class="kakaomap-navigation-button" @click="clipboard">주소 복사하기</div>
@@ -66,7 +66,7 @@
 <script>
 import KaKaoMap from '@/components/storeForUser/KakaoMapToShow2Marker';
 import { getStoreInfo } from '@/api/userStore';
-import { mapMutations } from 'vuex';
+import { mapMutations, mapGetters } from 'vuex';
 export default {
   props: {
     baseInfo: {
@@ -85,14 +85,21 @@ export default {
   },
   data() {
     return {
-      locationArr: [{ storeAddr: '' }, { userAddr: '대전 유성구 진잠로92번길 33' }],
+      locationArr: {
+        storeAddr: '',
+        userAddr: '대전 유성구 진잠로92번길 33',
+      },
       loaded: false,
     };
   },
   created() {
     this.changeCloseDayToKor();
-    this.locationArr[0].storeAddr = this.baseInfo.mainAddress;
+    this.locationArr.storeAddr = this.baseInfo.mainAddress;
+    if (!this.getUserInfo.address) this.locationArr.userAddr = this.getUserInfo.address;
     this.loaded = true;
+  },
+  computed: {
+    ...mapGetters(['getUserInfo']),
   },
   methods: {
     changeCloseDayToKor() {
@@ -128,6 +135,18 @@ export default {
   @include shadow1;
   border-radius: 5px;
 }
+.userstore-kakaomap {
+  padding: 10px;
+  @include pc {
+    font-size: 14px;
+  }
+  @include mobile {
+    font-size: 12px;
+  }
+  @include xs-mobile {
+    font-size: 10px;
+  }
+}
 .userstore-introduce {
   flex-basis: 50%;
   padding: 10px;
@@ -142,6 +161,9 @@ export default {
   @include xs-mobile {
     font-size: 13px;
   }
+}
+.userstore-license {
+  padding: 10px;
 }
 .userstore-info-middle {
   @include flexbox;
@@ -251,6 +273,7 @@ export default {
 }
 .license-info {
   flex-basis: 70%;
+  text-align: right;
   margin-bottom: 3px;
   @include xs-mobile {
     font-size: 12px;

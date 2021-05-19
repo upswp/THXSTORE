@@ -11,6 +11,10 @@ export default {
       type: Array,
       default: () => [],
     },
+    logo: {
+      type: String,
+      default: '',
+    },
   },
   data() {
     return {
@@ -26,16 +30,13 @@ export default {
       geocoder: new kakao.maps.services.Geocoder(),
     };
   },
-  computed: {
-    ...mapGetters(['getWatchedStore']),
-  },
   watch: {
     location: {
       immediate: true,
       handler(newValue) {
         //   상세주소
-        const storeAddr = newValue[0]['storeAddr'];
-        const userAddr = newValue[1]['userAddr'];
+        const storeAddr = newValue.storeAddr;
+        const userAddr = newValue.userAddr;
         this.searchStore(storeAddr);
         this.searchUser(userAddr);
       },
@@ -47,7 +48,7 @@ export default {
     let mapContainer = document.getElementById('map');
     let mapOption = {
       center: initPosition,
-      level: 4,
+      level: 8,
     };
     this.map = new kakao.maps.Map(mapContainer, mapOption);
     // 마커 생성
@@ -65,8 +66,8 @@ export default {
         if (status === kakao.maps.services.Status.OK) {
           let coords = new kakao.maps.LatLng(result[0].y, result[0].x);
           // 로고 유무에 따라 마커이미지 판별
-          if (this.getWatchedStore.sideInfo.logo) {
-            this.imageSrc = this.getWatchedStore.sideInfo.logo;
+          if (this.logo) {
+            this.imageSrc = this.logo;
           } else {
             this.imageSrc = 'https://cdn.pixabay.com/photo/2016/03/31/17/53/communication-1293975_960_720.png';
           }

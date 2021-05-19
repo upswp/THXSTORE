@@ -17,7 +17,4 @@ export default {
   getStoreId(state) {
     return state.storeId;
   },
-  getWatchedStore(state) {
-    return state.watchedStore;
-  },
 };

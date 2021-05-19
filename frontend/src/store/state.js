@@ -15,5 +15,4 @@ export default {
   spinnerOn: false,
   storeId: getStoreIdFromLocalStorage() || '',
   rewriteBaseInfo: false,
-  watchedStore: null,
 };
