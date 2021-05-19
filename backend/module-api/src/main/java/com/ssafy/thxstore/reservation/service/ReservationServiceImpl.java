@@ -239,13 +239,13 @@ public class ReservationServiceImpl implements ReservationService{
     // email -> store 일경우 사장님 Id ->memberId           member일 경우 email -> 맴버 꺼 Id -> storeId
     @Override
     @Transactional
-    public String deleteReservation(String email,Long Id,String type){
+    public String deleteReservation(String email,Long reservationId,String type){
 
 
         if(type == "store"){
             Optional<Store> store= storeRepository.findByEmailJoin(email);
 
-            List<ReservationGroup> order = reservationGroupRepository.findAllByMemberIdAndStoreId(Id,store.get().getId());
+            List<ReservationGroup> order = reservationGroupRepository.findAllByReservationId(reservationId,email);
             if(!order.get(0).getReservation().getReservationStatus().equals(ReservationStatus.DEFAULT)){
                 return "해당 주문이 접수되어 취소할 수 없습니다.";
             }
@@ -254,7 +254,7 @@ public class ReservationServiceImpl implements ReservationService{
         }else{
             Optional<Member> member= memberRepository.findByEmail(email);
 
-            List<ReservationGroup> order = reservationGroupRepository.findAllByMemberIdAndStoreId(member.get().getId(),Id);
+            List<ReservationGroup> order = reservationGroupRepository.findAllByReservationId(reservationId,email);
 
             if(!order.get(0).getReservation().getReservationStatus().equals(ReservationStatus.DEFAULT)){
                 return "주문이 접수 상태로 넘어가 취소할 수 없습니다.";
@@ -268,7 +268,7 @@ public class ReservationServiceImpl implements ReservationService{
     public String statusUpdate(String email, StatusRequest status){
 //        Optional<Reservation> nowReservation= reservationRepository.findByMember(status.getMemberId());
 
-        reservationRepository.findReservation(email,status.getStoreId(),status.getReservationStatus().name());
+        reservationRepository.findReservation(email,status.getReservationId(),status.getReservationStatus().name());
         return "변경되었습니다";
     }
 }

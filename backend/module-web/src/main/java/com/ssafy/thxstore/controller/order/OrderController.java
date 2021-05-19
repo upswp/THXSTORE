@@ -55,6 +55,7 @@ private final AppProperties appProperties;
  */
 
 //주문등록 주문이 들어왔을 때 ---->  재고 확인 후   stock 다떨어졌으면 품절된 상품이 있습니다 return
+//ok
 @PostMapping("/reservation")
 public ResponseEntity<List<String>> addReservation(@RequestHeader String authorization, @RequestBody ReservationDto reservation){
 
@@ -72,6 +73,7 @@ public ResponseEntity<List<String>> addReservation(@RequestHeader String authori
      */
 
     //토큰 id 포함한 객체로 받았으면 더 좋았을듯
+    //ok
     @GetMapping("/reservation/member")
     public ResponseEntity getReservation(@RequestHeader String authorization) throws ParseException {
 
@@ -104,10 +106,15 @@ public ResponseEntity<List<String>> addReservation(@RequestHeader String authori
     /**
      * 회원의 주문 취소  authorization -> 회원의 email 토큰 -> 이걸로 member id 가져온다
      */
+
+    /**
+     * 맴버 아이디랑 스토어아이디로 삭제할 경우 문제 있음 !   --> reservationId로 삭제하자
+     */
+    //ok
     @DeleteMapping("/reservation/member")
-    public ResponseEntity<String> deleteReservationForMember(@RequestHeader String authorization,@RequestParam("storeId") Long storeId){
+    public ResponseEntity<String> deleteReservationForMember(@RequestHeader String authorization,@RequestParam("reservationId") Long reservationId){
         String email = jwtToEmail(authorization);
-        String result = reservationService.deleteReservation(email,storeId,"member");
+        String result = reservationService.deleteReservation(email,reservationId,"member");
 
         if(result.equals("취소했습니다")){
             return new ResponseEntity<>(result, HttpStatus.OK);}
@@ -120,10 +127,11 @@ public ResponseEntity<List<String>> addReservation(@RequestHeader String authori
     /**
      * 사장님의 주문 취소
      */
+    //ok
     @DeleteMapping("/reservation/store")
-    public ResponseEntity deleteReservationForStore(@RequestHeader String authorization,@RequestParam("memberId") Long memberId){
+    public ResponseEntity deleteReservationForStore(@RequestHeader String authorization,@RequestParam("reservationId") Long reservationId){
         String email = jwtToEmail(authorization);
-        reservationService.deleteReservation(email,memberId,"store");
+        reservationService.deleteReservation(email,reservationId,"store");
 
         return new ResponseEntity<>("주문 취소 되었습니다.", HttpStatus.OK);
 //        return ResponseEntity.created(li.getUri()).body(li.getOrderResource());
@@ -142,7 +150,7 @@ public ResponseEntity<List<String>> addReservation(@RequestHeader String authori
      * 사장님 -> 토큰 ,  유저 아디이 받고 ,  스토어 아이디 받아서   -스토어테이블에서   스토어 아이디
      * 사장님이 상태를 변경한다.
      */
-
+    //ok
     @PutMapping("/reservation/status") // v2 mem id로 받아서 검색 후 수정, 받아오는 형식 memformdto
     public ResponseEntity<String> updateStatus(@RequestHeader String authorization,@RequestBody StatusRequest status) {
         String email = jwtToEmail(authorization);
@@ -157,7 +165,7 @@ public ResponseEntity<List<String>> addReservation(@RequestHeader String authori
      *
      * 사장님이 조회 페이지 눌렀을 경우 푸셔 인스턴스 만들고
      */
-
+    //ok
     @GetMapping("/reservation/store")
     public ResponseEntity getStoreReservation(@RequestHeader String authorization) throws ParseException {
         String email = jwtToEmail(authorization);
