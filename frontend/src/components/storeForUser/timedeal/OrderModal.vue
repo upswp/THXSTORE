@@ -26,13 +26,18 @@
         <div class="total-pay-label">총 금액</div>
         <div class="total-pay">{{ oneTrans(totalPayFor()) }}원</div>
       </div>
-      <div class="confirm-button" :class="{ success: !error, fail: error }" @click="$emit('confirmStatus')">확인</div>
+      <div class="button-wrapper">
+        <div v-if="!error" class="cancel-button" @click="cancelOrder">주문 취소</div>
+        <div class="confirm-button" :class="{ success: !error, fail: error }" @click="$emit('confirmStatus')">확인</div>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
 import { oneTrans } from '@/utils/filters';
+import { cancelOrderForUser } from '@/api/order';
+import { mapMutations } from 'vuex';
 export default {
   props: {
     error: {
@@ -48,14 +53,48 @@ export default {
   },
   methods: {
     oneTrans,
+    ...mapMutations(['setSpinnerState']),
     totalPayFor() {
       return this.message.reduce((acc, item) => acc + item.payFor, 0);
+    },
+    async cancelOrder() {
+      try {
+        this.setSpinnerState(true);
+        await cancelOrderForUser(this.$route.params.storeId);
+      } catch (error) {
+        console.log(error);
+        if (error.response.status === 400) {
+          alert('이미 주문이 접수 되었습니다.');
+        } else {
+          alert('주문 취소가 불가능한 상태입니다');
+        }
+      } finally {
+        this.setSpinnerState(false);
+        this.$emit('confirmStatus');
+      }
     },
   },
 };
 </script>
 
 <style lang="scss" scoped>
+.button-wrapper {
+  @include flexbox;
+  @include justify-content(space-between);
+}
+.cancel-button {
+  padding: 10px;
+  box-shadow: 0 0 3px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  cursor: pointer;
+  color: white;
+  border-radius: 5px;
+  background-color: rgb(195, 55, 55);
+  &:hover {
+    background-color: rgb(195, 17, 17);
+  }
+  flex-basis: 45%;
+}
 .modal-container {
   position: fixed;
   z-index: 12;
@@ -129,6 +168,7 @@ export default {
     }
   }
   &.success {
+    flex-basis: 45%;
     background-color: rgb(89, 201, 107);
     &:hover {
       background-color: rgb(37, 184, 73);
