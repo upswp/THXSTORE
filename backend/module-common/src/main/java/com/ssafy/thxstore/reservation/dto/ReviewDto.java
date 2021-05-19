@@ -22,6 +22,7 @@ public class ReviewDto {
 
     private Long reviewId;
 
+    private String profileImg;
 
     @NotBlank
     private Long storeId;
@@ -41,11 +42,14 @@ public class ReviewDto {
     @NotBlank
     private String dateTime;
 
+    private AnswerDto answerDto;
+
     private List<ReviewproductResponse> reservationGroupDtoList;
 
     @Builder
-    public ReviewDto(String memberName,List<ReviewproductResponse> reservationGroupDtoList,Long reviewId,String logo,String comment, int star, String dateTime,Long storeId,Long memberId,Long reservationId,String storeName) {
+    public ReviewDto(AnswerDto answerDto,String profileImg,String memberName,List<ReviewproductResponse> reservationGroupDtoList,Long reviewId,String logo,String comment, int star, String dateTime,Long storeId,Long memberId,Long reservationId,String storeName) {
         this.comment = comment;
+        this.answerDto = answerDto;
         this.memberName =memberName;
         this.reservationGroupDtoList =reservationGroupDtoList;
         this.reviewId = reviewId;

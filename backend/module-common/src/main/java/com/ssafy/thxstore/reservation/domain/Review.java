@@ -48,12 +48,12 @@ public class Review {
     private String dateTime;
 
     @ColumnDescription("엔서 매핑")
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     @JoinColumn(name = "answer_id")
     private Answer answer2;
 
     @ColumnDescription("양방향 맵핑으로 리뷰조회시 상품도 조회")
-    @OneToOne(mappedBy = "review", fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "review", fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     private Reservation reservation = new Reservation();
 
     @Builder
@@ -67,5 +67,9 @@ public class Review {
         this.memberId = memberId;
         this.storeName =storeName;
         this.storeId = storeId;
+    }
+
+    public void getNewAnswer(Answer answer) {
+        this.answer2 = answer;
     }
 }
