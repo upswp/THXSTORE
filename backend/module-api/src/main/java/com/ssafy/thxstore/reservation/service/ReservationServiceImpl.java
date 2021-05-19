@@ -85,10 +85,12 @@ public class ReservationServiceImpl implements ReservationService{
 
         reservationRepository.save(reservation);
         List<ReservationGroup> reservationAntityList = new ArrayList<>();
-        Boolean stockflag = false; //true로 바뀌면 재고 떨어짐
 
+        Boolean stockflag = false; //true로 바뀌면 재고 떨어짐
+        List<Integer> productindex= new ArrayList<>();
+        Optional<Product> product = Optional.of(new Product());
         for(int i =0 ;i<reservationList.getReservationGroups().size();i++){
-            Optional<Product> product = productRepository.findById(reservationList.getReservationGroups().get(i).getProductId());
+            product = productRepository.findById(reservationList.getReservationGroups().get(i).getProductId());
 
             if(product.get().getStock() - reservationList.getReservationGroups().get(i).getCount() < 0){
                 stockflag =true;
@@ -105,13 +107,17 @@ public class ReservationServiceImpl implements ReservationService{
                     productName(reservationList.getReservationGroups().get(i).getProductName()).
                     build();
 
-            //저장하기전 -> 구매 수량 만큼 재고 마이너스
-            // 인트로 바꿔서 연산 하고 stockUpdate 메소드에서 INTEGER로 바꿔서 저장
-            product.get().stockUpdate(Integer.parseInt(""+product.get().getStock()) - reservationList.getReservationGroups().get(i).getCount());
+            productindex.add(i);
             reservationAntityList.add(reservationGroup);
         }
-        if(stockflag == true){
+        if(stockflag == true){   //재고 - 인거 있다면 저장안함
             return outOfStock;
+        }
+
+        //제고 -인게 없다면 (무사 통과)  -> 각 재고 마이너스 처리 해주고 (List<Integer> productindex)로 -> 재고가 마이너스인경우 넘어오지도 않음 빼도됨!
+        // 인트로 바꿔서 연산 하고 stockUpdate 메소드에서 INTEGER로 바꿔서 저장
+        for(int i =0 ;i< productindex.size(); i++) {
+            product.get().stockUpdate(Integer.parseInt("" + product.get().getStock()) - reservationList.getReservationGroups().get(productindex.get(i)).getCount());
         }
         reservationGroupRepository.saveAll(reservationAntityList);
 
