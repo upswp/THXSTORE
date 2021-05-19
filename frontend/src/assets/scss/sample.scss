@@ -1,6 +1,7 @@
 // @import '@/assets/scss/sample';
 
 .calculator-container{
+  z-index: 2;
   height:fit-content;
     border : 1px solid $gray400;
     padding : 10px;
@@ -79,10 +80,10 @@
   overflow: auto;
   margin-bottom:20px;
   @include mobile{
-    height:200px;
+    height:150px;
   }
   @include xs-mobile{
-    height:200px;
+    height:150px;
   }
 }
 .selected-box{
@@ -163,4 +164,14 @@ input[type="number"]::-webkit-inner-spin-button {
   &:hover{
     background-image: linear-gradient(0.25turn, #fa4f40,#ff203e);
   }
+  @include pc{
+    font-size:18px;
+  }
+  @include mobile{
+    font-size:16px;
+  }
+  @include xs-mobile{
+    font-size:14px;
+  }
+  
 }

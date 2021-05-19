@@ -27,6 +27,7 @@
 
 <script>
 import { getStoreInfo } from '@/api/userStore';
+import { mapMutations } from 'vuex';
 export default {
   data() {
     return {
@@ -46,6 +47,7 @@ export default {
   // 늦게 나오는 거
   async created() {
     try {
+      this.setSpinnerState(true);
       const { data } = await getStoreInfo(this.storeId);
       this.baseInfo = data.baseInfo;
       this.sideInfo = data.sideInfo;
@@ -55,12 +57,15 @@ export default {
     } catch (error) {
       console.log(error);
       alert('가게 정보를 불러오는데 실패하였습니다.');
+    } finally {
+      this.setSpinnerState(false);
     }
   },
   mounted() {
     this.syncTab(this.path.fullPath);
   },
   methods: {
+    ...mapMutations(['setSpinnerState']),
     syncTab(path) {
       for (const name of ['info', 'menu', 'timedeal', 'live']) {
         if (path.includes(name)) {
