@@ -158,6 +158,9 @@ public class ReviewService {
                     }
                 ReviewDto reviewDto = ReviewDto.builder().
                         answerDto(answerDto).
+                        reservationId(ReviewList.get(i).getReservation().getId()).
+                        memberName(ReviewList.get(i).getMemberName()).
+                        reviewId(ReviewList.get(i).getId()).
                         profileImg(ReviewList.get(i).getReservation().getMember().getProfileImage()).
                         storeId(ReviewList.get(i).getStoreId()).
                         memberId(ReviewList.get(i).getMemberId()).
