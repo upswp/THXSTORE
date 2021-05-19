@@ -122,12 +122,15 @@ export default {
         this.confirmBody = orderList;
         this.confirm = true;
       } catch (error) {
-        console.log(error);
-        this.error = true;
-        this.confirmBody = error.response.data;
-        this.confirm = true;
+        console.log(error.response.status);
         this.setSpinnerState(false);
-        alert('주문하는데 실패했습니다.');
+        if (error.response.status === 400) {
+          this.error = true;
+          this.confirmBody = error.response.data;
+          this.confirm = true;
+        } else {
+          alert('주문하는데 실패했습니다.');
+        }
       }
     },
     decrease(menu) {

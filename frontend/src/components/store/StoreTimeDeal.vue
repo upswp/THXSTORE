@@ -232,6 +232,9 @@ export default {
         if (timeDealList.length === 0) {
           alert('유효한 할인율과 재고를 적어주세요');
           return;
+        } else if (timeDealList.length === 1) {
+          alert('두 개 이상의 상품을 등록해주세요');
+          return;
         }
         this.setSpinnerState(true);
         await registerTimeDeal({

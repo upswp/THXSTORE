@@ -56,5 +56,150 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '@/assets/scss/sample';
+.modal-container {
+  position: fixed;
+  z-index: 12;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.3);
+
+  @include flexbox;
+  @include justify-content(center);
+  @include align-items(center);
+}
+.modal-body {
+  background-color: white;
+  border-radius: 5px;
+  @include lg-pc {
+    width: 600px;
+    padding: 50px;
+
+    font-size: 16px;
+  }
+  @include pc {
+    width: 500px;
+    padding: 50px;
+    font-size: 15px;
+  }
+  @include mobile {
+    width: 400px;
+    padding: 40px;
+    font-size: 14px;
+  }
+  @include xs-mobile {
+    padding: 30px;
+    width: 300px;
+    font-size: 13px;
+  }
+}
+.fail-header {
+  font-weight: bold;
+  color: rgb(200, 28, 28);
+  margin-bottom: 10px;
+  @include lg-pc {
+    font-size: 20px;
+  }
+  @include pc {
+    font-size: 19px;
+  }
+  @include mobile {
+    font-size: 18px;
+  }
+  @include xs-mobile {
+    font-size: 17px;
+  }
+}
+.order-fail,
+.order-success {
+  margin-bottom: 40px;
+}
+.confirm-button {
+  padding: 10px;
+  box-shadow: 0 0 3px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  cursor: pointer;
+  color: white;
+  border-radius: 5px;
+  &.fail {
+    background-color: rgb(195, 55, 55);
+    &:hover {
+      background-color: rgb(195, 17, 17);
+    }
+  }
+  &.success {
+    background-color: rgb(89, 201, 107);
+    &:hover {
+      background-color: rgb(37, 184, 73);
+    }
+  }
+}
+.success-header {
+  font-weight: bold;
+  color: rgb(10, 131, 80);
+  margin-bottom: 20px;
+  @include lg-pc {
+    font-size: 20px;
+  }
+  @include pc {
+    font-size: 19px;
+  }
+  @include mobile {
+    font-size: 18px;
+  }
+  @include xs-mobile {
+    font-size: 17px;
+  }
+}
+.order-table {
+  border: 1px solid $gray400;
+  border-left: none;
+  border-right: none;
+  padding: 10px;
+  width: 100%;
+  th {
+    text-align: right;
+    padding: 5px 0;
+  }
+  td {
+    text-align: right;
+  }
+  margin-bottom: 20px;
+}
+.total-pay-label {
+  @include lg-pc {
+    font-size: 14px;
+  }
+  @include pc {
+    font-size: 13px;
+  }
+  @include mobile {
+    font-size: 12px;
+  }
+  @include xs-mobile {
+    font-size: 11px;
+  }
+  text-align: right;
+  margin-bottom: 5px;
+  padding-right: 10px;
+}
+.total-pay {
+  @include lg-pc {
+    font-size: 20px;
+  }
+  @include pc {
+    font-size: 19px;
+  }
+  @include mobile {
+    font-size: 18px;
+  }
+  @include xs-mobile {
+    font-size: 17px;
+  }
+  color: rgb(221, 16, 16);
+  font-weight: bold;
+  text-align: right;
+  padding-right: 10px;
+}
 </style>
