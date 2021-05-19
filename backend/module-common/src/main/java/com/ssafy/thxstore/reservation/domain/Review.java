@@ -7,6 +7,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 @Entity
@@ -36,6 +37,9 @@ public class Review {
     @Column(name = "store_name")
     private String storeName;
 
+    @Column(name = "member_name")
+    private String memberName;
+
     @Column(name = "store_id")
     private Long storeId;
 
@@ -48,9 +52,15 @@ public class Review {
     @JoinColumn(name = "answer_id")
     private Answer answer2;
 
+    @ColumnDescription("양방향 맵핑으로 리뷰조회시 상품도 조회")
+    @OneToOne(mappedBy = "review", fetch = FetchType.LAZY)
+    private Reservation reservation = new Reservation();
+
     @Builder
-    public Review(Long id,String comment, int star, String dateTime,Long memberId,String storeName,Long storeId) {
+    public Review(String memberName,Reservation reservation,Long id,String comment, int star, String dateTime,Long memberId,String storeName,Long storeId) {
         this.comment = comment;
+        this.memberName =memberName;
+        this.reservation = reservation;
         this.id = id;
         this.star =star;
         this.dateTime = dateTime;

@@ -7,9 +7,11 @@ import com.ssafy.thxstore.member.repository.MemberRepository;
 import com.ssafy.thxstore.reservation.domain.Answer;
 import com.ssafy.thxstore.reservation.domain.Reservation;
 import com.ssafy.thxstore.reservation.domain.Review;
+import com.ssafy.thxstore.reservation.dto.ReservationGroupDto;
 import com.ssafy.thxstore.reservation.dto.request.AnswerRequest;
 import com.ssafy.thxstore.reservation.dto.ReviewDto;
 import com.ssafy.thxstore.reservation.dto.response.CheckReviewResponse;
+import com.ssafy.thxstore.reservation.dto.response.ReviewproductResponse;
 import com.ssafy.thxstore.reservation.repository.AnswerRepository;
 import com.ssafy.thxstore.reservation.repository.ReservationRepository;
 import com.ssafy.thxstore.reservation.repository.ReviewRepository;
@@ -54,6 +56,7 @@ public class ReviewService {
         }
 
         Review review = Review.builder().
+                memberName(reviewDto.getMemberName()).
                 dateTime(DateTime.now().toString()).
                 comment(reviewDto.getComment()).
                 star(reviewDto.getStar()).
@@ -89,18 +92,30 @@ public class ReviewService {
     public List<ReviewDto> getReview(Long Id,String type) {
         List<Review> ReviewList;
         List<ReviewDto> ReviewDtoList = new LinkedList<>();
+//        List<ReviewproductResponse> ReservationGroupDtoList = new LinkedList<>();
 
         if(type == "member") {
 
             //reservation id 찾아오려면 쿼리 하나 날려야됨 일단 null 보내고 필요하면 넣자
 
             ReviewList = reviewRepository.findReviewByMemberId(Id);
-            for(int i =0 ;i<ReviewList.size(); i++){
+            for(int i =0 ;i<ReviewList.size(); i++){ //1개
+                List<ReviewproductResponse> ReservationGroupDtoList = new LinkedList<>();
                 //Review 랑 스토어 매핑하면 쿼리 줄일 수 있겠다
                 Optional<Store> store= storeRepository.findById(ReviewList.get(i).getStoreId());
 
+                for(int j =0;ReviewList.get(i).getReservation().getReservationGroup().size()>j;j++) {
+                    ReviewproductResponse reservationGroupDto = ReviewproductResponse.builder().
+                            productName(ReviewList.get(i).getReservation().getReservationGroup().get(j).getProductName()).
+                            build();
+                    ReservationGroupDtoList.add(reservationGroupDto);
+                }
                 ReviewDto reviewDto = ReviewDto.builder().
+                        memberName(ReviewList.get(i).getMemberName()).
+                        reservationGroupDtoList(ReservationGroupDtoList).
+                        reviewId(ReviewList.get(i).getId()).
                         logo(store.get().getLogo()).
+                        reservationId(ReviewList.get(i).getReservation().getId()).
                         storeId(ReviewList.get(i).getStoreId()).
                         memberId(ReviewList.get(i).getMemberId()).
                         storeName(ReviewList.get(i).getStoreName()).
