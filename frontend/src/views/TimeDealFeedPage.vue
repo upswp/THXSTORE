@@ -67,6 +67,8 @@ export default {
             });
             return x;
           });
+        } else {
+          this.feedList = [];
         }
         this.loaded = true;
         this.setSpinnerState(false);

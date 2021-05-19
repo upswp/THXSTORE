@@ -1,2 +1,26 @@
 // @import '@/assets/scss/sample';
 
+  .slide-down-item{
+    transition: all 1s;
+  }
+  .slide-down-enter, .slide-down-leave-to{
+    opacity: 0;
+    @include transform(translate(0, 2rem));
+  }
+  .slide-down-leave-active{
+    position:absolute;
+  }
+
+    // .slide-down-enter-active,
+    // .slide-down-leave-active{
+    //   transition-duration: 0.4s;
+    //   transition-property: height, opacity, transform;
+    //   transition-timing-function: cubic-bezier(0.55, 0, 0.1, 1);
+    //   overflow: hidden;
+    // }
+
+    // .slide-down-enter,
+    // .slide-down-leave-active {
+    //   opacity: 0;
+    //   @include transform(translate(0, 2rem));
+    // }

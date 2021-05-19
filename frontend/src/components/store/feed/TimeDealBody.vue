@@ -1,6 +1,18 @@
 <template>
-  <div class="feed-above-container">
-    <div v-for="(feed, index) in feedList" :key="index" class="feed-wrapper">
+  <transition-group
+    name="slide-down"
+    class="feed-above-container"
+    appear
+    @before-enter="beforeEnter"
+    @after-enter="afterEnter"
+    @enter-cancelled="afterEnter"
+  >
+    <div
+      v-for="(feed, index) in feedList"
+      :key="`pop-${index}`"
+      class="feed-wrapper slide-down-item"
+      :data-index="index"
+    >
       <div class="store-head">
         <div class="store-name-wrapper">
           <img :src="feed.logo" class="store-logo" />
@@ -39,7 +51,7 @@
         <div slot="pagination" class="swiper-pagination swiper-pagination-bullets"></div>
       </swiper>
     </div>
-  </div>
+  </transition-group>
 </template>
 
 <script>
@@ -62,6 +74,7 @@ export default {
   data() {
     return {
       swiperOption: {
+        lazy: true,
         slidesPerView: 3,
         pagination: {
           el: '.swiper-pagination',
@@ -94,11 +107,19 @@ export default {
       return timeStrConvert(end.getHours(), 1) + ':' + timeStrConvert(end.getMinutes(), 1);
     },
     oneTrans,
+    beforeEnter(el) {
+      el.style.transitionDelay = 90 * parseInt(el.dataset.index, 10) + 'ms';
+    },
+    // 트랜지션을 완료하거나 취소할 때는 딜레이를 제거합니다.
+    afterEnter(el) {
+      el.style.transitionDelay = '';
+    },
   },
 };
 </script>
 
 <style lang="scss" scoped>
+@import '@/assets/scss/sample';
 svg {
   color: $gray600;
 }
