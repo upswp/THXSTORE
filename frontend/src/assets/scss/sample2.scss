@@ -1,248 +1,141 @@
-.timedeal-container {
-    border: 2px solid $gray400;
-    header {
-        text-align: center;
-        
+.recent-review-container {
+  width: 80%;
+  max-width: 1080px;
+  .recent-review-title {
+    font-size: 24px;
+    text-align: center;
+    font-weight: 600;
+    margin-bottom: 20px;
+    @include mobile() {
+      font-size: 18px;
     }
-    .timedeal-item {
-        border: 2px solid $blue400;
-        border-radius: 15px;
-        @include shadow1;
-        @include flexbox;
-        flex-wrap: wrap;
-        width: 95%;
-        margin: auto;
+    @include xs-mobile() {
+      font-size: 16px;
+    }
+  }
+  .recent-review-items {
+    @include flexbox;
+    background-color: white;
+    border: 1px $gray200 solid;
+    padding: 1%;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    // flex-direction: column;
+    .recent-review-item{
+      width: 49%;
+      @include shadow1;
+      padding: 1%;
+      border-radius: 0px 0px 40px 0px;
+      border: 4px black solid;
+      margin-bottom: 15px;
+      @include mobile {
+        width: 100%;
+      }
+      @include xs-mobile {
+        width: 100%;
+      }
+    }
+    .review-header-container {
+      padding: 1%;
+      @include flexbox;
+      @include align-items(center);
+      justify-content: space-between;
+      flex-grow: 1;
+      flex-wrap: wrap;
+      margin-bottom: 10px;
+      // border: $gray600 2px solid;
+      border-radius: 10px;
+      .review-logo {
+        $length: clamp(20px, 30%, 120px);
+        border-radius: 10%;
+        width: $length;
+        height: $length;
+        object-fit: cover;
+        object-position: center 50%;
+        margin-right: 10px;
+        cursor: pointer;
+        @include mobile {
+          $length: clamp(20px, 20%, 120px);
+          width: $length;
+          height: $length;
+        }
+      }
+      .review-info {
+        position: relative;
+        width: 65%;
+        @include mobile {
+          width: 65%;
+        }
         @include xs-mobile {
-            width: 100%;
+          width: 65%;
         }
-
-        .item-thumbnail {
-            @include flexbox;
-            align-items: center;
-            width: 60%;
-            padding: 1%;
-            text-align: center;
-            border-right: 2px solid $gray400;
+        .store-label {
+          width: 60%;
+          color: white;
+          padding: 0.7%;
+          margin-bottom: 5px;
+          label {
+            border-radius: 30px;
+            padding: 1px 5%;
+            background-color: $gray400;
+            @include mobile {
+              font-size: 12px;
+            }
+            @include pc {
+              font-size: 12px;
+            }
             @include xs-mobile {
-                width: 100%;
+              font-size: 0.7em;
             }
-            img{
-                object-fit: cover;
-                object-position: center 50%;
-                border-radius: 5%;
-                @include lg-pc {
-                    height: 278px;
-                    width: 100%;
-
-                }
-                @include pc {
-                    height: 210px;
-                    width: 100%;
-                }
-                @include mobile {
-                    height: 210px;
-                    width: 100%;
-                }
-                @include xs-mobile {
-                    
-                    width: 100%;
-                }
+           }}
+           .store-name {
+             @include lg-pc {
+               font-size: 1.4em;
+             }
+             @include mobile {
+               font-size: 1.2em;
+             }
+           }
+           .review-date {
+             display: inline-block;
+             width: 100%;
+             text-align: start;
+             @include lg-pc {
+               font-size: 0.8em;
+             }
+             @include pc {
+               font-size: 0.7em;
+             }
+             @include mobile {
+               font-size: 0.8em;
+              }
+              @include xs-mobile {
+                font-size: 0.7em;
+             }
             }
-        }
-        .item-info {
-            @include flexbox;
-            width: 40%;
-            padding: 1%;
-            flex-direction: column;
-            // justify-content: space-between;
-            // flex-wrap: wrap;
-            @include xs-mobile {
-                width: 100%;
-            }
-            .info-header {
-                @include flexbox;
-                width: 100%;
-                
-                .timedeal-title {
-                    width: 30%;
-                    margin-right: 5%;
-                    border-radius: 10px;
-                    border: $gray200 solid 1px;
-
-                    .timedeal-logo {
-                        width: 60%;
-                        background-color: $red600;
-                        text-align: center;
-                        color: whitesmoke;
-                        border-radius: 10px;
-                        padding: 2%;
-                    }
-                }
-            }
-            .reserved-stock {
-                width : 100%;
-                font-size: 0.9em;
-                text-align: end;
-                @include xs-mobile {
-                    font-size: 0.6em;
-                }
-            }
-            .info-name {
-                font-weight: bold;
-                @include lg-pc {
-                    font-size: 1.3em;
-                    padding-top: 10px;
-                    padding-bottom: 10px;
-                }
-                @include xs-mobile {
-                    font-size: 0.9em;
-                }
-            }
-            .info-introduce {
-                @include flexbox;
-                height: 150px;
-                word-break: keep-all;
-                align-items: center;
-                @include pc {
-                    font-size: 0.9em;
-                    height: 120px;
-                }
-                @include mobile {
-                    font-size: 0.9em;
-                    height: 120px;
-                }
-                @include xs-mobile {
-                    word-break: normal;
-                    padding-top: 10px;
-                    padding-bottom: 10px;
-                    height: 70px;
-                    line-height: 15px;
-                    display: -webkit-box;
-                    -webkit-line-clamp: 4;
-                    -webkit-box-orient: vertical;   ;
-                    overflow: hidden;
-                    font-size: 0.7em;
-                }
-            }
-            .info-footer {
-                @include flexbox;
-                flex-wrap: wrap;
-                // padding-top: 50px;
-                justify-content: space-between;
-                .info-timedeal-price {
-                    margin-bottom: 10px;
-                    display: inline-block;
-                    width: 100%;
-                    .info-origin-price{
-                        color: red;
-                        font-size: 0.8em;
-                        @include xs-mobile {
-                            font-size: 0.7em;
-                        }
-                        &::before{
-                            content: '타임딜가z ';
-                            color: white;
-                            font-size: 15px;
-                            @include mobile {
-                                content: '타임딜가  ';
-                                font-size: 0.7em;}
-                            @include xs-mobile {
-                                font-size: 1em;}
-                        }
-                 
-                    }
-                    .info-sale-price{
-                        &::before {
-                            content: '타임딜가 ';
-                            color: $red600;
-                            font-weight: bold;
-                            font-size: 15px;
-                            @include mobile {
-                                font-size: 0.7em;
-                            }
-                            @include xs-mobile {
-                                font-size: 0.7em;
-                            }
-                            
-                        }
-                        @include mobile {
-                            font-size: 0.9em;
-                        }
-                        // @include xs-mobile {
-                        //     font-size: 0.7em;
-                        // }
-                    }
-                }
-                .order-number-container {
-                    @include flexbox;
-                    align-items: center;
-                    width: 60%;
-                    height: 25px;
-                    .quantity-minus-button{
-                        height: 100%;
-                        border-radius: 0px;
-                        line-height: 100%;
-                        border: none;
-                    }
-                    .quantity-value {
-                        display: inline-block;
-                        width: 30%;
-                        height: 100%;
-                        border: 1px $gray200 solid;
-                        padding: 5px;
-                        @include pc {
-                            font-size: 0.8em;
-                        }
-                        @include mobile {
-                            font-size: 0.6em;
-                        }
-                        
-                    }
-                    .quantity-plus-button{
-                        height: 100%;
-                        border: none;
-                        border-radius: 0px;
-                        line-height: 100%;
-                    }
-                    .cart-arrow-down {
-                        font-size: 1.3em;
-                        margin-left: 5px;
-                        color: $gray400;
-                        @include mobile {
-                            font-size: 1em;
-                        }
-                        &:hover{
-                          cursor: pointer;  
-                          color: $red600;
-                        }
-                    }
-                }
-                .item-sum {
-                    width: 38%;
-                    text-align: end;
-                    margin-right: 2%;
-                    line-height: 25px;
-                    border-bottom: 2px $gray400 solid;
-                    @include pc {
-                        display: table-cell;
-                        vertical-align: middle;
-                        font-size: 0.9em;
-                        
-                    }
-                    @include mobile {
-                        display: table-cell;
-                        vertical-align: middle;
-                        font-size: 0.8em;
-                    }
-                    @include xs-mobile {
-                        display: table-cell;
-                        vertical-align: middle;
-                        font-size: 0.9em;
-                    }}
-            }
-        }
-        .item-sum {
-            width: 30%;
-        }
+          
+      }
+      
+      
+      
     }
+
+    .review-comment {
+      width:100%;
+      padding: 2%;
+      pre {
+        font-family: S-CoreDream-4Regular;
+        overflow: hidden;
+        white-space: pre-line;
+        line-break: strict;
+      }
+    }
+    .review-info {
+      
+     
+      .order-menu-container {
+        margin: 0 4%;
+      }
+  
+    }  }
 }

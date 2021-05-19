@@ -28,7 +28,7 @@ function oneTrans(num) {
 }
 function dateTrans(dateStr) {
   const date = new Date(dateStr);
-  return `${date.getFullYear()}/${date.getMonth()}/${date.getDate()} ${date.getHours()}:${date.getMinutes()}`;
+  return `${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()} ${date.getHours()}:${date.getMinutes()}`;
 }
 
 const categoryStrConvert = {
