@@ -240,18 +240,17 @@ public class ReservationServiceImpl implements ReservationService{
             Optional<Store> store= storeRepository.findByEmailJoin(email);
 
             List<ReservationGroup> order = reservationGroupRepository.findAllByMemberIdAndStoreId(Id,store.get().getId());
-            if(!order.get(0).getReservation().equals(ReservationStatus.DEFAULT)){
-                return "주문이 접수 상태로 넘어가 취소할 수 없습니다.";
+            if(!order.get(0).getReservation().getReservationStatus().equals(ReservationStatus.DEFAULT)){
+                return "해당 주문이 접수되어 취소할 수 없습니다.";
             }
             reservationGroupRepository.deleteAll(order);
-            return "취소했습니다.";
+            return "취소했습니다";
         }else{
             Optional<Member> member= memberRepository.findByEmail(email);
 
-
-            System.out.println("member.get().getId() : "+member.get().getId() );
             List<ReservationGroup> order = reservationGroupRepository.findAllByMemberIdAndStoreId(member.get().getId(),Id);
-            if(!order.get(0).getReservation().equals(ReservationStatus.DEFAULT)){
+
+            if(!order.get(0).getReservation().getReservationStatus().equals(ReservationStatus.DEFAULT)){
                 return "주문이 접수 상태로 넘어가 취소할 수 없습니다.";
             }
             reservationGroupRepository.deleteAll(order);

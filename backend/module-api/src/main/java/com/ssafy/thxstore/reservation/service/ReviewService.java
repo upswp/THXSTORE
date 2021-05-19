@@ -143,7 +143,14 @@ public class ReviewService {
             ReviewList = reviewRepository.findReviewByStoreId(Id);
             for(int i =0 ;i<ReviewList.size(); i++){
 
+                List<ReviewproductResponse> ReservationGroupDtoList = new LinkedList<>();
 
+                for(int j =0;ReviewList.get(i).getReservation().getReservationGroup().size()>j;j++) {
+                    ReviewproductResponse reservationGroupDto = ReviewproductResponse.builder().
+                            productName(ReviewList.get(i).getReservation().getReservationGroup().get(j).getProductName()).
+                            build();
+                    ReservationGroupDtoList.add(reservationGroupDto);
+                }
                 //리뷰 아이디를 통해 엔서에서 조회하자
                     AnswerDto answerDto = new AnswerDto();
                     Optional<Answer> answer = answerRepository.findByReviewId(ReviewList.get(i).getId());
@@ -158,6 +165,10 @@ public class ReviewService {
                     }
                 ReviewDto reviewDto = ReviewDto.builder().
                         answerDto(answerDto).
+                        reservationGroupDtoList(ReservationGroupDtoList).
+                        reservationId(ReviewList.get(i).getReservation().getId()).
+                        memberName(ReviewList.get(i).getMemberName()).
+                        reviewId(ReviewList.get(i).getId()).
                         profileImg(ReviewList.get(i).getReservation().getMember().getProfileImage()).
                         storeId(ReviewList.get(i).getStoreId()).
                         memberId(ReviewList.get(i).getMemberId()).
