@@ -34,6 +34,12 @@ public interface ReservationGroupRepository extends JpaRepository<ReservationGro
 //    Optional<Member> findByIdandStoreId(Long memberId, Long storeId);
 
 
-    @Query(value = "select * from reservation_group rg where user_id = :Id and store_id = :storeId",nativeQuery = true)
-    List<ReservationGroup> findAllByMemberIdAndStoreId(Long Id, Long storeId);
+//    @Query(value = "select * from reservation_group rg where user_id = :Id and store_id = :storeId",nativeQuery = true)
+//    List<ReservationGroup> findAllByMemberIdAndStoreId(Long Id, Long storeId);
+
+//    @Query(value = "select * from reservation_group rg where user_id = :Id and store_id = :storeId",nativeQuery = true)
+//    List<ReservationGroup> findAllByMemberIdAndStoreId(Long Id, Long storeId);
+
+    @Query(value = "select * from reservation_group rg where reservation_id = :reservationId and email = :email",nativeQuery = true)
+    List<ReservationGroup> findAllByReservationId(Long reservationId,String email);
 }

@@ -31,8 +31,8 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
 //
     @Modifying
     @Transactional
-    @Query(value = "update reservation set status = :newStatus where email = :email and store_id = :storeId",nativeQuery = true)
-    void findReservation(String email, Long storeId , String newStatus);
+    @Query(value = "update reservation set status = :newStatus where reservation_id = :reservationId and email = :email",nativeQuery = true)
+    void findReservation(String email, Long reservationId , String newStatus);
 
     @Query(value = "select * from reservation where review_id = :reviewId",nativeQuery = true)
     Reservation findByreviewId(Long reviewId);
