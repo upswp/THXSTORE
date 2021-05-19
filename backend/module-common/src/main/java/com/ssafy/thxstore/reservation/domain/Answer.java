@@ -41,7 +41,7 @@ public class Answer {
     private String dateTime;
 
     @ColumnDescription("양방향 맵핑 리뷰 삭제 시 답변도 삭제")
-    @OneToOne(mappedBy = "answer2", fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "answer", fetch = FetchType.LAZY)
     private Review review = new Review();
 
     @Builder

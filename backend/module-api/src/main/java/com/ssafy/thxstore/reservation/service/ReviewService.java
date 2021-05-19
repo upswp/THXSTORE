@@ -2,13 +2,11 @@ package com.ssafy.thxstore.reservation.service;
 
 import com.ssafy.thxstore.common.exceptions.AuthException;
 import com.ssafy.thxstore.common.exceptions.ErrorCode;
-import com.ssafy.thxstore.member.domain.Member;
 import com.ssafy.thxstore.member.repository.MemberRepository;
 import com.ssafy.thxstore.reservation.domain.Answer;
 import com.ssafy.thxstore.reservation.domain.Reservation;
 import com.ssafy.thxstore.reservation.domain.Review;
-import com.ssafy.thxstore.reservation.dto.ReservationGroupDto;
-import com.ssafy.thxstore.reservation.dto.request.AnswerRequest;
+import com.ssafy.thxstore.reservation.dto.AnswerDto;
 import com.ssafy.thxstore.reservation.dto.ReviewDto;
 import com.ssafy.thxstore.reservation.dto.response.CheckReviewResponse;
 import com.ssafy.thxstore.reservation.dto.response.ReviewproductResponse;
@@ -110,7 +108,17 @@ public class ReviewService {
                             build();
                     ReservationGroupDtoList.add(reservationGroupDto);
                 }
+
+                AnswerDto answerDto;
+
+                answerDto = AnswerDto.builder().comment(ReviewList.get(i).getAnswer().getComment()).
+                        dateTime(ReviewList.get(i).getAnswer().getDateTime()).
+                        storeId(ReviewList.get(i).getAnswer().getStoreId()).
+                        reveiwId(ReviewList.get(i).getAnswer().getReview().getId()).
+                        build();
+
                 ReviewDto reviewDto = ReviewDto.builder().
+                        answerDto(answerDto).
                         memberName(ReviewList.get(i).getMemberName()).
                         reservationGroupDtoList(ReservationGroupDtoList).
                         reviewId(ReviewList.get(i).getId()).
@@ -129,7 +137,9 @@ public class ReviewService {
         }else{
             ReviewList = reviewRepository.findReviewByStoreId(Id);
             for(int i =0 ;i<ReviewList.size(); i++){
+
                 ReviewDto reviewDto = ReviewDto.builder().
+                        profileImg(ReviewList.get(i).getReservation().getMember().getProfileImage()).
                         storeId(ReviewList.get(i).getStoreId()).
                         memberId(ReviewList.get(i).getMemberId()).
                         storeName(ReviewList.get(i).getStoreName()).
@@ -152,19 +162,23 @@ public class ReviewService {
      * 2. 글생성
      */
     @Transactional
-    public String createAnswer(String email, AnswerRequest answerRequest) {
+    public String createAnswer(AnswerDto answerDto) {
 
         // TODO: 2021-05-17 join 쿼리 단축시키기
-        Optional<Member> member = memberRepository.findByEmail(email);
-        Optional<Store> store = storeRepository.findByMemberId(member.get().getId());
+//        Optional<Member> member = memberRepository.findById(answerRequest.getMemberId());
+//        Optional<Store> store = storeRepository.findByMemberId(member.get().getId());
+
+        Optional<Review> review = reviewRepository.findById(answerDto.getReveiwId());
+
+        //리뷰도 찾아서 연결해주자
 
         Answer answer = Answer.builder().
-                comment(answerRequest.getComment()).
+                comment(answerDto.getComment()).
                 dateTime(DateTime.now().toString()).
-                memberId(answerRequest.getMemberId()).
-                storeName(store.get().getName()).
-                storeId(store.get().getId()).
+                storeId(review.get().getStoreId()).
                 build();
+
+        review.get().getNewAnswer(answer);
 
         answerRepository.save(answer);
         return "답변 작성이 완료되었습니다.";

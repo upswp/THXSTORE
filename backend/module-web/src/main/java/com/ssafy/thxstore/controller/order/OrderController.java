@@ -1,15 +1,11 @@
 package com.ssafy.thxstore.controller.order;
 
-import com.ssafy.thxstore.common.exceptions.AuthException;
-import com.ssafy.thxstore.common.exceptions.ErrorCode;
 import com.ssafy.thxstore.controller.config.AppProperties;
-import com.ssafy.thxstore.controller.member.AuthController;
-import com.ssafy.thxstore.controller.member.Resource.CheckEmailResource;
 import com.ssafy.thxstore.controller.order.Resource.CheckReviewResource;
 import com.ssafy.thxstore.controller.order.Resource.ReviewResource;
 import com.ssafy.thxstore.reservation.domain.Review;
 import com.ssafy.thxstore.reservation.dto.*;
-import com.ssafy.thxstore.reservation.dto.request.AnswerRequest;
+import com.ssafy.thxstore.reservation.dto.AnswerDto;
 import com.ssafy.thxstore.reservation.dto.request.StatusRequest;
 import com.ssafy.thxstore.reservation.dto.response.CheckReviewResponse;
 import com.ssafy.thxstore.reservation.service.ReservationService;
@@ -240,14 +236,17 @@ public ResponseEntity<List<String>> addReservation(@RequestHeader String authori
      * 1. 빌드로 리뷰(맴버 아이디 받아옴 dto)량 연결해서
      * 2. 글생성
      */
-    
-    // TODO: 2021-05-17 리뷰 조회할 때 사장님 답변이 달려 있으면 -> 사장님 답변도 함께 리턴
+
+    // TODO: 2021-05-19 사장님이 리뷰 조회할때만 -> 사용자의 프로필 이미지 필요함 ok
+    // TODO: 2021-05-19 요청값 찾아서 정욱이형 알려주기   ok
+
+    // TODO: 2021-05-19 맴버가 리뷰조회할때 리뷰 조회할 때 사장님 답변이 달려 있으면 -> 사장님 답변도 함께 리턴  이거는 그 다음 할일 ok
+    // TODO: 2021-05-19 사장님이 자기 가게에 달린 리뷰 조회할때도 자기가 답변작성한게 있으면 보여야겠죠? ok
 
     @PostMapping("/reservation/answer")
-    public ResponseEntity<String> createAnswer(String authorization,@RequestBody AnswerRequest answerRequest){
-        String email = jwtToEmail(authorization);
+    public ResponseEntity<String> createAnswer(@RequestBody AnswerDto answerDto){
 
-        String result = reviewService.createAnswer(email,answerRequest);
+        String result = reviewService.createAnswer(answerDto);
 
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
