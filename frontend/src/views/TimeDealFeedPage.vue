@@ -99,8 +99,25 @@ export default {
   }
 }
 .no-time-deal {
-  padding-top: 30px;
-  padding-left: 30px;
+  color: $gray600;
+  height: 300px;
+  @include flexbox;
+  @include justify-content(center);
+  @include align-items(center);
   font-size: 30px;
+  width: 100%;
+  @include lg-pc {
+    width: clamp(100px, 50vw, 1000px);
+  }
+  @include pc {
+    width: clamp(100px, 50vw, 1000px);
+    font-size: 25px;
+  }
+  @include mobile {
+    font-size: 20px;
+  }
+  @include xs-mobile {
+    font-size: 15px;
+  }
 }
 </style>

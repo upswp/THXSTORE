@@ -13,7 +13,7 @@
       class="feed-wrapper slide-down-item"
       :data-index="index"
     >
-      <div class="store-head">
+      <div class="store-head" @click="goToStore(feed.id)">
         <div class="store-name-wrapper">
           <img :src="feed.logo" class="store-logo" />
           <span class="store-name">{{ feed.name }}</span>
@@ -37,7 +37,7 @@
           <img :src="feed.thumbImg" />
         </swiper-slide>
         <swiper-slide v-for="(item, index2) in feed.timeDealList" :key="index2"
-          ><img :src="item.productImg" />
+          ><img :src="item.productImg" class="swiper-lazy" loading="lazy" />
           <div class="item-info">
             <span class="item-name">{{ item.name }}</span>
             <span class="item-rate">-{{ item.rate }}%</span>
@@ -86,10 +86,12 @@ export default {
           768: {
             slidesPerView: 3,
             spaceBetween: 10,
+            lazy: true,
           },
           320: {
             slidesPerView: 2,
             spaceBetween: 10,
+            lazy: true,
           },
         },
       },
@@ -113,6 +115,14 @@ export default {
     // 트랜지션을 완료하거나 취소할 때는 딜레이를 제거합니다.
     afterEnter(el) {
       el.style.transitionDelay = '';
+    },
+    goToStore(id) {
+      this.$router.push({
+        name: 'timedeal',
+        params: {
+          storeId: id,
+        },
+      });
     },
   },
 };
@@ -241,6 +251,7 @@ svg {
   margin-bottom: 10px;
 }
 .store-head {
+  cursor: pointer;
   @include lg-pc {
     @include flexbox;
     @include justify-content(space-between);

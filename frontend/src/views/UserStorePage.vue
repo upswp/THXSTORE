@@ -69,7 +69,6 @@ export default {
     syncTab(path) {
       for (const name of ['info', 'menu', 'timedeal', 'live']) {
         if (path.includes(name)) {
-          console.log(name);
           this.resetActive();
           this.active = name;
           this.$refs[name].classList.add('active');
@@ -84,7 +83,6 @@ export default {
       if (this.active === item) return;
       this.resetActive();
       this.active = item;
-      // console.log('아이템', this.active);
       this.$refs[item].classList.add('active');
       this.$router.push({
         name: item,

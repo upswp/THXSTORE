@@ -7,9 +7,6 @@
     opacity: 0;
     @include transform(translate(0, 2rem));
   }
-  .slide-down-leave-active{
-    position:absolute;
-  }
 
     // .slide-down-enter-active,
     // .slide-down-leave-active{
