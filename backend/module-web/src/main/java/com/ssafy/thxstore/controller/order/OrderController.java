@@ -1,5 +1,7 @@
 package com.ssafy.thxstore.controller.order;
 
+import com.ssafy.thxstore.common.exceptions.AuthException;
+import com.ssafy.thxstore.common.exceptions.ErrorCode;
 import com.ssafy.thxstore.controller.config.AppProperties;
 import com.ssafy.thxstore.controller.member.AuthController;
 import com.ssafy.thxstore.controller.member.Resource.CheckEmailResource;
@@ -58,12 +60,13 @@ private final AppProperties appProperties;
 
 //주문등록 주문이 들어왔을 때 ---->  재고 확인 후   stock 다떨어졌으면 품절된 상품이 있습니다 return
 @PostMapping("/reservation")
-public ResponseEntity<String> addReservation(@RequestHeader String authorization, @RequestBody ReservationDto reservation){
+public ResponseEntity<List<String>> addReservation(@RequestHeader String authorization, @RequestBody ReservationDto reservation){
 
     String email = jwtToEmail(authorization);
-    String result = reservationService.addReservation(email,reservation);
+    List<String> result = reservationService.addReservation(email,reservation);
 
-    return new ResponseEntity<>(result, HttpStatus.OK);
+    if(result.size()==0){return new ResponseEntity<>(result, HttpStatus.OK);}
+    else{  return new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);    }
 }
 
     /**

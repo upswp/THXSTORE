@@ -1,9 +1,12 @@
 package com.ssafy.thxstore.reservation.service;
 
 import com.pusher.rest.Pusher;
+import com.ssafy.thxstore.common.exceptions.AuthException;
+import com.ssafy.thxstore.common.exceptions.ErrorCode;
 import com.ssafy.thxstore.member.domain.Member;
 import com.ssafy.thxstore.member.repository.MemberRepository;
 import com.ssafy.thxstore.product.domain.Product;
+import com.ssafy.thxstore.product.dto.ProductDto;
 import com.ssafy.thxstore.product.repository.ProductRepository;
 import com.ssafy.thxstore.reservation.domain.Reservation;
 import com.ssafy.thxstore.reservation.domain.ReservationGroup;
@@ -46,7 +49,7 @@ public class ReservationServiceImpl implements ReservationService{
      */
     @Override
     @Transactional
-    public String addReservation(String email,ReservationDto reservationList){
+    public List<String> addReservation(String email,ReservationDto reservationList){
 
         /**
          * 가게를 등록할 때 이벤트를 발생시키고
@@ -70,6 +73,7 @@ public class ReservationServiceImpl implements ReservationService{
 
         List<ReservationGroupDto> reservationGroupDtoList = new LinkedList<>();
         List<ReservationDto> reservationDtoList = new LinkedList<>();
+        List<String> outOfStock = new LinkedList<>();
 
         Reservation reservation = Reservation.builder().
                 email(store.get().getMember().getEmail()).  //스토어 사장님의 이메일이 들어가야해
@@ -81,13 +85,14 @@ public class ReservationServiceImpl implements ReservationService{
 
         reservationRepository.save(reservation);
         List<ReservationGroup> reservationAntityList = new ArrayList<>();
+        Boolean stockflag = false; //true로 바뀌면 재고 떨어짐
 
         for(int i =0 ;i<reservationList.getReservationGroups().size();i++){
             Optional<Product> product = productRepository.findById(reservationList.getReservationGroups().get(i).getProductId());
 
             if(product.get().getStock() - reservationList.getReservationGroups().get(i).getCount() < 0){
-
-                return "선택하신 메뉴 중에 품절된 상품이 있습니다";
+                stockflag =true;
+                outOfStock.add(reservationList.getReservationGroups().get(i).getProductName());
             }
 
             ReservationGroup reservationGroup = ReservationGroup.builder().
@@ -105,6 +110,9 @@ public class ReservationServiceImpl implements ReservationService{
             product.get().stockUpdate(Integer.parseInt(""+product.get().getStock()) - reservationList.getReservationGroups().get(i).getCount());
             reservationAntityList.add(reservationGroup);
         }
+        if(stockflag == true){
+            return outOfStock;
+        }
         reservationGroupRepository.saveAll(reservationAntityList);
 
         Pusher pusher = new Pusher("1203876", "c961ac666cf7baaf084c", "43c7f358035c2a712f23");
@@ -113,7 +121,7 @@ public class ReservationServiceImpl implements ReservationService{
 
 //            pusher.trigger(reservationList.getStoreId()+"-channel", "my-event", Collections.singletonMap("message","회원번호: "+reservationList.getUserId()+ "님의 주문이 등록되었습니다."));
         pusher.trigger(reservationList.getStoreId()+"-channel", "my-event", reservationList);
-        return "주문이 완료되었습니다.";
+        return outOfStock;
     }
 
     /**

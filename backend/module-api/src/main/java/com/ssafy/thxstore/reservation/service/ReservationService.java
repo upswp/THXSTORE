@@ -7,7 +7,7 @@ import java.text.ParseException;
 import java.util.List;
 
 public interface ReservationService {
-    String addReservation(String email,ReservationDto reservationList);
+    List<String> addReservation(String email,ReservationDto reservationList);
     List<ReservationDto> getReservation(String email,String type) throws ParseException;
     String deleteReservation(String email,Long Id,String type);
     String statusUpdate(String email, StatusRequest status);
