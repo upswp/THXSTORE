@@ -23,7 +23,8 @@ public enum ErrorCode {
     BAD_LOGIN(400, "AU_005", "잘못된 아이디 또는 패스워드입니다."),
     UNAUTHORIZED_MEMBER(400,"AU_006","존재하지않는 유저입니다."),
     CHECK_REVIEW(200,"AU_008","이미 작성된 리뷰가 있습니다."),
-    OUT_OF_STOCK(400,"AU_008","재고가 떨어졌습니다."),
+    CHECK_ANSWER(200,"AU_009","이미 작성된 답글가 있습니다."),
+    OUT_OF_STOCK(400,"AU_010","재고가 떨어졌습니다."),
     NOT_FOUND_IMAGE(400,"AU_007","이미지 관련 오류가 발생했습니다.");
 
     //-----------------------

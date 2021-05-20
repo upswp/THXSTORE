@@ -85,10 +85,12 @@ public class ReservationServiceImpl implements ReservationService{
 
         reservationRepository.save(reservation);
         List<ReservationGroup> reservationAntityList = new ArrayList<>();
-        Boolean stockflag = false; //true로 바뀌면 재고 떨어짐
 
+        Boolean stockflag = false; //true로 바뀌면 재고 떨어짐
+        List<Integer> productindex= new ArrayList<>();
+        Optional<Product> product = Optional.of(new Product());
         for(int i =0 ;i<reservationList.getReservationGroups().size();i++){
-            Optional<Product> product = productRepository.findById(reservationList.getReservationGroups().get(i).getProductId());
+            product = productRepository.findById(reservationList.getReservationGroups().get(i).getProductId());
 
             if(product.get().getStock() - reservationList.getReservationGroups().get(i).getCount() < 0){
                 stockflag =true;
@@ -105,13 +107,17 @@ public class ReservationServiceImpl implements ReservationService{
                     productName(reservationList.getReservationGroups().get(i).getProductName()).
                     build();
 
-            //저장하기전 -> 구매 수량 만큼 재고 마이너스
-            // 인트로 바꿔서 연산 하고 stockUpdate 메소드에서 INTEGER로 바꿔서 저장
-            product.get().stockUpdate(Integer.parseInt(""+product.get().getStock()) - reservationList.getReservationGroups().get(i).getCount());
+            productindex.add(i);
             reservationAntityList.add(reservationGroup);
         }
-        if(stockflag == true){
+        if(stockflag == true){   //재고 - 인거 있다면 저장안함
             return outOfStock;
+        }
+
+        //제고 -인게 없다면 (무사 통과)  -> 각 재고 마이너스 처리 해주고 (List<Integer> productindex)로 -> 재고가 마이너스인경우 넘어오지도 않음 빼도됨!
+        // 인트로 바꿔서 연산 하고 stockUpdate 메소드에서 INTEGER로 바꿔서 저장
+        for(int i =0 ;i< productindex.size(); i++) {
+            product.get().stockUpdate(Integer.parseInt("" + product.get().getStock()) - reservationList.getReservationGroups().get(productindex.get(i)).getCount());
         }
         reservationGroupRepository.saveAll(reservationAntityList);
 
@@ -233,25 +239,24 @@ public class ReservationServiceImpl implements ReservationService{
     // email -> store 일경우 사장님 Id ->memberId           member일 경우 email -> 맴버 꺼 Id -> storeId
     @Override
     @Transactional
-    public String deleteReservation(String email,Long Id,String type){
+    public String deleteReservation(String email,Long reservationId,String type){
 
 
         if(type == "store"){
             Optional<Store> store= storeRepository.findByEmailJoin(email);
 
-            List<ReservationGroup> order = reservationGroupRepository.findAllByMemberIdAndStoreId(Id,store.get().getId());
-            if(!order.get(0).getReservation().equals(ReservationStatus.DEFAULT)){
-                return "주문이 접수 상태로 넘어가 취소할 수 없습니다.";
+            List<ReservationGroup> order = reservationGroupRepository.findAllByReservationId(reservationId,email);
+            if(!order.get(0).getReservation().getReservationStatus().equals(ReservationStatus.DEFAULT)){
+                return "해당 주문이 접수되어 취소할 수 없습니다.";
             }
             reservationGroupRepository.deleteAll(order);
-            return "취소했습니다.";
+            return "취소했습니다";
         }else{
             Optional<Member> member= memberRepository.findByEmail(email);
 
+            List<ReservationGroup> order = reservationGroupRepository.findAllByReservationId(reservationId,email);
 
-            System.out.println("member.get().getId() : "+member.get().getId() );
-            List<ReservationGroup> order = reservationGroupRepository.findAllByMemberIdAndStoreId(member.get().getId(),Id);
-            if(!order.get(0).getReservation().equals(ReservationStatus.DEFAULT)){
+            if(!order.get(0).getReservation().getReservationStatus().equals(ReservationStatus.DEFAULT)){
                 return "주문이 접수 상태로 넘어가 취소할 수 없습니다.";
             }
             reservationGroupRepository.deleteAll(order);
@@ -263,7 +268,7 @@ public class ReservationServiceImpl implements ReservationService{
     public String statusUpdate(String email, StatusRequest status){
 //        Optional<Reservation> nowReservation= reservationRepository.findByMember(status.getMemberId());
 
-        reservationRepository.findReservation(email,status.getStoreId(),status.getReservationStatus().name());
+        reservationRepository.findReservation(email,status.getReservationId(),status.getReservationStatus().name());
         return "변경되었습니다";
     }
 }

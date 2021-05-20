@@ -30,7 +30,7 @@ public class Reservation {
     private Member member;
 
     @ColumnDescription("하나의 주문 당 연결되는 리뷰 한 개")
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     @JoinColumn(name = "review_id")
     private Review review;
 

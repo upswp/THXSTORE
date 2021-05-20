@@ -36,17 +36,21 @@ public class Answer {
     @Column(name = "store_id")
     private Long storeId;
 
+    @Column(name = "review_id")
+    private Long reviewId;
+
     @ColumnDescription("스토어 아이디로 각각의 장바구니 구분")
     @Column(name = "write_time")
     private String dateTime;
 
     @ColumnDescription("양방향 맵핑 리뷰 삭제 시 답변도 삭제")
-    @OneToOne(mappedBy = "answer2", fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "answer2", fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     private Review review = new Review();
 
     @Builder
-    public Answer(String comment, String dateTime,Long memberId,String storeName,Long storeId) {
+    public Answer(Long reviewId,String comment, String dateTime,Long memberId,String storeName,Long storeId) {
         this.comment = comment;
+        this.reviewId =reviewId;
         this.dateTime = dateTime;
         this.memberId = memberId;
         this.storeName =storeName;
