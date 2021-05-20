@@ -92,7 +92,7 @@ public class ReservationServiceImpl implements ReservationService{
         for(int i =0 ;i<reservationList.getReservationGroups().size();i++){
             product = productRepository.findById(reservationList.getReservationGroups().get(i).getProductId());
 
-            if(product.get().getStock() - reservationList.getReservationGroups().get(i).getCount() < 0){
+            if(product.get().getStock() - reservationList.getReservationGroups().get(i).getCount() < 0){  //제고가 없는 경우-> 재고 없음 플러그 + outofstock에 제품이름추가
                 stockflag =true;
                 outOfStock.add(reservationList.getReservationGroups().get(i).getProductName());
             }
@@ -110,7 +110,7 @@ public class ReservationServiceImpl implements ReservationService{
             productindex.add(i);
             reservationAntityList.add(reservationGroup);
         }
-        if(stockflag == true){   //재고 - 인거 있다면 저장안함
+        if(stockflag == true){   //재고 - 인거 있다면 저장안함  -> outofstock에 저장된 제품 이름 리턴
             return outOfStock;
         }
 
@@ -128,6 +128,7 @@ public class ReservationServiceImpl implements ReservationService{
 //            pusher.trigger(reservationList.getStoreId()+"-channel", "my-event", Collections.singletonMap("message","회원번호: "+reservationList.getUserId()+ "님의 주문이 등록되었습니다."));
         pusher.trigger(reservationList.getStoreId()+"-channel", "my-event", reservationList);
 
+        outOfStock.add("주문가능");//outofstock의 0인덱스 -> 제고있음
         outOfStock.add(""+reservation.getId());
         return outOfStock;
     }

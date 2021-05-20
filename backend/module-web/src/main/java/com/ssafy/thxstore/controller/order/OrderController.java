@@ -62,7 +62,7 @@ public ResponseEntity<List<String>> addReservation(@RequestHeader String authori
     String email = jwtToEmail(authorization);
     List<String> result = reservationService.addReservation(email,reservation);
 
-    if(result.size()==0){result.add("제품 등록에 성공했습니다."); return new ResponseEntity<>(result, HttpStatus.OK);}
+    if(result.get(0).equals("주문가능")){result.add("제품 등록에 성공했습니다."); return new ResponseEntity<>(result, HttpStatus.OK);}
     else{  return new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);    }   //품절된 상품이 있는경우 품절된 상품 리턴
 }
 
