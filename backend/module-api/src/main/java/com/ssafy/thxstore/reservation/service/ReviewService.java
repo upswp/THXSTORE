@@ -24,10 +24,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.text.DateFormat;
-import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @Component
@@ -138,6 +135,7 @@ public class ReviewService {
                         build();
 
                 ReviewDtoList.add(reviewDto);
+                ReviewDtoList.sort(Comparator.reverseOrder());
             }
         }else{
             ReviewList = reviewRepository.findReviewByStoreId(Id);
@@ -179,6 +177,8 @@ public class ReviewService {
                         build();
 
                 ReviewDtoList.add(reviewDto);
+                ReviewDtoList.sort(Comparator.reverseOrder());
+
             }
         }
 

@@ -233,7 +233,7 @@ public class ReservationServiceImpl implements ReservationService{
                         build();
 
                 reservationDtoList.add(reservationDto);
-
+                reservationDtoList.sort(Comparator.reverseOrder());
             }//for
         }//else
 
