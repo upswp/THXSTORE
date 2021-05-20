@@ -111,7 +111,7 @@ public class StoreService {
             }
             store.setLogo(imgProfile);
         }
-        if(storeChangedDto.getLogo() ==null){
+        if(store.getLogo() == null){
             store.setLogo("https://thxstore.s3.ap-northeast-2.amazonaws.com/%EC%8A%A4%ED%86%A0%EC%96%B4+%EB%94%94%ED%8F%B4%ED%8A%B8+%EB%A1%9C%EA%B3%A0.png");
         }
         return store;
