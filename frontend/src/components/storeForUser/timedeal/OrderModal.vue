@@ -50,6 +50,11 @@ export default {
       default: () => [],
       require: true,
     },
+    reservationId: {
+      type: String,
+      default: '',
+      require: false,
+    },
   },
   methods: {
     oneTrans,
@@ -60,7 +65,7 @@ export default {
     async cancelOrder() {
       try {
         this.setSpinnerState(true);
-        await cancelOrderForUser(this.$route.params.storeId);
+        await cancelOrderForUser(this.reservationId[1]);
       } catch (error) {
         console.log(error);
         if (error.response.status === 400) {

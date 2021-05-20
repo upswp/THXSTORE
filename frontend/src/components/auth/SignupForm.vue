@@ -59,7 +59,7 @@ export default {
         nickname: '',
         lat: 33.450701,
         lon: 126.570667,
-        address: '',
+        address: '대전광역시 유성구 덕명동 124',
       },
     };
   },

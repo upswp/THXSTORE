@@ -56,6 +56,7 @@
         </template>
       </table>
     </section>
+    <!-- <div class="temp"><awesome icon="store" class="store"></awesome>Thx!Store</div> -->
   </div>
 </template>
 
@@ -152,27 +153,31 @@ export default {
         this.setSpinnerState(true);
         await setReservationStatus({
           reservationStatus: state,
-          storeId: order.storeId,
-          userId: order.userId,
+          reservationId: order.reservationId,
         });
         order.reservationStatus = state;
         this.setSpinnerState(false);
       } catch (error) {
         console.log(error);
         this.setSpinnerState(false);
-        alert('주문 상태 변경에 실패하였습니다');
+        if (error.response.status === 400) {
+          alert('이미 취소된 주문입니다.');
+          order.reservationStatus = 'REJECT';
+        } else {
+          alert('주문 상태 변경에 실패하였습니다');
+        }
       }
     },
     async rejectOrder(order) {
       try {
         this.setSpinnerState(true);
-        await cancelOrder(order.userId);
+        await cancelOrder(order.reservationId);
         this.setSpinnerState(false);
         order.reservationStatus = 'REJECT';
       } catch (error) {
         console.log(error);
         this.setSpinnerState(false);
-        alert('주문 취소에 실패하였습니다');
+        alert('주문 취소에 실패하였습니다. 새로고침을 통해 내역을 갱신해주세요');
       }
     },
     counterOn() {
@@ -203,6 +208,17 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+// .temp {
+//   height: 500px;
+//   font-size: 240px;
+//   font-family: 'Pacifico', cursive;
+//   @include flexbox;
+//   @include justify-content(center);
+//   color: $blue800;
+//   svg {
+//     margin-right: 5px;
+//   }
+// }
 .store-reservation-container {
   width: 100%;
   @include lg-pc {

@@ -17,7 +17,7 @@
         <div class="menu-name">{{ menu.name }}</div>
         <div class="menu-count-wrapper">
           <span @click="decrease(menu)">-</span>
-          <input v-model="menu.count" type="number" class="menu-count" />
+          <input v-model="menu.count" type="number" class="menu-count" @input="checkValid(menu)" />
           <span @click="increase(menu)">+</span>
         </div>
         <div class="menu-payFor">{{ oneTrans(menu.payFor) }}원</div>
@@ -28,7 +28,13 @@
       <span class="total-pay-for">{{ oneTrans(totalPayFor) }}원</span>
     </div>
     <div class="order-button" @click="getDeal">예약 하기</div>
-    <order-modal v-if="confirm" :error="error" :message="confirmBody" @confirmStatus="confirmStatus"></order-modal>
+    <order-modal
+      v-if="confirm"
+      :error="error"
+      :message="confirmBody"
+      :reservation-id="reservationId"
+      @confirmStatus="confirmStatus"
+    ></order-modal>
   </aside>
 </template>
 
@@ -53,6 +59,7 @@ export default {
       confirm: false,
       error: false,
       confirmBody: '',
+      reservationId: '',
     };
   },
   computed: {
@@ -66,16 +73,26 @@ export default {
       }, 0);
     },
     totalCount() {
-      return this.selectedMenus.reduce((acc, item) => {
-        return acc + item.count;
-      }, 0);
+      return parseInt(
+        this.selectedMenus.reduce((acc, item) => {
+          return acc + item.count;
+        }, 0),
+      );
     },
   },
   methods: {
+    checkValid(menu) {
+      if (isNaN(menu.count)) menu.count = 0;
+      else if (parseInt(menu.count) < 0) menu.count = 0;
+      else if (menu.count > menu.stock) menu.count = menu.stock;
+      console.log(menu.count);
+      menu.payFor = menu.count * menu.discounted;
+    },
     confirmStatus() {
       this.error = false;
       this.confirm = false;
       this.confirmBody = '';
+      this.reservationId = '';
       this.$router.go(0);
     },
     ...mapMutations(['setSpinnerState']),
@@ -104,7 +121,7 @@ export default {
       try {
         this.setSpinnerState(true);
         const orderList = this.menus.filter(x => x.selected);
-        await makeDeal({
+        const { data } = await makeDeal({
           userId: this.getUserInfo.id,
           storeId: this.$route.params.storeId,
           nickname: this.getUserInfo.nickname,
@@ -118,6 +135,7 @@ export default {
             };
           }),
         });
+        this.reservationId = data;
         this.setSpinnerState(false);
         this.confirmBody = orderList;
         this.confirm = true;
@@ -135,7 +153,6 @@ export default {
     },
     decrease(menu) {
       if (menu.count > 1) menu.count--;
-      menu.payFor = menu.count * menu.discounted;
       menu.payFor = menu.count * menu.discounted;
     },
     increase(menu) {

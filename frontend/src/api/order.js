@@ -32,8 +32,7 @@ const getTotalOrders = () => privateAPI.get('reservation/store');
 /**
  * 주문 상태 변경 정보
  * @typedef {object} OrderStatus
- * @property {number} userId - 주문자 id
- * @property {number} storeId - 가게 id
+ * @property {number} reservationId - 주문 id
  * @property {string} reservationStatus - 주문 상태
  */
 /**
@@ -47,14 +46,13 @@ const setReservationStatus = orderStatus => privateAPI.put('reservation/status',
 /**
  * 판매자 입장에서 주문 취소
  * @typedef {function} cancelOrder
- * @param {number} userId
- * @param {number} storeId
+ * @param {number} reservationId
  * @returns {Promise<Boolean>} isCanceled
  */
-const cancelOrder = userId =>
+const cancelOrder = reservationId =>
   privateAPI.delete('reservation/store', {
     params: {
-      memberId: userId,
+      reservationId: reservationId,
     },
   });
 
@@ -81,13 +79,13 @@ const makeDeal = orderData => privateAPI.post('reservation', orderData);
 /**
  * 사용자 입장에서 주문 취소
  * @typedef {function} cancelOrderForUser
- * @param {number} storeId
+ * @param {number} reservationId
  * @returns {Promise<Boolean>} isCanceled
  */
-const cancelOrderForUser = storeId =>
+const cancelOrderForUser = reservationId =>
   privateAPI.delete('reservation/member', {
     params: {
-      storeId: storeId,
+      reservationId: reservationId,
     },
   });
 export { getTotalOrders, setReservationStatus, cancelOrder, makeDeal, cancelOrderForUser };

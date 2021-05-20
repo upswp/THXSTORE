@@ -18,3 +18,8 @@ export default {
   },
 };
 </script>
+<style lang="scss" scoped>
+video {
+  width: 100%;
+}
+</style>
