@@ -8,6 +8,12 @@
       <div id="main-video">
         <user-video :stream-manager="mainStreamManager" />
       </div>
+      <div style="border: 1px solid black">
+        <div v-for="(chat, index) in chats" :key="index">
+          {{ chat }}
+        </div>
+      </div>
+      <input v-model="sendMsg" type="text" @keydown.enter="submitMsg" />
     </div>
   </div>
 </template>
@@ -38,6 +44,8 @@ export default {
       myUserName: '',
       storeId: this.$route.params.storeId,
       subscribers: [],
+      chats: [],
+      sendMsg: '',
     };
   },
   computed: {
@@ -49,6 +57,20 @@ export default {
     this.joinSession();
   },
   methods: {
+    submitMsg() {
+      this.session
+        .signal({
+          data: this.sendMsg, // Any string (optional)
+          to: [], // Array of Connection objects (optional. Broadcast to everyone if empty)
+          type: 'my-chat', // The type of message (optional)
+        })
+        .then(() => {
+          console.log('Message successfully sent');
+        })
+        .catch(error => {
+          console.error(error);
+        });
+    },
     joinSession() {
       // --- Get an OpenVidu object ---
       this.OV = new OpenVidu();
@@ -64,7 +86,12 @@ export default {
         this.subscribers.push(subscriber);
         this.mainStreamManager = this.subscribers[0];
       });
-
+      this.session.on('signal:my-chat', event => {
+        this.chats.push(event.data);
+        console.log(event.data); // Message
+        console.log(event.from); // Connection object of the sender
+        console.log(event.type); // The type of message ("my-chat")
+      });
       // On every Stream destroyed...
       this.session.on('streamDestroyed', ({ stream }) => {
         const index = this.subscribers.indexOf(stream.streamManager, 0);
