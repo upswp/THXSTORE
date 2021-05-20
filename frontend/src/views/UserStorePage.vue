@@ -7,6 +7,7 @@
         타임딜 <span class="time-deal-ani">Now!</span>
       </div>
       <div ref="live" class="nav-item" @click="selectComponent('live')">라이브커머스</div>
+      <div ref="userStoreReview" class="nav-item" @click="selectComponent('userStoreReview')">리뷰</div>
     </div>
     <div v-if="loaded" class="main-content-wrapper">
       <div class="main-content">

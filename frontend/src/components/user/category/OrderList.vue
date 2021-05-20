@@ -1,7 +1,7 @@
 <template>
-  <div v-if="loaded" class="order-list-container">
-    <div class="order-list-title">{{ $store.state.userInfo.nickname }}님의 예약 목록</div>
-    <div class="order-list-items">
+  <div class="order-list-container">
+    <div class="order-list-title">주문 목록</div>
+    <div v-if="loaded" class="order-list-items">
       <div v-for="(orderItem, index) in orderItems" :key="index" class="order-list-item">
         <div class="order-list-header">
           <img class="item-logo" :src="orderItem.storeImg" alt="" />
@@ -94,12 +94,14 @@
         </form>
       </div>
     </div>
+    <div v-else>주문내역이 없습니다.</div>
   </div>
 </template>
 
 <script>
 import { getUserOrders, registerReview } from '@/api/userOrder';
 import { dateTrans, oneTrans } from '@/utils/filters';
+import { mapMutations } from 'vuex';
 export default {
   data() {
     return {
@@ -113,6 +115,7 @@ export default {
     this.changeResStatusToKor();
   },
   methods: {
+    ...mapMutations(['setSpinnerState']),
     starScore($event, index) {
       console.log('starscore', $event.target.value);
       this.orderItems[index].starScore = parseFloat($event.target.value);
@@ -149,19 +152,25 @@ export default {
       return false;
     },
     async getUserOrdersList() {
-      const { data } = await getUserOrders();
-      data.forEach(x => {
-        x['totalPayment'] = 0;
-        x['reviewLoaded'] = false;
-        x['starScore'] = '';
-        x['reviewContent'] = '';
-        x.reservationGroups.forEach(product => {
-          product['computed'] = Math.floor(product.price * (100 - product.rate)) / 100;
-          x['totalPayment'] += product.computed;
+      try {
+        this.setSpinnerState(true);
+        const { data } = await getUserOrders();
+        data.forEach(x => {
+          x['totalPayment'] = 0;
+          x['reviewLoaded'] = false;
+          x['starScore'] = '';
+          x['reviewContent'] = '';
+          x.reservationGroups.forEach(product => {
+            product['computed'] = Math.floor(product.price * (100 - product.rate)) / 100;
+            x['totalPayment'] += product.computed;
+          });
         });
-      });
-      this.orderItems = data;
-      console.log('this.orderItems', this.orderItems);
+        this.setSpinnerState(false);
+        this.orderItems = data;
+      } catch (error) {
+        this.setSpinnerState(false);
+        console.log(error);
+      }
     },
     async submitForm(index) {
       try {
@@ -173,14 +182,17 @@ export default {
           comment: this.orderItems[index].reviewContent,
           memberName: this.$store.state.userInfo.nickname,
         };
+        this.setSpinnerState(true);
         const { data } = await registerReview(rawData);
         this.toggleReviewLoaded(index);
+        this.setSpinnerState(false);
         if (data.message) {
           alert('이미 리뷰를 작성하셨습니다.');
         } else {
           alert('리뷰가 정상적으로 등록되었습니다.');
         }
       } catch (error) {
+        this.setSpinnerState(false);
         console.log(error);
       }
     },
