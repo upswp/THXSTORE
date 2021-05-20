@@ -75,7 +75,7 @@ export default {
         }
       } finally {
         this.setSpinnerState(false);
-        // this.$emit('confirmStatus');
+        this.$emit('confirmStatus');
       }
     },
   },

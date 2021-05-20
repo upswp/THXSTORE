@@ -160,7 +160,12 @@ export default {
       } catch (error) {
         console.log(error);
         this.setSpinnerState(false);
-        alert('주문 상태 변경에 실패하였습니다');
+        if (error.response.status === 400) {
+          alert('이미 취소된 주문입니다.');
+          order.reservationStatus = 'REJECT';
+        } else {
+          alert('주문 상태 변경에 실패하였습니다');
+        }
       }
     },
     async rejectOrder(order) {
@@ -172,7 +177,7 @@ export default {
       } catch (error) {
         console.log(error);
         this.setSpinnerState(false);
-        alert('주문 취소에 실패하였습니다');
+        alert('주문 취소에 실패하였습니다. 새로고침을 통해 내역을 갱신해주세요');
       }
     },
     counterOn() {
