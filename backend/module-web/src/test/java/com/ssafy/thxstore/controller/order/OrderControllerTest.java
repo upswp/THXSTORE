@@ -88,6 +88,7 @@ public class OrderControllerTest extends BaseControllerTest {
 
         ReviewDto reviewDto = ReviewDto.builder().
                 logo("ejejej.com").
+                profileImg("profileImg").
                 answerDto(null).
                 reviewId(1L).
                 reservationGroupDtoList(reserlist).
