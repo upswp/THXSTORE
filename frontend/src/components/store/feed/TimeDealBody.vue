@@ -46,7 +46,7 @@
             <div class="original-price">{{ oneTrans(item.price) }}</div>
             <div class="discounted-price">{{ oneTrans(item.discounted) }}원</div>
           </div>
-          <div v-if="item.stock === 0" class="sold-out">매진 되었습니다.</div>
+          <div v-if="item.stock <= 0" class="sold-out">매진 되었습니다.</div>
         </swiper-slide>
         <div slot="pagination" class="swiper-pagination swiper-pagination-bullets"></div>
       </swiper>

@@ -14,13 +14,18 @@
           </span>
           <span class="detail-guide-text">프로필</span>
         </div>
-        <div ref="store-icon" class="drawer-item" @click="moveToPage('store')">
+        <div
+          v-if="getUserInfo.role === 'ROLE_MANAGER'"
+          ref="store-icon"
+          class="drawer-item"
+          @click="moveToPage('store')"
+        >
           <span class="drawer-icon-wrapper">
             <awesome icon="store"></awesome>
           </span>
           <span class="detail-guide-text">내 가게</span>
         </div>
-        <div ref="admin-icon" class="drawer-item" @click="moveToPage('admin')">
+        <div v-if="getUserInfo.role === 'ROLE_ADMIN'" ref="admin-icon" class="drawer-item" @click="moveToPage('admin')">
           <span class="drawer-icon-wrapper">
             <awesome icon="clipboard-list"></awesome>
           </span>
@@ -42,7 +47,7 @@ import { mapGetters, mapMutations } from 'vuex';
 import { clearLocalStorageItem, USER_INFO, TOKEN } from '@/utils/webStorage';
 export default {
   computed: {
-    ...mapGetters(['isMainDrawerOpend']),
+    ...mapGetters(['isMainDrawerOpend', 'getUserInfo']),
   },
   methods: {
     ...mapMutations(['toggleMainDrawerOpen', 'setToken', 'clearUserInfo']),

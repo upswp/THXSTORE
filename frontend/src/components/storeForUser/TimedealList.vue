@@ -8,7 +8,7 @@
               <img
                 :src="item.productImg"
                 class="product-img"
-                :style="{ height: item.stock > 30 ? '300px' : item.stock > 20 ? '280px' : '260px' }"
+                :style="{ height: item.stock > 20 ? '300px' : item.stock > 10 ? '280px' : '260px' }"
                 @click="toggleCard(item, index)"
               />
               <div class="item-info">
@@ -23,7 +23,7 @@
                   <awesome :icon="['far', 'check-circle']"></awesome>
                 </div>
               </transition>
-              <div v-if="item.stock === 0" class="item-sold-out">Sold Out</div>
+              <div v-if="item.stock <= 0" class="item-sold-out">Sold Out</div>
             </div>
           </div>
         </masonry>

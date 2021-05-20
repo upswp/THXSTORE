@@ -25,7 +25,7 @@
           }}</span>
         </div>
         <div class="review-comment">
-          <pre>{{ reviewItem.comment }} asdfasdfas dfasdfasdfasd</pre>
+          <pre>{{ reviewItem.comment }}</pre>
         </div>
         <div v-if="answerCheck(reviewItem.answerDto.comment)" class="answer-item" @click="toggleAnswerLoaded(index)">
           💌 사장님의 편지
