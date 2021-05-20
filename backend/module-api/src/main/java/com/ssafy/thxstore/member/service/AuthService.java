@@ -36,7 +36,8 @@ public class AuthService {
             throw new AuthException(ErrorCode.DUPLICATED_EMAIL);
         }
         Member member;
-        if (signUpRequest.getSocial() == null && signUpRequest.getUserId() == null && signUpRequest.getProfileImage() == null) {
+        if (signUpRequest.getUserId() == null && signUpRequest.getProfileImage() == null) {
+            System.out.println("여기 일반");
             member = Member.builder()
                     .email(signUpRequest.getEmail())
                     .password(signUpRequest.getPassword())
@@ -50,6 +51,7 @@ public class AuthService {
                     .address(signUpRequest.getAddress())
                     .build();
         } else {
+            System.out.println("여기 소셜");
             member = Member.builder()
                     .email(signUpRequest.getEmail())
                     .password(signUpRequest.getPassword())
