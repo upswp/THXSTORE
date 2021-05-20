@@ -62,8 +62,8 @@ public ResponseEntity<List<String>> addReservation(@RequestHeader String authori
     String email = jwtToEmail(authorization);
     List<String> result = reservationService.addReservation(email,reservation);
 
-    if(result.size()==0){return new ResponseEntity<>(result, HttpStatus.OK);}
-    else{  return new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);    }
+    if(result.get(0).equals("주문가능")){result.add("제품 등록에 성공했습니다."); return new ResponseEntity<>(result, HttpStatus.OK);}
+    else{  return new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);    }   //품절된 상품이 있는경우 품절된 상품 리턴
 }
 
     /**
@@ -164,6 +164,7 @@ public ResponseEntity<List<String>> addReservation(@RequestHeader String authori
      * 사장님 입장에서 조회 ->본인의 가게에 들어온 주문 내역만
      *
      * 사장님이 조회 페이지 눌렀을 경우 푸셔 인스턴스 만들고
+
      */
     //ok
     @GetMapping("/reservation/store")

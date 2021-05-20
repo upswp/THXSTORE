@@ -12,7 +12,7 @@ import java.util.List;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class ReviewDto {
+public class ReviewDto implements Comparable<ReviewDto>{
     @NotBlank
     private String comment;
 
@@ -60,5 +60,14 @@ public class ReviewDto {
         this.memberId =memberId;
         this.reservationId = reservationId;
         this.storeName = storeName;
+    }
+
+    @Override
+    public int compareTo(ReviewDto arg0) {
+        // TODO Auto-generated method stub
+        Long target = arg0.getReservationId();
+        if(reviewId == target) return 0;
+        else if(reviewId > target) return 1;
+        else return -1;
     }
 }

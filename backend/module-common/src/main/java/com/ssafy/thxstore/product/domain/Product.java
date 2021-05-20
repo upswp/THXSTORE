@@ -66,4 +66,8 @@ public class Product {
     public void stockUpdate(int i) {
         this.stock = Integer.valueOf(""+i);
     }
+
+    public void updatestock(int i) {
+        this.stock = i;
+    }
 }

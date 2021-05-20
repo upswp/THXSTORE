@@ -24,6 +24,11 @@ const routesForUserStore = [
         name: 'live',
         component: () => import('@/components/storeForUser/UserStoreLive.vue'),
       },
+      {
+        path: 'review/:storeId',
+        name: 'userStoreReview',
+        component: () => import('@/components/storeForUser/UserStoreReview.vue'),
+      },
     ],
   },
 ];

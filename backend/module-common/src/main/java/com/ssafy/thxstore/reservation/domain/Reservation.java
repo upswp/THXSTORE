@@ -83,4 +83,8 @@ public class Reservation {
     public void deleteReview() {
         this.review = null;
     }
+
+    public void updateStatus(ReservationStatus reservationStatus) {
+        this.reservationStatus = reservationStatus;
+    }
 }

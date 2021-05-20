@@ -54,6 +54,10 @@ export default {
           if (this.invalidMove('reservation')) return;
           this.$router.push({ name: 'storeReservation' });
           break;
+        case 'review':
+          if (this.invalidMove('review')) return;
+          this.$router.push({ name: 'storeReview' });
+          break;
       }
     },
     invalidMove(selection) {

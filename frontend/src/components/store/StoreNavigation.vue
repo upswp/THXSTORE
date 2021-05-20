@@ -15,6 +15,9 @@
 
       <label ref="reservation" class="nav-item" for="reservation-radio">예약 관리</label>
       <input id="reservation-radio" v-model="tap" type="radio" value="reservation" style="display: none" />
+
+      <label ref="review" class="nav-item" for="review-radio">리뷰 관리</label>
+      <input id="review-radio" v-model="tap" type="radio" value="review" style="display: none" />
     </div>
   </div>
 </template>

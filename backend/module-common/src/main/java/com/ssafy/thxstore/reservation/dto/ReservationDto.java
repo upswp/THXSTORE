@@ -65,4 +65,8 @@ public class ReservationDto implements Comparable<ReservationDto>{
         else if(reservationId > target) return 1;
         else return -1;
     }
+
+    public void addreservationId(Long id) {
+        this.reservationId = id;
+    }
 }

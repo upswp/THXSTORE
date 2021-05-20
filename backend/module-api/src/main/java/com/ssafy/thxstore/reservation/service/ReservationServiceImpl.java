@@ -92,12 +92,13 @@ public class ReservationServiceImpl implements ReservationService{
         for(int i =0 ;i<reservationList.getReservationGroups().size();i++){
             product = productRepository.findById(reservationList.getReservationGroups().get(i).getProductId());
 
-            if(product.get().getStock() - reservationList.getReservationGroups().get(i).getCount() < 0){
+            if(product.get().getStock() - reservationList.getReservationGroups().get(i).getCount() < 0){  //제고가 없는 경우-> 재고 없음 플러그 + outofstock에 제품이름추가
                 stockflag =true;
                 outOfStock.add(reservationList.getReservationGroups().get(i).getProductName());
             }
 
             ReservationGroup reservationGroup = ReservationGroup.builder().
+                    product(product.get()).
                     rate(reservationList.getReservationGroups().get(i).getRate()).
                     storeId(reservationList.getStoreId()).
                     userId(reservationList.getUserId()).
@@ -110,7 +111,7 @@ public class ReservationServiceImpl implements ReservationService{
             productindex.add(i);
             reservationAntityList.add(reservationGroup);
         }
-        if(stockflag == true){   //재고 - 인거 있다면 저장안함
+        if(stockflag == true){   //재고 - 인거 있다면 저장안함  -> outofstock에 저장된 제품 이름 리턴
             return outOfStock;
         }
 
@@ -124,9 +125,12 @@ public class ReservationServiceImpl implements ReservationService{
         Pusher pusher = new Pusher("1203876", "c961ac666cf7baaf084c", "43c7f358035c2a712f23");
         pusher.setCluster("ap3");
         reservationList.updateOrderTime(DateTime.now().toString());
-
+        reservationList.addreservationId(reservation.getId());
 //            pusher.trigger(reservationList.getStoreId()+"-channel", "my-event", Collections.singletonMap("message","회원번호: "+reservationList.getUserId()+ "님의 주문이 등록되었습니다."));
         pusher.trigger(reservationList.getStoreId()+"-channel", "my-event", reservationList);
+
+        outOfStock.add("주문가능");//outofstock의 0인덱스 -> 제고있음
+        outOfStock.add(""+reservation.getId());
         return outOfStock;
     }
 
@@ -220,6 +224,7 @@ public class ReservationServiceImpl implements ReservationService{
                 ReservationDto reservationDto = ReservationDto.builder().
                         email(reservationlist.get(i).getEmail()).
                         storeId(reservationlist.get(i).getStoreId()).
+                        reservationId(reservationlist.get(i).getId()).
                         reservationStatus(reservationlist.get(i).getReservationStatus()).
                         nickname(reservationlist.get(i).getNickname()).
                         orderTime(reservationlist.get(i).getDateTime()).
@@ -228,7 +233,7 @@ public class ReservationServiceImpl implements ReservationService{
                         build();
 
                 reservationDtoList.add(reservationDto);
-
+                reservationDtoList.sort(Comparator.reverseOrder());
             }//for
         }//else
 
@@ -245,30 +250,55 @@ public class ReservationServiceImpl implements ReservationService{
         if(type == "store"){
             Optional<Store> store= storeRepository.findByEmailJoin(email);
 
-            List<ReservationGroup> order = reservationGroupRepository.findAllByReservationId(reservationId,email);
+            List<ReservationGroup> order = reservationGroupRepository.findAllByReservationId(reservationId);
             if(!order.get(0).getReservation().getReservationStatus().equals(ReservationStatus.DEFAULT)){
                 return "해당 주문이 접수되어 취소할 수 없습니다.";
+            }
+            // 주문 생성하며 빠졌던 재고를 되돌리는 로직
+            //reservation_group의 카운트 만큼 prodcut의 stock 에 더해준다
+
+            for(int i = 0 ;i<order.size(); i++){
+                Optional<Product> product = productRepository.findById(order.get(i).getProduct().getId());  //어떤 제품인지 확인
+
+                product.get().updatestock(product.get().getStock() +order.get(i).getCount());
             }
             reservationGroupRepository.deleteAll(order);
             return "취소했습니다";
         }else{
             Optional<Member> member= memberRepository.findByEmail(email);
 
-            List<ReservationGroup> order = reservationGroupRepository.findAllByReservationId(reservationId,email);
+            List<ReservationGroup> order = reservationGroupRepository.findAllByReservationId(reservationId);
 
             if(!order.get(0).getReservation().getReservationStatus().equals(ReservationStatus.DEFAULT)){
                 return "주문이 접수 상태로 넘어가 취소할 수 없습니다.";
             }
+
+            for(int i = 0 ;i<order.size(); i++){
+                Optional<Product> product = productRepository.findById(order.get(i).getProduct().getId());  //어떤 제품인지 확인
+
+                product.get().updatestock(product.get().getStock() +order.get(i).getCount());
+            }
+
             reservationGroupRepository.deleteAll(order);
-            return "취소했습니다.";
+            return "취소했습니다";
         }
     }
 
     @Override
+    @Transactional
     public String statusUpdate(String email, StatusRequest status){
 //        Optional<Reservation> nowReservation= reservationRepository.findByMember(status.getMemberId());
 
-        reservationRepository.findReservation(email,status.getReservationId(),status.getReservationStatus().name());
-        return "변경되었습니다";
+        //findby로 찾고 상태 업데이트 하자
+        Optional<Reservation> reservation = reservationRepository.findById(status.getReservationId());
+
+        if(reservation.isPresent()) {
+            reservation.get().updateStatus(status.getReservationStatus());
+            return "변경되었습니다";
+        }
+        else{
+//            return "이미 취소된 주문입니다.";
+            throw new AuthException(ErrorCode.STATUS_UPDATE);
+        }
     }
 }
