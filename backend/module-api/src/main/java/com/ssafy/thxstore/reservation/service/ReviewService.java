@@ -141,6 +141,7 @@ public class ReviewService {
             ReviewList = reviewRepository.findReviewByStoreId(Id);
             for(int i =0 ;i<ReviewList.size(); i++){
 
+                Optional<Store> store= storeRepository.findById(ReviewList.get(i).getStoreId());
                 List<ReviewproductResponse> ReservationGroupDtoList = new LinkedList<>();
 
                 for(int j =0;ReviewList.get(i).getReservation().getReservationGroup().size()>j;j++) {
@@ -163,6 +164,7 @@ public class ReviewService {
                     }
                 ReviewDto reviewDto = ReviewDto.builder().
                         answerDto(answerDto).
+                        logo(store.get().getLogo()).
                         reservationGroupDtoList(ReservationGroupDtoList).
                         reservationId(ReviewList.get(i).getReservation().getId()).
                         memberName(ReviewList.get(i).getMemberName()).

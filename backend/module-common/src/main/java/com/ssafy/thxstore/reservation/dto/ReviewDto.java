@@ -22,8 +22,6 @@ public class ReviewDto implements Comparable<ReviewDto>{
 
     private Long reviewId;
 
-    private String profileImg;
-
     @NotBlank
     private Long storeId;
 

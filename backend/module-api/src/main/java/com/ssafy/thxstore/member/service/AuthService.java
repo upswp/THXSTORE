@@ -14,6 +14,7 @@ import com.ssafy.thxstore.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -29,6 +30,7 @@ public class AuthService {
      * @param signUpRequest 회원가입 RequestDto
      * @return Member
      */
+    @Transactional
     public Member registerMember(SignUpRequest signUpRequest) {
         if (memberRepository.existsByEmail(signUpRequest.getEmail())) {
             throw new AuthException(ErrorCode.DUPLICATED_EMAIL);
