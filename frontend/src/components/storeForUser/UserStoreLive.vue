@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="userstore-live-container">
     <div v-if="session" id="session">
       <div id="session-header">
         <h1 id="session-title">{{ mySessionId }}</h1>
@@ -36,13 +36,15 @@ export default {
       mainStreamManager: undefined,
       mySessionId: '',
       myUserName: '',
+      storeId: this.$route.params.storeId,
+      subscribers: [],
     };
   },
   computed: {
-    ...mapGetters(['getStoreId', 'getUserInfo']),
+    ...mapGetters(['getUserInfo']),
   },
   created() {
-    this.mySessionId = `Session${this.getStoreId}`;
+    this.mySessionId = `Session${this.storeId}`;
     this.myUserName = `User${this.getUserInfo.id}`;
     this.joinSession();
   },
@@ -56,6 +58,21 @@ export default {
 
       // --- Specify the actions when events take place in the session ---
 
+      // On every new Stream received...
+      this.session.on('streamCreated', ({ stream }) => {
+        const subscriber = this.session.subscribe(stream);
+        this.subscribers.push(subscriber);
+        this.mainStreamManager = this.subscribers[0];
+      });
+
+      // On every Stream destroyed...
+      this.session.on('streamDestroyed', ({ stream }) => {
+        const index = this.subscribers.indexOf(stream.streamManager, 0);
+        if (index >= 0) {
+          this.subscribers.splice(index, 1);
+        }
+      });
+
       // On every asynchronous exception...
       this.session.on('exception', ({ exception }) => {
         console.warn(exception);
@@ -68,24 +85,7 @@ export default {
       this.getToken(this.mySessionId).then(token => {
         this.session
           .connect(token, { clientData: this.myUserName })
-          .then(() => {
-            // --- Get your own camera stream with the desired properties ---
-
-            let publisher = this.OV.initPublisher(undefined, {
-              audioSource: undefined, // The source of audio. If undefined default microphone
-              videoSource: undefined, // The source of video. If undefined default webcam
-              publishAudio: true, // Whether you want to start publishing with your audio unmuted or not
-              publishVideo: true, // Whether you want to start publishing with your video enabled or not
-              resolution: '640x480', // The resolution of your video
-              frameRate: 30, // The frame rate of your video
-              insertMode: 'APPEND', // How the video is inserted in the target element 'video-container'
-              mirror: false, // Whether to mirror your local video or not
-            });
-
-            this.mainStreamManager = publisher;
-
-            this.session.publish(this.mainStreamManager);
-          })
+          .then(() => {})
           .catch(error => {
             console.log('There was an error connecting to the session:', error.code, error.message);
           });
@@ -164,4 +164,8 @@ export default {
 };
 </script>
 
-<style lang="sass" scoped></style>
+<style lang="scss" scoped>
+.userstore-live-container {
+  width: 100%;
+}
+</style>
