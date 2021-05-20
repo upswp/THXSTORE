@@ -22,7 +22,7 @@ const routesForUserStore = [
       {
         path: 'live/:storeId',
         name: 'live',
-        component: () => import('@/components/storeForUser/UserStoreLiveCommerce.vue'),
+        component: () => import('@/components/storeForUser/UserStoreLive.vue'),
       },
     ],
   },
