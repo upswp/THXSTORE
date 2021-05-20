@@ -17,7 +17,7 @@
         <div class="menu-name">{{ menu.name }}</div>
         <div class="menu-count-wrapper">
           <span @click="decrease(menu)">-</span>
-          <input v-model="menu.count" type="number" class="menu-count" />
+          <input v-model="menu.count" type="number" class="menu-count" @input="checkValid(menu)" />
           <span @click="increase(menu)">+</span>
         </div>
         <div class="menu-payFor">{{ oneTrans(menu.payFor) }}원</div>
@@ -73,12 +73,21 @@ export default {
       }, 0);
     },
     totalCount() {
-      return this.selectedMenus.reduce((acc, item) => {
-        return acc + item.count;
-      }, 0);
+      return parseInt(
+        this.selectedMenus.reduce((acc, item) => {
+          return acc + item.count;
+        }, 0),
+      );
     },
   },
   methods: {
+    checkValid(menu) {
+      if (isNaN(menu.count)) menu.count = 0;
+      else if (parseInt(menu.count) < 0) menu.count = 0;
+      else if (menu.count > menu.stock) menu.count = menu.stock;
+      console.log(menu.count);
+      menu.payFor = menu.count * menu.discounted;
+    },
     confirmStatus() {
       this.error = false;
       this.confirm = false;
@@ -144,7 +153,6 @@ export default {
     },
     decrease(menu) {
       if (menu.count > 1) menu.count--;
-      menu.payFor = menu.count * menu.discounted;
       menu.payFor = menu.count * menu.discounted;
     },
     increase(menu) {
