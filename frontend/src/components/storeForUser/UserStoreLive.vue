@@ -1,19 +1,49 @@
 <template>
-  <div class="userstore-live-container">
+  <div class="live-container">
+    <div class="reAccessLine">
+      <span class="reAccessButton" @click="joinSession">재접속하기</span>
+    </div>
     <div v-if="session" id="session">
-      <div id="session-header">
-        <h1 id="session-title">{{ mySessionId }}</h1>
-        <input id="buttonLeaveSession" type="button" value="Leave session" @click="leaveSession" />
-      </div>
-      <div id="main-video">
-        <user-video :stream-manager="mainStreamManager" />
-      </div>
-      <div style="border: 1px solid black">
-        <div v-for="(chat, index) in chats" :key="index">
-          {{ chat }}
+      <header class="session-header">
+        <div>라이브 방송 중</div>
+      </header>
+      <section class="session-body">
+        <div id="main-video" class="main-video">
+          <user-video :stream-manager="mainStreamManager" />
         </div>
-      </div>
-      <input v-model="sendMsg" type="text" @keydown.enter="submitMsg" />
+        <div class="chat-box">
+          <div class="chat-display">
+            <div v-for="(chat, index) in chats" :key="index" class="chat-line">
+              <div v-if="chat.userId === getUserInfo.id" class="my-comment">
+                <img :src="chat.profileImage" class="user-profile" />
+                <div>
+                  <span class="participant-name">{{ chat.nickname }} </span><span class="chat-msg">{{ chat.msg }}</span>
+                </div>
+              </div>
+              <div v-else class="other-comment">
+                <img :src="chat.profileImage" class="user-profile" />
+                <div>
+                  <span class="participant-name other">{{ chat.nickname }} </span
+                  ><span class="chat-msg">{{ chat.msg }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="msg-wrapper">
+            <div class="msg-guide">
+              <img :src="getUserInfo.profileImage" class="user-profile" />
+              {{ getUserInfo.nickname }}
+            </div>
+            <input
+              v-model="sendMsg"
+              type="text"
+              class="msg-input"
+              placeholder="메세지를 입력해주세요"
+              @keydown.enter="submitMsg"
+            />
+          </div>
+        </div>
+      </section>
     </div>
   </div>
 </template>
@@ -58,9 +88,16 @@ export default {
   },
   methods: {
     submitMsg() {
+      const sendData = {
+        userId: this.getUserInfo.id,
+        profileImage: this.getUserInfo.profileImage,
+        nickname: this.getUserInfo.nickname,
+        msg: this.sendMsg,
+      };
+      this.sendMsg = '';
       this.session
         .signal({
-          data: this.sendMsg, // Any string (optional)
+          data: JSON.stringify(sendData), // Any string (optional)
           to: [], // Array of Connection objects (optional. Broadcast to everyone if empty)
           type: 'my-chat', // The type of message (optional)
         })
@@ -87,10 +124,7 @@ export default {
         this.mainStreamManager = this.subscribers[0];
       });
       this.session.on('signal:my-chat', event => {
-        this.chats.push(event.data);
-        console.log(event.data); // Message
-        console.log(event.from); // Connection object of the sender
-        console.log(event.type); // The type of message ("my-chat")
+        this.chats.push(JSON.parse(event.data));
       });
       // On every Stream destroyed...
       this.session.on('streamDestroyed', ({ stream }) => {
@@ -192,7 +226,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.userstore-live-container {
-  width: 100%;
-}
+@import '@/assets/scss/sample';
 </style>

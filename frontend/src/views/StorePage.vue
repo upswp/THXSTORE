@@ -66,6 +66,7 @@ export default {
 
 <style lang="scss" scoped>
 .store-container {
+  z-index: 0;
   width: 100%;
   @include lg-pc {
     @include flexbox;
@@ -76,6 +77,8 @@ export default {
 }
 .store-aside {
   @include lg-pc {
+    z-index: 1;
+    background-color: white;
     position: fixed;
     padding: 10px 0;
     margin: 0;
@@ -84,6 +87,8 @@ export default {
     box-shadow: 2px 0 5px rgba(0, 0, 0, 0.3);
   }
   @include pc {
+    z-index: 1;
+    background-color: white;
     position: fixed;
     padding: 10px 0;
     width: 250px;

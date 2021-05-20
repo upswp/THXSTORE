@@ -56,6 +56,7 @@
         </template>
       </table>
     </section>
+    <!-- <div class="temp"><awesome icon="store" class="store"></awesome>Thx!Store</div> -->
   </div>
 </template>
 
@@ -152,8 +153,7 @@ export default {
         this.setSpinnerState(true);
         await setReservationStatus({
           reservationStatus: state,
-          storeId: order.storeId,
-          userId: order.userId,
+          reservationId: order.reservationId,
         });
         order.reservationStatus = state;
         this.setSpinnerState(false);
@@ -166,7 +166,7 @@ export default {
     async rejectOrder(order) {
       try {
         this.setSpinnerState(true);
-        await cancelOrder(order.userId);
+        await cancelOrder(order.reservationId);
         this.setSpinnerState(false);
         order.reservationStatus = 'REJECT';
       } catch (error) {
@@ -203,6 +203,17 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+// .temp {
+//   height: 500px;
+//   font-size: 240px;
+//   font-family: 'Pacifico', cursive;
+//   @include flexbox;
+//   @include justify-content(center);
+//   color: $blue800;
+//   svg {
+//     margin-right: 5px;
+//   }
+// }
 .store-reservation-container {
   width: 100%;
   @include lg-pc {

@@ -28,7 +28,13 @@
       <span class="total-pay-for">{{ oneTrans(totalPayFor) }}원</span>
     </div>
     <div class="order-button" @click="getDeal">예약 하기</div>
-    <order-modal v-if="confirm" :error="error" :message="confirmBody" @confirmStatus="confirmStatus"></order-modal>
+    <order-modal
+      v-if="confirm"
+      :error="error"
+      :message="confirmBody"
+      :reservation-id="reservationId"
+      @confirmStatus="confirmStatus"
+    ></order-modal>
   </aside>
 </template>
 
@@ -53,6 +59,7 @@ export default {
       confirm: false,
       error: false,
       confirmBody: '',
+      reservationId: '',
     };
   },
   computed: {
@@ -76,6 +83,7 @@ export default {
       this.error = false;
       this.confirm = false;
       this.confirmBody = '';
+      this.reservationId = '';
       this.$router.go(0);
     },
     ...mapMutations(['setSpinnerState']),
@@ -104,7 +112,7 @@ export default {
       try {
         this.setSpinnerState(true);
         const orderList = this.menus.filter(x => x.selected);
-        await makeDeal({
+        const { data } = await makeDeal({
           userId: this.getUserInfo.id,
           storeId: this.$route.params.storeId,
           nickname: this.getUserInfo.nickname,
@@ -118,6 +126,7 @@ export default {
             };
           }),
         });
+        this.reservationId = data;
         this.setSpinnerState(false);
         this.confirmBody = orderList;
         this.confirm = true;
