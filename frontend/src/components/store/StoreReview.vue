@@ -1,15 +1,17 @@
 <template>
-  <div class="recent-review-container">
-    <div class="recent-review-title">최근 리뷰</div>
-    <div class="recent-review-items">
-      <div v-for="(reviewItem, index) in reviewItems" :key="index" class="recent-review-item">
+  <div class="userstore-review-container">
+    <div class="userstore-review-title">사용자 리뷰</div>
+    <div v-if="loaded" class="userstore-review-items">
+      <div v-for="(reviewItem, index) in reviewItems" :key="index" class="userstore-review-item">
         <div class="review-header-container">
-          <div class="review-logo"><img :src="reviewItem.logo" /></div>
+          <!-- <div class="review-thumbnail"><img :src="reviewItem.logo" /></div> -->
+          <div class="review-thumbnail"><img :src="reviewItem.profileImg" /></div>
           <div class="review-info">
-            <div class="store-label"><label>스토어</label></div>
-            <div class="store-name">{{ reviewItem.storeName }}</div>
+            <div class="member-label"><label>고객</label></div>
+            <div class="member-name">{{ reviewItem.memberName }}</div>
             <div class="star-ratings">
               <div class="star-ratings-fill" :style="{ width: ratingToPercent(reviewItem.star) + '%' }">
+                <!-- <div class="star-ratings-fill" style="width: 100%"> -->
                 <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
               </div>
               <div class="star-ratings-base">
@@ -25,7 +27,7 @@
           }}</span>
         </div>
         <div class="review-comment">
-          <pre>{{ reviewItem.comment }} asdfasdfas dfasdfasdfasd</pre>
+          <pre>{{ reviewItem.comment }}</pre>
         </div>
         <div v-if="answerCheck(reviewItem.answerDto.comment)" class="answer-item" @click="toggleAnswerLoaded(index)">
           💌 사장님의 편지
@@ -35,24 +37,38 @@
             </div>
           </div>
         </div>
+        <div v-else class="review-list-footer" @click="toggleAnswerFormLoaded(index)">✏️ 답글</div>
+        <form v-if="reviewItems[index].answerFormLoaded" class="answer-form" @submit.prevent="submitForm(index)">
+          <textarea
+            type="text"
+            class="answer-input"
+            placeholder="리뷰에대한 답글을 달아주세요"
+            autofocus
+            @input="answerContent($event, index)"
+          ></textarea>
+          <button class="close-button" @click="toggleAnswerFormLoaded(index)">닫기</button>
+          <button class="submit-button" type="submit">등록</button>
+        </form>
       </div>
     </div>
+    <div v-else style="text-align: center">작성된 리뷰가 없습니다.</div>
   </div>
 </template>
 
 <script>
-import { getUserReview } from '@/api/userOrder';
+import { getStoreReview, registerStoreAnswer } from '@/api/userOrder';
 import { dateTrans } from '@/utils/filters';
 import { mapMutations } from 'vuex';
 export default {
   data() {
     return {
+      loaded: false,
       reviewItems: [],
       answerLoaded: true,
     };
   },
   created() {
-    this.getUserReviewList();
+    this.getStoreReviewList();
   },
   methods: {
     dateTrans,
@@ -60,20 +76,55 @@ export default {
     toggleAnswerLoaded(index) {
       this.reviewItems[index].answerLoaded = !this.reviewItems[index].answerLoaded;
     },
+    toggleAnswerFormLoaded(index) {
+      this.reviewItems[index].answerFormLoaded = !this.reviewItems[index].answerFormLoaded;
+    },
     answerCheck(answerCheck) {
       if (answerCheck) return true;
       return false;
     },
-    async getUserReviewList() {
+    answerContent($event, index) {
+      this.reviewItems[index].answerContent = $event.target.value;
+      console.log('답글내용', this.reviewItems[index].answerContent);
+    },
+    async submitForm(index) {
       try {
         this.setSpinnerState(true);
-        const userId = this.$store.state.userInfo.id;
-        const { data } = await getUserReview(userId);
+        const rawData = {
+          storeId: this.reviewItems[index].storeId,
+          comment: this.reviewItems[index].answerContent,
+          reviewId: this.reviewItems[index].reviewId,
+        };
+        console.log(rawData);
+        const { data } = await registerStoreAnswer(rawData);
+        this.toggleAnswerFormLoaded(index);
+        this.setSpinnerState(false);
+        if (data.message) {
+          alert('이미 답글을 작성하셨습니다.');
+        } else {
+          alert('답글이 정상적으로 등록되었습니다.');
+        }
+      } catch (error) {
+        this.setSpinnerState(false);
+        console.log(error);
+      }
+    },
+    async getStoreReviewList() {
+      try {
+        this.setSpinnerState(true);
+        const storeId = this.$store.state.storeId;
+        console.log('스토어아이디', storeId);
+        const { data } = await getStoreReview(storeId);
         data.forEach(x => {
           x['answerLoaded'] = false;
+          x['answerFormLoaded'] = false;
+          x['answerContent'] = '';
         });
-        this.setSpinnerState(false);
         this.reviewItems = data;
+        this.setSpinnerState(false);
+        if (this.reviewItems.length) {
+          this.loaded = true;
+        }
       } catch (error) {
         this.setSpinnerState(false);
         console.log(error);
@@ -88,11 +139,19 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.recent-review-container {
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+.userstore-review-container {
   width: 100%;
-  margin: auto;
+  margin: 0px 10px auto;
   max-width: 1180px;
-  .recent-review-title {
+  .userstore-review-title {
     font-size: 24px;
     text-align: center;
     font-weight: 600;
@@ -104,7 +163,7 @@ export default {
       font-size: 16px;
     }
   }
-  .recent-review-items {
+  .userstore-review-items {
     @include flexbox;
     background-color: white;
     border: 1px $gray200 solid;
@@ -112,7 +171,7 @@ export default {
     justify-content: space-between;
     flex-wrap: wrap;
     // flex-direction: column;
-    .recent-review-item {
+    .userstore-review-item {
       width: 49%;
       @include shadow1;
       padding: 1%;
@@ -140,7 +199,7 @@ export default {
       margin-bottom: 10px;
       // border: $gray600 2px solid;
       border-radius: 10px;
-      .review-logo {
+      .review-thumbnail {
         $length: clamp(20px, 30%, 120px);
         border-radius: 10%;
         width: $length;
@@ -149,6 +208,11 @@ export default {
         object-position: center 50%;
         margin-right: 10px;
         cursor: pointer;
+        @include mobile {
+          $length: clamp(20px, 20%, 120px);
+          width: $length;
+          height: $length;
+        }
       }
       .review-info {
         position: relative;
@@ -159,7 +223,7 @@ export default {
         @include xs-mobile {
           width: 65%;
         }
-        .store-label {
+        .member-label {
           width: 60%;
           color: white;
           padding: 0.7%;
@@ -179,12 +243,12 @@ export default {
             }
           }
         }
-        .store-name {
+        .member-name {
           @include lg-pc {
             font-size: 1.4em;
           }
           @include mobile {
-            font-size: 1.1em;
+            font-size: 1.2em;
           }
         }
         .review-date {
@@ -229,6 +293,7 @@ export default {
         }
       }
     }
+
     .review-comment {
       width: 100%;
       padding: 2%;
@@ -251,19 +316,56 @@ export default {
       &:hover {
         cursor: pointer;
       }
-      .answer-comment {
-        width: 100%;
-        padding: 2%;
-        margin-top: 5px;
+    }
+    .answer-comment {
+      width: 100%;
+      padding: 2%;
+      margin-top: 5px;
+      animation: fade-in 1s;
+      animation-fill-mode: alt;
 
-        pre {
-          font-family: Noto Sans KR;
-          overflow: hidden;
-          white-space: pre-line;
-          line-break: strict;
-          height: 100px;
-          overflow-y: auto;
-        }
+      pre {
+        font-family: S-CoreDream-4Regular;
+        overflow: hidden;
+        white-space: pre-line;
+        line-break: strict;
+        height: 100px;
+        overflow-y: auto;
+      }
+    }
+    .review-list-footer {
+      width: 100%;
+      text-align: center;
+      // position: absolute;
+      bottom: 0px;
+
+      &:hover {
+        cursor: pointer;
+      }
+    }
+    .answer-form {
+      padding-top: 15px;
+      text-align: center;
+      .answer-input {
+        width: 95%;
+        height: 100px;
+        margin-bottom: 2%;
+        resize: none;
+        font-size: 0.8em;
+        border: black 2px solid;
+      }
+      .close-button {
+        background-color: $red400;
+        border: none;
+        width: 30%;
+        margin-right: 15%;
+        color: white;
+      }
+      .submit-button {
+        background-color: $green400;
+        border: none;
+        color: white;
+        width: 30%;
       }
     }
   }

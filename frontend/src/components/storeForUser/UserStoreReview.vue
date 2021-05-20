@@ -1,15 +1,17 @@
 <template>
-  <div class="recent-review-container">
-    <div class="recent-review-title">최근 리뷰</div>
-    <div class="recent-review-items">
-      <div v-for="(reviewItem, index) in reviewItems" :key="index" class="recent-review-item">
+  <div class="userstore-review-container">
+    <div class="userstore-review-title">사용자 리뷰</div>
+    <div v-if="loaded" class="userstore-review-items">
+      <div v-for="(reviewItem, index) in reviewItems" :key="index" class="userstore-review-item">
         <div class="review-header-container">
-          <div class="review-logo"><img :src="reviewItem.logo" /></div>
+          <!-- <div class="review-thumbnail"><img :src="reviewItem.logo" /></div> -->
+          <div class="review-thumbnail"><img :src="reviewItem.profileImg" /></div>
           <div class="review-info">
-            <div class="store-label"><label>스토어</label></div>
-            <div class="store-name">{{ reviewItem.storeName }}</div>
+            <div class="member-label"><label>고객</label></div>
+            <div class="member-name">{{ reviewItem.memberName }}</div>
             <div class="star-ratings">
               <div class="star-ratings-fill" :style="{ width: ratingToPercent(reviewItem.star) + '%' }">
+                <!-- <div class="star-ratings-fill" style="width: 100%"> -->
                 <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
               </div>
               <div class="star-ratings-base">
@@ -25,7 +27,7 @@
           }}</span>
         </div>
         <div class="review-comment">
-          <pre>{{ reviewItem.comment }} asdfasdfas dfasdfasdfasd</pre>
+          <pre>{{ reviewItem.comment }}</pre>
         </div>
         <div v-if="answerCheck(reviewItem.answerDto.comment)" class="answer-item" @click="toggleAnswerLoaded(index)">
           💌 사장님의 편지
@@ -37,11 +39,12 @@
         </div>
       </div>
     </div>
+    <div v-else style="text-align: center">작성된 리뷰가 없습니다.</div>
   </div>
 </template>
 
 <script>
-import { getUserReview } from '@/api/userOrder';
+import { getStoreReview } from '@/api/userOrder';
 import { dateTrans } from '@/utils/filters';
 import { mapMutations } from 'vuex';
 export default {
@@ -49,10 +52,11 @@ export default {
     return {
       reviewItems: [],
       answerLoaded: true,
+      loaded: false,
     };
   },
   created() {
-    this.getUserReviewList();
+    this.getStoreReviewList();
   },
   methods: {
     dateTrans,
@@ -64,19 +68,22 @@ export default {
       if (answerCheck) return true;
       return false;
     },
-    async getUserReviewList() {
+    async getStoreReviewList() {
       try {
         this.setSpinnerState(true);
-        const userId = this.$store.state.userInfo.id;
-        const { data } = await getUserReview(userId);
+        const storeId = this.$route.params.storeId;
+        console.log('스토어아이디', storeId);
+        const { data } = await getStoreReview(storeId);
         data.forEach(x => {
           x['answerLoaded'] = false;
         });
-        this.setSpinnerState(false);
         this.reviewItems = data;
+        if (this.reviewItems.length) {
+          this.loaded = true;
+        }
+        this.setSpinnerState(false);
       } catch (error) {
         this.setSpinnerState(false);
-        console.log(error);
       }
     },
     ratingToPercent(star) {
@@ -88,11 +95,19 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.recent-review-container {
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+.userstore-review-container {
   width: 100%;
-  margin: auto;
+  margin: 0px 10px auto;
   max-width: 1180px;
-  .recent-review-title {
+  .userstore-review-title {
     font-size: 24px;
     text-align: center;
     font-weight: 600;
@@ -104,7 +119,7 @@ export default {
       font-size: 16px;
     }
   }
-  .recent-review-items {
+  .userstore-review-items {
     @include flexbox;
     background-color: white;
     border: 1px $gray200 solid;
@@ -112,7 +127,7 @@ export default {
     justify-content: space-between;
     flex-wrap: wrap;
     // flex-direction: column;
-    .recent-review-item {
+    .userstore-review-item {
       width: 49%;
       @include shadow1;
       padding: 1%;
@@ -140,7 +155,7 @@ export default {
       margin-bottom: 10px;
       // border: $gray600 2px solid;
       border-radius: 10px;
-      .review-logo {
+      .review-thumbnail {
         $length: clamp(20px, 30%, 120px);
         border-radius: 10%;
         width: $length;
@@ -149,6 +164,11 @@ export default {
         object-position: center 50%;
         margin-right: 10px;
         cursor: pointer;
+        @include mobile {
+          $length: clamp(20px, 20%, 120px);
+          width: $length;
+          height: $length;
+        }
       }
       .review-info {
         position: relative;
@@ -159,7 +179,7 @@ export default {
         @include xs-mobile {
           width: 65%;
         }
-        .store-label {
+        .member-label {
           width: 60%;
           color: white;
           padding: 0.7%;
@@ -179,12 +199,12 @@ export default {
             }
           }
         }
-        .store-name {
+        .member-name {
           @include lg-pc {
             font-size: 1.4em;
           }
           @include mobile {
-            font-size: 1.1em;
+            font-size: 1.2em;
           }
         }
         .review-date {
@@ -255,9 +275,11 @@ export default {
         width: 100%;
         padding: 2%;
         margin-top: 5px;
+        animation: fade-in 1s;
+        animation-fill-mode: alt;
 
         pre {
-          font-family: Noto Sans KR;
+          font-family: S-CoreDream-4Regular;
           overflow: hidden;
           white-space: pre-line;
           line-break: strict;

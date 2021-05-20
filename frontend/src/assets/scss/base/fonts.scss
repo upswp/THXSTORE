@@ -29,15 +29,15 @@ $web-font-family:
 
 
 
-// @font-face {
-//   font-family: 'Noto Sans KR';
-//   font-weight: 300;
-//   src: local('Noto Sans KR Light'),
-//   url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Light.woff2) format('woff2'),
-//   url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Light.woff) format('woff'),
-//   url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Light.otf) format('opentype');
+@font-face {
+  font-family: 'Noto Sans KR';
+  font-weight: 300;
+  src: local('Noto Sans KR Light'),
+  url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Light.woff2) format('woff2'),
+  url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Light.woff) format('woff'),
+  url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Light.otf) format('opentype');
 
-// }
+}
 
 
 
