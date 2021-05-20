@@ -127,6 +127,8 @@ public class ReservationServiceImpl implements ReservationService{
 
 //            pusher.trigger(reservationList.getStoreId()+"-channel", "my-event", Collections.singletonMap("message","회원번호: "+reservationList.getUserId()+ "님의 주문이 등록되었습니다."));
         pusher.trigger(reservationList.getStoreId()+"-channel", "my-event", reservationList);
+
+        outOfStock.add(""+reservation.getId());
         return outOfStock;
     }
 
