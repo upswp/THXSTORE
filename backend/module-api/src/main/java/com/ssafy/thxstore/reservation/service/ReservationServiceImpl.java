@@ -124,7 +124,7 @@ public class ReservationServiceImpl implements ReservationService{
         Pusher pusher = new Pusher("1203876", "c961ac666cf7baaf084c", "43c7f358035c2a712f23");
         pusher.setCluster("ap3");
         reservationList.updateOrderTime(DateTime.now().toString());
-
+        reservationList.addreservationId(reservation.getId());
 //            pusher.trigger(reservationList.getStoreId()+"-channel", "my-event", Collections.singletonMap("message","회원번호: "+reservationList.getUserId()+ "님의 주문이 등록되었습니다."));
         pusher.trigger(reservationList.getStoreId()+"-channel", "my-event", reservationList);
 
@@ -222,6 +222,7 @@ public class ReservationServiceImpl implements ReservationService{
                 ReservationDto reservationDto = ReservationDto.builder().
                         email(reservationlist.get(i).getEmail()).
                         storeId(reservationlist.get(i).getStoreId()).
+                        reservationId(reservationlist.get(i).getId()).
                         reservationStatus(reservationlist.get(i).getReservationStatus()).
                         nickname(reservationlist.get(i).getNickname()).
                         orderTime(reservationlist.get(i).getDateTime()).
