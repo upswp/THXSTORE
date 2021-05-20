@@ -51,10 +51,11 @@ public class ReservationGroup {
     private String productName;
 
     @Builder
-    public ReservationGroup(Reservation reservation, int count, int price, String productName,Long userId,Long storeId,int rate) {
+    public ReservationGroup(Product product,Reservation reservation, int count, int price, String productName,Long userId,Long storeId,int rate) {
         this.rate =rate;
         this.userId = userId;
         this.storeId = storeId;
+        this.product =product;
         this.reservation = reservation;
         this.count = count;
         this.price = price;

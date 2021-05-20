@@ -98,6 +98,7 @@ public class ReservationServiceImpl implements ReservationService{
             }
 
             ReservationGroup reservationGroup = ReservationGroup.builder().
+                    product(product.get()).
                     rate(reservationList.getReservationGroups().get(i).getRate()).
                     storeId(reservationList.getStoreId()).
                     userId(reservationList.getUserId()).
@@ -253,6 +254,14 @@ public class ReservationServiceImpl implements ReservationService{
             if(!order.get(0).getReservation().getReservationStatus().equals(ReservationStatus.DEFAULT)){
                 return "해당 주문이 접수되어 취소할 수 없습니다.";
             }
+            // 주문 생성하며 빠졌던 재고를 되돌리는 로직
+            //reservation_group의 카운트 만큼 prodcut의 stock 에 더해준다
+
+            for(int i = 0 ;i<order.size(); i++){
+                Optional<Product> product = productRepository.findById(order.get(i).getProduct().getId());  //어떤 제품인지 확인
+
+                product.get().updatestock(product.get().getStock() +order.get(i).getCount());
+            }
             reservationGroupRepository.deleteAll(order);
             return "취소했습니다";
         }else{
@@ -263,16 +272,34 @@ public class ReservationServiceImpl implements ReservationService{
             if(!order.get(0).getReservation().getReservationStatus().equals(ReservationStatus.DEFAULT)){
                 return "주문이 접수 상태로 넘어가 취소할 수 없습니다.";
             }
+
+            for(int i = 0 ;i<order.size(); i++){
+                Optional<Product> product = productRepository.findById(order.get(i).getProduct().getId());  //어떤 제품인지 확인
+
+                product.get().updatestock(product.get().getStock() +order.get(i).getCount());
+            }
+
             reservationGroupRepository.deleteAll(order);
             return "취소했습니다";
         }
     }
 
     @Override
+    @Transactional
     public String statusUpdate(String email, StatusRequest status){
 //        Optional<Reservation> nowReservation= reservationRepository.findByMember(status.getMemberId());
+        System.out.println("머지?:   " + status.getReservationId() +"status.getReservationStatus().name()  :" +status.getReservationStatus().name());
 
-        reservationRepository.findReservation(email,status.getReservationId(),status.getReservationStatus().name());
-        return "변경되었습니다";
+        //findby로 찾고 상태 업데이트 하자
+        Optional<Reservation> reservation = reservationRepository.findById(status.getReservationId());
+
+        if(reservation.isPresent()) {
+            reservation.get().updateStatus(status.getReservationStatus());
+            return "변경되었습니다";
+        }
+        else{
+//            return "이미 취소된 주문입니다.";
+            throw new AuthException(ErrorCode.STATUS_UPDATE);
+        }
     }
 }
