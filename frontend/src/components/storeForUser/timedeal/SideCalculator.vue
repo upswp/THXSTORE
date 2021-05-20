@@ -69,15 +69,13 @@ export default {
     },
     totalPayFor() {
       return this.selectedMenus.reduce((acc, item) => {
-        return acc + item.payFor;
+        return acc + parseInt(item.payFor);
       }, 0);
     },
     totalCount() {
-      return parseInt(
-        this.selectedMenus.reduce((acc, item) => {
-          return acc + item.count;
-        }, 0),
-      );
+      return this.selectedMenus.reduce((acc, item) => {
+        return acc + parseInt(item.count);
+      }, 0);
     },
   },
   methods: {

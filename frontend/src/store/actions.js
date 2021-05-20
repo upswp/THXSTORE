@@ -1,10 +1,14 @@
 import { loginUser } from '@/api/auth';
-import { saveUserToLocalStorage, saveTokenToLocalStorage } from '@/utils/webStorage';
+import { saveUserToLocalStorage, saveTokenToLocalStorage, clearLocalStorageItem } from '@/utils/webStorage';
 export default {
   async LOGIN({ commit }, loginData) {
     // 에러처리 : LoginForm.vue, SignupForm.vue
     const { data } = await loginUser(loginData);
     commit('setToken', data.accessToken);
+    clearLocalStorageItem('ThxStorage-V1-U');
+    clearLocalStorageItem('ThxStoreage-V1-S');
+    clearLocalStorageItem('ThxStoreage-V1-T');
+    commit('setStoreId', '');
     saveTokenToLocalStorage(data.accessToken);
     const userData = {
       address: data.address ? data.address : '대전광역시 유성구 덕명동 124',
