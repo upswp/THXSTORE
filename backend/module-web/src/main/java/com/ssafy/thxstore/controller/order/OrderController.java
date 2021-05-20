@@ -164,6 +164,7 @@ public ResponseEntity<List<String>> addReservation(@RequestHeader String authori
      * 사장님 입장에서 조회 ->본인의 가게에 들어온 주문 내역만
      *
      * 사장님이 조회 페이지 눌렀을 경우 푸셔 인스턴스 만들고
+
      */
     //ok
     @GetMapping("/reservation/store")
