@@ -145,7 +145,7 @@ public class StoreService {
 
     public Store storeApplicationSuccess(Long storeId,String email){    // 스토어 신청 허가.
         Store store = storeRepository.findById(storeId).get();
-        Member member = memberRepository.findByEmail(email).get();
+        Member member = memberRepository.findByEmail(store.getMember().getEmail()).get();
         member.setRole(MemberRole.ROLE_MANAGER);
         store.setCheckStore(CheckStore.NORMAL);
         return store;
