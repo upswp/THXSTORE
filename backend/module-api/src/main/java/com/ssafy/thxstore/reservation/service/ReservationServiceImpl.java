@@ -249,7 +249,7 @@ public class ReservationServiceImpl implements ReservationService{
         if(type == "store"){
             Optional<Store> store= storeRepository.findByEmailJoin(email);
 
-            List<ReservationGroup> order = reservationGroupRepository.findAllByReservationId(reservationId,email);
+            List<ReservationGroup> order = reservationGroupRepository.findAllByReservationId(reservationId);
             if(!order.get(0).getReservation().getReservationStatus().equals(ReservationStatus.DEFAULT)){
                 return "해당 주문이 접수되어 취소할 수 없습니다.";
             }
@@ -258,13 +258,13 @@ public class ReservationServiceImpl implements ReservationService{
         }else{
             Optional<Member> member= memberRepository.findByEmail(email);
 
-            List<ReservationGroup> order = reservationGroupRepository.findAllByReservationId(reservationId,email);
+            List<ReservationGroup> order = reservationGroupRepository.findAllByReservationId(reservationId);
 
             if(!order.get(0).getReservation().getReservationStatus().equals(ReservationStatus.DEFAULT)){
                 return "주문이 접수 상태로 넘어가 취소할 수 없습니다.";
             }
             reservationGroupRepository.deleteAll(order);
-            return "취소했습니다.";
+            return "취소했습니다";
         }
     }
 
