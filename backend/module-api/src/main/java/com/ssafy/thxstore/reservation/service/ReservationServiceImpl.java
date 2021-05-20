@@ -288,7 +288,6 @@ public class ReservationServiceImpl implements ReservationService{
     @Transactional
     public String statusUpdate(String email, StatusRequest status){
 //        Optional<Reservation> nowReservation= reservationRepository.findByMember(status.getMemberId());
-        System.out.println("머지?:   " + status.getReservationId() +"status.getReservationStatus().name()  :" +status.getReservationStatus().name());
 
         //findby로 찾고 상태 업데이트 하자
         Optional<Reservation> reservation = reservationRepository.findById(status.getReservationId());
