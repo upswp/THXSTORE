@@ -39,7 +39,6 @@ export default {
       this.sideInfo = sideInfo;
       this.storeId = baseInfo.storeId;
       if (sideInfo.thumbImg) this.thumbImg = sideInfo.thumbImg;
-      console.log('가게정보', data);
       this.loaded = true;
     } catch (error) {
       console.log(error);

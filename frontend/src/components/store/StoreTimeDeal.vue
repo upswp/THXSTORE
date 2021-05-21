@@ -81,8 +81,8 @@
         </select>
         <span>:</span>
         <select v-model="startMinute" class="time-select">
-          <option v-for="(i, index) in ['00', '30', '36']" :key="index" :value="i">
-            {{ i }}
+          <option v-for="(i, index) in 12" :key="index" :value="timeStrConvert(i - 1, 5)">
+            {{ timeStrConvert(i - 1, 5) }}
           </option>
         </select>
       </div>

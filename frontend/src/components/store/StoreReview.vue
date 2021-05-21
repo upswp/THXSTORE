@@ -85,7 +85,6 @@ export default {
     },
     answerContent($event, index) {
       this.reviewItems[index].answerContent = $event.target.value;
-      console.log('답글내용', this.reviewItems[index].answerContent);
     },
     async submitForm(index) {
       try {
@@ -95,7 +94,6 @@ export default {
           comment: this.reviewItems[index].answerContent,
           reviewId: this.reviewItems[index].reviewId,
         };
-        console.log(rawData);
         const { data } = await registerStoreAnswer(rawData);
         this.toggleAnswerFormLoaded(index);
         this.setSpinnerState(false);
@@ -113,7 +111,6 @@ export default {
       try {
         this.setSpinnerState(true);
         const storeId = this.$store.state.storeId;
-        console.log('스토어아이디', storeId);
         const { data } = await getStoreReview(storeId);
         data.forEach(x => {
           x['answerLoaded'] = false;
