@@ -122,10 +122,10 @@ export default {
     font-size: 24px;
   }
   @include mobile {
-    font-size: 20px;
+    font-size: 18px;
   }
   @include xs-mobile {
-    font-size: 16px;
+    font-size: 14px;
   }
   color: $gray600;
   height: 300px;
@@ -148,6 +148,18 @@ export default {
 }
 .card-wrapper {
   cursor: pointer;
+  @include lg-pc {
+    font-size: 16px;
+  }
+  @include pc {
+    font-size: 15px;
+  }
+  @include mobile {
+    font-size: 14px;
+  }
+  @include xs-mobile {
+    font-size: 13px;
+  }
 }
 .product-img {
   width: 100%;
