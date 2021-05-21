@@ -130,8 +130,8 @@ export default {
   watch: {
     timerDone(newValue) {
       if (newValue) {
-        this.countdown = '예약 관리 페이지로 이동합니다.';
-        this.$router.push({ name: 'storeReservation' });
+        this.countdown = '0';
+        // this.$router.push({ name: 'storeReservation' });
       }
     },
   },
@@ -140,27 +140,27 @@ export default {
       this.setSpinnerState(true);
       const { data } = await getTimeDeal(this.getStoreId);
       this.setSpinnerState(false);
-      if (data.status === 'PROGRESS' || data.status === 'COMPLETE') {
-        alert('오늘은 더 이상 타임딜을 등록할 수 없습니다! 내일을 기대해주세요~');
-        this.$router.push({ name: 'storeReservation' });
-      } else {
-        // 타임딜이 대기 중인 상태에서는 selectedMenus의 정보를 변경해야한다.
-        this.openTab = Array.from({ length: data.timeDeal.length }, (v, i) => i);
-        const [startHour, startMinute] = data.startTime.split(':');
-        this.startHour = startHour;
-        this.startMinute = startMinute;
-        this.selectedMenus = [...this.openTab];
-        this.menus = data.timeDeal;
-        this.menus.forEach(menu => this.discounting(menu));
-        this.reservation = true;
-        this.$nextTick(() => {
-          const start = new Date();
-          start.setHours(this.startHour);
-          start.setMinutes(this.startMinute);
-          this.timer = countDownTimer(start, this);
-        });
-        this.loaded = true;
-      }
+      // if (data.status === 'PROGRESS' || data.status === 'COMPLETE') {
+      // alert('오늘은 더 이상 타임딜을 등록할 수 없습니다! 내일을 기대해주세요~');
+      // this.$router.push({ name: 'storeReservation' });
+      // } else {
+      // 타임딜이 대기 중인 상태에서는 selectedMenus의 정보를 변경해야한다.
+      this.openTab = Array.from({ length: data.timeDeal.length }, (v, i) => i);
+      const [startHour, startMinute] = data.startTime.split(':');
+      this.startHour = startHour;
+      this.startMinute = startMinute;
+      this.selectedMenus = [...this.openTab];
+      this.menus = data.timeDeal;
+      this.menus.forEach(menu => this.discounting(menu));
+      this.reservation = true;
+      this.$nextTick(() => {
+        const start = new Date();
+        start.setHours(this.startHour);
+        start.setMinutes(this.startMinute);
+        this.timer = countDownTimer(start, this);
+      });
+      this.loaded = true;
+      // }
     } catch (error) {
       if (error.response.status === 400) {
         try {
@@ -269,6 +269,7 @@ export default {
 }
 .tiem-deal-counter {
   font-size: 20px;
+  margin-bottom: 20px;
   @include pc {
     font-size: 18px;
   }
