@@ -7,7 +7,6 @@
           <!-- <div class="review-thumbnail"><img :src="reviewItem.logo" /></div> -->
           <div class="review-thumbnail"><img :src="reviewItem.profileImg" /></div>
           <div class="review-info">
-            <div class="member-label"><label>고객</label></div>
             <div class="member-name">{{ reviewItem.memberName }}</div>
             <div class="star-ratings">
               <div class="star-ratings-fill" :style="{ width: ratingToPercent(reviewItem.star) + '%' }">
@@ -96,6 +95,7 @@ export default {
         };
         const { data } = await registerStoreAnswer(rawData);
         this.toggleAnswerFormLoaded(index);
+        this.reviewItems[index].answerDto.comment = this.reviewItems[index].answerContent;
         this.setSpinnerState(false);
         if (data.message) {
           alert('이미 답글을 작성하셨습니다.');
@@ -161,74 +161,75 @@ export default {
     }
   }
   .userstore-review-items {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 10px 20px;
-    grid-auto-rows: minmax(100px, auto);
-    // @include flexbox;
-    // justify-content: space-between;
-    // flex-wrap: wrap;
+    // display: grid;
+    // grid-template-columns: repeat(3, 1fr);
+    // gap: 10px 20px;
+    // grid-auto-rows: minmax(100px, auto);
+    @include flexbox;
+    justify-content: space-between;
+    flex-wrap: wrap;
     background-color: white;
     border: 1px $gray200 solid;
     padding: 1%;
     // flex-direction: column;
     .userstore-review-item {
-      width: 100%;
+      width: 48%;
       @include shadow1;
       padding: 1%;
       border-radius: 0px 0px 40px 0px;
       border: 2px black solid;
       margin-bottom: 15px;
-      // @include lg-pc {
-      //   width: 32%;
-      // }
-      // @include mobile {
-      //   width: 49%;
-      // }
-      // @include xs-mobile {
-      //   width: 80%;
-      // }
+      @include lg-pc {
+        width: 32%;
+      }
+      @include mobile {
+        width: 49%;
+      }
+      @include xs-mobile {
+        width: 80%;
+      }
       margin: 7px auto;
     }
     .review-header-container {
       padding: 1%;
       @include flexbox;
       @include align-items(center);
-      justify-content: space-between;
       flex-grow: 1;
       flex-wrap: wrap;
       margin-bottom: 10px;
       // border: $gray600 2px solid;
       border-radius: 10px;
       .review-thumbnail {
-        $length: clamp(20px, 30%, 120px);
+        $length: clamp(40px, 10vw, 100px);
         border-radius: 10%;
         width: $length;
         height: $length;
         margin-right: 10px;
         cursor: pointer;
+
         img {
           border-radius: 5px;
-          width: 100px;
-          height: 105px;
+          width: 100%;
+          height: 100%;
           object-fit: cover;
           object-position: center 50%;
+          // @include mobile {
+          //   $length: clamp(20px, 100%, 100px);
+          //   width: $length;
+          //   height: $length;
+          // }
         }
-        @include mobile {
-          $length: clamp(20px, 20%, 120px);
-          width: $length;
-          height: $length;
-        }
+        margin-bottom: 10px;
       }
       .review-info {
         position: relative;
-        width: 65%;
-        @include mobile {
-          width: 65%;
-        }
-        @include xs-mobile {
-          width: 65%;
-        }
+        // width: 65%;
+        // @include mobile {
+        //   width: 65%;
+        // }
+        // @include xs-mobile {
+        //   width: 65%;
+        // }
         .member-label {
           width: 60%;
           color: white;
