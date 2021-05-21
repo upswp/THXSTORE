@@ -64,24 +64,15 @@
       <ul>
           <li>Spring-Boot : 2.3.9</li>
           <li>Spring-Boot-Data-JPA</li>
-          <li>spring-boot-starter-mail</li>
+          <li>spring-boot-mail</li>
           <li>Spring Security</li>
-          <li>spring-boot-starter-hateoas</li>
-          <li>spring-boot-starter-validation</li>
-          <li>spring-boot-starter-jdbc</li>
-          <li>modelmapper : 2.3.8</li>
-          <li>openvidu-java-client : 2.17.0</li>
-          <li>spring-boot-starter-security</li>
+          <li>hateoas</li>
+          <li>restdocs-mockmvc</li>
           <li>jjwt : 0.9.1</li>
           <li>lombok</li>
           <li>mysql : 8.0.22</li>
           <li>h2 : 1.4.200</li>
-          <li>pusher : 2.2.1</li>
-          <li>JUnitParams : 1.1.1</li>
           <li>junit : 4.12</li>
-          <li>jersey-multipart : 1.19.4</li>
-          <li>spring-restdocs-asciidoctor : 2.0.3.RELEASE</li>
-          <li>spring-restdocs-mockmvc : 2.0.3.RELEASE</li>
       </ul>
       <ul>
         <li>라이브러리 📚</li>
