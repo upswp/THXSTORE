@@ -209,8 +209,11 @@ export default {
     .order-menu-list {
       width: 100%;
       padding: 0 2% 0 2%;
+      @include flexbox;
+      flex-wrap: wrap;
       span {
         border-radius: 30px;
+        margin-bottom: 3px;
         padding: 1px 2%;
         margin-right: 1%;
         color: white;

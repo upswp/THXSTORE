@@ -72,7 +72,6 @@ export default {
       try {
         this.setSpinnerState(true);
         const storeId = this.$route.params.storeId;
-        console.log('스토어아이디', storeId);
         const { data } = await getStoreReview(storeId);
         data.forEach(x => {
           x['answerLoaded'] = false;

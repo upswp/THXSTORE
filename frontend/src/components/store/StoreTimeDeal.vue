@@ -62,8 +62,8 @@
                 <th>정상가</th>
                 <th>할인 적용</th>
                 <tr>
-                  <td>{{ menu.price }}</td>
-                  <td>{{ menu.discounted }}</td>
+                  <td>{{ oneTrans(menu.price) }}원</td>
+                  <td>{{ oneTrans(menu.discounted) }}원</td>
                 </tr>
               </table>
             </div>
@@ -81,8 +81,8 @@
         </select>
         <span>:</span>
         <select v-model="startMinute" class="time-select">
-          <option v-for="(i, index) in ['00', '30', '36']" :key="index" :value="i">
-            {{ i }}
+          <option v-for="(i, index) in 12" :key="index" :value="timeStrConvert(i - 1, 5)">
+            {{ timeStrConvert(i - 1, 5) }}
           </option>
         </select>
       </div>
@@ -102,7 +102,7 @@
 <script>
 import { getTimeDeal, registerTimeDeal } from '@/api/timeDeal';
 import { getTotalMenu } from '@/api/menu';
-import { timeStrConvert } from '@/utils/filters';
+import { timeStrConvert, oneTrans } from '@/utils/filters';
 import { mapGetters, mapMutations } from 'vuex';
 import { countDownTimer } from '@/utils/time';
 export default {
@@ -188,6 +188,7 @@ export default {
     clearInterval(this.timer);
   },
   methods: {
+    oneTrans,
     countDownTimer,
     ...mapMutations(['setSpinnerState']),
     timeValid() {

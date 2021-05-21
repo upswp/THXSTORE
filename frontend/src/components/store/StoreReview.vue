@@ -85,7 +85,6 @@ export default {
     },
     answerContent($event, index) {
       this.reviewItems[index].answerContent = $event.target.value;
-      console.log('답글내용', this.reviewItems[index].answerContent);
     },
     async submitForm(index) {
       try {
@@ -95,7 +94,6 @@ export default {
           comment: this.reviewItems[index].answerContent,
           reviewId: this.reviewItems[index].reviewId,
         };
-        console.log(rawData);
         const { data } = await registerStoreAnswer(rawData);
         this.toggleAnswerFormLoaded(index);
         this.setSpinnerState(false);
@@ -113,7 +111,6 @@ export default {
       try {
         this.setSpinnerState(true);
         const storeId = this.$store.state.storeId;
-        console.log('스토어아이디', storeId);
         const { data } = await getStoreReview(storeId);
         data.forEach(x => {
           x['answerLoaded'] = false;
@@ -164,30 +161,34 @@ export default {
     }
   }
   .userstore-review-items {
-    @include flexbox;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px 20px;
+    grid-auto-rows: minmax(100px, auto);
+    // @include flexbox;
+    // justify-content: space-between;
+    // flex-wrap: wrap;
     background-color: white;
     border: 1px $gray200 solid;
     padding: 1%;
-    justify-content: space-between;
-    flex-wrap: wrap;
     // flex-direction: column;
     .userstore-review-item {
-      width: 49%;
+      width: 100%;
       @include shadow1;
       padding: 1%;
       border-radius: 0px 0px 40px 0px;
       border: 2px black solid;
       margin-bottom: 15px;
-      @include lg-pc {
-        width: 32%;
-      }
-      @include mobile {
-        width: 49%;
-      }
-      @include xs-mobile {
-        width: 80%;
-        margin: 7px auto;
-      }
+      // @include lg-pc {
+      //   width: 32%;
+      // }
+      // @include mobile {
+      //   width: 49%;
+      // }
+      // @include xs-mobile {
+      //   width: 80%;
+      // }
+      margin: 7px auto;
     }
     .review-header-container {
       padding: 1%;
@@ -204,10 +205,15 @@ export default {
         border-radius: 10%;
         width: $length;
         height: $length;
-        object-fit: cover;
-        object-position: center 50%;
         margin-right: 10px;
         cursor: pointer;
+        img {
+          border-radius: 5px;
+          width: 100px;
+          height: 105px;
+          object-fit: cover;
+          object-position: center 50%;
+        }
         @include mobile {
           $length: clamp(20px, 20%, 120px);
           width: $length;
@@ -273,9 +279,12 @@ export default {
     .order-menu-list {
       width: 100%;
       padding: 0 2% 0 2%;
+      @include flexbox;
+      flex-wrap: wrap;
       span {
+        margin-bottom: 3px;
         border-radius: 30px;
-        padding: 1px 2%;
+        padding: 2px 2%;
         margin-right: 1%;
         color: white;
         background-color: $blue200;

@@ -1,7 +1,7 @@
 <template>
   <div class="live-container">
     <div class="reAccessLine">
-      <span class="reAccessButton" @click="joinSession">재접속하기</span>
+      <span class="reAccessButton" @click="resetConnect">재접속하기</span>
     </div>
     <div v-if="session" id="session">
       <header class="session-header">
@@ -86,7 +86,15 @@ export default {
     this.myUserName = `User${this.getUserInfo.id}`;
     this.joinSession();
   },
+  beforeDestroy() {
+    this.leaveSession();
+  },
+
   methods: {
+    resetConnect() {
+      this.leaveSession();
+      this.joinSession();
+    },
     submitMsg() {
       const sendData = {
         userId: this.getUserInfo.id,
