@@ -2,6 +2,7 @@ package com.ssafy.thxstore.reservation.service;
 
 import com.ssafy.thxstore.common.exceptions.AuthException;
 import com.ssafy.thxstore.common.exceptions.ErrorCode;
+import com.ssafy.thxstore.member.domain.Member;
 import com.ssafy.thxstore.member.repository.MemberRepository;
 import com.ssafy.thxstore.reservation.domain.Answer;
 import com.ssafy.thxstore.reservation.domain.Reservation;
@@ -141,6 +142,8 @@ public class ReviewService {
             ReviewList = reviewRepository.findReviewByStoreId(Id);
             for(int i =0 ;i<ReviewList.size(); i++){
 
+                Optional<Member> member = memberRepository.findById(ReviewList.get(i).getMemberId());
+                Optional<Store> store= storeRepository.findById(ReviewList.get(i).getStoreId());
                 List<ReviewproductResponse> ReservationGroupDtoList = new LinkedList<>();
 
                 for(int j =0;ReviewList.get(i).getReservation().getReservationGroup().size()>j;j++) {
@@ -163,6 +166,8 @@ public class ReviewService {
                     }
                 ReviewDto reviewDto = ReviewDto.builder().
                         answerDto(answerDto).
+                        profileImg(member.get().getProfileImage()).
+                        logo(store.get().getLogo()).
                         reservationGroupDtoList(ReservationGroupDtoList).
                         reservationId(ReviewList.get(i).getReservation().getId()).
                         memberName(ReviewList.get(i).getMemberName()).

@@ -22,10 +22,10 @@ public class ReviewDto implements Comparable<ReviewDto>{
 
     private Long reviewId;
 
-    private String profileImg;
-
     @NotBlank
     private Long storeId;
+
+    private String profileImg;
 
     @NotBlank
     private String storeName;
@@ -49,6 +49,7 @@ public class ReviewDto implements Comparable<ReviewDto>{
     @Builder
     public ReviewDto(AnswerDto answerDto,String profileImg,String memberName,List<ReviewproductResponse> reservationGroupDtoList,Long reviewId,String logo,String comment, int star, String dateTime,Long storeId,Long memberId,Long reservationId,String storeName) {
         this.comment = comment;
+        this.profileImg = profileImg;
         this.answerDto = answerDto;
         this.memberName =memberName;
         this.reservationGroupDtoList =reservationGroupDtoList;

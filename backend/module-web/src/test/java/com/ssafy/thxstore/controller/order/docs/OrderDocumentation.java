@@ -29,7 +29,8 @@ public class OrderDocumentation {
                 ),
                 requestFields(
                         fieldWithPath("memberName").type(JsonFieldType.STRING).description("주문자 이름"),
-                        fieldWithPath("profileImg").type(JsonFieldType.NULL).description("이미지 주소"),
+                        fieldWithPath("logo").type(JsonFieldType.STRING).description("로고"),
+                        fieldWithPath("profileImg").type(JsonFieldType.STRING).description("회원 프로필이미지"),
                         fieldWithPath("answerDto").type(JsonFieldType.NULL).description("답변"),
                         fieldWithPath("reservationGroupDtoList").type(JsonFieldType.ARRAY).description("리뷰한 주문의 상품"),
                         fieldWithPath("reviewId").type(JsonFieldType.NUMBER).description("리뷰 아이디"),

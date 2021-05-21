@@ -14,6 +14,7 @@ import com.ssafy.thxstore.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -29,12 +30,14 @@ public class AuthService {
      * @param signUpRequest 회원가입 RequestDto
      * @return Member
      */
+    @Transactional
     public Member registerMember(SignUpRequest signUpRequest) {
         if (memberRepository.existsByEmail(signUpRequest.getEmail())) {
             throw new AuthException(ErrorCode.DUPLICATED_EMAIL);
         }
         Member member;
-        if (signUpRequest.getSocial() == null && signUpRequest.getUserId() == null && signUpRequest.getProfileImage() == null) {
+        if (signUpRequest.getUserId() == null && signUpRequest.getProfileImage() == null) {
+            System.out.println("여기 일반");
             member = Member.builder()
                     .email(signUpRequest.getEmail())
                     .password(signUpRequest.getPassword())
@@ -48,6 +51,7 @@ public class AuthService {
                     .address(signUpRequest.getAddress())
                     .build();
         } else {
+            System.out.println("여기 소셜");
             member = Member.builder()
                     .email(signUpRequest.getEmail())
                     .password(signUpRequest.getPassword())
