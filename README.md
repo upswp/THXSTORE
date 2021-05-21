@@ -122,7 +122,10 @@
           <li>AWS EC2 - Deploy Server</li>
           <li>AWS S3 - Image(File) Server</li>
           <li>AWS RDS - DB Server</li>
-          <li>Jenkins </li>
+          <li>jenkins 2.3 </li>
+          <li>blueocean 1.24.6 </li>
+          <li>docker-compose 1.24.1 </li>
+          <li>openVidu version kms:2.17.0</li>
           <li>GitLab</li>
           <li>Docker</li>
       </ul>
