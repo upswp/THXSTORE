@@ -144,7 +144,7 @@ export default {
   position: relative;
 }
 .nav-aside {
-  z-index: 9;
+  z-index: 1;
   position: fixed;
   left: 3px;
   // text-align: center;
@@ -169,6 +169,8 @@ export default {
     @include flexbox;
     @include justify-content(space-evenly);
     padding: 3px;
+    top: 42px;
+    left: 0px;
     width: 100%;
     background-color: white;
     min-height: 5px;
