@@ -12,7 +12,7 @@
           <user-video :stream-manager="mainStreamManager" />
         </div>
         <div class="chat-box">
-          <div class="chat-display">
+          <div ref="chatDisplay" class="chat-display">
             <div v-for="(chat, index) in chats" :key="index" class="chat-line">
               <div v-if="chat.userId === getUserInfo.id" class="my-comment">
                 <img :src="chat.profileImage" class="user-profile" />
@@ -91,6 +91,10 @@ export default {
   },
 
   methods: {
+    chat_on_scroll() {
+      console.log(this.$refs.chatDisplay);
+      this.$refs.chatDisplay.scrollTop = this.$refs.chatDisplay.scrollHeight;
+    },
     resetConnect() {
       this.leaveSession();
       this.joinSession();
@@ -133,6 +137,7 @@ export default {
       });
       this.session.on('signal:my-chat', event => {
         this.chats.push(JSON.parse(event.data));
+        this.chat_on_scroll();
       });
       // On every Stream destroyed...
       this.session.on('streamDestroyed', ({ stream }) => {
@@ -368,6 +373,7 @@ export default {
   overflow: auto;
 
   padding: 10px;
+  padding-bottom: 120px;
 }
 .my-comment,
 .other-comment {
