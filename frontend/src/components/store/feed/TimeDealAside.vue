@@ -1,7 +1,7 @@
 <template>
   <div class="feed-aside">
     <div class="profile-wrapper">
-      <img :src="getUserInfo.profileImage" />
+      <img :src="getUserInfo.profileImage" class="profile-image" />
     </div>
     <div class="current-location">
       <awesome icon="map-marker-alt"></awesome>
@@ -86,6 +86,8 @@ export default {
     width: 100px;
     height: 100px;
     border-radius: 50%;
+    object-fit: cover;
+    object-position: center 50%;
   }
   @include mobile {
     display: none;
