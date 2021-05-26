@@ -140,7 +140,7 @@ export default {
   @include shadow1;
   padding: 20px;
 }
-@include fade-transition(fade, 0.3s);
+@include fade-transition(0.3s);
 .contents-header {
   font-size: 18px;
   margin-bottom: 20px;

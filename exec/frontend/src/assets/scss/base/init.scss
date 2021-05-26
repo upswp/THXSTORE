@@ -70,6 +70,8 @@ html {
 body {
   @include selection($body-selection); // 드래그 색상
   font-family: $web-font-family;
+  @include md-font;
+  
 }
 
 body, header, footer, section, article, aside, div {

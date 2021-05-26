@@ -351,40 +351,135 @@
   box-shadow: rgba(0, 0, 0, 0.1) 0 0 19px;
 }
 // https://markus.oberlehner.net/blog/vue-router-page-transitions/#slide-transition 참조
-@mixin slide-transition{
+
+@mixin slide-left-transition($time){
   .slide-left-enter-active,
-    .slide-left-leave-active,
+  .slide-left-leave-active {
+    transition-duration: $time;
+    transition-property: height, opacity, transform;
+    transition-timing-function: cubic-bezier(0.55, 0, 0.1, 1);
+    overflow: hidden;
+  }
+  .slide-left-enter{
+    opacity: 0;
+    @include transform(translate(2em, 0));
+  }
+  .slide-left-leave-active{
+    opacity: 0;
+    @include transform(translate(-2em, 0));
+  }
+}
+
+@mixin slide-right-transition($time){
     .slide-right-enter-active,
     .slide-right-leave-active {
-      transition-duration: 0.4s;
+      transition-duration:$time;
       transition-property: height, opacity, transform;
       transition-timing-function: cubic-bezier(0.55, 0, 0.1, 1);
       overflow: hidden;
     }
-
-    .slide-left-enter,
-    .slide-right-leave-active {
-      opacity: 0;
-      @include transform(translate(2em, 0));
-    }
-
-    .slide-left-leave-active,
     .slide-right-enter {
       opacity: 0;
       @include transform(translate(-2em, 0));
     }
+
+    .slide-right-leave-active {
+      opacity: 0;
+      @include transform(translate(2em, 0));
+    }
 }
 
-@mixin fade-transition($name, $time){
-  .#{$name}-enter-active,
-.#{$name}-leave-active {
+@mixin fade-transition($time){
+  .fade-enter-active,
+.fade-leave-active {
   transition-duration: $time;
   transition-property: opacity;
   transition-timing-function: ease;
 }
 
-.#{$name}-enter,
-.#{$name}-leave-active {
+.fade-enter,
+.fade-leave-active {
   opacity: 0
 }
+}
+@mixin cross-middle{
+  @include flexbox;
+  @include justify-content(center);
+  @include align-items(center);
+}
+
+@mixin xs-font{
+  @include lg-pc{
+    font-size: 13px;
+  }
+  @include pc{
+    font-size: 13px;
+  }
+  @include mobile{
+    font-size : 12px;
+  }
+  @include xs-mobile{
+    font-size: 11px;
+  }
+}
+
+@mixin sm-font{
+  @include lg-pc{
+    font-size: 15px;
+  }
+  @include pc{
+    font-size: 15px;
+  }
+  @include mobile{
+    font-size : 14px;
+  }
+  @include xs-mobile{
+    font-size: 14px;
+  }
+}
+
+
+
+
+@mixin md-font{
+  @include lg-pc{
+    font-size: 16px;
+  }
+  @include pc{
+    font-size: 15px;
+  }
+  @include mobile{
+    font-size : 14px;
+  }
+  @include xs-mobile{
+    font-size: 13px;
+  }
+}
+@mixin lg-font{
+  @include lg-pc{
+    font-size: 18px;
+  }
+  @include pc{
+    font-size: 17px;
+  }
+  @include mobile{
+    font-size : 16px;
+  }
+  @include xs-mobile{
+    font-size: 15px;
+  }
+}
+@mixin xl-font{
+  @include lg-pc{
+    font-size: 20px;
+  }
+  @include pc{
+    font-size: 19px;
+  }
+  @include mobile{
+    font-size : 18px;
+  }
+  @include xs-mobile{
+    font-size: 17px;
+  }
 }

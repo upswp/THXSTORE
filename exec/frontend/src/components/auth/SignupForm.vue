@@ -1,24 +1,20 @@
 <template>
   <div class="container">
-    <header>
+    <header class="header-wrapper">
       <div class="signup-header">Sign up for Thx!Store</div>
     </header>
-    <form @submit.prevent="submitForm">
-      <div class="submit-items">
-        <input v-model="userData.email" v-focus class="submit-item email" type="text" placeholder="이메일" />
-        <div ref="email" class="label" :class="validationClass.email">{{ validationMsg.email }}</div>
-        <input v-model="userData.password1" class="submit-item" type="password" placeholder="비밀번호" />
-        <div ref="password1" class="label" :class="validationClass.password1">
-          {{ validationMsg.password1 }}
-        </div>
-        <input v-model="userData.password2" class="submit-item" type="password" placeholder="비밀번호 재입력" />
-        <div ref="password2" class="label" :class="validationClass.password2">{{ validationMsg.password2 }}</div>
-        <input v-model="userData.nickname" class="submit-item" type="text" placeholder="닉네임" />
-        <button class="submit-item btn" type="submit" :disabled="btnDisabled">
-          <b>회원가입</b>
-        </button>
+    <div class="submit-items">
+      <input v-model="userData.email" v-focus class="submit-item email" type="text" placeholder="이메일" />
+      <div ref="email" class="label" :class="validationClass.email">{{ validationMsg.email }}</div>
+      <input v-model="userData.password1" class="submit-item" type="password" placeholder="비밀번호" />
+      <div ref="password1" class="label" :class="validationClass.password1">
+        {{ validationMsg.password1 }}
       </div>
-    </form>
+      <input v-model="userData.password2" class="submit-item" type="password" placeholder="비밀번호 재입력" />
+      <div ref="password2" class="label" :class="validationClass.password2">{{ validationMsg.password2 }}</div>
+      <input v-model="userData.nickname" class="submit-item" type="text" placeholder="닉네임" />
+      <button class="submit-item btn" :disabled="btnDisabled" @click="submitForm">회원가입</button>
+    </div>
     <div class="line-division">OR</div>
     <div class="external-items">
       <button class="external-item" type="button" @click="kakaoSignup">
@@ -34,8 +30,8 @@
         <b> 페이스북으로 회원가입하기</b>
       </button>
     </div>
-    <hr />
-    <footer>
+    <hr class="footer-division" />
+    <footer class="footer-container">
       <span @click="moveToPage('login')">로그인하기</span>
       <span>|</span>
       <span @click="moveToPage('mailcode')">비밀번호찾기</span>
@@ -136,53 +132,55 @@ export default {
 <style lang="scss" scoped>
 .container {
   z-index: 1;
+  width: clamp(320px, 30%, 430px);
   padding: 20px;
-  width: clamp(360px, 30%, 430px);
-  @include box-shadow;
-  // background: #f9fafc;
-  background: white;
-
-  header {
+  box-shadow: 1px 10px 20px rgba(0, 0, 0, 0.3);
+  border-radius: 5px;
+  background-color: rgba(255, 255, 255, 0.7);
+}
+.line-division {
     @include flexbox;
-    @include justify-content(center);
-    margin-bottom: 20px;
-    font: {
-      size: 18px;
-      weight: 600;
+    @include align-items(center);
+    @include flex-basis(100%);
+    color: $blue300;
+    margin-bottom: 30px;
+    &::before,
+    &::after {
+      content: '';
+      @include flex-grow(1);
+      background: $blue300;
+      height: 1px;
+      font-size: 0px;
+      line-height: 0px;
+      margin: 0px 16px;
     }
-    color: $gray500;
   }
-
-  form {
-    font-size: 14px;
-    input {
-      width: 100%;
-      background-color: $gray000;
-      border: 2.5px solid #dfe1e6;
-      padding: 10px 15px;
-      border-radius: 3px;
-      margin-bottom: 20px;
-    }
-    .label {
-      color: $gray600;
-      font-size: 12px;
-      position: relative;
-      top: -15px;
-      padding: 0 0 0 3px;
-    }
-    .submit-items {
-      .label {
-        transition: color 0.3s;
-      }
-      .success-msg {
-        color: $green800;
-      }
-      .alert-msg {
-        color: $red600;
-      }
-    }
-
-    button {
+    
+.submit-items {
+  .label {
+    color: $gray600;
+    font-size: 12px;
+    position: relative;
+    top: -15px;
+    padding: 0 0 0 3px;
+    transition: color 0.3s;
+  }
+  .success-msg {
+    color: $green800;
+  }
+  .alert-msg {
+    color: $red600;
+  }
+}
+.submit-item {
+    @include sm-font;
+    width: 100%;
+    background-color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 3px;
+    margin-bottom: 20px;
+    &.btn {
       color: $white;
       border: none;
       background-color: $blue400;
@@ -200,13 +198,10 @@ export default {
       }
     }
   }
-
-  .line-division {
+.footer-division {
+    border: none;
     @include flexbox;
-    @include align-items(center);
     @include flex-basis(100%);
-    color: $blue300;
-    &::before,
     &::after {
       content: '';
       @include flex-grow(1);
@@ -214,57 +209,15 @@ export default {
       height: 1px;
       font-size: 0px;
       line-height: 0px;
-      margin: 0px 16px;
-    }
-    margin-bottom: 30px;
-  }
-  .external-items {
-    button.external-item {
-      width: 100%;
-      @include flexbox;
-      @include align-items(center);
-      @include justify-content(center);
-      @include box-shadow;
-      margin-bottom: 20px;
-      background-color: white;
-      border: 1px solid $gray100;
-      color: $gray600;
-      font-size: 13px;
-      &:hover {
-        background-color: rgba(0, 0, 0, 0.1);
-        color: $gray800;
-      }
-      &:active {
-        border: 1px solid $blue600;
-        color: $blue600;
-      }
-      img {
-        width: 2rem;
-        height: 2rem;
-        margin-right: 5px;
-      }
-    }
-  }
-  hr {
-    border: none;
-    @include flexbox;
-    @include flex-basis(100%);
-    &::after {
-      content: '';
-      @include flex-grow(1);
-      background: $blue100;
-      height: 1px;
-      font-size: 0px;
-      line-height: 0px;
     }
     margin-bottom: 20px;
   }
-  footer {
+   .footer-container {
     font-size: 14px;
     @include flexbox;
     @include justify-content(center);
     span {
-      color: $gray400;
+      color: $gray600;
       cursor: pointer;
       &:nth-child(2) {
         margin: 0 10px;
@@ -275,5 +228,39 @@ export default {
       }
     }
   }
+  .external-item {
+  width: 100%;
+  @include cross-middle;
+  @include box-shadow;
+  margin-bottom: 20px;
+  background-color: white;
+  border: none;
+  // border: 1px solid $gray100;
+  color: $gray600;
+  font-size: 13px;
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+    color: $gray800;
+  }
+  &:active {
+    border: 1px solid $blue600;
+    color: $blue600;
+  }
+  img {
+    width: 2rem;
+    height: 2rem;
+    margin-right: 5px;
+  }
+  
+}
+.header-wrapper {
+  @include flexbox;
+  @include justify-content(center);
+  margin-bottom: 20px;
+  font: {
+    size: 18px;
+    weight: 600;
+  }
+  color: $navy800;
 }
 </style>

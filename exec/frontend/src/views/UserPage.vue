@@ -51,7 +51,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@include slide-transition;
+@include slide-left-transition(0.4s);
+@include slide-right-transition(0.4s);
 .user-container {
   width: 100%;
   min-height: 100vh;

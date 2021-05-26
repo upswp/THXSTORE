@@ -396,5 +396,5 @@ hr {
 .map-container {
   width: 80%;
 }
-@include fade-transition(fade, 0.5s);
+@include fade-transition(0.5s);
 </style>

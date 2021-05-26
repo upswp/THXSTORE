@@ -6,30 +6,58 @@
         <li><span class="title">Thx!Store</span></li>
       </ul>
     </header>
-    <div class="main-wrap">
-      <main>
+    <main class="main-wrapper">
+      <section class="section-wrapper">
         <transition :name="transitionName" mode="out-in"><router-view></router-view> </transition>
-      </main>
+      </section>
+    </main>
       <aside class="privacy-policy" @click="showModal = true">
         <span>Privacy Policy</span>
       </aside>
       <privacy-policy v-if="showModal" @close="showModal = false"></privacy-policy>
-    </div>
+      <div>
+        <svg class="waves" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto">
+<defs>
+<path id="gentle-wave" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z" />
+</defs>
+<g class="parallax">
+<use xlink:href="#gentle-wave" x="48" y="0" fill="rgba(255,255,255,0.7" />
+<use xlink:href="#gentle-wave" x="48" y="3" fill="rgba(255,255,255,0.5)" />
+<use xlink:href="#gentle-wave" x="48" y="5" fill="rgba(255,255,255,0.3)" />
+<use xlink:href="#gentle-wave" x="48" y="7" fill="rgba(255,255,255,0.6)" />
+</g>
+</svg>
+      </div>
   </div>
 </template>
 
 <script>
 import PrivacyPolicy from '@/components/common/PrivacyPolicy';
-const DEFAULT_TRANSITION = 'fade';
 export default {
   components: {
     PrivacyPolicy,
   },
   data() {
     return {
-      transitionName: DEFAULT_TRANSITION,
+      transitionDefault: 'slide-left',
       showModal: false,
+      windowWidth : '',
+      transitionName:'',
     };
+  },
+  watch: {
+    windowWidth(width) {
+      if(width < 780) this.transitionName = 'fade';
+      else this.transitionName = this.transitionDefault;
+    }
+  },
+  mounted () {
+    window.addEventListener('resize', this.setWindowWidth)
+    this.setWindowWidth();
+  },
+  beforeDestroy () {
+    window.removeEventListener('resize', this.setWindowWidth);
   },
   created() {
     this.$router.beforeEach((to, from, next) => {
@@ -41,7 +69,7 @@ export default {
         transitionName = toDepth < fromDepth ? 'slide-right' : 'slide-left';
       }
 
-      this.transitionName = transitionName || DEFAULT_TRANSITION;
+      this.transitionDefault = transitionName || DEFAULT_TRANSITION;
 
       next();
     });
@@ -50,6 +78,9 @@ export default {
   },
 
   methods: {
+    setWindowWidth() {
+      this.windowWidth = window.innerWidth;
+    },
     facebookLoad() {
       this.$_Facebook.init();
     },
@@ -69,14 +100,14 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@mixin auth-transition($target) {
-  @include transition($target 1s);
-}
-.auth-container {
-  background: linear-gradient(0.25turn, $blue400, $gray200, $gray200, $blue400);
-  z-index: -1;
-  min-height: 100vh;
 
+.auth-container {
+  width: 100%;
+  min-height: 100vh;
+  background: linear-gradient(90deg, #69b7eb, #cbcfce, #70bfec);
+  background-size: 100% 100%;
+
+  z-index: -1;
   &::before {
     content: '';
     position: fixed;
@@ -84,10 +115,10 @@ export default {
     left: 0;
     width: 100vw;
     min-height: 100vh;
-    background: $blue400;
-    @include auth-transition(opacity);
     z-index: 0;
     opacity: 0;
+    @include transition(opacity 1s);
+    background: $blue400;
     @include mobile() {
       & {
         opacity: 1;
@@ -102,67 +133,94 @@ export default {
 }
 .auth-header {
   font-family: 'Pacifico', cursive;
-  color: $blue800;
-  @include flexbox;
-  @include justify-content(center);
+  
+  // color: $yellow800;
+  @include cross-middle;
   font-size: 2rem;
-  @include align-items(center);
 }
 .header-wrap {
-  margin: 32px 0;
-  padding: 0.1rem;
-  @include flexbox;
   position: relative;
-  cursor: pointer;
+  padding: 32px 0;
+  color: #00a1ff;
+  @include flexbox;
+  @include transition(color 1s);
   @include mobile() {
     color: white;
-    @include auth-transition(color);
   }
   @include xs-mobile() {
     color: white;
-    @include auth-transition(color);
   }
 }
 .store {
   font-size: 2rem;
   padding-right: 0.3rem;
 }
-.main-wrap {
-  @include lg-pc() {
-    @include slide-transition;
-  }
-  @include pc() {
-    @include slide-transition;
-  }
+.main-wrapper {
+  @include slide-left-transition(0.4s);
+  @include slide-right-transition(0.4s);
   @include mobile() {
-    @include slide-transition;
+    @include fade-transition(0.5s);
+    @include fade-transition(0.5s);
   }
   @include xs-mobile() {
-    @include fade-transition(slide-right, 0.5s);
-    @include fade-transition(slide-left, 0.5s);
+    @include fade-transition(0.5s);
+    @include fade-transition(0.5s);
   }
-  main {
-    @include flexbox();
-    @include justify-content(center);
-    margin-bottom: 40px;
-  }
+  
+}
+.section-wrapper {
+  @include flexbox;
+  @include justify-content(center);
+  margin-bottom: 40px;
 }
 .privacy-policy {
-  @include flexbox();
+  z-index: 1;
+  position: relative;
+  @include flexbox;
   @include justify-content(center);
-  span {
+  span{
     font-weight: 600;
-    z-index: 1;
-    color: $blue600;
+    color: $gray600;
     cursor: pointer;
     margin-bottom: 20px;
-    @include auth-transition(color);
-    @include mobile() {
-      color: white;
+    @include transition(color 0.5s);
+    &:hover{
+      color:black;
     }
-    @include xs-mobile() {
-      color: white;
-    }
+  }
+    
+}
+.waves {
+  position:fixed;
+  bottom: 0px;
+  width: 100%;
+  z-index: 0;
+}
+.parallax > use {
+  animation: move-forever 50s cubic-bezier(.55,.5,.45,.5)     infinite;
+}
+.parallax > use:nth-child(1) {
+  animation-delay: -2s;
+  animation-duration: 27s;
+}
+.parallax > use:nth-child(2) {
+  animation-delay: -3s;
+  animation-duration: 30s;
+}
+.parallax > use:nth-child(3) {
+  animation-delay: -4s;
+  animation-duration: 33s;
+}
+.parallax > use:nth-child(4) {
+  animation-delay: -5s;
+  animation-duration: 40s;
+}
+@keyframes move-forever {
+  0% {
+   transform: translate3d(-90px,0,0);
+  }
+  100% { 
+    transform: translate3d(85px,0,0);
   }
 }
 </style>
