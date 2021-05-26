@@ -1,0 +1,44 @@
+ifndef::sub-snippet[]
+:sub-snippet: ../../../../build/generated-snippets
+endif::[]
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 4
+:sectlinks:
+:site-url: /build/asciidoc/html5/state
+
+[[delete-review]]
+=== 리뷰 삭제 확인
+
+`Delete` 요청을 사용해서 email 삭제 후 Boolean 형태로 반환한다.
+
+==== Curl
+include::{sub-snippet}/delete-review/curl-request.adoc[]
+
+==== Links
+Links:
+include::{sub-snippet}/delete-review/links.adoc[]
+
+==== Request
+CURL:
+include::{sub-snippet}/delete-review/curl-request.adoc[]
+Http-request:
+include::{sub-snippet}/delete-review/http-request.adoc[]
+Request-header:
+include::{sub-snippet}/delete-review/request-headers.adoc[]
+Request-body:
+include::{sub-snippet}/delete-review/request-body.adoc[]
+Request-filed:
+include::{sub-snippet}/delete-review/request-fields.adoc[]
+
+==== Response
+Http-response:
+include::{sub-snippet}/delete-review/http-response.adoc[]
+//Response-header:
+//include::{sub-snippet}/delete-review/response-headers.adoc[]
+Response-body:
+include::{sub-snippet}/delete-review/response-body.adoc[]
+//Response-filed:
+//include::{sub-snippet}/delete-review/response-fields.adoc[]

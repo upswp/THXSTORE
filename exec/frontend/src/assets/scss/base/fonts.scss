@@ -1,0 +1,84 @@
+$web-font-family:
+  'S-CoreDream-4Regular',
+  // 'Noto Sans KR',
+  'Apple SD Gothic Neo',
+  'Pacifico',
+  'Helvetica Neue', Helvetica, Arial,
+  'Trebuchet MS',
+  sans-serif;
+
+  @font-face {
+    font-family: 'S-CoreDream-4Regular';
+    src: url('../../font/SCDream/SCDream4.otf');
+    font-display: fallback ;
+}
+@font-face{
+  font-family: 'Pacifico';
+  src: url('../../font/Pacifico/Pacifico-Regular.ttf');
+  font-display: fallback ;
+}
+// @font-face {
+//   font-family: 'Noto Sans KR';
+//   font-weight: 100;
+//   src: local('Noto Sans KR Thin'),
+//   url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Thin.woff2) format('woff2'),
+//   url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Thin.woff) format('woff'),
+//   url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Thin.otf) format('opentype');
+//   font-display: swap;
+// }
+
+
+
+@font-face {
+  font-family: 'Noto Sans KR';
+  font-weight: 300;
+  src: local('Noto Sans KR Light'),
+  url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Light.woff2) format('woff2'),
+  url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Light.woff) format('woff'),
+  url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Light.otf) format('opentype');
+
+}
+
+
+
+// @font-face {
+//   font-family: 'Noto Sans KR';
+//   font-weight: 400;
+//   src: local('Noto Sans KR Regular'),
+//    url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Regular.woff2) format('woff2'),
+//    url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Regular.woff) format('woff'),
+//    url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Regular.otf) format('opentype');
+//   }
+
+
+
+// @font-face {
+//   font-family: 'Noto Sans KR';
+//   font-weight: 500;
+//   src: local('Noto Sans KR Medium'),
+//   url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Medium.woff2) format('woff2'),
+//   url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Medium.woff) format('woff'),
+//   url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Medium.otf) format('opentype');
+// }
+
+
+
+// @font-face {
+//   font-family: 'Noto Sans KR';
+//   font-weight: 700;
+//   src: local('Noto Sans KR Bold'),
+//   url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Bold.woff2) format('woff2'),
+//   url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Bold.woff) format('woff')
+//   ,url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Bold.otf) format('opentype');
+// }
+
+
+
+// @font-face {
+//   font-family: 'Noto Sans KR';
+//   font-weight: 900;
+//   src: local('Noto Sans KR Black'),
+//   url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Black.woff2) format('woff2'),
+//   url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Black.woff) format('woff'),
+//   url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Black.otf) format('opentype');
+// }
