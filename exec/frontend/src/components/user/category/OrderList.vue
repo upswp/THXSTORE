@@ -40,45 +40,9 @@
         </div>
         <form v-if="orderItems[index].reviewLoaded" class="review-form" @submit.prevent="submitForm(index)">
           <div class="startRadio">
-            <label class="startRadio__box">
-              <input type="radio" name="star" value="0.5" @input="starScore($event, index)" />
+            <label v-for="(star, starIndex) in 10" :key="starIndex" class="startRadio__box">
+              <input type="radio" name="star" :value="0.5 * star" @input="starScore($event, index)" />
               <span class="startRadio__img"><span class="blind">별 1개</span></span>
-            </label>
-            <label class="startRadio__box">
-              <input type="radio" name="star" value="1" @input="starScore($event, index)" />
-              <span class="startRadio__img"><span class="blind">별 1.5개</span></span>
-            </label>
-            <label class="startRadio__box">
-              <input type="radio" name="star" value="1.5" @input="starScore($event, index)" />
-              <span class="startRadio__img"><span class="blind">별 2개</span></span>
-            </label>
-            <label class="startRadio__box">
-              <input type="radio" name="star" value="2" @input="starScore($event, index)" />
-              <span class="startRadio__img"><span class="blind">별 2.5개</span></span>
-            </label>
-            <label class="startRadio__box">
-              <input type="radio" name="star" value="2.5" @input="starScore($event, index)" />
-              <span class="startRadio__img"><span class="blind">별 3개</span></span>
-            </label>
-            <label class="startRadio__box">
-              <input type="radio" name="star" value="3" @input="starScore($event, index)" />
-              <span class="startRadio__img"><span class="blind">별 3.5개</span></span>
-            </label>
-            <label class="startRadio__box">
-              <input type="radio" name="star" value="3.5" @input="starScore($event, index)" />
-              <span class="startRadio__img"><span class="blind">별 4개</span></span>
-            </label>
-            <label class="startRadio__box">
-              <input type="radio" name="star" value="4" @input="starScore($event, index)" />
-              <span class="startRadio__img"><span class="blind">별 4.5개</span></span>
-            </label>
-            <label class="startRadio__box">
-              <input type="radio" name="star" value="4.5" @input="starScore($event, index)" />
-              <span class="startRadio__img"><span class="blind">별 5개</span></span>
-            </label>
-            <label class="startRadio__box">
-              <input type="radio" name="star" value="5" @input="starScore($event, index)" />
-              <span class="startRadio__img"><span class="blind">별 5.5개</span></span>
             </label>
           </div>
 
@@ -117,7 +81,6 @@ export default {
   methods: {
     ...mapMutations(['setSpinnerState']),
     starScore($event, index) {
-      console.log('starscore', $event.target.value);
       this.orderItems[index].starScore = parseFloat($event.target.value);
     },
     reviewContent($event, index) {
@@ -184,6 +147,7 @@ export default {
         };
         this.setSpinnerState(true);
         const { data } = await registerReview(rawData);
+        this.orderItems[index].reservationStatus = false;
         this.toggleReviewLoaded(index);
         this.setSpinnerState(false);
         if (data.message) {
