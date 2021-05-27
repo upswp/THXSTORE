@@ -1,1 +1,111 @@
 // @import '@/assets/scss/sample';
+
+.fixed-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 3;
+  width: 100%;
+  background-color: rgba(215, 219, 221, 0.698);
+  @include flexbox;
+  @include align-items(center);
+  box-shadow: 0 0 3px rgba(0, 0, 0, 0.2);
+  font-size: 1.4rem;
+  @include transition(all 0.5s);
+  &.top{
+    background-color: white;
+    & .title{
+      color:$blue600;
+    }
+    & .drawer-icon {
+      color:$gray600;
+      &:hover{
+        color:$blue400;
+      }
+    }
+  }
+}
+summary:first-of-type{
+  list-style-type : none;
+}
+.fixed-logo-wrapper {
+  flex-grow: 1;
+  @include flexbox;
+  @include align-items(center);
+}
+.logo-wrap {
+  font-family: 'Pacifico', cursive;
+  padding-left:10px;
+  color: $blue800;
+  @include flexbox;
+  position: relative;
+  .store {
+    padding-right: 0.3rem;
+  }
+}
+.navigation-drawer-button {
+  position: relative;
+  z-index: 4;
+  width: 50px;
+  padding: 10px;
+  @include flexbox;
+  @include justify-content(center);
+ 
+}
+.drawer-container{
+  position: absolute;
+  width:max-content;
+  top:48px;
+  right:0px;
+  @include md-font;
+  box-shadow : 0 0 20px rgba(0,0,0,0.1);
+  border-radius: 5px;
+  background-color: white;
+}
+.drawer-icon{
+  cursor:pointer;
+  color:$gray800;
+  @include transition(color 0.1s);
+  &:hover{
+    color:$blue800;
+  }
+  svg{
+    width:25px;
+    height:25px;
+  }
+}
+
+.drawer-item{
+  @include flexbox;
+  @include align-items(center);
+  padding:10px 20px;
+  cursor:pointer;
+  @include transition(all 0.2s);
+  &:hover{
+    background-color: $blue600;
+    color:white;
+  }
+  &::before{
+    display: inline-block;
+    content: "\2713";
+    margin-right:10px;
+    font-weight:bolder;
+    color:white;
+  }
+}
+table{
+  border-collapse: collapse;
+}
+td{
+  border:1px solid $gray200;
+}
+.block-for-logo {
+  @include lg-pc {
+    display: none;
+  }
+  @include pc {
+    display: none;
+  }
+}
+
+@include slide-down-transition(0.2s);

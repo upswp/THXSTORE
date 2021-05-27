@@ -139,23 +139,23 @@ export default {
   background-color: rgba(255, 255, 255, 0.7);
 }
 .line-division {
-    @include flexbox;
-    @include align-items(center);
-    @include flex-basis(100%);
-    color: $blue300;
-    margin-bottom: 30px;
-    &::before,
-    &::after {
-      content: '';
-      @include flex-grow(1);
-      background: $blue300;
-      height: 1px;
-      font-size: 0px;
-      line-height: 0px;
-      margin: 0px 16px;
-    }
+  @include flexbox;
+  @include align-items(center);
+  @include flex-basis(100%);
+  color: $blue300;
+  margin-bottom: 30px;
+  &::before,
+  &::after {
+    content: '';
+    @include flex-grow(1);
+    background: $blue300;
+    height: 1px;
+    font-size: 0px;
+    line-height: 0px;
+    margin: 0px 16px;
   }
-    
+}
+
 .submit-items {
   .label {
     color: $gray600;
@@ -173,62 +173,62 @@ export default {
   }
 }
 .submit-item {
-    @include sm-font;
+  @include sm-font;
+  width: 100%;
+  background-color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 3px;
+  margin-bottom: 20px;
+  &.btn {
+    color: $white;
+    border: none;
+    background-color: $blue400;
     width: 100%;
-    background-color: white;
-    border: none;
-    padding: 10px 15px;
-    border-radius: 3px;
-    margin-bottom: 20px;
-    &.btn {
-      color: $white;
-      border: none;
-      background-color: $blue400;
-      width: 100%;
-      padding: 10px 0;
-      font-size: 16px;
-      @include box-shadow;
-      margin-bottom: 30px;
-      transition: background-color 0.3s;
-      &:disabled {
-        background-color: $gray400;
-      }
-      &:hover:enabled {
-        background-color: $blue600;
-      }
+    padding: 10px 0;
+    font-size: 16px;
+    @include box-shadow;
+    margin-bottom: 30px;
+    transition: background-color 0.3s;
+    &:disabled {
+      background-color: $gray400;
+    }
+    &:hover:enabled {
+      background-color: $blue600;
     }
   }
+}
 .footer-division {
-    border: none;
-    @include flexbox;
-    @include flex-basis(100%);
-    &::after {
-      content: '';
-      @include flex-grow(1);
-      background: $blue300;
-      height: 1px;
-      font-size: 0px;
-      line-height: 0px;
-    }
-    margin-bottom: 20px;
+  border: none;
+  @include flexbox;
+  @include flex-basis(100%);
+  &::after {
+    content: '';
+    @include flex-grow(1);
+    background: $blue300;
+    height: 1px;
+    font-size: 0px;
+    line-height: 0px;
   }
-   .footer-container {
-    font-size: 14px;
-    @include flexbox;
-    @include justify-content(center);
-    span {
-      color: $gray600;
-      cursor: pointer;
-      &:nth-child(2) {
-        margin: 0 10px;
-        color: $gray400 !important;
-      }
-      &:hover {
-        color: $blue600;
-      }
+  margin-bottom: 20px;
+}
+.footer-container {
+  font-size: 14px;
+  @include flexbox;
+  @include justify-content(center);
+  span {
+    color: $gray600;
+    cursor: pointer;
+    &:nth-child(2) {
+      margin: 0 10px;
+      color: $gray400 !important;
+    }
+    &:hover {
+      color: $blue600;
     }
   }
-  .external-item {
+}
+.external-item {
   width: 100%;
   @include cross-middle;
   @include box-shadow;
@@ -251,7 +251,6 @@ export default {
     height: 2rem;
     margin-right: 5px;
   }
-  
 }
 .header-wrapper {
   @include flexbox;

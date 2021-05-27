@@ -388,7 +388,23 @@
       @include transform(translate(2em, 0));
     }
 }
-
+@mixin slide-down-transition($time){
+  .slide-down-enter-active,
+  .slide-down-leave-active {
+    transition-duration: $time;
+    transition-property: height, opacity, transform;
+    transition-timing-function: cubic-bezier(0.55, 0, 0.1, 1);
+    overflow: hidden;
+  }
+  .slide-down-enter{
+    opacity: 0;
+    @include transform(translate(0, -1em));
+  }
+  .slide-down-leave-active{
+    opacity: 0;
+    @include transform(translate(0, -1em));
+  }
+}
 @mixin fade-transition($time){
   .fade-enter-active,
 .fade-leave-active {

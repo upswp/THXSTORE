@@ -1,6 +1,7 @@
 import store from '@/store';
 import routesForStore from '@/router/store';
 import routesForAdmin from '@/router/admin';
+import routesForUser from '@/router/user';
 import routesForUserStore from '@/router/userStore';
 const authGuard = (to, from, next) => {
   if (store.getters.getToken) {
@@ -32,6 +33,7 @@ const routesForMain = [
       ...routesForStore,
       ...routesForAdmin,
       ...routesForUserStore,
+      ...routesForUser,
     ],
   },
 ];
