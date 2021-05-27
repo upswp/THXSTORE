@@ -81,14 +81,7 @@ export default {
     answerContent($event, reviewItem) {
       reviewItem.answerContent = $event.target.value;
     },
-<<<<<<< HEAD:exec/frontend/src/components/store/StoreReview.vue
-    answerContent($event, index) {
-      this.reviewItems[index].answerContent = $event.target.value;
-    },
-    async submitForm(index) {
-=======
     async submitForm(reviewItem) {
->>>>>>> de030b8 ([S04P31B202-436] refator: 코드리뷰 적용):frontend/src/components/store/StoreReview.vue
       try {
         this.setSpinnerState(true);
         const rawData = {
@@ -164,15 +157,8 @@ export default {
     justify-content: space-between;
     flex-wrap: wrap;
     background-color: white;
-<<<<<<< HEAD:exec/frontend/src/components/store/StoreReview.vue
     border: 1px $gray200 solid;
     padding: 1%;
-=======
-    justify-content: space-between;
-    flex-wrap: wrap;
-    padding: 1%;
-    border: 1px $gray200 solid;
->>>>>>> de030b8 ([S04P31B202-436] refator: 코드리뷰 적용):frontend/src/components/store/StoreReview.vue
     // flex-direction: column;
     .userstore-review-item {
       width: 48%;
@@ -195,10 +181,7 @@ export default {
     .review-header-container {
       @include flexbox;
       @include align-items(center);
-<<<<<<< HEAD:exec/frontend/src/components/store/StoreReview.vue
-=======
       @include justify-content(space-between);
->>>>>>> de030b8 ([S04P31B202-436] refator: 코드리뷰 적용):frontend/src/components/store/StoreReview.vue
       flex-grow: 1;
       flex-wrap: wrap;
       margin-bottom: 10px;
@@ -206,21 +189,11 @@ export default {
       // border: $gray600 2px solid;
       border-radius: 10px;
       .review-thumbnail {
-<<<<<<< HEAD:exec/frontend/src/components/store/StoreReview.vue
         $length: clamp(40px, 10vw, 100px);
         border-radius: 10%;
         width: $length;
         height: $length;
         margin-right: 10px;
-=======
-        $length: clamp(20px, 30%, 120px);
-        width: $length;
-        height: $length;
-        margin-right: 10px;
-        border-radius: 10%;
-        object-fit: cover;
-        object-position: center 50%;
->>>>>>> de030b8 ([S04P31B202-436] refator: 코드리뷰 적용):frontend/src/components/store/StoreReview.vue
         cursor: pointer;
 
         img {

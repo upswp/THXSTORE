@@ -143,13 +143,8 @@ export default {
 .header-container {
   position: relative;
 }
-<<<<<<< HEAD:exec/frontend/src/views/UserStorePage.vue
 .nav-aside {
   z-index: 1;
-=======
-.nav-items {
-  z-index: 9;
->>>>>>> de030b8 ([S04P31B202-436] refator: 코드리뷰 적용):frontend/src/views/UserStorePage.vue
   position: fixed;
   left: 3px;
   // text-align: center;
