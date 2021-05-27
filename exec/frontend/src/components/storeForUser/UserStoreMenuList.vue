@@ -1,13 +1,13 @@
 <template>
   <div class="userstore-menu-containter">
-    <div v-for="(menuGroupContainer, index) in storeMenuArr" :key="index" class="menu-group-container">
-      <div class="menu-group-title" @click="showAccordion">
-        <div class="group-title">{{ menuGroupContainer.name }}</div>
+    <div v-for="(menuListGroup, index) in storeMenuGroups" :key="index" class="menu-group-container">
+      <div class="menu-group-title" @click="showAccordion(menuListGroup)">
+        <div class="group-title">{{ menuListGroup.name }}</div>
         <awesome icon="chevron-up" class="chevron-up"></awesome>
       </div>
-      <div class="transition-div">
-        <div class="menu-list-container">
-          <div v-for="(menuList, menuIndex) in menuGroupContainer.product" :key="menuIndex" class="menu-list-item">
+      <transition name="fade">
+        <div v-if="menuListGroup.isShow" class="menu-list-groups">
+          <div v-for="(menuList, menuIndex) in menuListGroup.product" :key="menuIndex" class="menu-list-group">
             <div class="menu-list-info">
               <div class="info-name">
                 <b>{{ menuList.name }}</b>
@@ -24,7 +24,7 @@
             </div>
           </div>
         </div>
-      </div>
+      </transition>
     </div>
   </div>
 </template>
@@ -36,7 +36,7 @@ import { oneTrans } from '@/utils/filters';
 export default {
   data() {
     return {
-      storeMenuArr: [],
+      storeMenuGroups: [],
     };
   },
   async created() {
@@ -51,18 +51,24 @@ export default {
         this.setSpinnerState(true);
         const storeId = this.$route.params.storeId;
         const { data } = await getStoreMenu(storeId);
-        this.storeMenuArr = data;
+        console.log(data);
+        data.forEach(x => {
+          x['isShow'] = true;
+        });
+        console.log('isShow입력', data);
+        this.storeMenuGroups = data;
         this.setSpinnerState(false);
         return data;
       } catch (error) {
         this.setSpinnerState(false);
-        console.log(error);
         alert('타임딜 항목을 불러오는데 실패했습니다.');
       }
     },
-    showAccordion(e) {
-      e.currentTarget.querySelector('svg').classList.toggle('upside-down');
-      e.currentTarget.nextElementSibling.classList.toggle('hidden');
+    showAccordion(menuListGroup) {
+      menuListGroup.isShow = !menuListGroup.isShow;
+      // 자바스크립트로 조정하는 코드
+      // e.currentTarget.querySelector('svg').classList.toggle('upside-down');
+      // e.currentTarget.nextElementSibling.classList.toggle('hidden');
     },
   },
 };
@@ -115,27 +121,31 @@ export default {
         }
       }
     }
-    @keyframes fade-in {
-      from {
-        opacity: 0;
-      }
-      to {
-        opacity: 1;
-      }
+    .fade-enter-active,
+    .fade-leave-active {
+      transition: opacity 0.5s;
     }
+    .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+      opacity: 0;
+    }
+    // @keyframes fade-in {
+    //   from {
+    //     opacity: 0;
+    //   }
+    //   to {
+    //     opacity: 1;
+    //   }
+    // }
 
-    @keyframes fade-out {
-      from {
-        opacity: 1;
-      }
-      to {
-        opacity: 0;
-      }
-    }
-    .transition-div {
-      animation: fade-in 1s;
-      animation-fill-mode: alt;
-    }
+    // @keyframes fade-out {
+    //   from {
+    //     opacity: 1;
+    //   }
+    //   to {
+    //     opacity: 0;
+    //   }
+    // }
+
     .upside-down {
       transform: rotate(180deg);
     }
@@ -145,10 +155,10 @@ export default {
 
       // visibility: hidden;
     }
-    .menu-list-container {
+    .menu-list-groups {
       @include flexbox;
       flex-wrap: wrap;
-      .menu-list-item {
+      .menu-list-group {
         border: 1px solid $gray200;
         @include shadow3;
         margin: 1%;

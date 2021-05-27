@@ -1,6 +1,6 @@
 <template>
   <div class="userstore-container">
-    <div class="nav-aside">
+    <div class="nav-items">
       <div ref="info" class="active nav-item" @click="selectComponent('info')">가게 정보</div>
       <div ref="menu" class="nav-item" @click="selectComponent('menu')">메뉴</div>
       <div ref="timedeal" class="nav-item" @click="selectComponent('timedeal')">

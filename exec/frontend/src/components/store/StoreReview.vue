@@ -28,16 +28,16 @@
         <div class="review-comment">
           <pre>{{ reviewItem.comment }}</pre>
         </div>
-        <div v-if="answerCheck(reviewItem.answerDto.comment)" class="answer-item" @click="toggleAnswerLoaded(index)">
+        <div v-if="reviewItem.answerDto.comment" class="answer-item" @click="toggleAnswerLoaded(reviewItem)">
           💌 사장님의 편지
-          <div v-if="reviewItems[index].answerLoaded">
+          <div v-if="reviewItem.answerLoaded">
             <div class="answer-comment">
               <pre>"{{ reviewItem.answerDto.comment }}"</pre>
             </div>
           </div>
         </div>
-        <div v-else class="review-list-footer" @click="toggleAnswerFormLoaded(index)">✏️ 답글</div>
-        <form v-if="reviewItems[index].answerFormLoaded" class="answer-form" @submit.prevent="submitForm(index)">
+        <div v-else class="review-list-footer" @click="toggleAnswerFormLoaded(reviewItem)">✏️ 답글</div>
+        <form v-if="reviewItem.answerFormLoaded" class="answer-form" @submit.prevent="submitForm(index)">
           <textarea
             type="text"
             class="answer-input"
@@ -45,7 +45,7 @@
             autofocus
             @input="answerContent($event, index)"
           ></textarea>
-          <button class="close-button" @click="toggleAnswerFormLoaded(index)">닫기</button>
+          <button class="close-button" @click="toggleAnswerFormLoaded(reviewItem)">닫기</button>
           <button class="submit-button" type="submit">등록</button>
         </form>
       </div>
@@ -72,26 +72,22 @@ export default {
   methods: {
     dateTrans,
     ...mapMutations(['setSpinnerState']),
-    toggleAnswerLoaded(index) {
-      this.reviewItems[index].answerLoaded = !this.reviewItems[index].answerLoaded;
+    toggleAnswerLoaded(reviewItem) {
+      reviewItem.answerLoaded = !reviewItem.answerLoaded;
     },
-    toggleAnswerFormLoaded(index) {
-      this.reviewItems[index].answerFormLoaded = !this.reviewItems[index].answerFormLoaded;
+    toggleAnswerFormLoaded(reviewItem) {
+      reviewItem.answerFormLoaded = !reviewItem.answerFormLoaded;
     },
-    answerCheck(answerCheck) {
-      if (answerCheck) return true;
-      return false;
+    answerContent($event, reviewItem) {
+      reviewItem.answerContent = $event.target.value;
     },
-    answerContent($event, index) {
-      this.reviewItems[index].answerContent = $event.target.value;
-    },
-    async submitForm(index) {
+    async submitForm(reviewItem) {
       try {
         this.setSpinnerState(true);
         const rawData = {
-          storeId: this.reviewItems[index].storeId,
-          comment: this.reviewItems[index].answerContent,
-          reviewId: this.reviewItems[index].reviewId,
+          storeId: reviewItem.storeId,
+          comment: reviewItem.answerContent,
+          reviewId: reviewItem.reviewId,
         };
         const { data } = await registerStoreAnswer(rawData);
         this.toggleAnswerFormLoaded(index);
@@ -136,23 +132,15 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@keyframes fade-in {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
 .userstore-review-container {
   width: 100%;
-  margin: 0px 10px auto;
   max-width: 1180px;
+  margin: 0px 10px auto;
   .userstore-review-title {
-    font-size: 24px;
-    text-align: center;
-    font-weight: 600;
     margin-bottom: 20px;
+    font-weight: 600;
+    text-align: center;
+    font-size: 24px;
     @include mobile() {
       font-size: 18px;
     }
@@ -175,10 +163,10 @@ export default {
     .userstore-review-item {
       width: 48%;
       @include shadow1;
+      margin-bottom: 15px;
       padding: 1%;
       border-radius: 0px 0px 40px 0px;
-      border: 2px black solid;
-      margin-bottom: 15px;
+      border: 1px black solid;
       @include lg-pc {
         width: 32%;
       }
@@ -191,12 +179,13 @@ export default {
       margin: 7px auto;
     }
     .review-header-container {
-      padding: 1%;
       @include flexbox;
       @include align-items(center);
+      @include justify-content(space-between);
       flex-grow: 1;
       flex-wrap: wrap;
       margin-bottom: 10px;
+      padding: 1%;
       // border: $gray600 2px solid;
       border-radius: 10px;
       .review-thumbnail {
