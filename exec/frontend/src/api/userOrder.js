@@ -10,7 +10,7 @@ const getUserOrders = () => privateAPI.get('member/');
 // 사용자 입장에서 리뷰 작성
 const registerReview = formData => publicAPI.post('review/', formData);
 // 사용자 입장에서 리뷰 조회
-const getUserReview = userId => publicAPI.get(`review/${userId}`);
+const getUserReviews = userId => publicAPI.get(`review/${userId}`);
 
 // 리뷰_ 스토어 입장
 
@@ -18,4 +18,4 @@ const getUserReview = userId => publicAPI.get(`review/${userId}`);
 const getStoreReview = storeId => publicAPI.get(`review/store/${storeId}`);
 // 스토어 입장에서 리뷰 답글 작성
 const registerStoreAnswer = formData => publicAPI.post('answer/', formData);
-export { getUserOrders, registerReview, getUserReview, getStoreReview, registerStoreAnswer };
+export { getUserOrders, registerReview, getUserReviews, getStoreReview, registerStoreAnswer };

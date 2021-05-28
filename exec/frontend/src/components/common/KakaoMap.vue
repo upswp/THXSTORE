@@ -94,13 +94,7 @@ export default {
 }
 #map {
   width: 100%;
-  height: 500px;
-  @include mobile() {
-    height: 300px;
-  }
-  @include xs-mobile() {
-    height: 200px;
-  }
+  height: 350px;
 }
 .info-window-text {
   overflow: hidden;

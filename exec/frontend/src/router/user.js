@@ -22,8 +22,8 @@ const routesForUser = [
       },
       {
         path: 'recent-reviews',
-        name: 'userRecentReviews',
-        component: () => import('@/components/user/UserRecentReviews.vue'),
+        name: 'userReviews',
+        component: () => import('@/components/user/UserReviews.vue'),
       },
       {
         path: 'store-application',

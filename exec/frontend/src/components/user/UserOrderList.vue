@@ -1,5 +1,5 @@
 <template>
-  <div class="order-list-container">
+  <div v-if="orderListLoaded" class="order-list-container">
     <div class="order-list-title">주문 목록</div>
     <div v-if="loaded" class="order-list-items">
       <div v-for="(orderItem, index) in orderItems" :key="index" class="order-list-item">
@@ -67,6 +67,18 @@ import { getUserOrders, registerReview } from '@/api/userOrder';
 import { dateTrans, oneTrans } from '@/utils/filters';
 import { mapMutations } from 'vuex';
 export default {
+  props: {
+    orderList: {
+      type: Array,
+      default: () => [],
+      require: true,
+    },
+    orderListLoaded: {
+      type: Boolean,
+      default: false,
+      require: true,
+    },
+  },
   data() {
     return {
       orderItems: [],
@@ -75,8 +87,8 @@ export default {
     };
   },
   async created() {
-    await this.getUserOrdersList();
-    this.changeResStatusToKor();
+    // await this.getUserOrdersList();
+    // this.changeResStatusToKor();
   },
   methods: {
     ...mapMutations(['setSpinnerState']),

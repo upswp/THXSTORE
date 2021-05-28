@@ -473,10 +473,10 @@
 }
 @mixin lg-font{
   @include lg-pc{
-    font-size: 18px;
+    font-size: 20px;
   }
   @include pc{
-    font-size: 17px;
+    font-size: 18px;
   }
   @include mobile{
     font-size : 16px;
@@ -487,15 +487,15 @@
 }
 @mixin xl-font{
   @include lg-pc{
-    font-size: 20px;
+    font-size: 24px;
   }
   @include pc{
-    font-size: 19px;
+    font-size: 22px;
   }
   @include mobile{
-    font-size : 18px;
+    font-size : 20px;
   }
   @include xs-mobile{
-    font-size: 17px;
+    font-size: 18px;
   }
 }

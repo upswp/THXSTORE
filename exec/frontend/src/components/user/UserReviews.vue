@@ -1,5 +1,5 @@
 <template>
-  <div class="recent-review-container">
+  <div v-if="reviewListLoaded" class="recent-review-container">
     <div class="recent-review-title">최근 리뷰</div>
     <div class="recent-review-items">
       <div v-for="(reviewItem, index) in reviewItems" :key="index" class="recent-review-item">
@@ -41,10 +41,22 @@
 </template>
 
 <script>
-import { getUserReview } from '@/api/userOrder';
+import { getUserReviews } from '@/api/userOrder';
 import { dateTrans } from '@/utils/filters';
 import { mapMutations } from 'vuex';
 export default {
+  props: {
+    reviewList: {
+      type: Array,
+      default: () => [],
+      require: true,
+    },
+    reviewListLoaded: {
+      type: Boolean,
+      default: false,
+      require: true,
+    },
+  },
   data() {
     return {
       reviewItems: [],
@@ -52,7 +64,7 @@ export default {
     };
   },
   created() {
-    this.getUserReviewList();
+    // this.getUserReviewList();
   },
   methods: {
     dateTrans,
@@ -68,7 +80,7 @@ export default {
       try {
         this.setSpinnerState(true);
         const userId = this.$store.state.userInfo.id;
-        const { data } = await getUserReview(userId);
+        const { data } = await getUserReviews(userId);
         data.forEach(x => {
           x['answerLoaded'] = false;
         });
