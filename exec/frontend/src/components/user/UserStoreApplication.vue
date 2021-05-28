@@ -1,82 +1,96 @@
 <template>
-  <div class="store-enrollment-container">
+  <div class="store-enrollment-container px-40">
     <waiting-modal v-if="showWaitingModal" @close="backToMain"> </waiting-modal>
-    <return-Modal v-if="showReturnModal" @close="rewriteStoreEnrollment"></return-Modal>
+    <return-modal v-if="showReturnModal" @close="rewriteStoreEnrollment"></return-modal>
 
-    <header><h2>스토어 정보입력</h2></header>
-    <div>
-      <form @submit.prevent="submitForm">
-        <ul>
-          <li>
-            <label for="storeName">스토어 이름</label>
-            <div class="input-content">
-              <input id="storeName" v-model="storeInfo.name" type="text" />
-            </div>
-          </li>
-          <li>
-            <set-road-name v-if="addressAPILoad" @newAddress="setLocationByRoadName">스토어 주소 등록</set-road-name>
-            <label for="nomalAddress">스토어 주소</label>
-            <div class="input-content">
-              <input id="nomalAddress" v-model="storeInfo.mainAddress" type="text" placeholder="주소" />
-              <button id="addressButton" type="reset" @click="addressAPILoad = true">주소 찾기</button>
-              <input id="detailAddress" v-model="storeInfo.subAddress" type="text" placeholder="상세주소" />
-            </div>
-          </li>
-          <li>
-            <label for="phoneNum">전화번호</label>
-            <div class="input-content">
-              <input
-                id="phoneNum"
-                v-model="storeInfo.phoneNum"
-                type="tel"
-                placeholder="하이픈기호(-) 없이 입력해주세요."
-                @keyup="getPhoneNumber(storeInfo.phoneNum)"
-              />
-            </div>
-          </li>
-          <li>
-            <label for="comResNum">사업자등록번호</label>
-            <div class="input-content">
-              <input
-                id="comResNum"
-                v-model="storeInfo.license"
-                type="tel"
-                pattern="[0-9]{3}-[0-9]{2}-[0-9]{5}"
-                placeholder="사업자등록번호를 입력해주세요"
-                @keyup="getComResNum(storeInfo.license)"
-              />
-            </div>
-          </li>
-          <li>
-            <label>사업자등록사본</label>
-            <div class="input-content">
-              <div class="file-flex">
-                <label for="file_1" class="file_input_label">
-                  {{ fileValue }}
-                  <!-- <input id="fileName" v-model="fileValue" type="text" class="file_input_textbox" readonly /> -->
+    <header><h1 class="page-title">스토어 정보입력</h1></header>
+    <!-- <div> -->
+    <form class="form-section" @submit.prevent="submitForm">
+      <ul>
+        <li>
+          <label class="store-baseInfo-label" for="store-name">스토어 이름</label>
+          <div class="store-baseInfo-container">
+            <input id="store-name" v-model="storeInfo.name" class="store-baseInfo-input" type="text" />
+          </div>
+        </li>
+        <li>
+          <set-road-name v-if="addressAPILoad" @newAddress="setLocationByRoadName">스토어 주소 등록</set-road-name>
+          <label class="store-baseInfo-label" for="nomal-address">스토어 주소</label>
+          <div class="store-baseInfo-container">
+            <input
+              id="nomal-address"
+              v-model="storeInfo.mainAddress"
+              class="store-baseInfo-input"
+              type="text"
+              placeholder="주소"
+            />
+            <button id="address-button" type="reset" @click="addressAPILoad = true">주소 찾기</button>
+            <input
+              id="detailAddress"
+              v-model="storeInfo.subAddress"
+              class="store-baseInfo-input"
+              type="text"
+              placeholder="상세주소"
+            />
+          </div>
+        </li>
+        <li>
+          <label class="store-baseInfo-label" for="phone-num">전화번호</label>
+          <div class="store-baseInfo-container">
+            <input
+              id="phone-num"
+              v-model="storeInfo.phoneNum"
+              class="store-baseInfo-input"
+              type="tel"
+              placeholder="하이픈기호(-) 없이 입력해주세요."
+              @keyup="getPhoneNumber(storeInfo.phoneNum)"
+            />
+          </div>
+        </li>
+        <li>
+          <label class="store-baseInfo-label" for="comResNum">사업자등록번호</label>
+          <div class="store-baseInfo-container">
+            <input
+              id="comResNum"
+              v-model="storeInfo.license"
+              class="store-baseInfo-input"
+              type="tel"
+              pattern="[0-9]{3}-[0-9]{2}-[0-9]{5}"
+              placeholder="사업자등록번호를 입력해주세요"
+              @keyup="getComResNum(storeInfo.license)"
+            />
+          </div>
+        </li>
+        <li>
+          <label class="store-baseInfo-label">사업자등록사본</label>
+          <div class="store-baseInfo-container">
+            <div class="file-flex">
+              <label for="file-1" class="file-input-label">
+                {{ fileValue }}
+                <!-- <input id="fileName" v-model="fileValue" type="text" class="file-input-textbox" readonly /> -->
+              </label>
+              <div class="file-input-div">
+                <label for="file-1">
+                  <awesome ref="cloud" icon="cloud-upload-alt" class="before-upload"></awesome>
                 </label>
-                <div class="file_input_div">
-                  <label for="file_1">
-                    <awesome id="faCloud" ref="cloud" icon="cloud-upload-alt" class="before-upload"></awesome>
-                  </label>
-                  <input id="file_1" type="file" name="file_1" class="file_input_hidden" @change="insertedFile" />
-                </div>
+                <input id="file-1" type="file" name="file-1" class="file-input-hidden" @change="insertedFile" />
               </div>
             </div>
-            <div v-if="modifyButtonLoad" class="submit-button">
-              <button type="submit">
-                <b>수정 완료</b>
-              </button>
-            </div>
-            <div v-else class="submit-button">
-              <button type="submit">
-                <b>신청 완료</b>
-              </button>
-            </div>
-          </li>
-        </ul>
-      </form>
-    </div>
+          </div>
+          <div v-if="modifyButtonLoad" class="submit-button">
+            <button type="submit">
+              <b>수정 완료</b>
+            </button>
+          </div>
+          <div v-else class="submit-button">
+            <button type="submit">
+              <b>신청 완료</b>
+            </button>
+          </div>
+        </li>
+      </ul>
+    </form>
+    <!-- </div> -->
   </div>
 </template>
 
@@ -136,11 +150,11 @@ export default {
     },
   },
   activated() {
-    this.decideRole();
+    this.checkRole();
   },
   methods: {
     ...mapMutations(['setSpinnerState', 'setUserInfo']),
-    async decideRole() {
+    async checkRole() {
       try {
         this.setSpinnerState(true);
         const { data } = await getCheckOfStore('');
@@ -151,9 +165,9 @@ export default {
           this.setUserInfo({ role: 'ROLE_MANAGER' });
           this.storeInfo = data.baseInfo;
           this.modifyButtonLoad = true;
-          this.decideModificationModal();
+          this.checkModificationModal();
         } else {
-          this.decideApplicationModal();
+          this.checkApplicationModal();
         }
       } catch (error) {
         this.checkStore = '일반고객';
@@ -161,7 +175,7 @@ export default {
       }
     },
 
-    async decideApplicationModal() {
+    async checkApplicationModal() {
       try {
         const { data } = await getCheckOfStore('');
         this.checkStore = data.baseInfo.checkStore;
@@ -175,7 +189,7 @@ export default {
         this.setSpinnerState(false);
       }
     },
-    async decideModificationModal() {
+    async checkModificationModal() {
       try {
         this.setSpinnerState(true);
         const { data } = await getCheckOfStore('');
@@ -267,43 +281,46 @@ export default {
 
 <style lang="scss" scoped>
 .store-enrollment-container {
-  padding: 2%;
+  // padding: 2%;
+  // border: 2px solid red;
   width: 100%;
-
-  form {
-    background-color: white;
-    padding: 2%;
-    margin: auto;
-    max-width: 1024px;
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-  }
 
   header {
     @include flexbox;
     margin: 0% 5% 2% 5%;
     justify-content: center;
+    h1 {
+      font-size: 24px;
+    }
   }
 
-  label {
-    @include body1;
-    width: 125px;
-    margin-left: 2%;
-    padding: 3px 5px 7px;
-    float: left;
+  .form-section {
+    background-color: white;
+    padding: 2%;
+    margin: auto;
+    max-width: 1024px;
+    box-shadow: 0px 0 15px rgba(0, 0, 0, 0.1);
+    .store-baseInfo-label {
+      @include body1;
+      width: 125px;
+      margin-left: 2%;
+      padding: 3px 5px 7px;
+      float: left;
+    }
   }
-  input {
+  .store-baseInfo-input {
     display: inline-block;
     width: 100%;
     margin-bottom: 10px;
-    background-color: none;
-    border: 2.5px solid #dfe1e6;
     padding: 10px 15px;
+    border: 2.5px solid #dfe1e6;
     border-radius: 3px;
+    background-color: none;
   }
-  #nomalAddress {
+  #nomal-address {
     width: 60%;
   }
-  .input-content {
+  .store-baseInfo-container {
     padding-left: 25%;
   }
 
@@ -312,7 +329,7 @@ export default {
     background-color: none;
     // border: 2.5px solid #dfe1e6;
   }
-  .file_input_label {
+  .file-input-label {
     display: inline-block;
     width: 90%;
     margin-bottom: 0px;
@@ -324,39 +341,39 @@ export default {
     }
   }
 
-  .file_input_textbox {
+  .file-input-textbox {
     position: inherit;
     display: inline-block;
     width: 100%;
-    margin-bottom: 0px;
     margin-right: 1%;
+    margin-bottom: 0px;
     padding: 1px 1px;
-    background-color: none;
     border: 2.5px solid white;
+    background-color: none;
   }
-  .file_input_div {
+  .file-input-div {
     position: relative;
-    width: 70px;
     height: 36px;
+    width: 70px;
     overflow: hidden;
   }
-  .file_input_img_btn {
+  .file-input-img-btn {
     padding-left: 5px;
   }
-  .file_input_hidden {
-    font-size: 20px;
-    padding: 0;
+  .file-input-hidden {
     position: absolute;
-    right: 0px;
     top: 0px;
+    right: 0px;
+    padding: 0;
     opacity: 0;
+    font-size: 20px;
     filter: alpha(opacity=0);
     -ms-filter: alpha(opacity=0);
     cursor: pointer;
   }
   .before-upload {
-    color: $blue400;
     font-size: 40px;
+    color: $blue400;
     cursor: pointer;
   }
   input::-webkit-file-upload-button {
@@ -368,18 +385,18 @@ export default {
     color: $blue600;
   }
 
-  #addressButton {
+  #address-button {
+    vertical-align: middle;
+    margin: 0.4em 0.15em 0.7em;
     padding: 0.5em 1em;
-    margin: 0.4em 0.15em 0.7em 0.15em;
     border: 1px solid #ccc;
     border-color: #dbdbdb #d2d2d2 #b2b2b2 #d2d2d3;
-    cursor: pointer;
-    color: #464646;
     border-radius: 0.2em;
-    vertical-align: middle;
-    font-size: 1em;
-    line-height: 1.25em;
     background-image: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#f2f2f2));
+    line-height: 1.25em;
+    font-size: 1em;
+    color: #464646;
+    cursor: pointer;
   }
 
   .submit-button {
@@ -387,11 +404,11 @@ export default {
     @include justify-content(flex-end);
     button {
       @include box-shadow;
-      background-color: $blue400;
-      width: 30%;
       margin-top: 20px;
-      color: $white;
+      width: 30%;
       border: none;
+      background-color: $blue400;
+      color: $white;
       &:hover:enabled {
         background-color: $blue600;
       }
@@ -399,41 +416,41 @@ export default {
   }
   @include mobile {
     .store-enrollment-container {
-      padding: 0%;
       width: 20%;
+      padding: 0%;
     }
-    #storeName {
+    #store-name {
       margin: 0px 0px 5px 0px;
     }
     header {
-      font-size: 0.8rem;
+      h1 {
+        font-size: 20px;
+      }
     }
-    input {
-      font-size: 13px;
+    .store-baseInfo-container {
       padding: 5px 8px;
+      font-size: 13px;
     }
-    label {
+    .store-baseInfo-label {
       width: 40%;
-      float: left;
-      font-size: 15px;
-      padding-bottom: 0%;
       margin-bottom: 0.5%;
       margin-left: 0px;
+      padding-bottom: 0%;
+      float: left;
+      font-size: 15px;
     }
-    .input-content {
+    .store-baseInfo-container {
       width: 98%;
       padding: 0px 1% 1% 1%;
 
       display: inline-block;
     }
-    #nomalAddress {
+    #nomal-address {
       width: 70%;
       margin-bottom: 2px;
     }
-    #addressButton {
-      padding-right: 0%;
-      padding-left: 0%;
-      padding-bottom: 1.5%;
+    #address-button {
+      padding: 0.5em 0 1.5% 0;
       margin-left: 1%;
       margin-bottom: 5px;
       font-size: 13px;
@@ -444,34 +461,36 @@ export default {
   }
   @include xs-mobile {
     header {
-      font-size: 0.7rem;
+      h1 {
+        font-size: 16px;
+      }
     }
-    label {
+    .store-baseInfo-label {
+      font-size: 12px;
       width: 40%;
       float: left;
-      font-size: 12px;
-      padding-bottom: 0%;
       margin-left: 0px;
+      padding-bottom: 0%;
     }
     .before-upload {
       font-size: 30px;
     }
-    input {
+    .store-baseInfo-input {
       padding: 5px 8px;
       font-size: 11px;
     }
-    #addressButton {
+    #address-button {
       margin: 1%;
       padding: 5px 3px 5px 3px;
       font-size: 12px;
     }
-    .input-content {
+    .store-baseInfo-container {
+      display: inline-block;
       width: 98%;
       padding: 1%;
-      display: inline-block;
     }
     // .file_input_label {}
-    #nomalAddress {
+    #nomal-address {
       margin: 0px;
     }
   }
