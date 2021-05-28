@@ -91,6 +91,7 @@
 </template>
 
 <script>
+import { mapMutations } from 'vuex';
 import { clearLocalStorageItem, USER_INFO, TOKEN } from '@/utils/webStorage';
 export default {
   data() {
@@ -121,6 +122,7 @@ export default {
     this.removeScrolEvent();
   },
   methods: {
+    ...mapMutations(['setToken, clearUserInfo']),
     addScrollEvent() {
       window.addEventListener('scroll', this.handleScroll);
     },

@@ -102,7 +102,7 @@ export default {
           password: this.userData.password1,
         });
         this.setSpinnerState(false);
-        this.$router.push({ name: 'user' });
+        this.$router.push({ name: 'userProfile' });
       } catch (error) {
         console.log(error);
         this.setSpinnerState(false);
@@ -132,7 +132,7 @@ export default {
 <style lang="scss" scoped>
 .container {
   z-index: 1;
-  width: clamp(320px, 30%, 430px);
+  width: clamp(320px, 80%, 430px);
   padding: 20px;
   box-shadow: 1px 10px 20px rgba(0, 0, 0, 0.3);
   border-radius: 5px;

@@ -1,34 +1,40 @@
 <template>
   <div class="auth-container">
     <header class="auth-header">
-      <ul class="header-wrap">
-        <li><awesome icon="store" class="store"></awesome></li>
-        <li><span class="title">Thx!Store</span></li>
-      </ul>
+      <transition-group name="fade" tag="ul" class="header-wrap">
+        <li v-show="loaded" key="icon"><awesome icon="store" class="store"></awesome></li>
+        <li v-show="loaded" key="title"><span class="title">Thx!Store</span></li>
+      </transition-group>
     </header>
     <main class="main-wrapper">
       <section class="section-wrapper">
         <transition :name="transitionName" mode="out-in"><router-view></router-view> </transition>
       </section>
     </main>
-      <aside class="privacy-policy" @click="showModal = true">
-        <span>Privacy Policy</span>
-      </aside>
-      <privacy-policy v-if="showModal" @close="showModal = false"></privacy-policy>
-      <div>
-        <svg class="waves" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
-viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto">
-<defs>
-<path id="gentle-wave" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z" />
-</defs>
-<g class="parallax">
-<use xlink:href="#gentle-wave" x="48" y="0" fill="rgba(255,255,255,0.7" />
-<use xlink:href="#gentle-wave" x="48" y="3" fill="rgba(255,255,255,0.5)" />
-<use xlink:href="#gentle-wave" x="48" y="5" fill="rgba(255,255,255,0.3)" />
-<use xlink:href="#gentle-wave" x="48" y="7" fill="rgba(255,255,255,0.6)" />
-</g>
-</svg>
-      </div>
+    <aside class="privacy-policy" @click="showModal = true">
+      <span>Privacy Policy</span>
+    </aside>
+    <privacy-policy v-if="showModal" @close="showModal = false"></privacy-policy>
+    <div>
+      <svg
+        class="waves"
+        xmlns="http://www.w3.org/2000/svg"
+        xmlns:xlink="http://www.w3.org/1999/xlink"
+        viewBox="0 24 150 28"
+        preserveAspectRatio="none"
+        shape-rendering="auto"
+      >
+        <defs>
+          <path id="gentle-wave" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z" />
+        </defs>
+        <g class="parallax">
+          <use xlink:href="#gentle-wave" x="48" y="0" fill="rgba(255,255,255,0.7" />
+          <use xlink:href="#gentle-wave" x="48" y="3" fill="rgba(255,255,255,0.5)" />
+          <use xlink:href="#gentle-wave" x="48" y="5" fill="rgba(255,255,255,0.3)" />
+          <use xlink:href="#gentle-wave" x="48" y="7" fill="rgba(255,255,255,0.6)" />
+        </g>
+      </svg>
+    </div>
   </div>
 </template>
 
@@ -42,21 +48,23 @@ export default {
     return {
       transitionDefault: 'slide-left',
       showModal: false,
-      windowWidth : '',
-      transitionName:'',
+      windowWidth: '',
+      transitionName: '',
+      loaded: false,
     };
   },
   watch: {
     windowWidth(width) {
-      if(width < 780) this.transitionName = 'fade';
+      if (width < 780) this.transitionName = 'fade';
       else this.transitionName = this.transitionDefault;
-    }
+      this.loaded = true;
+    },
   },
-  mounted () {
-    window.addEventListener('resize', this.setWindowWidth)
+  mounted() {
+    window.addEventListener('resize', this.setWindowWidth);
     this.setWindowWidth();
   },
-  beforeDestroy () {
+  beforeDestroy() {
     window.removeEventListener('resize', this.setWindowWidth);
   },
   created() {
@@ -100,7 +108,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
+@include fade-transition(5s);
 .auth-container {
   width: 100%;
   min-height: 100vh;
@@ -133,13 +141,14 @@ export default {
 }
 .auth-header {
   font-family: 'Pacifico', cursive;
-  
+
   // color: $yellow800;
   @include cross-middle;
   font-size: 2rem;
 }
 .header-wrap {
   position: relative;
+  min-height: 100px;
   padding: 32px 0;
   color: #00a1ff;
   @include flexbox;
@@ -166,7 +175,6 @@ export default {
     @include fade-transition(0.5s);
     @include fade-transition(0.5s);
   }
-  
 }
 .section-wrapper {
   @include flexbox;
@@ -178,26 +186,25 @@ export default {
   position: relative;
   @include flexbox;
   @include justify-content(center);
-  span{
+  span {
     font-weight: 600;
     color: $gray600;
     cursor: pointer;
     margin-bottom: 20px;
     @include transition(color 0.5s);
-    &:hover{
-      color:black;
+    &:hover {
+      color: black;
     }
   }
-    
 }
 .waves {
-  position:fixed;
+  position: fixed;
   bottom: 0px;
   width: 100%;
   z-index: 0;
 }
 .parallax > use {
-  animation: move-forever 50s cubic-bezier(.55,.5,.45,.5)     infinite;
+  animation: move-forever 50s cubic-bezier(0.55, 0.5, 0.45, 0.5) infinite;
 }
 .parallax > use:nth-child(1) {
   animation-delay: -2s;
@@ -217,10 +224,10 @@ export default {
 }
 @keyframes move-forever {
   0% {
-   transform: translate3d(-90px,0,0);
+    transform: translate3d(-90px, 0, 0);
   }
-  100% { 
-    transform: translate3d(85px,0,0);
+  100% {
+    transform: translate3d(85px, 0, 0);
   }
 }
 </style>

@@ -72,7 +72,7 @@ export default {
           password: this.userData.password,
         });
         this.setSpinnerState(false);
-        this.$router.push({ name: 'user' });
+        this.$router.push({ name: 'userProfile' });
       } catch (error) {
         console.log(error);
         this.setSpinnerState(false);

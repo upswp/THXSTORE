@@ -1,18 +1,16 @@
 <template>
   <div class="container">
-     <header class="header-wrapper">
+    <header class="header-wrapper">
       <div class="login-header">Login for Thx!Store</div>
     </header>
     <div class="profile-img">
       <img :src="userData.profileImage" alt="profile" />
     </div>
-      <div class="submit-items">
-        <input v-model="userData.email" v-focus class="submit-item email" type="text" placeholder="이메일" />
-        <input v-model="userData.password1" class="submit-item" type="password" placeholder="비밀번호" />
-        <button class="submit-item btn" @click="submitForm" :disabled="btnDisabled">
-          로그인
-        </button>
-      </div>
+    <div class="submit-items">
+      <input v-model="userData.email" v-focus class="submit-item email" type="text" placeholder="이메일" />
+      <input v-model="userData.password1" class="submit-item" type="password" placeholder="비밀번호" />
+      <button class="submit-item btn" :disabled="btnDisabled" @click="submitForm">로그인</button>
+    </div>
     <hr class="footer-division" />
     <footer class="footer-container">
       <span @click="moveToPage('signup')">회원가입하기</span>
@@ -56,7 +54,7 @@ export default {
         this.setSpinnerState(true);
         await this.$store.dispatch('LOGIN', userData);
         this.setSpinnerState(false);
-        this.$router.push({ name: 'user' });
+        this.$router.push({ name: 'userProfile' });
       } catch (error) {
         this.setSpinnerState(false);
         console.log(error);
@@ -71,18 +69,18 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  .profile-img {
-    @include flexbox;
-    @include justify-content(center);
-    img {
-      width: 100px;
-      height: 100px;
-      border-radius: 50%;
-      border: 5px solid $gray400;
-      object-fit: cover;
-    }
-    margin-bottom: 10px;
+.profile-img {
+  @include flexbox;
+  @include justify-content(center);
+  img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    border: 5px solid $gray400;
+    object-fit: cover;
   }
+  margin-bottom: 10px;
+}
 
 .container {
   z-index: 1;
@@ -200,5 +198,4 @@ export default {
     }
   }
 }
-
 </style>

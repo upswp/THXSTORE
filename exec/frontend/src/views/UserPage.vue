@@ -9,7 +9,11 @@
 </template>
 
 <script>
-export default {};
+export default {
+  created() {
+    console.log('create user page');
+  },
+};
 </script>
 
 <style lang="scss" scoped>
