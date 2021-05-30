@@ -24,10 +24,10 @@
             <td v-if="j === 0" :rowspan="order.reservationGroups.length">{{ order.nickname }}</td>
             <td class="name">{{ product.productName }}</td>
             <td class="amount">{{ product.count }}</td>
-            <td>{{ oneTrans(product.discounted) }}</td>
-            <td>{{ oneTrans(product.computed) }}</td>
+            <td>{{ wonTrans(product.discounted) }}</td>
+            <td>{{ wonTrans(product.computed) }}</td>
             <td v-if="j === 0" :rowspan="order.reservationGroups.length" class="computed">
-              {{ oneTrans(order.total) }}
+              {{ wonTrans(order.total) }}
             </td>
             <td v-if="j === 0" :rowspan="order.reservationGroups.length">
               <div v-if="order.reservationStatus === 'DEFAULT'" class="default-option">
@@ -61,7 +61,7 @@
 </template>
 
 <script>
-import { oneTrans, dateTrans } from '@/utils/filters';
+import { wonTrans, dateTrans } from '@/utils/filters';
 import { getTimeDeal } from '@/api/timeDeal';
 import { getTotalOrders, setReservationStatus, cancelOrder } from '@/api/order';
 import { mapMutations, mapGetters } from 'vuex';
@@ -132,7 +132,7 @@ export default {
   },
   methods: {
     ...mapMutations(['setSpinnerState']),
-    oneTrans,
+    wonTrans,
     dateTrans,
     discounting(rate, price) {
       const origin = ((100 - rate) / 100) * price;

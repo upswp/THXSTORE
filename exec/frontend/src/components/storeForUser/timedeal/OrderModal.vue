@@ -18,13 +18,13 @@
           <th>금액</th>
           <tr v-for="(menu, index) in message" :key="index">
             <td>{{ menu.name }}</td>
-            <td>{{ oneTrans(menu.discounted) }}원</td>
+            <td>{{ wonTrans(menu.discounted) }}원</td>
             <td>{{ menu.count }}</td>
-            <td>{{ oneTrans(menu.payFor) }}원</td>
+            <td>{{ wonTrans(menu.payFor) }}원</td>
           </tr>
         </table>
         <div class="total-pay-label">총 금액</div>
-        <div class="total-pay">{{ oneTrans(totalPayFor()) }}원</div>
+        <div class="total-pay">{{ wonTrans(totalPayFor()) }}원</div>
       </div>
       <div class="button-wrapper">
         <div v-if="!error" class="cancel-button" @click="cancelOrder">주문 취소</div>
@@ -35,7 +35,7 @@
 </template>
 
 <script>
-import { oneTrans } from '@/utils/filters';
+import { wonTrans } from '@/utils/filters';
 import { cancelOrderForUser } from '@/api/order';
 import { mapMutations } from 'vuex';
 export default {
@@ -57,7 +57,7 @@ export default {
     },
   },
   methods: {
-    oneTrans,
+    wonTrans,
     ...mapMutations(['setSpinnerState']),
     totalPayFor() {
       return this.message.reduce((acc, item) => acc + item.payFor, 0);

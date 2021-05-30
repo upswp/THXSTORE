@@ -62,8 +62,8 @@
                 <th>정상가</th>
                 <th>할인 적용</th>
                 <tr>
-                  <td>{{ oneTrans(menu.price) }}원</td>
-                  <td>{{ oneTrans(menu.discounted) }}원</td>
+                  <td>{{ wonTrans(menu.price) }}원</td>
+                  <td>{{ wonTrans(menu.discounted) }}원</td>
                 </tr>
               </table>
             </div>
@@ -102,7 +102,7 @@
 <script>
 import { getTimeDeal, registerTimeDeal } from '@/api/timeDeal';
 import { getTotalMenu } from '@/api/menu';
-import { timeStrConvert, oneTrans } from '@/utils/filters';
+import { timeStrConvert, wonTrans } from '@/utils/filters';
 import { mapGetters, mapMutations } from 'vuex';
 import { countDownTimer } from '@/utils/time';
 export default {
@@ -188,7 +188,7 @@ export default {
     clearInterval(this.timer);
   },
   methods: {
-    oneTrans,
+    wonTrans,
     countDownTimer,
     ...mapMutations(['setSpinnerState']),
     timeValid() {

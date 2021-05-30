@@ -16,7 +16,7 @@
               </div>
               <div class="item-discounted">
                 <div class="item-rate">-{{ item.rate }}%</div>
-                <div class="discounted-price">{{ oneTrans(item.discounted) }}원</div>
+                <div class="discounted-price">{{ wonTrans(item.discounted) }}원</div>
               </div>
               <transition name="slide">
                 <div v-if="item.selected" class="item-selected" @click="toggleCard(item, index)">
@@ -37,7 +37,7 @@
 </template>
 
 <script>
-import { oneTrans } from '@/utils/filters';
+import { wonTrans } from '@/utils/filters';
 import { getStoreTimedeal } from '@/api/userStore';
 import { mapMutations } from 'vuex';
 import SideCalculator from '@/components/storeForUser/timedeal/SideCalculator.vue';
@@ -71,7 +71,7 @@ export default {
   },
   methods: {
     ...mapMutations(['setSpinnerState']),
-    oneTrans,
+    wonTrans,
     toggleCard(card, index) {
       card.selected = !card.selected;
       card.count = 1;

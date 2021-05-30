@@ -16,6 +16,7 @@
 <script>
 import { getUserReviews, getUserOrders } from '@/api/userOrder';
 import { mapMutations, mapGetters } from 'vuex';
+import { roundDownPrice } from '@/utils/filters';
 export default {
   data() {
     return {
@@ -53,12 +54,14 @@ export default {
       getUserOrders()
         .then(({ data }) => {
           data.forEach(order => {
-            order['totalPayment'] = 0;
-            order['reviewLoaded'] = false;
-            order['starScore'] = '';
-            order['reviewContent'] = '';
+            Object.assign(order, {
+              totalPayment: 0,
+              reviewLoaded: false,
+              starScore: '',
+              reviewContent: '',
+            });
             order.reservationGroups.forEach(product => {
-              product['computed'] = Math.floor(product.price * (100 - product.rate)) / 100;
+              product['computed'] = roundDownPrice(product.price, product.rate);
               order['totalPayment'] += product.computed;
             });
           });
