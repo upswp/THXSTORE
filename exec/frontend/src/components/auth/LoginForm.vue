@@ -5,7 +5,13 @@
     </header>
     <div class="submit-items">
       <input v-model="userData.id" v-focus class="submit-item" type="text" placeholder="아이디를 입력하세요" />
-      <input v-model="userData.password" class="submit-item" type="password" placeholder="비밀번호를 입력하세요" />
+      <input
+        v-model="userData.password"
+        class="submit-item"
+        type="password"
+        placeholder="비밀번호를 입력하세요"
+        @keydown.enter="submitForm"
+      />
       <button class="submit-item btn" :disabled="btnDisabled" @click="submitForm">로그인</button>
     </div>
     <div class="line-division">OR</div>

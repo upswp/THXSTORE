@@ -8,7 +8,13 @@
     </div>
     <div class="submit-items">
       <input v-model="userData.email" v-focus class="submit-item email" type="text" placeholder="이메일" />
-      <input v-model="userData.password1" class="submit-item" type="password" placeholder="비밀번호" />
+      <input
+        v-model="userData.password1"
+        class="submit-item"
+        type="password"
+        placeholder="비밀번호"
+        @keydown.enter="submitForm"
+      />
       <button class="submit-item btn" :disabled="btnDisabled" @click="submitForm">로그인</button>
     </div>
     <hr class="footer-division" />
