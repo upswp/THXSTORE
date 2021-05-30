@@ -31,10 +31,10 @@ export default {
       },
     },
     lat(newValue) {
-      this.$emit('lat-update', newValue);
+      this.$emit('update-lat', newValue);
     },
     lon(newValue) {
-      this.$emit('lon-update', newValue);
+      this.$emit('update-long', newValue);
     },
   },
   mounted() {

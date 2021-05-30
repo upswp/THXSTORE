@@ -119,10 +119,10 @@ export default {
     this.addScrollEvent();
   },
   beforeDestroy() {
-    this.removeScrolEvent();
+    this.removeScrollEvent();
   },
   methods: {
-    ...mapMutations(['setToken, clearUserInfo']),
+    ...mapMutations(['setToken', 'clearUserInfo']),
     addScrollEvent() {
       window.addEventListener('scroll', this.handleScroll);
     },

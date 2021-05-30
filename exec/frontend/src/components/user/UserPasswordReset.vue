@@ -5,19 +5,21 @@
       <transition name="fade" mode="out-in">
         <div v-if="!confirm" key="first" class="contents-wrapper">
           <p class="contents-header">사용자 확인을 위해서 비밀번호를 입력해주세요</p>
-          <input v-model="curPassword" type="password" />
-          <button :disabled="!curPassword" @click="checkPassword">확인</button>
+          <input v-model="curPassword" type="password" class="input-password" />
+          <button :disabled="!curPassword" class="confirm-button" @click="checkPassword">확인</button>
         </div>
         <div v-else key="second" class="contents-wrapper">
           <p class="contents-header">비밀번호를 입력해주세요</p>
-          <input v-model="userData.password1" type="password" />
-          <div ref="password1" class="label" :class="validationClass.password1">
+          <input v-model="userData.password1" type="password" class="input-password" />
+          <div ref="password1" class="input-label" :class="validationClass.password1">
             {{ validationMsg.password1 }}
           </div>
           <p class="contents-header">비밀번호를 다시 한번 입력해주세요</p>
-          <input v-model="userData.password2" type="password" />
-          <div ref="password2" class="label" :class="validationClass.password2">{{ validationMsg.password2 }}</div>
-          <button :disabled="!btnDisabled" @click="changePassword">확인</button>
+          <input v-model="userData.password2" type="password" class="input-password" />
+          <div ref="password2" class="input-label" :class="validationClass.password2">
+            {{ validationMsg.password2 }}
+          </div>
+          <button :disabled="!btnDisabled" class="confirm-button" @click="changePassword">확인</button>
         </div>
       </transition>
     </div>
@@ -27,7 +29,7 @@
 <script>
 import { validatePwd } from '@/utils/validation';
 import { loginUser, resetPwd } from '@/api/auth';
-import { mapGetters } from 'vuex';
+import { mapGetters, mapMutations } from 'vuex';
 export default {
   data() {
     return {
@@ -80,27 +82,35 @@ export default {
     },
   },
   methods: {
-    checkPassword() {
+    ...mapMutations(['setSpinnerState']),
+    async checkPassword() {
       if (!this.curPassword) return;
-      // try {
-      //   await loginUser({
-      //     userId: null,
-      //     social: null,
-      //     email: this.getUserInfo.email,
-      //     password: this.curPassword,
-      //   });
-      // } catch (error) {
-      //   alert('비밀번호가 맞지 않습니다. 다시 한번 입력해주세요.');
-      // }
-      this.confirm = true;
+      try {
+        this.setSpinnerState(true);
+        await loginUser({
+          email: this.getUserInfo.email,
+          password: this.curPassword,
+        });
+        this.confirm = true;
+      } catch (error) {
+        console.log(error);
+        alert('비밀번호가 맞지 않습니다. 다시 한번 입력해주세요.');
+      } finally {
+        this.setSpinnerState(false);
+      }
     },
-    changePassword() {
-      // try {
-      //   await resetPwd(this.password1);
-      // } catch (error) {
-      //   alert('비밀번호 변경에 문제가 생겼습니다. 로그아웃 후에 새롭게 로그인을 하신 뒤 시도해주세요.');
-      // }
-      this.confirm = false;
+    async changePassword() {
+      try {
+        this.setSpinnerState(true);
+        await resetPwd(this.password1);
+        this.setSpinnerState(false);
+        if (alert('비밀번호 변경에 성공했습니다. 메인페이지로 이동합니다')) {
+          this.$router.push({ name: 'userProfile' });
+        }
+      } catch (error) {
+        this.setSpinnerState(false);
+        alert('비밀번호 변경에 문제가 생겼습니다. 로그아웃 후에 새롭게 로그인을 하신 뒤 시도해주세요.');
+      }
     },
   },
 };
@@ -108,41 +118,29 @@ export default {
 
 <style lang="scss" scoped>
 .password-reset-container {
-  width: 60%;
-
-  @include mobile() {
-    width: 100%;
-  }
-  @include xs-mobile() {
-    width: 100%;
-  }
+  width: clamp(320px, 100%, 600px);
+  padding: 10px;
 }
 .page-title {
-  font-size: 24px;
+  @include xl-font;
   text-align: center;
-  font-weight: 600;
+  font-weight: bolder;
   margin-bottom: 20px;
-  @include mobile() {
-    font-size: 18px;
-  }
-  @include xs-mobile() {
-    font-size: 16px;
-  }
 }
 .password-reset-contents {
-  min-height: 500px;
+  width: 100%;
   @include flexbox;
   @include justify-content(center);
-  @include align-items(center);
   border: 1px solid $gray100;
   border-radius: 5px;
   background: white;
   @include shadow1;
   padding: 20px;
+  padding-top: 30px;
 }
 @include fade-transition(0.3s);
 .contents-header {
-  font-size: 18px;
+  font-weight: bold;
   margin-bottom: 20px;
   @include flexbox;
   @include align-items(center);
@@ -155,33 +153,29 @@ export default {
     background-color: $blue400;
     margin-right: 5px;
   }
-  @include mobile() {
-    font-size: 16px;
-  }
-  @include xs-mobile() {
-    font-size: 14px;
-  }
 }
-input {
+.contents-wrapper {
+  width: 100%;
+}
+.input-password {
   width: 100%;
   background-color: $gray000;
   border: 2.5px solid #dfe1e6;
-  padding: 10px 15px;
-  border-radius: 3px;
+  padding: 10px;
+  border-radius: 5px;
   margin-bottom: 5px;
 }
-button {
-  color: $white;
-  border: none;
-  background-color: $blue400;
+.confirm-button {
   width: 100%;
+  border: none;
   padding: 10px 0;
-  font-size: 16px;
-  @include box-shadow;
+  color: $white;
+  background-color: $blue400;
   margin: {
     bottom: 30px;
     top: 10px;
   }
+  @include box-shadow;
   &:disabled {
     background-color: $gray400;
   }
@@ -189,9 +183,9 @@ button {
     background-color: $blue600;
   }
 }
-.label {
+.input-label {
   color: $gray600;
-  font-size: 12px;
+  @include xs-font;
   padding: 0 0 0 3px;
   margin-bottom: 20px;
 }

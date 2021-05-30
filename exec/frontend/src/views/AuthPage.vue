@@ -77,7 +77,7 @@ export default {
         transitionName = toDepth < fromDepth ? 'slide-right' : 'slide-left';
       }
 
-      this.transitionDefault = transitionName || DEFAULT_TRANSITION;
+      this.transitionDefault = transitionName || 'fade';
 
       next();
     });

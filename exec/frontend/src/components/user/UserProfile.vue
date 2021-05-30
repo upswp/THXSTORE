@@ -68,7 +68,7 @@
       <!-- 사용자 현재 위치 지도 표시 -->
       <section class="section-part">
         <div class="kakao-map">
-          <kakao-map :location="newLocation" @lat-update="updateLat" @lon-update="updateLong"></kakao-map>
+          <kakao-map :location="newLocation" @update-lat="updateLat" @update-long="updateLong"></kakao-map>
         </div>
       </section>
     </main>
