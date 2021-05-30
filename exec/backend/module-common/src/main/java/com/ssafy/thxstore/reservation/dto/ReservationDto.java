@@ -1,6 +1,7 @@
 package com.ssafy.thxstore.reservation.dto;
 
 import com.ssafy.thxstore.reservation.domain.ReservationStatus;
+import com.ssafy.thxstore.store.domain.StoreCategory;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -31,6 +32,8 @@ public class ReservationDto implements Comparable<ReservationDto>{
 
     private String storeName;
 
+    private String storeCategory;
+
     private String storeImg;
 
 //    @NotBlank
@@ -40,8 +43,9 @@ public class ReservationDto implements Comparable<ReservationDto>{
     private List<ReservationGroupDto> reservationGroups;
 
     @Builder
-    public ReservationDto(Long reservationId,String storeImg,String storeName,String email,String nickname,String orderTime,Long storeId, Long userId, List<ReservationGroupDto> reservationGroups, ReservationStatus reservationStatus) {
+    public ReservationDto(String storeCategory,Long reservationId,String storeImg,String storeName,String email,String nickname,String orderTime,Long storeId, Long userId, List<ReservationGroupDto> reservationGroups, ReservationStatus reservationStatus) {
         this.userId = userId;
+        this.storeCategory = storeCategory;
         this.email = email;
         this.reservationId = reservationId;
         this.storeImg = storeImg;

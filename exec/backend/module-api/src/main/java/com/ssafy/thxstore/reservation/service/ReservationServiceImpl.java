@@ -177,6 +177,7 @@ public class ReservationServiceImpl implements ReservationService{
                 Optional<Store> store = storeRepository.findById(reservationlist.get(i).getStoreId());
 //2개 57, 58에 각각 상품그룹 넣어줘d
                     ReservationDto reservationDto = ReservationDto.builder().
+                            storeCategory(store.get().getStoreCategory().toString()).
                             reservationId(reservationlist.get(i).getId()).
                             storeImg(store.get().getLogo()).
                             storeName(store.get().getName()).
