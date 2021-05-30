@@ -20,12 +20,12 @@
           <input v-model="menu.count" type="number" class="menu-count" @input="checkValid(menu)" />
           <span @click="increase(menu)">+</span>
         </div>
-        <div class="menu-payFor">{{ oneTrans(menu.payFor) }}원</div>
+        <div class="menu-payFor">{{ wonTrans(menu.payFor) }}원</div>
       </div>
     </div>
     <div class="total-pay-for-wrapper">
       <span class="total-count">총 {{ totalCount }}개</span>
-      <span class="total-pay-for">{{ oneTrans(totalPayFor) }}원</span>
+      <span class="total-pay-for">{{ wonTrans(totalPayFor) }}원</span>
     </div>
     <div class="order-button" @click="getDeal">예약 하기</div>
     <order-modal
@@ -39,7 +39,7 @@
 </template>
 
 <script>
-import { oneTrans } from '@/utils/filters';
+import { wonTrans } from '@/utils/filters';
 import { makeDeal } from '@/api/order';
 import { mapMutations, mapGetters } from 'vuex';
 import OrderModal from '@/components/storeForUser/timedeal/OrderModal';
@@ -94,7 +94,7 @@ export default {
       this.$router.go(0);
     },
     ...mapMutations(['setSpinnerState']),
-    oneTrans,
+    wonTrans,
     addMenu(menu) {
       if (menu.selected === true) {
         alert('이미 포함된 메뉴입니다');

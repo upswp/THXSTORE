@@ -17,6 +17,7 @@ export default {
     return {
       map: '',
       marker: '',
+      infowindow: '',
       geocoder: new kakao.maps.services.Geocoder(),
       lat: 33.450701,
       lon: 126.570667,
@@ -30,10 +31,10 @@ export default {
       },
     },
     lat(newValue) {
-      this.$emit('lat-update', newValue);
+      this.$emit('update-lat', newValue);
     },
     lon(newValue) {
-      this.$emit('lon-update', newValue);
+      this.$emit('update-long', newValue);
     },
   },
   mounted() {
@@ -69,11 +70,14 @@ export default {
             position: coords,
           });
 
+          // 만약 기존의 infowindow가 있다면 닫아줍니다.
+          if (this.infowindow) this.infowindow.close();
+
           // 인포윈도우로 장소에 대한 설명을 표시합니다
-          var infowindow = new kakao.maps.InfoWindow({
+          this.infowindow = new kakao.maps.InfoWindow({
             content: `<div  style="font-size:14px;width:100%;text-align:center;padding:6px;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">${addr}</div>`,
           });
-          infowindow.open(this.map, this.marker);
+          this.infowindow.open(this.map, this.marker);
 
           // 지도의 중심을 결과값으로 받은 위치로 이동시킵니다
           this.map.setCenter(coords);
@@ -94,13 +98,7 @@ export default {
 }
 #map {
   width: 100%;
-  height: 500px;
-  @include mobile() {
-    height: 300px;
-  }
-  @include xs-mobile() {
-    height: 200px;
-  }
+  height: 350px;
 }
 .info-window-text {
   overflow: hidden;

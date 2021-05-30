@@ -11,8 +11,8 @@ const routes = [
     redirect: '/auth/login',
   },
 
-  ...routesForMain,
   ...routesForAuth,
+  ...routesForMain,
 ];
 
 const router = new VueRouter({

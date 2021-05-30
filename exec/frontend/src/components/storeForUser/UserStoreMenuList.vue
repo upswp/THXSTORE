@@ -17,7 +17,7 @@
               </div>
               <br />
               <label class="info-degree"> {{ menuList.amount }} </label>
-              <div class="info-price">{{ oneTrans(menuList.price) }}원</div>
+              <div class="info-price">{{ wonTrans(menuList.price) }}원</div>
             </div>
             <div class="menu-thumbnail">
               <img :src="menuList.productImg" />
@@ -32,7 +32,7 @@
 <script>
 import { getStoreMenu } from '@/api/userStore';
 import { mapMutations } from 'vuex';
-import { oneTrans } from '@/utils/filters';
+import { wonTrans } from '@/utils/filters';
 export default {
   data() {
     return {
@@ -44,7 +44,7 @@ export default {
     window.scrollTo({ top: 137, left: 0, behavior: 'smooth' });
   },
   methods: {
-    oneTrans,
+    wonTrans,
     ...mapMutations(['setSpinnerState']),
     async getMenuList() {
       try {
