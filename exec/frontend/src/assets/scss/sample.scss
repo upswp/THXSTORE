@@ -149,9 +149,10 @@
 .upload-state-label{
   @include flexbox;
   @include justify-content(space-between);
+  margin-top:10px;
   span{
-    padding:10px;
     padding-left: 0; 
+    font-weight: bold;
     @include flexbox;
     @include align-items(center);
     &::before{
@@ -165,7 +166,7 @@
   }
   label{
     background-color: $gray100;
-    padding:10px;
+    padding:5px 10px;
     margin-right:5px;
     box-shadow: 0 0 3px rgba(0,0,0,0.3); 
     cursor: pointer;

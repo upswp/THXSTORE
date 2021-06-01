@@ -76,8 +76,8 @@
       <aside class="preview-image-container">
         <article v-if="licenseImg" class="preview-image">
           <div class="upload-state-label">
-            <span>사업자 등록증 미리보기</span>
-            <label for="upload-input">이미지 변경하기 </label>
+            <span>사업자 등록증</span>
+            <label for="upload-input">변경하기 </label>
           </div>
           <input id="upload-input" type="file" class="upload-input" @change="insertedFile" />
           <img :src="licenseImg" />
