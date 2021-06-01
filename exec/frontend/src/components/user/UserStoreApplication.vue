@@ -219,7 +219,6 @@ export default {
       let res = validationPhoneNumber(phoneNumber);
       this.storeInfo.phoneNum = res;
     },
-
     backToMain() {
       this.$router.push({ path: 'user' });
     },
