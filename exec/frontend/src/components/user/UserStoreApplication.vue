@@ -93,6 +93,7 @@
         </article>
       </aside>
     </main>
+
     <!-- <div class="form-item">
         <label class="store-baseInfo-label">사업자등록사본</label>
         <div class="store-baseInfo-container">
