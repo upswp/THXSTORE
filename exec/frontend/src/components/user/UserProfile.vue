@@ -194,7 +194,7 @@ export default {
   margin-bottom: 20px;
 }
 .user-account-contents {
-  width: clamp(320px, 100%, 1000px);
+  width: clamp(310px, 100%, 1000px);
   margin: 0 auto;
   border: 1px solid $gray100;
   border-radius: 5px;

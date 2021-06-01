@@ -1,40 +1,41 @@
 <template>
-  <div class="store-enrollment-container px-40">
+  <div class="store-application-container">
     <waiting-modal v-if="showWaitingModal" @close="backToMain"> </waiting-modal>
     <return-modal v-if="showReturnModal" @close="rewriteStoreEnrollment"></return-modal>
 
-    <header><h1 class="page-title">스토어 정보입력</h1></header>
-    <!-- <div> -->
-    <form class="form-section" @submit.prevent="submitForm">
-      <ul>
-        <li>
-          <label class="store-baseInfo-label" for="store-name">스토어 이름</label>
+    <header class="page-title">판매자 신청/수정</header>
+    <main class="main-container">
+      <section class="application-form">
+        <div class="form-item">
+          <label class="store-baseInfo-label" for="store-name">가게명</label>
           <div class="store-baseInfo-container">
             <input id="store-name" v-model="storeInfo.name" class="store-baseInfo-input" type="text" />
           </div>
-        </li>
-        <li>
+        </div>
+        <div class="form-item">
           <set-road-name v-if="addressAPILoad" @newAddress="setLocationByRoadName">스토어 주소 등록</set-road-name>
-          <label class="store-baseInfo-label" for="nomal-address">스토어 주소</label>
-          <div class="store-baseInfo-container">
+          <label class="store-baseInfo-label" for="nomal-address">가게 주소</label>
+          <div class="store-address-container">
             <input
               id="nomal-address"
               v-model="storeInfo.mainAddress"
               class="store-baseInfo-input"
               type="text"
+              style="margin-bottom: 0; width: 60%"
               placeholder="주소"
+              disabled
             />
-            <button id="address-button" type="reset" @click="addressAPILoad = true">주소 찾기</button>
-            <input
-              id="detailAddress"
-              v-model="storeInfo.subAddress"
-              class="store-baseInfo-input"
-              type="text"
-              placeholder="상세주소"
-            />
+            <button class="address-button" @click="addressAPILoad = true">주소 찾기</button>
           </div>
-        </li>
-        <li>
+          <input
+            id="detailAddress"
+            v-model="storeInfo.subAddress"
+            class="store-baseInfo-input"
+            type="text"
+            placeholder="상세주소"
+          />
+        </div>
+        <div class="form-item">
           <label class="store-baseInfo-label" for="phone-num">전화번호</label>
           <div class="store-baseInfo-container">
             <input
@@ -43,11 +44,11 @@
               class="store-baseInfo-input"
               type="tel"
               placeholder="하이픈기호(-) 없이 입력해주세요."
-              @keyup="getPhoneNumber(storeInfo.phoneNum)"
+              @keyup="inputPhoneNumber(storeInfo.phoneNum)"
             />
           </div>
-        </li>
-        <li>
+        </div>
+        <div class="form-item" style="margin-bottom: 30px">
           <label class="store-baseInfo-label" for="comResNum">사업자등록번호</label>
           <div class="store-baseInfo-container">
             <input
@@ -60,36 +61,55 @@
               @keyup="getComResNum(storeInfo.license)"
             />
           </div>
-        </li>
-        <li>
-          <label class="store-baseInfo-label">사업자등록사본</label>
-          <div class="store-baseInfo-container">
-            <div class="file-flex">
-              <label for="file-1" class="file-input-label">
-                {{ fileValue }}
-                <!-- <input id="fileName" v-model="fileValue" type="text" class="file-input-textbox" readonly /> -->
+        </div>
+        <div v-if="modifyButtonLoad" class="submit-button">
+          <button type="submit" @click="submitForm">
+            <b>판매자 수정하기</b>
+          </button>
+        </div>
+        <div v-else class="submit-button">
+          <button type="submit" @click="submitForm">
+            <b>판매자 등록하기</b>
+          </button>
+        </div>
+      </section>
+      <aside class="preview-image-container">
+        <article v-if="licenseImg" class="preview-image">
+          <div class="upload-state-label">
+            <span>사업자 등록증 미리보기</span>
+            <label for="upload-input">이미지 변경하기 </label>
+          </div>
+          <input id="upload-input" type="file" class="upload-input" @change="insertedFile" />
+          <img :src="licenseImg" />
+        </article>
+        <article v-else class="preview-image-none">
+          <div style="text-align: center">
+            <div class="upload-guide">사업자 등록 사본을 업로드해주세요</div>
+            <label for="upload-input" class="upload-label">
+              <awesome ref="cloud" icon="cloud-upload-alt" class="upload-button"></awesome>
+              <input id="upload-input" type="file" class="upload-input" @change="insertedFile" />
+            </label>
+          </div>
+        </article>
+      </aside>
+    </main>
+    <!-- <div class="form-item">
+        <label class="store-baseInfo-label">사업자등록사본</label>
+        <div class="store-baseInfo-container">
+          <div class="file-flex">
+            <label for="file-1" class="file-input-label">
+              {{ fileValue }}
+            </label>
+            <div class="file-input-div">
+              <label for="file-1">
+                <awesome ref="cloud" icon="cloud-upload-alt" class="before-upload"></awesome>
               </label>
-              <div class="file-input-div">
-                <label for="file-1">
-                  <awesome ref="cloud" icon="cloud-upload-alt" class="before-upload"></awesome>
-                </label>
-                <input id="file-1" type="file" name="file-1" class="file-input-hidden" @change="insertedFile" />
-              </div>
+              <input id="file-1" type="file" name="file-1" class="file-input-hidden" @change="insertedFile" />
             </div>
           </div>
-          <div v-if="modifyButtonLoad" class="submit-button">
-            <button type="submit">
-              <b>수정 완료</b>
-            </button>
-          </div>
-          <div v-else class="submit-button">
-            <button type="submit">
-              <b>신청 완료</b>
-            </button>
-          </div>
-        </li>
-      </ul>
-    </form>
+        </div>
+      </div> -->
+
     <!-- </div> -->
   </div>
 </template>
@@ -130,6 +150,7 @@ export default {
         license: '',
         licenseImg: '',
       },
+      licenseImg: '',
       // 그 외
       fileValue: '',
       addressAPILoad: false,
@@ -210,8 +231,8 @@ export default {
       let res = validationComResNum(comResNum);
       this.storeInfo.license = res;
     },
-    getPhoneNumber(phoneNumber) {
-      if (!phoneNumber) return phoneNumber;
+    inputPhoneNumber(phoneNumber) {
+      if (phoneNumber === '') return;
       let res = validationPhoneNumber(phoneNumber);
       this.storeInfo.phoneNum = res;
     },
@@ -262,7 +283,7 @@ export default {
     },
     insertedFile(event) {
       const file = event.target.files[0];
-      // this.licenseImg = URL.createObjectURL(file);
+      this.licenseImg = URL.createObjectURL(file);
       this.storeInfo.licenseImg = file;
       const fileValue = file.name;
       this.fileValue = fileValue;
@@ -280,219 +301,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.store-enrollment-container {
-  // padding: 2%;
-  // border: 2px solid red;
-  width: 100%;
-
-  header {
-    @include flexbox;
-    margin: 0% 5% 2% 5%;
-    justify-content: center;
-    h1 {
-      font-size: 24px;
-    }
-  }
-
-  .form-section {
-    background-color: white;
-    padding: 2%;
-    margin: auto;
-    max-width: 1024px;
-    box-shadow: 0px 0 15px rgba(0, 0, 0, 0.1);
-    .store-baseInfo-label {
-      @include body1;
-      width: 125px;
-      margin-left: 2%;
-      padding: 3px 5px 7px;
-      float: left;
-    }
-  }
-  .store-baseInfo-input {
-    display: inline-block;
-    width: 100%;
-    margin-bottom: 10px;
-    padding: 10px 15px;
-    border: 2.5px solid #dfe1e6;
-    border-radius: 3px;
-    background-color: none;
-  }
-  #nomal-address {
-    width: 60%;
-  }
-  .store-baseInfo-container {
-    padding-left: 25%;
-  }
-
-  .file-flex {
-    @include flexbox;
-    background-color: none;
-    // border: 2.5px solid #dfe1e6;
-  }
-  .file-input-label {
-    display: inline-block;
-    width: 90%;
-    margin-bottom: 0px;
-    margin-left: 0%;
-    padding: 5px 15px;
-    border: 2.5px solid #dfe1e6;
-    &:hover {
-      cursor: pointer;
-    }
-  }
-
-  .file-input-textbox {
-    position: inherit;
-    display: inline-block;
-    width: 100%;
-    margin-right: 1%;
-    margin-bottom: 0px;
-    padding: 1px 1px;
-    border: 2.5px solid white;
-    background-color: none;
-  }
-  .file-input-div {
-    position: relative;
-    height: 36px;
-    width: 70px;
-    overflow: hidden;
-  }
-  .file-input-img-btn {
-    padding-left: 5px;
-  }
-  .file-input-hidden {
-    position: absolute;
-    top: 0px;
-    right: 0px;
-    padding: 0;
-    opacity: 0;
-    font-size: 20px;
-    filter: alpha(opacity=0);
-    -ms-filter: alpha(opacity=0);
-    cursor: pointer;
-  }
-  .before-upload {
-    font-size: 40px;
-    color: $blue400;
-    cursor: pointer;
-  }
-  input::-webkit-file-upload-button {
-    cursor: pointer;
-  }
-
-  .after-upload {
-    transition: color 0.3s;
-    color: $blue600;
-  }
-
-  #address-button {
-    vertical-align: middle;
-    margin: 0.4em 0.15em 0.7em;
-    padding: 0.5em 1em;
-    border: 1px solid #ccc;
-    border-color: #dbdbdb #d2d2d2 #b2b2b2 #d2d2d3;
-    border-radius: 0.2em;
-    background-image: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#f2f2f2));
-    line-height: 1.25em;
-    font-size: 1em;
-    color: #464646;
-    cursor: pointer;
-  }
-
-  .submit-button {
-    @include flexbox;
-    @include justify-content(flex-end);
-    button {
-      @include box-shadow;
-      margin-top: 20px;
-      width: 30%;
-      border: none;
-      background-color: $blue400;
-      color: $white;
-      &:hover:enabled {
-        background-color: $blue600;
-      }
-    }
-  }
-  @include mobile {
-    .store-enrollment-container {
-      width: 20%;
-      padding: 0%;
-    }
-    #store-name {
-      margin: 0px 0px 5px 0px;
-    }
-    header {
-      h1 {
-        font-size: 20px;
-      }
-    }
-    .store-baseInfo-container {
-      padding: 5px 8px;
-      font-size: 13px;
-    }
-    .store-baseInfo-label {
-      width: 40%;
-      margin-bottom: 0.5%;
-      margin-left: 0px;
-      padding-bottom: 0%;
-      float: left;
-      font-size: 15px;
-    }
-    .store-baseInfo-container {
-      width: 98%;
-      padding: 0px 1% 1% 1%;
-
-      display: inline-block;
-    }
-    #nomal-address {
-      width: 70%;
-      margin-bottom: 2px;
-    }
-    #address-button {
-      padding: 0.5em 0 1.5% 0;
-      margin-left: 1%;
-      margin-bottom: 5px;
-      font-size: 13px;
-    }
-    button {
-      margin-right: 4%;
-    }
-  }
-  @include xs-mobile {
-    header {
-      h1 {
-        font-size: 16px;
-      }
-    }
-    .store-baseInfo-label {
-      font-size: 12px;
-      width: 40%;
-      float: left;
-      margin-left: 0px;
-      padding-bottom: 0%;
-    }
-    .before-upload {
-      font-size: 30px;
-    }
-    .store-baseInfo-input {
-      padding: 5px 8px;
-      font-size: 11px;
-    }
-    #address-button {
-      margin: 1%;
-      padding: 5px 3px 5px 3px;
-      font-size: 12px;
-    }
-    .store-baseInfo-container {
-      display: inline-block;
-      width: 98%;
-      padding: 1%;
-    }
-    // .file_input_label {}
-    #nomal-address {
-      margin: 0px;
-    }
-  }
-}
+@import '@/assets/scss/sample';
 </style>
