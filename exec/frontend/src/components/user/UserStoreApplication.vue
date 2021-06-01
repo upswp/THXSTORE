@@ -222,6 +222,7 @@ export default {
     backToMain() {
       this.$router.push({ path: 'user' });
     },
+
     rewriteStoreEnrollment() {
       this.confirmModalLoaded = false;
       this.checkStore = '';
