@@ -215,6 +215,7 @@ export default {
     },
     inputPhoneNumber(phoneNumber) {
       if (phoneNumber === '') return;
+
       let res = validationPhoneNumber(phoneNumber);
       this.storeInfo.phoneNum = res;
     },
