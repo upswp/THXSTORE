@@ -1,7 +1,7 @@
 <template>
   <div class="store-application-container">
-    <waiting-modal v-if="showWaitingModal" @close="backToMain"> </waiting-modal>
-    <return-modal v-if="showReturnModal" @close="rewriteStoreEnrollment"></return-modal>
+    <waiting-modal v-if="waitingModalLoaded" @close="backToMain"> </waiting-modal>
+    <return-modal v-if="confirmModalLoaded" @close="rewriteStoreEnrollment"></return-modal>
 
     <header class="page-title">판매자 신청/수정</header>
     <main class="main-container">
@@ -93,24 +93,6 @@
         </article>
       </aside>
     </main>
-    <!-- <div class="form-item">
-        <label class="store-baseInfo-label">사업자등록사본</label>
-        <div class="store-baseInfo-container">
-          <div class="file-flex">
-            <label for="file-1" class="file-input-label">
-              {{ fileValue }}
-            </label>
-            <div class="file-input-div">
-              <label for="file-1">
-                <awesome ref="cloud" icon="cloud-upload-alt" class="before-upload"></awesome>
-              </label>
-              <input id="file-1" type="file" name="file-1" class="file-input-hidden" @change="insertedFile" />
-            </div>
-          </div>
-        </div>
-      </div> -->
-
-    <!-- </div> -->
   </div>
 </template>
 
@@ -120,7 +102,7 @@ import WaitingModal from '@/components/user/modal/WaitingModal.vue';
 import ReturnModal from '@/components/user/modal/ReturnModal.vue';
 import {
   registerStore,
-  getCheckOfStore,
+  getMyStore,
   deletePreStoreEnrollment,
   modifyStoreBaseInfo,
   deletePreStoreModification,
@@ -129,7 +111,7 @@ import { validationPhoneNumber, validationComResNum } from '@/utils/validation';
 import { mapMutations } from 'vuex';
 import { handleException } from '@/utils/handler.js';
 import { findAddressAPI } from '@/api/map.js';
-
+import { getUserFromLocalStorage, saveUserToLocalStorage } from '@/utils/webStorage';
 export default {
   components: {
     SetRoadName,
@@ -139,8 +121,8 @@ export default {
   data() {
     return {
       // 모달
-      showWaitingModal: false,
-      showReturnModal: false,
+      waitingModalLoaded: false,
+      confirmModalLoaded: false,
       // 신청 정보
       storeInfo: {
         name: '',
@@ -170,60 +152,60 @@ export default {
       );
     },
   },
-  activated() {
-    this.checkRole();
+  created() {
+    this.amIManager();
   },
   methods: {
     ...mapMutations(['setSpinnerState', 'setUserInfo']),
-    async checkRole() {
+    async amIManager() {
       try {
         this.setSpinnerState(true);
-        const { data } = await getCheckOfStore('');
-        const role = data.baseInfo.role;
-        data.baseInfo.licenseImg = '';
+        const { data } = await getMyStore();
         this.setSpinnerState(false);
-        if (role == 'ROLE_MANAGER') {
-          this.setUserInfo({ role: 'ROLE_MANAGER' });
+
+        const role = data.baseInfo.role;
+        // data.baseInfo.licenseImg = '';
+        if (role === 'ROLE_MANAGER') {
+          // 현재 사용자가 사업자인 경우
           this.storeInfo = data.baseInfo;
           this.modifyButtonLoad = true;
-          this.checkModificationModal();
-        } else {
-          this.checkApplicationModal();
+
+          // 새롭게 로그인을 하지 않는 유저들을 위해 role에 대한 정보를 로그인하지 않더라도 갱신해준다.
+          const userInfo = getUserFromLocalStorage();
+          userInfo.role = 'ROLE_MANAGER';
+          saveUserToLocalStorage(userInfo);
+
+          // 마찬가지로 새롭게 로그인을 하지 않는 유저들을 위해서 vuex 레벨에서 role을 변경해준다.
+          this.setUserInfo({ role: 'ROLE_MANAGER' });
+
+          // 이전에 사업자 정보 수정을 요청하였는지 확인한다.
+          this.checkModificationStatus();
+        } else if (role === 'ROLE_USER') {
+          // 아직 사업자가 아닌 경우, 이전에 사업자 등록을 신청하였는지 확인한다.
+          this.checkApplicationStatus();
         }
       } catch (error) {
-        this.checkStore = '일반고객';
+        console.log('Still User');
         this.setSpinnerState(false);
       }
     },
 
-    async checkApplicationModal() {
-      try {
-        const { data } = await getCheckOfStore('');
-        this.checkStore = data.baseInfo.checkStore;
-        if (this.checkStore == 'APPLICATION_WAITING') {
-          this.showWaitingModal = true;
-        } else if (this.checkStore === 'APPLICATION_FAILED') {
-          this.showReturnModal = true;
-        }
-        this.setSpinnerState(false);
-      } catch (error) {
-        this.setSpinnerState(false);
+    checkApplicationStatus() {
+      // 판매자 신청을 했는지, 했다면 현재 진행 정도가 어느 정도인지 확인
+      const applicationStatus = this.storeInfo.checkStore;
+      if (applicationStatus === 'APPLICATION_WAITING') {
+        this.waitingModalLoaded = true;
+      } else if (applicationStatus === 'APPLICATION_FAILED') {
+        this.confirmModalLoaded = true;
       }
     },
-    async checkModificationModal() {
-      try {
-        this.setSpinnerState(true);
-        const { data } = await getCheckOfStore('');
-        this.checkStore = data.baseInfo.checkStore;
-        if (this.checkStore == 'EDIT_WAITING') {
-          this.showWaitingModal = true;
-        } else if (this.checkStore === 'EDIT_FAILED') {
-          this.showReturnModal = true;
-        }
-        this.setSpinnerState(false);
-      } catch (error) {
-        this.checkStore = '일반고객';
-        this.setSpinnerState(false);
+    checkModificationStatus() {
+      // 판매자 정보 수정 요청을 했는지, 했다면 현재 진행 정도가 어느 정도인지 확인
+      const modificationStatus = this.storeInfo.checkStore;
+      if (modificationStatus === 'EDIT_WAITING') {
+        this.waitingModalLoaded = true;
+      } else if (modificationStatus === 'EDIT_FAILED') {
+        this.confirmModalLoaded = true;
       }
     },
     getComResNum(comResNum) {
@@ -238,12 +220,10 @@ export default {
     },
 
     backToMain() {
-      this.showWaitingModal = false;
-      // this.$router.push({ path: 'user' });
-      this.$emit('changeTab', 'UserProfile');
+      this.$router.push({ path: 'user' });
     },
     rewriteStoreEnrollment() {
-      this.showReturnModal = false;
+      this.confirmModalLoaded = false;
       this.checkStore = '';
       const role = this.storeInfo.role;
       if (role == 'ROLE_MANAGER') {

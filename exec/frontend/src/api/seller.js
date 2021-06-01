@@ -28,7 +28,7 @@ const privateAPI = createInstanceWithToken('api/store/');
  */
 
 // 판매자 상태 조회
-const getCheckOfStore = () => privateAPI.get('');
+const getMyStore = () => privateAPI.get('');
 
 /**
  * 판매자 등록
@@ -85,7 +85,7 @@ export {
   getStoreEnrollmentList,
   approveStoreEnrollment,
   retireStoreEnrollment,
-  getCheckOfStore,
+  getMyStore,
   deletePreStoreEnrollment,
   modifyStoreBaseInfo,
   getStoreModifyList,
