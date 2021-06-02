@@ -1,7 +1,7 @@
 <template>
   <div class="store-application-container">
     <waiting-modal v-if="waitingModalLoaded" @close="backToMain"> </waiting-modal>
-    <return-modal v-if="confirmModalLoaded" @close="rewriteStoreEnrollment"></return-modal>
+    <rejected-modal v-if="rejectedModalLoaded" @close="confirmRejection"></rejected-modal>
 
     <header class="page-title">판매자 신청/수정</header>
     <main class="main-container">
@@ -63,7 +63,7 @@
           </div>
         </div>
         <div v-if="modifyButtonLoad" class="submit-button">
-          <button type="submit" @click="submitForm">
+          <button type="submit" :disabled="!validForm" @click="submitForm">
             <b>판매자 수정하기</b>
           </button>
         </div>
@@ -74,13 +74,13 @@
         </div>
       </section>
       <aside class="preview-image-container">
-        <article v-if="licenseImg" class="preview-image">
+        <article v-if="uploadedImg" class="preview-image">
           <div class="upload-state-label">
             <span>사업자 등록증</span>
             <label for="upload-input">변경하기 </label>
           </div>
           <input id="upload-input" type="file" class="upload-input" @change="insertedFile" />
-          <img :src="licenseImg" />
+          <img :src="uploadedImg" />
         </article>
         <article v-else class="preview-image-none">
           <div style="text-align: center">
@@ -98,14 +98,14 @@
 
 <script>
 import SetRoadName from '@/components/common/SetRoadName.vue';
-import WaitingModal from '@/components/user/modal/WaitingModal.vue';
-import ReturnModal from '@/components/user/modal/ReturnModal.vue';
+import WaitingModal from '@/components/user/modal/ResponseWaitingModal.vue';
+import RejectedModal from '@/components/user/modal/ResponseRejectedModal.vue';
 import {
   registerStore,
   getMyStore,
-  deletePreStoreEnrollment,
+  confirmApplictaionRejected,
   modifyStoreBaseInfo,
-  deletePreStoreModification,
+  confirmModificationRejected,
 } from '@/api/seller';
 import { validationPhoneNumber, validationComResNum } from '@/utils/validation';
 import { mapMutations } from 'vuex';
@@ -116,13 +116,13 @@ export default {
   components: {
     SetRoadName,
     WaitingModal,
-    ReturnModal,
+    RejectedModal,
   },
   data() {
     return {
       // 모달
       waitingModalLoaded: false,
-      confirmModalLoaded: false,
+      rejectedModalLoaded: false,
       // 신청 정보
       storeInfo: {
         name: '',
@@ -132,13 +132,10 @@ export default {
         license: '',
         licenseImg: '',
       },
-      licenseImg: '',
+      uploadedImg: '',
       // 그 외
-      fileValue: '',
       addressAPILoad: false,
       modifyButtonLoad: false,
-      checkStore: '',
-      role: '',
     };
   },
   computed: {
@@ -148,7 +145,7 @@ export default {
         this.storeInfo.mainAddress !== '' &&
         this.storeInfo.phoneNum !== '' &&
         this.storeInfo.license !== '' &&
-        this.storeInfo.licenseImg !== ''
+        this.storeInfo.licenseImg instanceof File
       );
     },
   },
@@ -164,7 +161,6 @@ export default {
         this.setSpinnerState(false);
 
         const role = data.baseInfo.role;
-        // data.baseInfo.licenseImg = '';
         if (role === 'ROLE_MANAGER') {
           // 현재 사용자가 사업자인 경우
           this.storeInfo = data.baseInfo;
@@ -189,14 +185,13 @@ export default {
         this.setSpinnerState(false);
       }
     },
-
     checkApplicationStatus() {
       // 판매자 신청을 했는지, 했다면 현재 진행 정도가 어느 정도인지 확인
       const applicationStatus = this.storeInfo.checkStore;
       if (applicationStatus === 'APPLICATION_WAITING') {
         this.waitingModalLoaded = true;
       } else if (applicationStatus === 'APPLICATION_FAILED') {
-        this.confirmModalLoaded = true;
+        this.rejectedModalLoaded = true;
       }
     },
     checkModificationStatus() {
@@ -205,9 +200,21 @@ export default {
       if (modificationStatus === 'EDIT_WAITING') {
         this.waitingModalLoaded = true;
       } else if (modificationStatus === 'EDIT_FAILED') {
-        this.confirmModalLoaded = true;
+        this.rejectedModalLoaded = true;
       }
     },
+    backToMain() {
+      this.$router.push({ path: 'userProfile' });
+    },
+    confirmRejection() {
+      this.rejectedModalLoaded = false;
+      if (this.storeInfo.role === 'ROLE_MANAGER') {
+        confirmModificationRejected();
+      } else {
+        confirmApplictaionRejected();
+      }
+    },
+
     getComResNum(comResNum) {
       if (!comResNum) return comResNum;
       let res = validationComResNum(comResNum);
@@ -219,20 +226,7 @@ export default {
       let res = validationPhoneNumber(phoneNumber);
       this.storeInfo.phoneNum = res;
     },
-    backToMain() {
-      this.$router.push({ path: 'user' });
-    },
 
-    rewriteStoreEnrollment() {
-      this.confirmModalLoaded = false;
-      this.checkStore = '';
-      const role = this.storeInfo.role;
-      if (role == 'ROLE_MANAGER') {
-        deletePreStoreModification();
-      } else {
-        deletePreStoreEnrollment();
-      }
-    },
     async submitForm() {
       try {
         if (!this.validForm) {
@@ -264,14 +258,8 @@ export default {
     },
     insertedFile(event) {
       const file = event.target.files[0];
-      this.licenseImg = URL.createObjectURL(file);
+      this.uploadedImg = URL.createObjectURL(file);
       this.storeInfo.licenseImg = file;
-      const fileValue = file.name;
-      this.fileValue = fileValue;
-
-      if (file) {
-        this.$refs.cloud.classList.add('after-upload');
-      }
     },
     setLocationByRoadName(data) {
       this.addressAPILoad = false;
@@ -282,5 +270,183 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '@/assets/scss/sample';
+.store-application-container {
+  width: 100%;
+  padding: 0 2%;
+}
+.page-title {
+  @include xl-font;
+  text-align: center;
+  font-weight: bolder;
+  margin-bottom: 20px;
+}
+.main-container {
+  @include flexbox;
+  flex-wrap: wrap;
+  width: clamp(310px, 100%, 1200px);
+  margin: 0 auto;
+  @include shadow1;
+}
+.application-form {
+  position: relative;
+  flex-grow: 1;
+  margin: 0 auto;
+  border: 1px solid $gray100;
+  border-radius: 5px;
+  background: white;
+  padding: 20px 10px;
+}
+
+.form-item {
+  margin-bottom: 15px;
+}
+.store-baseInfo-label {
+  font-weight: bold;
+  @include flexbox;
+  @include align-items(center);
+  margin-bottom: 5px;
+  &::before {
+    display: inline-block;
+    content: '';
+    width: 8px;
+    height: 8px;
+    margin-right: 5px;
+    background-color: $yellow800;
+  }
+}
+.store-baseInfo-input {
+  display: inline-block;
+  width: 100%;
+  margin-bottom: 10px;
+  padding: 10px 13px;
+  border: 1px solid $gray250;
+  box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.2);
+  border-radius: 3px;
+  background-color: none;
+}
+.store-address-container {
+  @include flexbox;
+  margin-bottom: 10px;
+}
+
+.address-button {
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin: 5px 0px 5px 10px;
+  padding: 0 10px;
+  box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.2);
+  @include transition(all 0.1s);
+  &:hover {
+    color: white;
+    background-color: $blue400;
+  }
+}
+.submit-button {
+  position: absolute;
+  bottom: 15px;
+  width: calc(100% - 20px);
+  button {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    @include transition(all 0.2s);
+    &:enabled {
+      background-color: $blue400;
+      color: white;
+      &:hover {
+        background-color: $blue600;
+      }
+    }
+  }
+}
+.preview-image-container {
+  flex-grow: 2;
+  width: 310px;
+  height: 700px;
+  padding: 10px;
+  border: 2px dashed $gray400;
+  margin: 10px;
+
+  @include mobile {
+    height: 600px;
+  }
+  @include xs-mobile {
+    height: 500px;
+  }
+}
+.preview-image {
+  overflow: auto;
+  height: 100%;
+  img {
+    width: 100%;
+  }
+}
+.preview-image-none {
+  width: 100%;
+  height: 100%;
+  @include cross-middle;
+  position: relative;
+  padding-bottom: 50px;
+}
+.upload-button {
+  position: relative;
+  font-size: 30px;
+  color: $blue400;
+  cursor: pointer;
+  animation: bouncing 0.5s infinite alternate;
+  @include transition(transform 0.5s);
+  &:hover {
+    animation-play-state: paused;
+    @include transform(scale(1.5));
+  }
+}
+
+@keyframes bouncing {
+  0% {
+    bottom: 0;
+  }
+  100% {
+    bottom: 15px;
+  }
+}
+.upload-input {
+  display: none;
+}
+.upload-guide {
+  margin-bottom: 30px;
+  @include lg-font;
+}
+.upload-state-label {
+  @include flexbox;
+  @include justify-content(space-between);
+  margin-top: 10px;
+  span {
+    padding-left: 0;
+    font-weight: bold;
+    @include flexbox;
+    @include align-items(center);
+    &::before {
+      display: inline-block;
+      content: '';
+      width: 8px;
+      height: 8px;
+      background-color: $yellow800;
+      margin-right: 5px;
+    }
+  }
+  label {
+    background-color: $gray100;
+    padding: 5px 10px;
+    margin-right: 5px;
+    box-shadow: 0 0 3px rgba(0, 0, 0, 0.3);
+    cursor: pointer;
+    @include transition(all 0.2s);
+    &:hover {
+      background-color: $blue400;
+      color: white;
+    }
+  }
+  margin-bottom: 20px;
+}
 </style>

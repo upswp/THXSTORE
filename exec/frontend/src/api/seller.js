@@ -55,7 +55,7 @@ const approveStoreEnrollment = pass => privateAPI.post('application/success/', p
  */
 const retireStoreEnrollment = fail => privateAPI.post('application/fail/', fail);
 // 반려되었을 때 스토어 등록 정보 삭제
-const deletePreStoreEnrollment = () => privateAPI.post('application/confirm/');
+const confirmApplictaionRejected = () => privateAPI.post('application/confirm/');
 
 // 판매자가 기본정보를 수정
 /**
@@ -79,17 +79,17 @@ const approveStoreModification = pass => privateAPI.post('modify/success/', pass
  */
 const retireStoreModification = fail => privateAPI.post('modify/fail/', fail);
 // 반려되었을 때 스토어 수정 정보 삭제
-const deletePreStoreModification = () => privateAPI.post('modify/confirm/');
+const confirmModificationRejected = () => privateAPI.post('modify/confirm/');
 export {
   registerStore,
   getStoreEnrollmentList,
   approveStoreEnrollment,
   retireStoreEnrollment,
   getMyStore,
-  deletePreStoreEnrollment,
+  confirmApplictaionRejected,
   modifyStoreBaseInfo,
   getStoreModifyList,
   approveStoreModification,
   retireStoreModification,
-  deletePreStoreModification,
+  confirmModificationRejected,
 };
