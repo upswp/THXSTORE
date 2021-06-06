@@ -1,7 +1,7 @@
 import router from '@/router';
 import { validateEmail, validatePwd } from '@/utils/validation';
 import { emailCheck } from '@/api/auth';
-import { debounce } from 'lodash';
+import { debounce } from '@/utils/lodash';
 
 export default {
   // 재사용할 컴포넌트 옵션
