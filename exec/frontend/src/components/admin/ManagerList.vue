@@ -64,16 +64,6 @@ export default {
       order: 0,
     };
   },
-  watch: {
-    showStoreEnrollmentAndModificationList(newValue, oldValue) {
-      if (newValue === oldValue) return;
-      if (newValue === 'applyStoreEnrollment') {
-        this.getStoreListforEnroll();
-      } else {
-        this.getStoreListforModify();
-      }
-    },
-  },
   created() {
     this.getStoreListforEnroll();
   },
@@ -83,9 +73,15 @@ export default {
       try {
         this.resetData();
         this.setSpinnerState(true);
-        const { data } = await getStoreApplicationList();
+        if (this.showStoreEnrollmentAndModificationList === 'application') {
+          const { data } = await getStoreApplicationList();
+          this.storeNormalInfo = data;
+        } else {
+          const { data } = await getStoreModificationlist();
+          this.storeNormalInfo = data;
+        }
         this.setSpinnerState(false);
-        this.storeNormalInfo = data;
+
         if (this.storeNormalInfo.length != 0) {
           this.isListBe = true;
         }

@@ -28,7 +28,7 @@ const routesForUser = [
       {
         path: 'store-application',
         name: 'userStoreApplication',
-        component: () => import('@/components/user/UserStoreApplication.vue'),
+        component: () => import('@/components/user/UserStoreRequest.vue'),
       },
     ],
   },
