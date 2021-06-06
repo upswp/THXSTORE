@@ -62,7 +62,7 @@
             />
           </div>
         </div>
-        <div v-if="modifyButtonLoad" class="submit-button">
+        <div v-if="modifyButtonLoaded" class="submit-button">
           <button type="submit" :disabled="!validForm" @click="submitForm">
             <b>판매자 수정하기</b>
           </button>
@@ -135,7 +135,7 @@ export default {
       uploadedImg: '',
       // 그 외
       addressAPILoaded: false,
-      modifyButtonLoad: false,
+      modifyButtonLoaded: false,
     };
   },
   computed: {
@@ -177,7 +177,7 @@ export default {
 
         if (role === 'ROLE_MANAGER') {
           // 현재 사용자가 사업자인 경우
-          this.modifyButtonLoad = true;
+          this.modifyButtonLoaded = true;
 
           // 새롭게 로그인을 하지 않는 유저들을 위해 role에 대한 정보를 로그인하지 않더라도 갱신해준다.
           const userInfo = getUserFromLocalStorage();
@@ -201,11 +201,11 @@ export default {
     checkApplicationStatus() {
       // 판매자 신청을 했는지, 했다면 현재 진행 정도가 어느 정도인지 확인
       const applicationStatus = this.storeInfo.checkStore;
-      console.log(this.storeInfo);
       if (applicationStatus === 'APPLICATION_WAITING') {
         this.waitingModalLoaded = true;
       } else if (applicationStatus === 'APPLICATION_FAILED') {
         this.rejectedModalLoaded = true;
+        this.storeInfo.storeId = undefined;
       }
     },
     checkModificationStatus() {
@@ -248,16 +248,17 @@ export default {
         this.setSpinnerState(true);
         const formData = new FormData();
         for (const key in this.storeInfo) {
+          if (key === 'checkStore' || key === 'role') continue;
           formData.append(key, this.storeInfo[key]);
         }
-        if (this.modifyButtonLoad == true) {
-          formData.delete('checkStore');
-          formData.delete('role');
+
+        if (this.modifyButtonLoaded === true) {
           await modifyStoreInfo(formData);
         } else {
           await registerStore(formData);
         }
         this.setSpinnerState(false);
+        alert('요청이 성공적으로 등록되었습니다. 프로필 페이지로 이동합니다.');
         this.backToMain();
       } catch (error) {
         alert('스토어 등록/수정에 문제가 생겼습니다. 다시 시도해주세요.');
