@@ -36,7 +36,7 @@
         <div class="pass-button" @click="approveEnrollment">승인</div>
       </div>
     </div>
-    <div v-else class="list-none">판매자 등록 신청이 없습니다.</div>
+    <div v-else class="list-none">신청 목록이 없습니다.</div>
   </div>
 </template>
 

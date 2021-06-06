@@ -216,7 +216,7 @@ export default {
       }
     },
     backToMain() {
-      this.$router.push({ path: 'userProfile' });
+      this.$router.push({ name: 'userProfile' });
     },
     confirmRejection() {
       this.rejectedModalLoaded = false;

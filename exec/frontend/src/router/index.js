@@ -15,6 +15,14 @@ const routes = [
   ...routesForMain,
 ];
 
+// NavigationDuplicated 오류만 console 창에 띄우지 않도록 함.
+const originalPush = VueRouter.prototype.push;
+VueRouter.prototype.push = function push(location) {
+  return originalPush.call(this, location).catch(err => {
+    if (err.name !== 'NavigationDuplicated') throw err;
+  });
+};
+
 const router = new VueRouter({
   mode: 'history',
   routes,

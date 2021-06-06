@@ -19,7 +19,7 @@
         </div>
       </transition>
     </div>
-    <div class="navigation-drawer-button">
+    <div v-if="getUserInfo.role === 'ROLE_MANAGER'" class="navigation-drawer-button">
       <div class="drawer-icon" @click="toggleDrawer('storeDrawer')"><awesome icon="store-alt"></awesome></div>
       <transition name="slide-down">
         <div v-if="drawers.storeDrawer" class="drawer-container">
@@ -87,11 +87,30 @@
         </div>
       </transition>
     </div>
+    <div v-if="getUserInfo.role === 'ROLE_ADMIN'" class="navigation-drawer-button">
+      <div class="drawer-icon" @click="toggleDrawer('adminDrawer')"><awesome icon="cog"></awesome></div>
+      <transition name="slide-down">
+        <div v-if="drawers.adminDrawer" class="drawer-container">
+          <table>
+            <tr>
+              <td>
+                <div class="drawer-item" @click="moveToPage('storeApplication')">가게 등록 관리</div>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <div class="drawer-item" @click="moveToPage('storeModification')">가게 정보 수정 관리</div>
+              </td>
+            </tr>
+          </table>
+        </div>
+      </transition>
+    </div>
   </header>
 </template>
 
 <script>
-import { mapMutations } from 'vuex';
+import { mapMutations, mapGetters } from 'vuex';
 import { clearLocalStorageItem, USER_INFO, TOKEN } from '@/utils/webStorage';
 export default {
   data() {
@@ -100,6 +119,7 @@ export default {
         timeDealDrawer: false,
         userDrawer: false,
         storeDrawer: false,
+        adminDrawer: false,
       },
     };
   },
@@ -108,6 +128,7 @@ export default {
     path() {
       return this.$route.fullPath;
     },
+    ...mapGetters(['getUserInfo']),
   },
   watch: {
     path() {

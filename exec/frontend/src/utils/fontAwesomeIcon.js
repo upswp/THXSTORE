@@ -32,6 +32,7 @@ import {
   faCaretDown,
   faStoreAlt,
   faEdit,
+  faCog,
 } from '@fortawesome/free-solid-svg-icons';
 library.add(
   faStore,
@@ -62,6 +63,7 @@ library.add(
   faCaretDown,
   faStoreAlt,
   faEdit,
+  faCog,
 );
 
 import {
