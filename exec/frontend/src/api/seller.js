@@ -16,7 +16,7 @@ const privateAPI = createInstanceWithToken('api/store/');
  * @property {boolean} timeDealCheck - 타임 딜 진행 여부 (isTimeDealActive로 변경 예정)
  */
 /**
- * @typedef {object} StoreInfo
+ * @typedef {object} SideInfo
  * @property {string} openTime - 영업 시작 시간 (hh:mm)
  * @property {string} closeTime - 영업 종료 시간 (hh:mm)
  * @property {string} closeDay - 휴무일 (Mon|Tue|... 요일 구분은 |로 한다) (dayOff로 변경 예정)
@@ -28,7 +28,7 @@ const privateAPI = createInstanceWithToken('api/store/');
 /**
  * @typedef {object} StoreInfo
  * @property {BaseInfo} baseInfo - 가게 고유 정보, 관리자 승인을 받아야 변경이 가능
- * @property {string} openTime - 가게 부가 정보, 관리자 승인 없이 변경 가능
+ * @property {SideInfo} sideInfo - 가게 부가 정보, 관리자 승인 없이 변경 가능
  */
 /**
  * @typedef {object} DataForRegistration
@@ -65,7 +65,7 @@ const getMyStoreInfo = () => privateAPI.get('');
  * 판매자가 가게 등록 요청
  * @typedef {function} registerStore
  * @param {DataForRegistration} dataForRegistration
- * @returns {Promise<Boolean>} - 가게 등록 신청 성공 여부
+ * @returns {Promise<Boolean>} - api 요청 성공 여부
  */
 const registerStore = dataForRegistration => privateAPI.post('', dataForRegistration);
 
@@ -73,21 +73,9 @@ const registerStore = dataForRegistration => privateAPI.post('', dataForRegistra
  * 판매자가 가게 기본 정보 수정 요청
  * @typedef {function} modifyStoreInfo
  * @param {DataForModification} dataForModification
- * @returns {Promise<Boolean>} - 가게 등록 신청 성공 여부
+ * @returns {Promise<Boolean>} - api 요청 성공 여부
  */
 const modifyStoreInfo = dataForModification => privateAPI.put('', dataForModification);
-
-// 관리자가 판매자 신청내역 확인
-const getStoreApplicationList = () => privateAPI.get('application/');
-
-// 관리자가 판매자 수정내역 확인
-const getStoreModificationlist = () => privateAPI.get('modify/');
-
-// 관리자가 판매자 등록을 승인 또는 거절
-const answerStoreAplication = (storeId, response) => privateAPI.post(`application/${response}/`, { storeId });
-
-// 관리자가 판매자 수정을 승인 또는 거절
-const answerStoreModification = (tempStoreId, response) => privateAPI.post(`modify/${response}/`, { tempStoreId });
 
 /**
  * 스토어 등록이 반려되었을 때 신청자가 이를 확인 (이후, 스토어 등록 정보 삭제)
@@ -103,14 +91,4 @@ const acceptApplicationRejected = () => privateAPI.post('application/confirm/');
  */
 const acceptModificationRejected = () => privateAPI.post('modify/confirm/');
 
-export {
-  registerStore,
-  getStoreApplicationList,
-  answerStoreAplication,
-  getMyStoreInfo,
-  acceptApplicationRejected,
-  modifyStoreInfo,
-  getStoreModificationlist,
-  answerStoreModification,
-  acceptModificationRejected,
-};
+export { registerStore, getMyStoreInfo, acceptApplicationRejected, modifyStoreInfo, acceptModificationRejected };

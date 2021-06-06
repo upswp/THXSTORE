@@ -43,10 +43,10 @@
 <script>
 import {
   getStoreApplicationList,
-  answerStoreAplication,
   getStoreModificationlist,
+  answerStoreAplication,
   answerStoreModification,
-} from '@/api/seller';
+} from '@/api/admin';
 import { mapMutations } from 'vuex';
 export default {
   props: {
@@ -73,7 +73,7 @@ export default {
       try {
         this.resetData();
         this.setSpinnerState(true);
-        if (this.showStoreEnrollmentAndModificationList === 'application') {
+        if (this.showStoreEnrollmentAndModificationList === 'applyStoreEnrollment') {
           const { data } = await getStoreApplicationList();
           this.storeNormalInfo = data;
         } else {
