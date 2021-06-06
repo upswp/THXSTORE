@@ -13,7 +13,7 @@
           </div>
         </div>
         <div class="form-item">
-          <set-road-name v-if="addressAPILoad" @newAddress="setLocationByRoadName">스토어 주소 등록</set-road-name>
+          <set-road-name v-if="addressAPILoaded" @newAddress="setLocationByRoadName">스토어 주소 등록</set-road-name>
           <label class="store-baseInfo-label" for="nomal-address">가게 주소</label>
           <div class="store-address-container">
             <input
@@ -25,7 +25,7 @@
               placeholder="주소"
               disabled
             />
-            <button class="address-button" @click="addressAPILoad = true">주소 찾기</button>
+            <button class="address-button" @click="addressAPILoaded = true">주소 찾기</button>
           </div>
           <input
             id="detailAddress"
@@ -79,7 +79,7 @@
             <span>사업자 등록증</span>
             <label for="upload-input">변경하기 </label>
           </div>
-          <input id="upload-input" type="file" class="upload-input" @change="insertedFile" />
+          <input id="upload-input" type="file" class="upload-input" @change="uploadFile" />
           <img :src="uploadedImg" />
         </article>
         <article v-else class="preview-image-none">
@@ -87,7 +87,7 @@
             <div class="upload-guide">사업자 등록 사본을 업로드해주세요</div>
             <label for="upload-input" class="upload-label">
               <awesome ref="cloud" icon="cloud-upload-alt" class="upload-button"></awesome>
-              <input id="upload-input" type="file" class="upload-input" @change="insertedFile" />
+              <input id="upload-input" type="file" class="upload-input" @change="uploadFile" />
             </label>
           </div>
         </article>
@@ -102,10 +102,10 @@ import WaitingModal from '@/components/user/modal/ResponseWaitingModal.vue';
 import RejectedModal from '@/components/user/modal/ResponseRejectedModal.vue';
 import {
   registerStore,
-  getMyStore,
-  confirmApplictaionRejected,
-  modifyStoreBaseInfo,
-  confirmModificationRejected,
+  getMyStoreInfo,
+  acceptApplicationRejected,
+  modifyStoreInfo,
+  acceptModificationRejected,
 } from '@/api/seller';
 import { validationPhoneNumber, validationComResNum } from '@/utils/validation';
 import { mapMutations } from 'vuex';
@@ -134,7 +134,7 @@ export default {
       },
       uploadedImg: '',
       // 그 외
-      addressAPILoad: false,
+      addressAPILoaded: false,
       modifyButtonLoad: false,
     };
   },
@@ -149,6 +149,18 @@ export default {
       );
     },
   },
+  watch: {
+    'storeInfo.mainAddress': async function (newValue) {
+      try {
+        const { data } = await findAddressAPI(this.storeInfo.mainAddress);
+        this.storeInfo.lon = data.documents[0].x;
+        this.storeInfo.lat = data.documents[0].y;
+      } catch (error) {
+        console.log(error);
+        alert('주소에 대응하는 위치 좌표를 찾을 수 없습니다. 다시 주소를 변경해주세요.');
+      }
+    },
+  },
   created() {
     this.amIManager();
   },
@@ -157,7 +169,7 @@ export default {
     async amIManager() {
       try {
         this.setSpinnerState(true);
-        const { data } = await getMyStore();
+        const { data } = await getMyStoreInfo();
         this.setSpinnerState(false);
 
         const role = data.baseInfo.role;
@@ -209,9 +221,9 @@ export default {
     confirmRejection() {
       this.rejectedModalLoaded = false;
       if (this.storeInfo.role === 'ROLE_MANAGER') {
-        confirmModificationRejected();
+        acceptModificationRejected();
       } else {
-        confirmApplictaionRejected();
+        acceptApplicationRejected();
       }
     },
 
@@ -229,40 +241,32 @@ export default {
 
     async submitForm() {
       try {
-        if (!this.validForm) {
-          alert('항목을 모두 채워주세요');
-        } else {
-          this.setSpinnerState(true);
-          const { data } = await findAddressAPI(this.storeInfo.mainAddress);
-          this.storeInfo.lon = data.documents[0].x;
-          this.storeInfo.lat = data.documents[0].y;
-          const formData = new FormData();
-          for (const key in this.storeInfo) {
-            formData.append(key, this.storeInfo[key]);
-          }
-          if (this.modifyButtonLoad == true) {
-            formData.delete('checkStore');
-            formData.delete('role');
-            await modifyStoreBaseInfo(formData);
-          } else {
-            await registerStore(formData);
-            this.setSpinnerState(false);
-          }
-          this.setSpinnerState(false);
-          this.$emit('changeTab', 'UserProfile');
+        this.setSpinnerState(true);
+        const formData = new FormData();
+        for (const key in this.storeInfo) {
+          formData.append(key, this.storeInfo[key]);
         }
+        if (this.modifyButtonLoad == true) {
+          formData.delete('checkStore');
+          formData.delete('role');
+          await modifyStoreInfo(formData);
+        } else {
+          await registerStore(formData);
+        }
+        this.setSpinnerState(false);
+        this.backToMain();
       } catch (error) {
-        alert('스토어 등록에 문제가 생겼습니다. 다시 시도해주세요.');
+        alert('스토어 등록/수정에 문제가 생겼습니다. 다시 시도해주세요.');
         this.setSpinnerState(false);
       }
     },
-    insertedFile(event) {
+    uploadFile(event) {
       const file = event.target.files[0];
       this.uploadedImg = URL.createObjectURL(file);
       this.storeInfo.licenseImg = file;
     },
     setLocationByRoadName(data) {
-      this.addressAPILoad = false;
+      this.addressAPILoaded = false;
       this.storeInfo.mainAddress = data;
     },
   },

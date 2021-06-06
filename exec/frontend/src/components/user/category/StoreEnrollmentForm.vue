@@ -102,7 +102,7 @@ import {
   registerStore,
   getCheckOfStore,
   deletePreStoreEnrollment,
-  modifyStoreBaseInfo,
+  modifyStoreInfo,
   deletePreStoreModification,
 } from '@/api/seller';
 import { validationPhoneNumber, validationComResNum } from '@/utils/validation';
@@ -247,7 +247,7 @@ export default {
           if (this.modifyButtonLoad == true) {
             formData.delete('checkStore');
             formData.delete('role');
-            await modifyStoreBaseInfo(formData);
+            await modifyStoreInfo(formData);
           } else {
             await registerStore(formData);
             this.setSpinnerState(false);

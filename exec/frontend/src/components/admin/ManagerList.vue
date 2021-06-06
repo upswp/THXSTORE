@@ -42,12 +42,10 @@
 
 <script>
 import {
-  getStoreEnrollmentList,
-  approveStoreEnrollment,
-  retireStoreEnrollment,
-  getStoreModifyList,
-  approveStoreModification,
-  retireStoreModification,
+  getStoreApplicationList,
+  answerStoreAplication,
+  getStoreModificationlist,
+  answerStoreModification,
 } from '@/api/seller';
 import { mapMutations } from 'vuex';
 export default {
@@ -85,7 +83,7 @@ export default {
       try {
         this.resetData();
         this.setSpinnerState(true);
-        const { data } = await getStoreEnrollmentList();
+        const { data } = await getStoreApplicationList();
         this.setSpinnerState(false);
         this.storeNormalInfo = data;
         if (this.storeNormalInfo.length != 0) {
@@ -98,7 +96,7 @@ export default {
     async getStoreListforModify() {
       try {
         this.setSpinnerState(true);
-        const { data } = await getStoreModifyList();
+        const { data } = await getStoreModificationlist();
         this.setSpinnerState(false);
         this.storeNormalInfo = data;
         if (this.storeNormalInfo.length != 0) {
@@ -116,10 +114,10 @@ export default {
         const order = this.order;
         if (this.showStoreEnrollmentAndModificationList == 'modifyStoreEnrollment') {
           const tempStoreId = this.storeNormalInfo[order].tempStoreId;
-          await approveStoreModification({ tempStoreId: tempStoreId });
+          await answerStoreModification(tempStoreId, 'success');
         } else {
           const storeId = this.storeNormalInfo[order].id;
-          await approveStoreEnrollment({ storeId: storeId });
+          await answerStoreAplication(storeId, 'success');
         }
         this.storeNormalInfo.splice(this.order, 1);
         this.storeNormalInfo = [...this.storeNormalInfo];
@@ -135,10 +133,10 @@ export default {
       const order = this.order;
       if (this.showStoreEnrollmentAndModificationList == 'modifyStoreEnrollment') {
         const tempStoreId = this.storeNormalInfo[order].tempStoreId;
-        await retireStoreModification({ tempStoreId: tempStoreId });
+        await answerStoreModification(tempStoreId, 'fail');
       } else {
         const storeId = this.storeNormalInfo[order].id;
-        await retireStoreEnrollment({ storeId: storeId });
+        await answerStoreAplication(storeId, 'fail');
       }
       this.storeNormalInfo.splice(this.order, 1);
       this.storeNormalInfo = [...this.storeNormalInfo];
