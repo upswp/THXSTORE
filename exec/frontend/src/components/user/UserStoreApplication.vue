@@ -172,10 +172,11 @@ export default {
         const { data } = await getMyStoreInfo();
         this.setSpinnerState(false);
 
+        this.storeInfo = data.baseInfo;
         const role = data.baseInfo.role;
+
         if (role === 'ROLE_MANAGER') {
           // 현재 사용자가 사업자인 경우
-          this.storeInfo = data.baseInfo;
           this.modifyButtonLoad = true;
 
           // 새롭게 로그인을 하지 않는 유저들을 위해 role에 대한 정보를 로그인하지 않더라도 갱신해준다.
@@ -200,6 +201,7 @@ export default {
     checkApplicationStatus() {
       // 판매자 신청을 했는지, 했다면 현재 진행 정도가 어느 정도인지 확인
       const applicationStatus = this.storeInfo.checkStore;
+      console.log(this.storeInfo);
       if (applicationStatus === 'APPLICATION_WAITING') {
         this.waitingModalLoaded = true;
       } else if (applicationStatus === 'APPLICATION_FAILED') {
@@ -216,7 +218,9 @@ export default {
       }
     },
     backToMain() {
-      this.$router.push({ name: 'userProfile' });
+      this.waitingModalLoaded = false;
+      this.rejectedModalLoaded = false;
+      setTimeout(() => this.$router.push({ name: 'userProfile' }), 300);
     },
     confirmRejection() {
       this.rejectedModalLoaded = false;
