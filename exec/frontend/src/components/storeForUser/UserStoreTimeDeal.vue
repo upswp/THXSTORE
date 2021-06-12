@@ -1,9 +1,9 @@
 <template>
   <div class="time-deal-container">
-    <div v-if="loaded" class="content-wrapper">
+    <div v-if="timeDealLoaded" class="content-wrapper">
       <section class="time-deal-section">
         <masonry :cols="cols" :gutter="10">
-          <div v-for="(item, index) in timeDealList" :key="index" class="item-card">
+          <div v-for="(item, index) in timeDeal" :key="index" class="item-card">
             <div class="card-wrapper">
               <img
                 :src="item.productImg"
@@ -38,12 +38,23 @@
 
 <script>
 import { wonTrans } from '@/utils/filters';
-import { getStoreTimedeal } from '@/api/userStore';
 import { mapMutations } from 'vuex';
 import SideCalculator from '@/components/storeForUser/timedeal/SideCalculator.vue';
 export default {
   components: {
     SideCalculator,
+  },
+  props: {
+    timeDeal: {
+      type: Array,
+      default: () => [],
+      require: true,
+    },
+    timeDealLoaded: {
+      type: Boolean,
+      default: false,
+      require: true,
+    },
   },
   data() {
     return {
@@ -59,13 +70,17 @@ export default {
       cols: { default: 4, 1200: 3, 1000: 2, 900: 1, 768: 3, 500: 2, 360: 1 },
     };
   },
+  watch: {
+    timeDealLoaded(newValue) {
+      this.setSpinnerState(false);
+    },
+  },
 
   beforeDestroy() {
     clearInterval(this.timer);
   },
   async created() {
-    await this.getTimedealList();
-    window.scrollTo({ top: 137, left: 0, behavior: 'smooth' });
+    // await this.getTimedealList();
   },
   methods: {
     ...mapMutations(['setSpinnerState']),

@@ -1,8 +1,8 @@
 <template>
-  <div class="userstore-review-container">
+  <div v-if="reviewListLoaded" class="userstore-review-container">
     <div class="userstore-review-title">사용자 리뷰</div>
     <div v-if="loaded" class="userstore-review-items">
-      <div v-for="(reviewItem, index) in reviewItems" :key="index" class="userstore-review-item">
+      <div v-for="(reviewItem, index) in reviewList" :key="index" class="userstore-review-item">
         <div class="review-header-container">
           <!-- <div class="review-thumbnail"><img :src="reviewItem.logo" /></div> -->
           <div class="review-thumbnail"><img :src="reviewItem.profileImg" /></div>
@@ -48,12 +48,29 @@ import { getStoreReview } from '@/api/userOrder';
 import { dateTrans } from '@/utils/filters';
 import { mapMutations } from 'vuex';
 export default {
+  props: {
+    reviewList: {
+      type: Array,
+      default: () => [],
+      require: true,
+    },
+    reviewListLoaded: {
+      type: Boolean,
+      default: false,
+      require: true,
+    },
+  },
   data() {
     return {
       reviewItems: [],
       answerLoaded: true,
       loaded: false,
     };
+  },
+  watch: {
+    reviewListLoaded(newValue) {
+      this.setSpinnerState(false);
+    },
   },
   created() {
     this.getStoreReviewList();

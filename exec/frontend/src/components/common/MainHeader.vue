@@ -41,7 +41,7 @@
             </tr>
             <tr>
               <td>
-                <div class="drawer-item" @click="moveToPage('storeLive')">라이브 챗</div>
+                <div class="drawer-item" @click="moveToPage('storeLive')">라이브 시작하기</div>
               </td>
             </tr>
             <tr>

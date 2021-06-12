@@ -1,26 +1,26 @@
 <template>
-  <div class="userstore-menu-containter">
-    <div v-for="(menuListGroup, index) in storeMenuGroups" :key="index" class="menu-group-container">
-      <div class="menu-group-title" @click="showAccordion(menuListGroup)">
-        <div class="group-title">{{ menuListGroup.name }}</div>
+  <div v-if="menuGroupListLoaded" class="userstore-menu-containter">
+    <div v-for="(menuGroup, index) in menuGroupList" :key="index" class="menu-group-container">
+      <div class="menu-group-title" @click="showAccordion(menuGroup)">
+        <div class="group-title">{{ menuGroup.name }}</div>
         <awesome icon="chevron-up" class="chevron-up"></awesome>
       </div>
       <transition name="fade">
-        <div v-if="menuListGroup.isShow" class="menu-list-groups">
-          <div v-for="(menuList, menuIndex) in menuListGroup.product" :key="menuIndex" class="menu-list-group">
+        <div v-if="menuGroup.isShow" class="menu-list-groups">
+          <div v-for="(menu, menuIndex) in menuGroup.product" :key="menuIndex" class="menu-list-group">
             <div class="menu-list-info">
               <div class="info-name">
-                <b>{{ menuList.name }}</b>
+                <b>{{ menu.name }}</b>
               </div>
               <div class="info-content">
-                {{ menuList.introduce }}
+                {{ menu.introduce }}
               </div>
               <br />
-              <label class="info-degree"> {{ menuList.amount }} </label>
-              <div class="info-price">{{ wonTrans(menuList.price) }}원</div>
+              <label class="info-degree"> {{ menu.amount }} </label>
+              <div class="info-price">{{ wonTrans(menu.price) }}원</div>
             </div>
             <div class="menu-thumbnail">
-              <img :src="menuList.productImg" />
+              <img :src="menu.productImg" />
             </div>
           </div>
         </div>
@@ -30,19 +30,32 @@
 </template>
 
 <script>
-import { getStoreMenu } from '@/api/userStore';
 import { mapMutations } from 'vuex';
 import { wonTrans } from '@/utils/filters';
 export default {
+  props: {
+    menuGroupList: {
+      type: Array,
+      default: () => [],
+      require: true,
+    },
+    menuGroupListLoaded: {
+      type: Boolean,
+      default: false,
+      require: true,
+    },
+  },
   data() {
     return {
       storeMenuGroups: [],
     };
   },
-  async created() {
-    await this.getMenuList();
-    window.scrollTo({ top: 137, left: 0, behavior: 'smooth' });
+  watch: {
+    menuGroupListLoaded(newValue) {
+      this.setSpinnerState(false);
+    },
   },
+  created() {},
   methods: {
     wonTrans,
     ...mapMutations(['setSpinnerState']),
