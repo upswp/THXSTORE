@@ -18,11 +18,11 @@
           </li>
           <li ref="timedeal" class="nav-item" @click="selectComponent('timedeal')">
             <i class="material-icons"> alarm_on </i>
-            타임딜
+            타임 딜
           </li>
           <li ref="live" class="nav-item" @click="selectComponent('live')">
             <i class="material-icons"> live_tv </i>
-            라이브커머스
+            라이브 스토어
           </li>
           <li ref="userStoreReview" class="nav-item" @click="selectComponent('review')">
             <i class="material-icons"> drive_file_rename_outline </i>
@@ -156,10 +156,10 @@ export default {
     loadStoreReview() {
       getStoreReview(this.storeId)
         .then(({ data }) => {
-          data.forEach(x => {
-            x['answerLoaded'] = false;
+          this.reviewList = data.map(review => {
+            review['answerLoaded'] = false;
+            return review;
           });
-          this.reviewList = data;
           this.reviewListLoaded = true;
         })
         .catch(error => {

@@ -33,6 +33,7 @@ import {
   faStoreAlt,
   faEdit,
   faCog,
+  faRedoAlt,
 } from '@fortawesome/free-solid-svg-icons';
 library.add(
   faStore,
@@ -65,6 +66,7 @@ library.add(
   faEdit,
   faCog,
   faHourglassHalf,
+  faRedoAlt,
 );
 
 import {

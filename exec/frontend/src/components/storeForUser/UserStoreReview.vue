@@ -1,7 +1,7 @@
 <template>
-  <div v-if="reviewListLoaded" class="userstore-review-container">
+  <div class="userstore-review-container">
     <div class="userstore-review-title">사용자 리뷰</div>
-    <div v-if="loaded" class="userstore-review-items">
+    <div v-if="reviewListLoaded" class="userstore-review-items">
       <div v-for="(reviewItem, index) in reviewList" :key="index" class="userstore-review-item">
         <div class="review-header-container">
           <!-- <div class="review-thumbnail"><img :src="reviewItem.logo" /></div> -->
@@ -31,7 +31,7 @@
         </div>
         <div v-if="answerCheck(reviewItem.answerDto.comment)" class="answer-item" @click="toggleAnswerLoaded(index)">
           💌 사장님의 편지
-          <div v-if="reviewItems[index].answerLoaded">
+          <div v-if="reviewItem.answerLoaded">
             <div class="answer-comment">
               <pre>"{{ reviewItem.answerDto.comment }}"</pre>
             </div>
@@ -44,7 +44,6 @@
 </template>
 
 <script>
-import { getStoreReview } from '@/api/userOrder';
 import { dateTrans } from '@/utils/filters';
 import { mapMutations } from 'vuex';
 export default {
@@ -72,9 +71,7 @@ export default {
       this.setSpinnerState(false);
     },
   },
-  created() {
-    this.getStoreReviewList();
-  },
+  created() {},
   methods: {
     dateTrans,
     ...mapMutations(['setSpinnerState']),

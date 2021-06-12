@@ -1,15 +1,17 @@
 <template>
   <div class="live-container">
-    <div class="reAccessLine">
-      <span class="reAccessButton" @click="resetConnect">재접속하기</span>
-    </div>
-    <div v-if="session" id="session">
+    <div id="session">
       <header class="session-header">
-        <div>라이브 방송 중</div>
+        <span class="live-label">
+          <i class="material-icons"> live_tv </i>
+          라이브 <span class="live-status" :class="{ 'live-on': onLive }">{{ onLive ? 'on' : 'off' }}</span>
+        </span>
+        <span class="re-access-button" @click="resetConnect">재접속하기</span>
       </header>
-      <section class="session-body">
+      <section v-if="session" class="session-body">
         <div id="main-video" class="main-video">
-          <user-video :stream-manager="mainStreamManager" />
+          <user-video v-if="onLive" :stream-manager="mainStreamManager" />
+          <div v-else class="video-off">방송 준비 중입니다</div>
         </div>
         <div class="chat-box">
           <div ref="chatDisplay" class="chat-display">
@@ -44,6 +46,10 @@
           </div>
         </div>
       </section>
+      <section v-else class="session-error">
+        <div>세션 연결이 어렵습니다. 잠시 후에 시도 해주세요.</div>
+        <div><awesome icon="redo-alt" @click="refresh"></awesome></div>
+      </section>
     </div>
   </div>
 </template>
@@ -76,6 +82,7 @@ export default {
       subscribers: [],
       chats: [],
       sendMsg: '',
+      onLive: false,
     };
   },
   computed: {
@@ -93,15 +100,22 @@ export default {
 
   methods: {
     ...mapMutations(['setSpinnerState']),
+    refresh() {
+      location.reload();
+    },
     chat_on_scroll() {
-      console.log(this.$refs.chatDisplay);
       this.$refs.chatDisplay.scrollTop = this.$refs.chatDisplay.scrollHeight;
     },
     resetConnect() {
+      this.setSpinnerState(true);
       this.leaveSession();
-      this.joinSession();
+      setTimeout(() => {
+        this.joinSession();
+        this.setSpinnerState(false);
+      }, 1000);
     },
     submitMsg() {
+      if (this.sendMsg.trim() === '') return;
       const sendData = {
         userId: this.getUserInfo.id,
         profileImage: this.getUserInfo.profileImage,
@@ -133,16 +147,18 @@ export default {
 
       // On every new Stream received...
       this.session.on('streamCreated', ({ stream }) => {
+        this.onLive = true;
         const subscriber = this.session.subscribe(stream);
         this.subscribers.push(subscriber);
-        this.mainStreamManager = this.subscribers[0];
+        this.mainStreamManager = this.subscribers[this.subscribers.length - 1];
       });
       this.session.on('signal:my-chat', event => {
         this.chats.push(JSON.parse(event.data));
-        this.chat_on_scroll();
+        setTimeout(this.chat_on_scroll, 10);
       });
       // On every Stream destroyed...
       this.session.on('streamDestroyed', ({ stream }) => {
+        this.onLive = false;
         const index = this.subscribers.indexOf(stream.streamManager, 0);
         if (index >= 0) {
           this.subscribers.splice(index, 1);
@@ -248,6 +264,7 @@ export default {
 }
 .live-container {
   width: 100%;
+  margin-top: 1vw;
   @include lg-pc {
     font-size: 16px;
   }
@@ -262,12 +279,11 @@ export default {
   }
   position: relative;
 }
-.reAccessLine {
+.re-access-line {
   @include flexbox;
   @include justify-content(flex-end);
-  margin-bottom: 10px;
 }
-.reAccessButton {
+.re-access-button {
   top: 0px;
   right: 130px;
   cursor: pointer;
@@ -280,62 +296,17 @@ export default {
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
   padding: 10px;
   border-radius: 5px;
-  @include lg-pc {
-    font-size: 16px;
-  }
-  @include pc {
-    font-size: 14px;
-  }
-  @include mobile {
-    font-size: 12px;
-  }
-  @include xs-mobile {
-    font-size: 10px;
-  }
+  @include sm-font;
 }
 .session-header {
   font-weight: bold;
   padding: 10px;
-  @include lg-pc {
-    font-size: 22px;
-  }
-  @include pc {
-    font-size: 21px;
-  }
-  @include mobile {
-    font-size: 20px;
-  }
-  @include xs-mobile {
-    font-size: 19px;
-  }
+  @include lg-font;
+  @include flexbox;
+  @include justify-content(space-between);
+  @include align-items(center);
 }
-.leaveLiveButton {
-  margin-left: 10px;
-  top: 0px;
-  right: 0px;
-  cursor: pointer;
-  display: inline-block;
-  color: white;
-  background-color: rgb(231, 93, 68);
-  &:hover {
-    background-color: rgb(240, 53, 20);
-  }
-  box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
-  padding: 10px;
-  border-radius: 5px;
-  @include lg-pc {
-    font-size: 16px;
-  }
-  @include pc {
-    font-size: 14px;
-  }
-  @include mobile {
-    font-size: 12px;
-  }
-  @include xs-mobile {
-    font-size: 10px;
-  }
-}
+
 .session-body {
   border-radius: 5px;
   border: 1px solid $gray400;
@@ -375,7 +346,7 @@ export default {
   overflow: auto;
 
   padding: 10px;
-  padding-bottom: 120px;
+  margin-bottom: 100px;
 }
 .my-comment,
 .other-comment {
@@ -412,12 +383,59 @@ export default {
   background-color: white;
   position: absolute;
   bottom: 0px;
-  width: calc(100%);
-  padding: 5px 15px;
+  width: 100%;
+  padding: 10px 15px 5px 15px;
 }
 .msg-guide {
   @include flexbox;
   @include align-items(center);
   margin-bottom: 10px;
+}
+.live-status {
+  margin-left: 5px;
+  color: $navy800;
+}
+.live-on {
+  color: $red800;
+}
+.video-off {
+  width: 100%;
+  min-height: 500px;
+  background-color: $gray100;
+  border: 1px solid $gray400;
+  @include mobile {
+    min-height: 300px;
+  }
+  @include xs-mobile {
+    min-height: 300px;
+  }
+  @include cross-middle;
+}
+.live-label {
+  @include flexbox;
+  @include align-items(center);
+  @include xl-font;
+  i {
+    margin-right: 5px;
+  }
+}
+.session-error {
+  margin-top: 100px;
+  @include xl-font;
+  div {
+    color: $gray500;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  svg {
+    font-size: 30px;
+
+    cursor: pointer;
+    @include transition(0.5s);
+    &:hover {
+      color: $gray800;
+      transform: rotate(360deg);
+    }
+  }
 }
 </style>

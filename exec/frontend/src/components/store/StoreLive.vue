@@ -90,7 +90,6 @@ export default {
   },
   methods: {
     chat_on_scroll() {
-      console.log(this.$refs.chatDisplay);
       this.$refs.chatDisplay.scrollTop = this.$refs.chatDisplay.scrollHeight;
     },
     resetConnect() {
@@ -98,6 +97,7 @@ export default {
       this.joinSession();
     },
     submitMsg() {
+      if (this.sendMsg.trim() === '') return;
       const sendData = {
         userId: this.getUserInfo.id,
         profileImage: this.getUserInfo.profileImage,
@@ -128,7 +128,7 @@ export default {
       // --- Specify the actions when events take place in the session ---
       this.session.on('signal:my-chat', event => {
         this.chats.push(JSON.parse(event.data));
-        this.chat_on_scroll();
+        setTimeout(this.chat_on_scroll, 10);
       });
       // On every asynchronous exception...
       this.session.on('exception', ({ exception }) => {
@@ -150,7 +150,7 @@ export default {
               videoSource: undefined, // The source of video. If undefined default webcam
               publishAudio: true, // Whether you want to start publishing with your audio unmuted or not
               publishVideo: true, // Whether you want to start publishing with your video enabled or not
-              resolution: '640x480', // The resolution of your video
+              resolution: '1280x720', // The resolution of your video
               frameRate: 30, // The frame rate of your video
               insertMode: 'APPEND', // How the video is inserted in the target element 'video-container'
               mirror: false, // Whether to mirror your local video or not
@@ -373,7 +373,7 @@ export default {
   overflow: auto;
 
   padding: 10px;
-  padding-bottom: 120px;
+  margin-bottom: 100px;
 }
 .my-comment,
 .other-comment {
@@ -409,8 +409,8 @@ export default {
   background-color: white;
   position: absolute;
   bottom: 0px;
-  width: calc(100%);
-  padding: 5px 15px;
+  width: 100%;
+  padding: 10px 15px 5px 15px;
 }
 .msg-guide {
   @include flexbox;

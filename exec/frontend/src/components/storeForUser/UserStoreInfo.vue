@@ -93,6 +93,7 @@ export default {
     };
   },
   created() {
+    this.setSpinnerState(false);
     this.changeCloseDayToKor();
     this.locationArr.storeAddr = this.baseInfo.mainAddress;
     if (!this.getUserInfo.address) this.locationArr.userAddr = this.getUserInfo.address;

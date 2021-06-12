@@ -11,6 +11,12 @@
   padding: 5px 10px 5px;
   max-width: 1200px;
   min-height: 90vh;
+  @include mobile {
+    padding-bottom:70px;
+  }
+  @include xs-mobile {
+    padding-bottom: 70px;
+  }
 }
 .store-title {
   font-size: 30px;
@@ -24,6 +30,9 @@
   @include xs-mobile {
     font-size: 20px;
   }
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .header-container {
   position: relative;
@@ -46,6 +55,12 @@
   color:white;
   font-weight: bold;
   @include xl-font;
+  @include mobile{
+    font-size:24px;
+  }
+  @include xs-mobile{
+    font-size:24px;
+  }
   color:white;
   cursor:pointer;
   padding: 10px 10px 10px;
@@ -64,14 +79,14 @@
 }
 .store-thumbnail {
   img {
-    height: 10vw;
+    height: clamp(100px,13vw,160px);
     object-fit: cover;
     object-position: center 50%;
     width: 100%;
   }
 }
 .logo-and-title {
-  height: 10vw;
+  height: clamp(100px,13vw,160px);
   position: absolute;
   top: 0px;
   color: white;
@@ -81,6 +96,12 @@
   @include flexbox;
   @include align-items(center);
   background-color: rgba(0, 0, 0, 0.4);
+  @include mobile{
+    padding:10px;
+  }
+  @include xs-mobile{
+    padding:10px;
+  }
 }
 .store-logo {
   $length: clamp(20px, 8vw, 130px);
@@ -135,8 +156,8 @@
 .toggle-label{
   z-index:5;
   position: fixed;
-  top: 70px;
-  right: 20px;
+  top: 65px;
+  right: 15px;
   width: 50px;
   height: 50px;
   @include cross-middle;
@@ -151,22 +172,21 @@
   @include lg-font;
   @include transition(all 0.6s);
   @include mobile{
-    top:60px;
-    right:15px;
-    width: 40px;
-    height: 40px;
+    top: auto;
+    bottom:15px;
   }
   @include xs-mobile{
-    top:65px;
-    right:15px;
-    width: 30px;
-    height: 30px;
+    top: auto;
+    bottom:10px;
+    right:10px;
+    width: 40px;
+    height: 40px;
   }
 }
 .menu-background{
   position: fixed;
-  top: 70px;
-  right: 20px;
+  top: 65px;
+  right: 15px;
   z-index:4;
   width: 50px;
   height: 50px;
@@ -175,15 +195,14 @@
   background: $blue400;
   @include transition(all 0.6s);
   @include mobile{
-    top:60px;
-    right:15px;
-    width: 40px;
-    height: 40px;
+    top: auto;
+    bottom:15px;
   }
   @include xs-mobile{
-    top:65px;
-    right:15px;
-    width: 30px;
-    height: 30px;
+    top: auto;
+    bottom:10px;
+    right:10px;
+    width: 40px;
+    height: 40px;
   }
 }
