@@ -314,16 +314,17 @@ export default {
 
   @include fit-pc {
     @include flexbox;
+    padding-right: 10px;
   }
 }
 .main-video {
-  flex-basis: 50%;
+  flex-basis: 60%;
+  min-height: 200px;
   @include flexbox;
   @include justify-content(center);
   @include align-items(center);
-  margin-bottom: 10px;
   @include fit-pc {
-    margin-bottom: 0px;
+    padding: 0 10px 0 0;
   }
 }
 .chat-box {
@@ -335,13 +336,13 @@ export default {
   @include xs-mobile {
     width: 100%;
   }
-  border-radius: 5px;
+  // border-radius: 5px;
   border: 1px solid $gray400;
   background-color: white;
 }
 .chat-display {
   width: 100%;
-  height: calc(500px - 100px);
+  height: 300px;
   background-color: $gray100;
   overflow: auto;
 
@@ -400,9 +401,11 @@ export default {
 }
 .video-off {
   width: 100%;
-  min-height: 500px;
+  margin-bottom: 10px;
+  min-height: 400px;
   background-color: $gray100;
   border: 1px solid $gray400;
+  border-radius: 5px;
   @include mobile {
     min-height: 300px;
   }
