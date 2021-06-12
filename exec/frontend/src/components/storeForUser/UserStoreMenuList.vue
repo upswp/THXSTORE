@@ -51,11 +51,9 @@ export default {
         this.setSpinnerState(true);
         const storeId = this.$route.params.storeId;
         const { data } = await getStoreMenu(storeId);
-        console.log(data);
         data.forEach(x => {
           x['isShow'] = true;
         });
-        console.log('isShow입력', data);
         this.storeMenuGroups = data;
         this.setSpinnerState(false);
         return data;

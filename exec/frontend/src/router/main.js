@@ -21,11 +21,6 @@ const routesForMain = [
     beforeEnter: authGuard,
     children: [
       {
-        path: '/user',
-        name: 'user',
-        component: () => import('@/views/UserPage.vue'),
-      },
-      {
         path: '/feed',
         name: 'feed',
         component: () => import('@/views/TimeDealFeedPage.vue'),

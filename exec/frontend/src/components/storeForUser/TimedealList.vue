@@ -66,8 +66,6 @@ export default {
   async created() {
     await this.getTimedealList();
     window.scrollTo({ top: 137, left: 0, behavior: 'smooth' });
-    this.counterOn();
-    this.makeReservationGroup();
   },
   methods: {
     ...mapMutations(['setSpinnerState']),
@@ -148,6 +146,8 @@ export default {
 }
 .card-wrapper {
   cursor: pointer;
+  position: relative;
+  overflow: hidden;
   @include lg-pc {
     font-size: 16px;
   }
@@ -239,7 +239,7 @@ export default {
 }
 .slide-enter, .slide-leave-to
 /* .slide-fade-leave-active below version 2.1.8 */ {
-  transform: translateY(10px);
+  transform: translateY(-10px);
   opacity: 0;
 }
 .item-info {

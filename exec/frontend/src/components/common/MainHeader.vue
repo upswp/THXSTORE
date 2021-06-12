@@ -63,13 +63,10 @@
         <awesome icon="user-circle"></awesome>
       </div>
       <transition name="slide-down">
-        <div v-if="drawers.userDrawer" v-click-outside="resetDrawer" class="drawer-container">
+        <div v-if="drawers.userDrawer" class="drawer-container">
           <table>
             <tr>
               <td><div class="drawer-item" @click="moveToPage('userProfile')">프로필</div></td>
-            </tr>
-            <tr>
-              <td><div class="drawer-item" @click="moveToPage('userPasswordReset')">비밀번호변경</div></td>
             </tr>
             <tr>
               <td><div class="drawer-item" @click="moveToPage('userOrderList')">예약목록</div></td>
@@ -79,6 +76,9 @@
             </tr>
             <tr>
               <td><div class="drawer-item" @click="moveToPage('userStoreApplication')">판매자 신청/수정</div></td>
+            </tr>
+            <tr>
+              <td><div class="drawer-item" @click="moveToPage('userPasswordReset')">비밀번호변경</div></td>
             </tr>
             <tr>
               <td><div class="drawer-item" @click="logout">로그아웃</div></td>
@@ -194,7 +194,7 @@ export default {
   position: fixed;
   top: 0;
   left: 0;
-  z-index: 3;
+  z-index: 6;
   width: 100%;
   background-color: rgba(215, 219, 221, 0.698);
   @include flexbox;
@@ -250,6 +250,7 @@ summary:first-of-type {
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
   border-radius: 5px;
   background-color: white;
+  overflow: hidden;
 }
 .drawer-icon {
   cursor: pointer;

@@ -64,6 +64,7 @@ library.add(
   faStoreAlt,
   faEdit,
   faCog,
+  faHourglassHalf,
 );
 
 import {
