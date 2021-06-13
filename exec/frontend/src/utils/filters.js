@@ -65,6 +65,17 @@ const orderStatusStrConvert = {
   STANDBY_BY: '수령 대기',
   FINISH: '수령 완료',
 };
+const holidayStrConvert = code => {
+  return code
+    .replace('MON', '월요일')
+    .replace('TUE', '화요일')
+    .replace('WED', '수요일')
+    .replace('THU', '목요일')
+    .replace('FRI', '금요일')
+    .replace('SAT', '토요일')
+    .replace('SUN', '일요일')
+    .replace('|', ', ');
+};
 export {
   formatNumber,
   timeStrConvert,
@@ -75,4 +86,5 @@ export {
   categoryClassConvert,
   roundDownPrice,
   orderStatusStrConvert,
+  holidayStrConvert,
 };
