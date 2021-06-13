@@ -11,7 +11,7 @@ const throttle = (func, delay) => {
     if (!throttled) {
       throttled = true;
       setTimeout(() => {
-        func.bind(null, ...args);
+        func(...args);
         throttled = false;
       }, delay);
     }
