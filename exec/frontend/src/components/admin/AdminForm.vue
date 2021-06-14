@@ -1,13 +1,7 @@
 <template>
   <div class="admin-container">
     <div class="admin-header">
-      <h1>관리자 페이지</h1>
-      <div class="select-container">
-        <select id="" v-model="showStoreEnrollmentList">
-          <option value="applyStoreEnrollment">신청 목록</option>
-          <option value="modifyStoreEnrollment">수정 목록</option>
-        </select>
-      </div>
+      <h1><slot></slot></h1>
     </div>
     <manager-list :show-store-enrollment-and-modification-list="showStoreEnrollmentList"></manager-list>
     <br />
@@ -21,9 +15,16 @@ export default {
   components: {
     ManagerList,
   },
+  props: {
+    mode: {
+      type: String,
+      default: '',
+      require: true,
+    },
+  },
   data() {
     return {
-      showStoreEnrollmentList: 'applyStoreEnrollment',
+      showStoreEnrollmentList: this.mode === 'application' ? 'applyStoreEnrollment' : 'modifyStoreEnrollment',
     };
   },
 };

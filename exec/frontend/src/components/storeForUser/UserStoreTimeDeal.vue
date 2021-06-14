@@ -1,9 +1,9 @@
 <template>
   <div class="time-deal-container">
-    <div v-if="loaded" class="content-wrapper">
+    <div v-if="timeDealLoaded" class="content-wrapper">
       <section class="time-deal-section">
         <masonry :cols="cols" :gutter="10">
-          <div v-for="(item, index) in timeDealList" :key="index" class="item-card">
+          <div v-for="(item, index) in timeDeal" :key="index" class="item-card">
             <div class="card-wrapper">
               <img
                 :src="item.productImg"
@@ -16,7 +16,7 @@
               </div>
               <div class="item-discounted">
                 <div class="item-rate">-{{ item.rate }}%</div>
-                <div class="discounted-price">{{ oneTrans(item.discounted) }}원</div>
+                <div class="discounted-price">{{ wonTrans(item.discounted) }}원</div>
               </div>
               <transition name="slide">
                 <div v-if="item.selected" class="item-selected" @click="toggleCard(item, index)">
@@ -37,13 +37,24 @@
 </template>
 
 <script>
-import { oneTrans } from '@/utils/filters';
-import { getStoreTimedeal } from '@/api/userStore';
+import { wonTrans } from '@/utils/filters';
 import { mapMutations } from 'vuex';
 import SideCalculator from '@/components/storeForUser/timedeal/SideCalculator.vue';
 export default {
   components: {
     SideCalculator,
+  },
+  props: {
+    timeDeal: {
+      type: Array,
+      default: () => [],
+      require: true,
+    },
+    timeDealLoaded: {
+      type: Boolean,
+      default: false,
+      require: true,
+    },
   },
   data() {
     return {
@@ -59,19 +70,21 @@ export default {
       cols: { default: 4, 1200: 3, 1000: 2, 900: 1, 768: 3, 500: 2, 360: 1 },
     };
   },
+  watch: {
+    timeDealLoaded(newValue) {
+      this.setSpinnerState(false);
+    },
+  },
 
   beforeDestroy() {
     clearInterval(this.timer);
   },
   async created() {
-    await this.getTimedealList();
-    window.scrollTo({ top: 137, left: 0, behavior: 'smooth' });
-    this.counterOn();
-    this.makeReservationGroup();
+    // await this.getTimedealList();
   },
   methods: {
     ...mapMutations(['setSpinnerState']),
-    oneTrans,
+    wonTrans,
     toggleCard(card, index) {
       card.selected = !card.selected;
       card.count = 1;
@@ -148,6 +161,8 @@ export default {
 }
 .card-wrapper {
   cursor: pointer;
+  position: relative;
+  overflow: hidden;
   @include lg-pc {
     font-size: 16px;
   }
@@ -239,7 +254,7 @@ export default {
 }
 .slide-enter, .slide-leave-to
 /* .slide-fade-leave-active below version 2.1.8 */ {
-  transform: translateY(10px);
+  transform: translateY(-10px);
   opacity: 0;
 }
 .item-info {

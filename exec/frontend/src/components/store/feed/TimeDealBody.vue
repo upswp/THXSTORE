@@ -43,8 +43,8 @@
             <span class="item-rate">-{{ item.rate }}%</span>
           </div>
           <div class="item-discounted">
-            <div class="original-price">{{ oneTrans(item.price) }}</div>
-            <div class="discounted-price">{{ oneTrans(item.discounted) }}원</div>
+            <div class="original-price">{{ wonTrans(item.price) }}</div>
+            <div class="discounted-price">{{ wonTrans(item.discounted) }}원</div>
           </div>
           <div v-if="item.stock <= 0" class="sold-out">매진 되었습니다.</div>
         </swiper-slide>
@@ -58,7 +58,7 @@
 import { Swiper, SwiperSlide } from 'vue-awesome-swiper';
 import 'swiper/css/swiper.css';
 import { endTime } from '@/utils/time';
-import { categoryStrConvert, categoryClassConvert, timeStrConvert, oneTrans } from '@/utils/filters';
+import { categoryStrConvert, categoryClassConvert, timeStrConvert, wonTrans } from '@/utils/filters';
 export default {
   components: {
     Swiper,
@@ -108,7 +108,7 @@ export default {
       const end = endTime(start);
       return timeStrConvert(end.getHours(), 1) + ':' + timeStrConvert(end.getMinutes(), 1);
     },
-    oneTrans,
+    wonTrans,
     beforeEnter(el) {
       el.style.transitionDelay = 90 * parseInt(el.dataset.index, 10) + 'ms';
     },

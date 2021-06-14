@@ -23,14 +23,16 @@ function meridiemConvert(value) {
   if (num === 12) return [true, '12'];
   if (num < 24) return [true, timeStrConvert(num - 12, 1)];
 }
-function oneTrans(num) {
+function wonTrans(num) {
   return num.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ',');
 }
 function dateTrans(dateStr) {
   const date = new Date(dateStr);
   return `${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()} ${date.getHours()}:${date.getMinutes()}`;
 }
-
+function roundDownPrice(price, rate) {
+  return Math.floor((price * (100 - rate)) / 100 / 100) * 100;
+}
 const categoryStrConvert = {
   DEFAULT: '미지정',
   KR_FOOD: '한식',
@@ -57,4 +59,32 @@ const categoryClassConvert = {
   STEAM_SOUP: 'category-steam-soup',
   CAFE: 'category-cafe',
 };
-export { formatNumber, timeStrConvert, meridiemConvert, oneTrans, dateTrans, categoryStrConvert, categoryClassConvert };
+const orderStatusStrConvert = {
+  DEFAULT: '주문 대기',
+  ACCEPT: '주문 접수',
+  STANDBY_BY: '수령 대기',
+  FINISH: '수령 완료',
+};
+const holidayStrConvert = code => {
+  return code
+    .replace('MON', '월요일')
+    .replace('TUE', '화요일')
+    .replace('WED', '수요일')
+    .replace('THU', '목요일')
+    .replace('FRI', '금요일')
+    .replace('SAT', '토요일')
+    .replace('SUN', '일요일')
+    .replace('|', ', ');
+};
+export {
+  formatNumber,
+  timeStrConvert,
+  meridiemConvert,
+  wonTrans,
+  dateTrans,
+  categoryStrConvert,
+  categoryClassConvert,
+  roundDownPrice,
+  orderStatusStrConvert,
+  holidayStrConvert,
+};

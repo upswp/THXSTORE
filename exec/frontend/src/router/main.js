@@ -1,6 +1,7 @@
 import store from '@/store';
 import routesForStore from '@/router/store';
 import routesForAdmin from '@/router/admin';
+import routesForUser from '@/router/user';
 import routesForUserStore from '@/router/userStore';
 const authGuard = (to, from, next) => {
   if (store.getters.getToken) {
@@ -20,11 +21,6 @@ const routesForMain = [
     beforeEnter: authGuard,
     children: [
       {
-        path: '/user',
-        name: 'user',
-        component: () => import('@/views/UserPage.vue'),
-      },
-      {
         path: '/feed',
         name: 'feed',
         component: () => import('@/views/TimeDealFeedPage.vue'),
@@ -32,6 +28,7 @@ const routesForMain = [
       ...routesForStore,
       ...routesForAdmin,
       ...routesForUserStore,
+      ...routesForUser,
     ],
   },
 ];

@@ -1,95 +1,94 @@
-import { createInstance, createInstanceWithToken } from '@/api/index.js';
+import { createInstanceWithToken } from '@/api/index.js';
 
-const publicAPI = createInstance('api/store/');
 const privateAPI = createInstanceWithToken('api/store/');
-
 /**
- * @typedef {object} sendResultOfAdminDecision
- * @property {string} storeId - 스토어 아이디
+ * @typedef {object} BaseInfo
+ * @property {number} storeId - 가게 고유 번호
+ * @property {string} name - 가게 상호명
+ * @property {string} mainAddress - 가게 등록지 주소
+ * @property {string} subAddress - 상세 주소
+ * @property {string} phoneNum - 가게 전화 번호
+ * @property {string} license - 사업자 등록 번호
+ * @property {string} licenseImg - 사업자 등록증 이미지 주소
+ * @property {number} lat - 가게 등록지 위도
+ * @property {number} lon - 가게 등록지 경도
+ * @property {string} checkStore - 등록/수정 처리 진행상황 (progressStatus로 변경 예정)
+ * @property {boolean} timeDealCheck - 타임 딜 진행 여부 (isTimeDealActive로 변경 예정)
  */
 /**
- * @typedef {object} registerData
- * @property {string} name - 가게이름
- * @property {string} mainAddress - 가게 주소
- * @property {string} subAddress - 가게 세부주소
- * @property {string} phoneNum - 전화번호
- * @property {string} license - 사업자번호
- * @property {string} licenseImg - 사업자번호 사본
+ * @typedef {object} SideInfo
+ * @property {string} openTime - 영업 시작 시간 (hh:mm)
+ * @property {string} closeTime - 영업 종료 시간 (hh:mm)
+ * @property {string} closeDay - 휴무일 (Mon|Tue|... 요일 구분은 |로 한다) (dayOff로 변경 예정)
+ * @property {string} storeCategory - 가게 카테고리
+ * @property {string} logo - 가게 로고 이미지 주소 (logoImg로 변경 예정)
+ * @property {string} thumbImg - 썸네일 이미지 주소
+ * @property {string} introduce - 가게 소개 문구
+ */
+/**
+ * @typedef {object} StoreInfo
+ * @property {BaseInfo} baseInfo - 가게 고유 정보, 관리자 승인을 받아야 변경이 가능
+ * @property {SideInfo} sideInfo - 가게 부가 정보, 관리자 승인 없이 변경 가능
+ */
+/**
+ * @typedef {object} DataForRegistration
+ * @property {string} name - 가게 상호명
+ * @property {string} mainAddress - 가게 등록지 주소
+ * @property {string} subAddress - 상세 주소
+ * @property {string} phoneNum - 가게 전화 번호
+ * @property {string} license - 사업자 등록 번호
+ * @property {file} licenseImg - 사업자 등록증 이미지 파일
+ * @property {number} lat - 가게 등록지 위도
+ * @property {number} lon - 가게 등록지 경도
+ */
+/**
+ * @typedef {object} DataForModification
+ * @property {number} storeId - 가게 고유 번호
+ * @property {string} name - 가게 상호명
+ * @property {string} mainAddress - 가게 등록지 주소
+ * @property {string} subAddress - 상세 주소
+ * @property {string} phoneNum - 가게 전화 번호
+ * @property {string} license - 사업자 등록 번호
+ * @property {file} licenseImg - 사업자 등록증 이미지 파일
+ * @property {number} lat - 가게 등록지 위도
+ * @property {number} lon - 가게 등록지 경도
  */
 
 /**
- * @typedef {object} modifiedData
- * @property {string} name - 가게이름
- * @property {string} mainAddress - 가게 주소
- * @property {string} subAddress - 가게 세부주소
- * @property {string} phoneNum - 전화번호
- * @property {string} license - 사업자번호
- * @property {string} licenseImg - 사업자번호 사본
+ * 판매자의 가게 정보 조회
+ * @typedef {function} getMyStoreInfo
+ * @returns {Promise<StoreInfo>} - 가게 정보
  */
-
-// 판매자 상태 조회
-const getCheckOfStore = () => privateAPI.get('');
+const getMyStoreInfo = () => privateAPI.get('');
 
 /**
- * 판매자 등록
+ * 판매자가 가게 등록 요청
  * @typedef {function} registerStore
- * @param {registerData} registerData
- * @returns {promise<Boolean>} isEnrollment
+ * @param {DataForRegistration} dataForRegistration
+ * @returns {Promise<Boolean>} - api 요청 성공 여부
  */
-const registerStore = registerData => privateAPI.post('', registerData);
-
-// 관리자가 판매자 신청내역 확인
-const getStoreEnrollmentList = () => privateAPI.get('application/');
+const registerStore = dataForRegistration => privateAPI.post('', dataForRegistration);
 
 /**
- * 관리자가 판매자 등록을 승인
- * @param {sendResultOfAdminDecision} pass
- * @returns {promise<Boolean>} ispass
+ * 판매자가 가게 기본 정보 수정 요청
+ * @typedef {function} modifyStoreInfo
+ * @param {DataForModification} dataForModification
+ * @returns {Promise<Boolean>} - api 요청 성공 여부
  */
-const approveStoreEnrollment = pass => privateAPI.post('application/success/', pass);
+const modifyStoreInfo = dataForModification => privateAPI.put('', dataForModification);
 
 /**
- * 관리자가 판매자 등록을 거절
- * @param {sendResultOfAdminDecision} fail
- * @returns {promise<Boolean>} isfail
+ * 스토어 등록이 반려되었을 때 신청자가 이를 확인 (이후, 스토어 등록 정보 삭제)
+ * @typedef {function} acceptApplicationRejected
+ * @returns {Promise<Boolean>} - 반려 확인을 정상 확인했는지 여부
  */
-const retireStoreEnrollment = fail => privateAPI.post('application/fail/', fail);
-// 반려되었을 때 스토어 등록 정보 삭제
-const deletePreStoreEnrollment = () => privateAPI.post('application/confirm/');
+const acceptApplicationRejected = () => privateAPI.post('application/confirm/');
 
-// 판매자가 기본정보를 수정
 /**
- * @typedef {function} modifyStoreBaseInfo
- * @param {registerData} modifiedData
- * @returns {Promise<Boolean>} isModified
+ * 스토어 수정이 반려되었을 때 신청자가 이를 확인 (이후, 스토어 수정 정보 삭제)
+ * @typedef {function} acceptModificationRejected
+ * @returns {Promise<Boolean>} - 반려 확인을 정상 확인했는지 여부
  */
-const modifyStoreBaseInfo = modifiedData => privateAPI.put('', modifiedData);
-// 관리자가 판매자 수정내역 확인
-const getStoreModifyList = () => privateAPI.get('modify/');
-/**
- * 관리자가 판매자 수정을 승인
- * @param {sendResultOfAdminDecision} pass
- * @returns {Promise<Boolean>} ismodified
- */
-const approveStoreModification = pass => privateAPI.post('modify/success/', pass);
-/**
- * 관리자가 판매자 수정을 거절
- * @param {sendResultOfAdminDecision} fail
- * @returns {Promise<Boolean>} ismodified
- */
-const retireStoreModification = fail => privateAPI.post('modify/fail/', fail);
-// 반려되었을 때 스토어 수정 정보 삭제
-const deletePreStoreModification = () => privateAPI.post('modify/confirm/');
-export {
-  registerStore,
-  getStoreEnrollmentList,
-  approveStoreEnrollment,
-  retireStoreEnrollment,
-  getCheckOfStore,
-  deletePreStoreEnrollment,
-  modifyStoreBaseInfo,
-  getStoreModifyList,
-  approveStoreModification,
-  retireStoreModification,
-  deletePreStoreModification,
-};
+const acceptModificationRejected = () => privateAPI.post('modify/confirm/');
+
+export { registerStore, getMyStoreInfo, acceptApplicationRejected, modifyStoreInfo, acceptModificationRejected };

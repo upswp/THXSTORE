@@ -608,7 +608,7 @@ export default {
     color: $green600;
   }
 }
-@include fade-transition(fade, 0.2s);
+@include fade-transition(0.2s);
 pre {
   font-family: 'S-CoreDream-4Regular';
 }

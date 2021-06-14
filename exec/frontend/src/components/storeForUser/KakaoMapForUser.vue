@@ -4,95 +4,54 @@
   </div>
 </template>
 <script>
-import { mapGetters } from 'vuex';
 export default {
   props: {
     location: {
       type: Array,
       default: () => [],
     },
-    logo: {
-      type: String,
-      default: '',
-    },
   },
   data() {
     return {
-      storeAddr: {
-        marker: '',
-      },
-      userAddr: {
-        marker: '',
-      },
       map: '',
-      marker: '',
-      imageSrc: '',
       geocoder: new kakao.maps.services.Geocoder(),
     };
   },
-  watch: {
-    location: {
-      immediate: true,
-      handler(newValue) {
-        //   상세주소
-        const storeAddr = newValue.storeAddr;
-        const userAddr = newValue.userAddr;
-        this.searchStore(storeAddr);
-        this.searchUser(userAddr);
-      },
-    },
+  created() {
+    this.searchAddress(this.location.store);
+    this.searchAddress(this.location.user);
   },
   mounted() {
-    let initPosition = new kakao.maps.LatLng(33.450701, 126.570667);
-
-    let mapContainer = document.getElementById('map');
-    let mapOption = {
-      center: initPosition,
+    const mapContainer = document.getElementById('map');
+    const mapOption = {
+      center: new kakao.maps.LatLng(33.450701, 126.570667),
       level: 8,
     };
     this.map = new kakao.maps.Map(mapContainer, mapOption);
-    // 마커 생성
-    this.marker = new kakao.maps.Marker({
-      position: initPosition,
-    });
-    // 마커가 지도 위에 표시되도록 설정
-    // this.marker.setMap(this.map);
   },
 
   methods: {
-    searchStore(addr) {
+    searchAddress(addr) {
       this.geocoder.addressSearch(addr, (result, status) => {
         // 정상적으로 검색이 완료됐으면
         if (status === kakao.maps.services.Status.OK) {
-          let coords = new kakao.maps.LatLng(result[0].y, result[0].x);
-          // 로고 유무에 따라 마커이미지 판별
-          // if (this.logo) {
-          //   this.imageSrc = this.logo;
-          // } else {
-          //   this.imageSrc = 'https://cdn.pixabay.com/photo/2016/03/31/17/53/communication-1293975_960_720.png';
-          // }
-          // let imageSrc = this.imageSrc;
-          // let imageSize = new kakao.maps.Size(42, 49); // 마커이미지의 크기입니다
-          // let imageOption = { offset: new kakao.maps.Point(15, 15) }; // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
-          // // 마커이미지 생성
-          // let markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption);
-          let markerPosition = coords;
-          this.storeAddr.marker = new kakao.maps.Marker({
+          const markerPosition = new kakao.maps.LatLng(result[0].y, result[0].x);
+          const marker = new kakao.maps.Marker({
             map: this.map,
             position: markerPosition,
-            // image: markerImage,
           });
+
           // 마커이미지를 맵에 보여준다.
-          this.storeAddr.marker.setMap(this.map);
+          marker.setMap(this.map);
 
           // 인포윈도우로 장소에 대한 설명을 표시합니다
           var infowindow = new kakao.maps.InfoWindow({
-            content: `<div  style="color: #0074CC; font-size:14px;width:100%;text-align:center;padding:6px;overflow: hidden;text-overflow: ellipsis;white-space: nowrap; vertical-align: top;">${addr}</div>`,
+            content: `<div style="color: #0074CC; font-size:14px;width:100%;text-align:center;padding:6px;overflow: hidden;text-overflow: ellipsis;white-space: nowrap; vertical-align: top;">${addr}</div>`,
           });
-          infowindow.open(this.map, this.storeAddr.marker);
+          infowindow.open(this.map, marker);
 
           // 지도의 중심을 결과값으로 받은 위치로 이동시킵니다
-          this.map.setCenter(coords);
+          this.map.setCenter(markerPosition);
         } else {
           alert('해당 위치는 지도에 표시되지 않는 지역입니다');
         }

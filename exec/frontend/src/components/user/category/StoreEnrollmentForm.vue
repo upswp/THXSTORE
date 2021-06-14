@@ -1,7 +1,7 @@
 <template>
   <div class="store-enrollment-container px-40">
     <waiting-modal v-if="showWaitingModal" @close="backToMain"> </waiting-modal>
-    <return-modal v-if="showReturnModal" @close="rewriteStoreEnrollment"></return-modal>
+    <rejected-modal v-if="showReturnModal" @close="rewriteStoreEnrollment"></rejected-modal>
 
     <header><h1 class="page-title">스토어 정보입력</h1></header>
     <!-- <div> -->
@@ -96,13 +96,13 @@
 
 <script>
 import SetRoadName from '@/components/common/SetRoadName.vue';
-import WaitingModal from '@/components/user/modal/WaitingModal.vue';
-import ReturnModal from '@/components/user/modal/ReturnModal.vue';
+import WaitingModal from '@/components/user/modal/ResponseWaitingModal.vue';
+import RejectedModal from '@/components/user/modal/ResponseRejectedModal.vue';
 import {
   registerStore,
   getCheckOfStore,
   deletePreStoreEnrollment,
-  modifyStoreBaseInfo,
+  modifyStoreInfo,
   deletePreStoreModification,
 } from '@/api/seller';
 import { validationPhoneNumber, validationComResNum } from '@/utils/validation';
@@ -114,7 +114,7 @@ export default {
   components: {
     SetRoadName,
     WaitingModal,
-    ReturnModal,
+    RejectedModal,
   },
   data() {
     return {
@@ -247,7 +247,7 @@ export default {
           if (this.modifyButtonLoad == true) {
             formData.delete('checkStore');
             formData.delete('role');
-            await modifyStoreBaseInfo(formData);
+            await modifyStoreInfo(formData);
           } else {
             await registerStore(formData);
             this.setSpinnerState(false);

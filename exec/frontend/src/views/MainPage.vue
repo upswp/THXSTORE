@@ -1,7 +1,6 @@
 <template>
   <div class="main-container">
     <main-header></main-header>
-    <main-aside></main-aside>
     <div class="main-contents">
       <router-view></router-view>
     </div>
@@ -10,11 +9,9 @@
 
 <script>
 import MainHeader from '@/components/common/MainHeader';
-import MainAside from '@/components/common/MainAside';
 export default {
   components: {
     MainHeader,
-    MainAside,
   },
 };
 </script>

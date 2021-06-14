@@ -36,19 +36,17 @@
         <div class="pass-button" @click="approveEnrollment">승인</div>
       </div>
     </div>
-    <div v-else class="list-none">판매자 등록 신청이 없습니다.</div>
+    <div v-else class="list-none">신청 목록이 없습니다.</div>
   </div>
 </template>
 
 <script>
 import {
-  getStoreEnrollmentList,
-  approveStoreEnrollment,
-  retireStoreEnrollment,
-  getStoreModifyList,
-  approveStoreModification,
-  retireStoreModification,
-} from '@/api/seller';
+  getStoreApplicationList,
+  getStoreModificationlist,
+  answerStoreAplication,
+  answerStoreModification,
+} from '@/api/admin';
 import { mapMutations } from 'vuex';
 export default {
   props: {
@@ -66,16 +64,6 @@ export default {
       order: 0,
     };
   },
-  watch: {
-    showStoreEnrollmentAndModificationList(newValue, oldValue) {
-      if (newValue === oldValue) return;
-      if (newValue === 'applyStoreEnrollment') {
-        this.getStoreListforEnroll();
-      } else {
-        this.getStoreListforModify();
-      }
-    },
-  },
   created() {
     this.getStoreListforEnroll();
   },
@@ -85,9 +73,15 @@ export default {
       try {
         this.resetData();
         this.setSpinnerState(true);
-        const { data } = await getStoreEnrollmentList();
+        if (this.showStoreEnrollmentAndModificationList === 'applyStoreEnrollment') {
+          const { data } = await getStoreApplicationList();
+          this.storeNormalInfo = data;
+        } else {
+          const { data } = await getStoreModificationlist();
+          this.storeNormalInfo = data;
+        }
         this.setSpinnerState(false);
-        this.storeNormalInfo = data;
+
         if (this.storeNormalInfo.length != 0) {
           this.isListBe = true;
         }
@@ -98,7 +92,7 @@ export default {
     async getStoreListforModify() {
       try {
         this.setSpinnerState(true);
-        const { data } = await getStoreModifyList();
+        const { data } = await getStoreModificationlist();
         this.setSpinnerState(false);
         this.storeNormalInfo = data;
         if (this.storeNormalInfo.length != 0) {
@@ -116,10 +110,10 @@ export default {
         const order = this.order;
         if (this.showStoreEnrollmentAndModificationList == 'modifyStoreEnrollment') {
           const tempStoreId = this.storeNormalInfo[order].tempStoreId;
-          await approveStoreModification({ tempStoreId: tempStoreId });
+          await answerStoreModification(tempStoreId, 'success');
         } else {
           const storeId = this.storeNormalInfo[order].id;
-          await approveStoreEnrollment({ storeId: storeId });
+          await answerStoreAplication(storeId, 'success');
         }
         this.storeNormalInfo.splice(this.order, 1);
         this.storeNormalInfo = [...this.storeNormalInfo];
@@ -135,10 +129,10 @@ export default {
       const order = this.order;
       if (this.showStoreEnrollmentAndModificationList == 'modifyStoreEnrollment') {
         const tempStoreId = this.storeNormalInfo[order].tempStoreId;
-        await retireStoreModification({ tempStoreId: tempStoreId });
+        await answerStoreModification(tempStoreId, 'fail');
       } else {
         const storeId = this.storeNormalInfo[order].id;
-        await retireStoreEnrollment({ storeId: storeId });
+        await answerStoreAplication(storeId, 'fail');
       }
       this.storeNormalInfo.splice(this.order, 1);
       this.storeNormalInfo = [...this.storeNormalInfo];

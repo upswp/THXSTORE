@@ -7,7 +7,7 @@ const routesForUserStore = [
       {
         path: 'menu/:storeId',
         name: 'menu',
-        component: () => import('@/components/storeForUser/UserStoreMenuList.vue'),
+        component: () => import('@/components/storeForUser/UserStoreMenu.vue'),
       },
       {
         path: 'info/:storeId',
@@ -17,7 +17,7 @@ const routesForUserStore = [
       {
         path: 'timedeal/:storeId',
         name: 'timedeal',
-        component: () => import('@/components/storeForUser/TimedealList.vue'),
+        component: () => import('@/components/storeForUser/UserStoreTimeDeal.vue'),
       },
       {
         path: 'live/:storeId',
@@ -26,7 +26,7 @@ const routesForUserStore = [
       },
       {
         path: 'review/:storeId',
-        name: 'userStoreReview',
+        name: 'review',
         component: () => import('@/components/storeForUser/UserStoreReview.vue'),
       },
     ],
